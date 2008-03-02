@@ -1,0 +1,16 @@
+Java Query Library (JaqLib)
+---------------------------
+Copyright 2008 Werner Fragner
+
+
+
+jaqlib-0.9
+----------
+
+JaqLib supports quering collections that implement the 'java.lang.Iterable' interface out of the box.
+Other sources that should be queried can be integrated into the library by implementing an own
+'org.jaqlib.query.QueryBuilder'.
+Where conditions can be defined by using a method call recording mechanism. This mechanism uses dynamic
+proxies for recording method calls. Because dynamic proxies can only be applied to interfaces the
+open source library CgLib can be optionally used to proxy classes. This release was tested with
+CgLib 2.1_3 (http://downloads.sourceforge.net/cglib/cglib-nodep-2.1_3.jar).
