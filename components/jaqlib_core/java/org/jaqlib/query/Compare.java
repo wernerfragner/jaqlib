@@ -5,9 +5,9 @@ package org.jaqlib.query;
  * 
  * @param <T>
  */
-public interface Compare<T>
+public interface Compare<T, ResultType>
 {
 
-  boolean evaluate(T item);
+  boolean evaluate(T element);
 
 }

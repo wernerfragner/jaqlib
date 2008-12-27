@@ -7,7 +7,8 @@ package org.jaqlib.query;
  * @param <T>
  * @param <ResultType>
  */
-public abstract class AbstractCompare<T, ResultType> implements Compare<T>
+public abstract class AbstractCompare<T, ResultType> implements
+    Compare<T, ResultType>
 {
 
   protected final ResultType expected;

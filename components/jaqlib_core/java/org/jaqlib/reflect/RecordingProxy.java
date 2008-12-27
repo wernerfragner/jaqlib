@@ -10,14 +10,14 @@ import org.jaqlib.util.reflect.ReflectionUtil;
  * 
  * @param <T>
  */
-public class JaqlibProxy<T>
+public class RecordingProxy<T>
 {
 
   private final ClassLoader classLoader;
-  private final JaqlibInvocationHandler invocationHandler = new JaqlibInvocationHandler();
+  private final RecordingInvocationHandler invocationHandler = new RecordingInvocationHandler();
 
 
-  public JaqlibProxy(ClassLoader classLoader)
+  public RecordingProxy(ClassLoader classLoader)
   {
     this.classLoader = Assert.notNull(classLoader);
   }
@@ -85,7 +85,7 @@ public class JaqlibProxy<T>
   }
 
 
-  public JaqlibInvocationRecorder getInvocationRecorder()
+  public MethodCallRecorder getInvocationRecorder()
   {
     return invocationHandler;
   }

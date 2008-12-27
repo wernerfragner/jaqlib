@@ -5,32 +5,32 @@ package org.jaqlib.query.syntaxtree;
  * 
  * @param <T>
  */
-public abstract class Connector<T> implements SyntaxTreeItem<T>
+public abstract class Connector<T> implements SyntaxTreeNode<T>
 {
 
-  private SyntaxTreeItem<T> left;
-  private SyntaxTreeItem<T> right;
+  private SyntaxTreeNode<T> left;
+  private SyntaxTreeNode<T> right;
 
 
-  void setLeft(SyntaxTreeItem<T> item)
+  void setLeft(SyntaxTreeNode<T> node)
   {
-    this.left = item;
+    this.left = node;
   }
 
 
-  public void setRight(SyntaxTreeItem<T> item)
+  public void setRight(SyntaxTreeNode<T> node)
   {
-    this.right = item;
+    this.right = node;
   }
 
 
-  public SyntaxTreeItem<T> getLeft()
+  public SyntaxTreeNode<T> getLeft()
   {
     return left;
   }
 
 
-  public SyntaxTreeItem<T> getRight()
+  public SyntaxTreeNode<T> getRight()
   {
     return right;
   }

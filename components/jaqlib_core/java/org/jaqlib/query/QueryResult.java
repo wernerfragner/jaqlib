@@ -70,6 +70,19 @@ public class QueryResult<T, DataSourceType> extends
   }
 
 
+  /**
+   * Simple condition that can be used to test all single elements for various
+   * conditions.
+   * 
+   * @param <R> the result element type.
+   * @return
+   */
+  public <R> SingleElementWhereCondition<T, DataSourceType, R> and()
+  {
+    return getQuery().addSimpleWhereCondition();
+  }
+
+
   public QueryResult<T, DataSourceType> and(WhereCondition<T> condition)
   {
     return getQuery().addAndWhereCondition(condition);
@@ -82,16 +95,17 @@ public class QueryResult<T, DataSourceType> extends
   }
 
 
-  public <R> ReflectiveWhereCondition<T, DataSourceType, R> and(R evalResult)
+  public <R> ComparableWhereCondition<T, DataSourceType, R> andMethodCallResult(
+      R evalResult)
   {
     return getQuery().addReflectiveAndWhereCondition();
   }
 
 
-  public <R> ReflectiveWhereCondition<T, DataSourceType, R> or(R evalResult)
+  public <R> ComparableWhereCondition<T, DataSourceType, R> orMethodCallResult(
+      R evalResult)
   {
     return getQuery().addReflectiveOrWhereCondition();
   }
-
 
 }

@@ -9,10 +9,10 @@ package org.jaqlib.query;
  */
 public class SimpleWhereCondition<T, DataSourceType, ResultType> extends
     QueryItem<T, DataSourceType> implements WhereCondition<T>,
-    SingleItemWhereCondition<T, DataSourceType, ResultType>
+    SingleElementWhereCondition<T, DataSourceType, ResultType>
 {
 
-  private ItemWhereCondition<T, DataSourceType, ResultType> item;
+  private ElementWhereCondition<T, DataSourceType, ResultType> element;
 
 
   public SimpleWhereCondition(Query<T, DataSourceType> query)
@@ -21,16 +21,17 @@ public class SimpleWhereCondition<T, DataSourceType, ResultType> extends
   }
 
 
-  public ComparableWhereCondition<T, DataSourceType, ResultType> item()
+  public ComparableWhereCondition<T, DataSourceType, ResultType> element()
   {
-    item = new ItemWhereCondition<T, DataSourceType, ResultType>(getQuery());
-    return item;
+    element = new ElementWhereCondition<T, DataSourceType, ResultType>(
+        getQuery());
+    return element;
   }
 
 
-  public boolean evaluate(T item)
+  public boolean evaluate(T element)
   {
-    return this.item.evaluate(item);
+    return this.element.evaluate(element);
   }
 
 }

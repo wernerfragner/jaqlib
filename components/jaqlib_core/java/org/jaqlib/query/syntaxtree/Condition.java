@@ -8,7 +8,7 @@ import org.jaqlib.util.Assert;
  * 
  * @param <T>
  */
-public class Condition<T> implements SyntaxTreeItem<T>
+public class Condition<T> implements SyntaxTreeNode<T>
 {
 
   private final WhereCondition<T> condition;
@@ -20,9 +20,9 @@ public class Condition<T> implements SyntaxTreeItem<T>
   }
 
 
-  public boolean visit(T item)
+  public boolean visit(T element)
   {
-    return condition.evaluate(item);
+    return condition.evaluate(element);
   }
 
 }

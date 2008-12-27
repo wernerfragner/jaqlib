@@ -1,22 +1,25 @@
 package org.jaqlib.query;
 
+import org.jaqlib.reflect.MethodInvocation;
+
 
 /**
  * @author Werner Fragner
  * 
  * @param <T>
  */
-public class IsSmallerThan<T> extends ComparableFunction<T>
+public class IsSmallerThan<T, ResultType> extends
+    ComparableFunction<T, ResultType>
 {
 
-  public IsSmallerThan(T expected)
+  public IsSmallerThan(MethodInvocation invocation, ResultType expected)
   {
-    super(expected);
+    super(invocation, expected);
   }
 
 
   @Override
-  protected boolean doCompare(Comparable<T> actual, T expected)
+  protected boolean doCompare(Comparable<ResultType> actual, ResultType expected)
   {
     return actual.compareTo(expected) < 0;
   }

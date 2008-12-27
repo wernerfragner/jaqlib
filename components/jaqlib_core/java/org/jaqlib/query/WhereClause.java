@@ -18,23 +18,23 @@ public class WhereClause<T, DataSourceType> extends
 
 
   /**
-   * Simple where clause that can be used to test all single items for various
-   * conditions.
+   * Simple where clause that can be used to test all single elements for
+   * various conditions.
    * 
-   * @param <R> the result item type.
+   * @param <R> the result element type.
    * @return
    */
-  public <R> SingleItemWhereCondition<T, DataSourceType, R> where()
+  public <R> SingleElementWhereCondition<T, DataSourceType, R> where()
   {
     return getQuery().addSimpleWhereCondition();
   }
 
 
   /**
-   * Where clause that uses recorded method calls to test all items for various
-   * conditions.
+   * Where clause that uses recorded method calls to test all elements for
+   * various conditions.
    * 
-   * @param <R> the result item type.
+   * @param <R> the result element type.
    * @param evalResult
    * @return
    */

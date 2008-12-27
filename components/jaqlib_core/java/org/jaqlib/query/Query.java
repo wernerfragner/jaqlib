@@ -12,23 +12,24 @@ public interface Query<T, DataSourceType> extends
 {
 
   /**
-   * Create a from clause with only one item in the select clause (= only one
-   * result item class).
+   * Create a from clause with only one element in the select clause (= only one
+   * result element class).
    * 
-   * @param resultItemClass
+   * @param resultElementClass
    * @return an object representing a from clause.
    */
-  FromClause<T, DataSourceType> createFromClause(Class<T> resultItemClass);
+  FromClause<T, DataSourceType> createFromClause(Class<T> resultElementClass);
 
 
   /**
-   * Create a from clause with multiple items in the select clause (= multiple
-   * result item classes).
+   * Create a from clause with multiple elements in the select clause (=
+   * multiple result element classes).
    * 
-   * @param resultItemClasses
+   * @param resultElementClasses
    * @return an object representing a from clause.
    */
-  FromClause<T, DataSourceType> createFromClause(Class<T>... resultItemClasses);
+  FromClause<T, DataSourceType> createFromClause(
+      Class<T>... resultElementClasses);
 
 
   WhereClause<T, DataSourceType> createWhereClause(DataSourceType dataSource);
@@ -37,7 +38,7 @@ public interface Query<T, DataSourceType> extends
   QueryResult<T, DataSourceType> createQueryResult();
 
 
-  <R> SingleItemWhereCondition<T, DataSourceType, R> addSimpleWhereCondition();
+  <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleWhereCondition();
 
 
   <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveWhereCondition();
@@ -57,6 +58,5 @@ public interface Query<T, DataSourceType> extends
 
 
   QueryResult<T, DataSourceType> addOrWhereCondition(WhereCondition<T> condition);
-
 
 }

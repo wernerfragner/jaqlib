@@ -3,6 +3,11 @@ package org.jaqlib.query.syntaxtree;
 import org.jaqlib.util.Assert;
 
 /**
+ * Represents a simple syntax tree with AND and OR connections. The
+ * {@link Connector} nodes always have a condition on their left leaves. An
+ * additional condition is always stored at their right leaves. Only the last
+ * {@link Connector} node has a condition at the right leave.
+ * 
  * @author Werner Fragner
  * 
  * @param <T>
@@ -10,15 +15,15 @@ import org.jaqlib.util.Assert;
 public class SyntaxTree<T>
 {
 
-  private SyntaxTreeItem<T> root;
-  private SyntaxTreeItem<T> current;
+  private Root<T> root;
+  private Connector<T> current;
 
 
-  public boolean visit(T item)
+  public boolean visit(T element)
   {
     if (root != null)
     {
-      return root.visit(item);
+      return root.visit(element);
     }
     // no root present, so no conditions should be evaluated
     // --> return true
@@ -26,20 +31,24 @@ public class SyntaxTree<T>
   }
 
 
-  public void setRoot(SyntaxTreeItem<T> root)
+  public void setRoot(SyntaxTreeNode<T> root)
   {
     Assert.state(this.root == null, "Root condition can be set only once.");
-    this.root = root;
-    this.current = root;
+
+    this.root = new Root<T>();
+    this.current = this.root;
+    this.current.setRight(root);
   }
 
 
   public Connector<T> addConnector(Connector<T> connector)
   {
-    connector.setLeft(current);
+    SyntaxTreeNode<T> right = current.getRight();
+    current.setRight(connector);
+    connector.setLeft(right);
+
     current = connector;
     return connector;
   }
-
 
 }

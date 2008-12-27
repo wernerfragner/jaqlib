@@ -1,4 +1,4 @@
-package org.jaqlib.reflect;
+package org.jaqlib.util.reflect;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;

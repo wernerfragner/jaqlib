@@ -5,9 +5,9 @@ package org.jaqlib.query.syntaxtree;
  * 
  * @param <T>
  */
-public interface SyntaxTreeItem<T>
+public interface SyntaxTreeNode<T>
 {
 
-  boolean visit(T item);
+  boolean visit(T element);
 
 }

@@ -27,30 +27,30 @@ public class Assert
   }
 
 
-  public static <T> void notEmpty(Collection<T> items, String message)
+  public static <T> void notEmpty(Collection<T> elements, String message)
   {
-    notNull(items);
-    if (items.isEmpty())
+    notNull(elements);
+    if (elements.isEmpty())
     {
       throw new IllegalStateException(message);
     }
   }
 
 
-  public static <T> void size(int size, T[] items, String message)
+  public static <T> void size(int size, T[] elements, String message)
   {
-    notNull(items);
-    if (items.length != size)
+    notNull(elements);
+    if (elements.length != size)
     {
       throw new IllegalStateException(message);
     }
   }
 
 
-  public static <T> void size(int size, Collection<T> items, String message)
+  public static <T> void size(int size, Collection<T> elements, String message)
   {
-    notNull(items);
-    if (items.size() != size)
+    notNull(elements);
+    if (elements.size() != size)
     {
       throw new IllegalStateException(message);
     }

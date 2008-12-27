@@ -29,21 +29,32 @@ public abstract class ReflectiveCompare<T, ResultType> extends
 
 
   @SuppressWarnings("unchecked")
-  protected ResultType getActualValue(T item)
+  protected ResultType getActualValue(T element)
   {
     // invocations on null objects do not make sense, return null
-    if (item == null)
+    if (element == null)
     {
       return null;
     }
 
-    // if no invocation has been made than item itself should be evaluated
+    // if no invocation has been made than element itself should be evaluated
     if (invocation == null)
     {
-      return (ResultType) item;
+      return (ResultType) element;
     }
 
-    // invoke recored method on given item
-    return (ResultType) invocation.invoke(item);
+    // invoke recored method on given element
+    return (ResultType) invocation.invoke(element);
   }
+
+
+  public boolean evaluate(T element)
+  {
+    ResultType actual = getActualValue(element);
+    return doEvaluate(actual);
+  }
+
+
+  protected abstract boolean doEvaluate(ResultType actual);
+
 }
