@@ -1,7 +1,7 @@
 package org.jaqlib.query;
 
-import org.jaqlib.reflect.JaqlibProxy;
 import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.reflect.RecordingProxy;
 
 /**
  * @author Werner Fragner
@@ -15,7 +15,7 @@ public abstract class AbstractComparableWhereCondition<T, DataSourceType, Result
     ComparableWhereCondition<T, DataSourceType, ResultType>
 {
 
-  private Compare<T> compare;
+  private Compare<T, ResultType> compare;
 
 
   public AbstractComparableWhereCondition(Query<T, DataSourceType> query)
@@ -48,30 +48,38 @@ public abstract class AbstractComparableWhereCondition<T, DataSourceType, Result
   }
 
 
-  public QueryResult<T, DataSourceType> isGreaterThan(T expected)
+  public QueryResult<T, DataSourceType> isGreaterThan(ResultType expected)
   {
-    this.compare = new IsGreaterThan<T>(expected);
+    final MethodInvocation invocation = getLastMethodInvocation();
+    this.compare = new IsGreaterThan<T, ResultType>(invocation, expected);
     return getQuery().createQueryResult();
   }
 
 
-  public QueryResult<T, DataSourceType> isGreaterThanOrEqualTo(T expected)
+  public QueryResult<T, DataSourceType> isGreaterThanOrEqualTo(
+      ResultType expected)
   {
-    this.compare = new IsGreaterThanOrEqualTo<T>(expected);
+    final MethodInvocation invocation = getLastMethodInvocation();
+    this.compare = new IsGreaterThanOrEqualTo<T, ResultType>(invocation,
+        expected);
     return getQuery().createQueryResult();
   }
 
 
-  public QueryResult<T, DataSourceType> isSmallerThan(T expected)
+  public QueryResult<T, DataSourceType> isSmallerThan(ResultType expected)
   {
-    this.compare = new IsSmallerThan<T>(expected);
+    final MethodInvocation invocation = getLastMethodInvocation();
+    this.compare = new IsSmallerThan<T, ResultType>(invocation, expected);
     return getQuery().createQueryResult();
   }
 
 
-  public QueryResult<T, DataSourceType> isSmallerThanOrEqualTo(T expected)
+  public QueryResult<T, DataSourceType> isSmallerThanOrEqualTo(
+      ResultType expected)
   {
-    this.compare = new IsSmallerThanOrEqualTo<T>(expected);
+    final MethodInvocation invocation = getLastMethodInvocation();
+    this.compare = new IsSmallerThanOrEqualTo<T, ResultType>(invocation,
+        expected);
     return getQuery().createQueryResult();
   }
 
@@ -100,14 +108,14 @@ public abstract class AbstractComparableWhereCondition<T, DataSourceType, Result
   }
 
 
-  public boolean evaluate(T item)
+  public boolean evaluate(T element)
   {
-    return compare.evaluate(item);
+    return compare.evaluate(element);
   }
 
 
   /**
-   * @return the last recorded method invocation on a {@link JaqlibProxy}
+   * @return the last recorded method invocation on a {@link RecordingProxy}
    *         object. Can return null if no method invocations are supported.
    */
   protected abstract MethodInvocation getLastMethodInvocation();

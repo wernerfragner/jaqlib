@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author Werner Fragner
  */
-public interface JaqlibInvocationRecorder
+public interface MethodCallRecorder
 {
 
   MethodInvocation getLastInvocation();

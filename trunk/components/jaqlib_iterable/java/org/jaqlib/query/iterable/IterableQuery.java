@@ -15,32 +15,32 @@ import org.jaqlib.query.Query;
 import org.jaqlib.query.QueryResult;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.SimpleWhereCondition;
-import org.jaqlib.query.SingleItemWhereCondition;
+import org.jaqlib.query.SingleElementWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.syntaxtree.And;
 import org.jaqlib.query.syntaxtree.Condition;
 import org.jaqlib.query.syntaxtree.Or;
 import org.jaqlib.query.syntaxtree.SyntaxTree;
-import org.jaqlib.reflect.JaqlibInvocationRecorder;
+import org.jaqlib.reflect.MethodCallRecorder;
 import org.jaqlib.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
 
 /**
  * @author Werner Fragner
  * 
- * @param <T> the result item class of the query.
+ * @param <T> the result element class of the query.
  */
 public class IterableQuery<T> implements Query<T, Iterable<T>>
 {
 
   private final SyntaxTree<T> tree = new SyntaxTree<T>();
-  private final JaqlibInvocationRecorder invocationRecorder;
+  private final MethodCallRecorder invocationRecorder;
 
   private Iterable<T> dataSource;
 
 
-  public IterableQuery(JaqlibInvocationRecorder invocationRecorder)
+  public IterableQuery(MethodCallRecorder invocationRecorder)
   {
     this.invocationRecorder = Assert.notNull(invocationRecorder);
   }
@@ -53,26 +53,26 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
 
 
   /**
-   * The item class is not used because IterableQuery only supports one item
-   * class.
+   * The element class is not used because IterableQuery only supports one
+   * element class.
    */
-  public FromClause<T, Iterable<T>> createFromClause(Class<T> resultItemClass)
+  public FromClause<T, Iterable<T>> createFromClause(Class<T> resultElementClass)
   {
     return new FromClause<T, Iterable<T>>(this);
   }
 
 
   public FromClause<T, Iterable<T>> createFromClause(
-      Class<T>... resultItemClasses)
+      Class<T>... resultElementClasses)
   {
-    Class<T> resultItemClass = null;
-    if (resultItemClasses != null && resultItemClasses.length > 0)
+    Class<T> resultElementClass = null;
+    if (resultElementClasses != null && resultElementClasses.length > 0)
     {
-      Assert.size(1, resultItemClasses,
-          "Only one result item class is supported.");
-      resultItemClass = resultItemClasses[0];
+      Assert.size(1, resultElementClasses,
+          "Only one result element class is supported.");
+      resultElementClass = resultElementClasses[0];
     }
-    return createFromClause(resultItemClass);
+    return createFromClause(resultElementClass);
   }
 
 
@@ -113,7 +113,7 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  public <R> SingleItemWhereCondition<T, Iterable<T>, R> addSimpleWhereCondition()
+  public <R> SingleElementWhereCondition<T, Iterable<T>, R> addSimpleWhereCondition()
   {
     SimpleWhereCondition<T, Iterable<T>, R> condition = new SimpleWhereCondition<T, Iterable<T>, R>(
         this);
@@ -169,11 +169,11 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
 
   private <CollType extends Collection<T>> CollType addResults(CollType result)
   {
-    for (T item : dataSource)
+    for (T element : dataSource)
     {
-      if (tree.visit(item))
+      if (tree.visit(element))
       {
-        result.add(item);
+        result.add(element);
       }
     }
     return result;
@@ -182,11 +182,11 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
 
   public T getFirstResult()
   {
-    for (T item : dataSource)
+    for (T element : dataSource)
     {
-      if (tree.visit(item))
+      if (tree.visit(element))
       {
-        return item;
+        return element;
       }
     }
     return null;
@@ -195,15 +195,15 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
 
   public T getLastResult()
   {
-    T foundItem = null;
-    for (T item : dataSource)
+    T foundElement = null;
+    for (T element : dataSource)
     {
-      if (tree.visit(item))
+      if (tree.visit(element))
       {
-        foundItem = item;
+        foundElement = element;
       }
     }
-    return foundItem;
+    return foundElement;
   }
 
 
@@ -239,21 +239,21 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
       final CollType resultMap)
   {
     final MethodInvocation invocation = getLastInvocation();
-    for (T item : dataSource)
+    for (T element : dataSource)
     {
-      if (item != null && tree.visit(item))
+      if (element != null && tree.visit(element))
       {
-        final KeyType itemKey = (KeyType) getKey(item, invocation);
-        resultMap.put(itemKey, item);
+        final KeyType elementKey = (KeyType) getKey(element, invocation);
+        resultMap.put(elementKey, element);
       }
     }
     return resultMap;
   }
 
 
-  private Object getKey(T item, MethodInvocation invocation)
+  private Object getKey(T element, MethodInvocation invocation)
   {
-    return invocation.invoke(item);
+    return invocation.invoke(element);
   }
 
 

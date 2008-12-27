@@ -8,9 +8,9 @@ package org.jaqlib.query.syntaxtree;
 public class And<T> extends Connector<T>
 {
 
-  public boolean visit(T item)
+  public boolean visit(T element)
   {
-    return getLeft().visit(item) && getRight().visit(item);
+    return getLeft().visit(element) && getRight().visit(element);
   }
 
 }

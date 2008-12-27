@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.reflect.StandardValueObjectFactory;
 
 
-public class JaqlibInvocationHandler implements JaqlibInvocationRecorder,
+public class RecordingInvocationHandler implements MethodCallRecorder,
     java.lang.reflect.InvocationHandler
 {
 

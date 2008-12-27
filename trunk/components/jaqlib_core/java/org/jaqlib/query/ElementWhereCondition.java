@@ -4,7 +4,7 @@ import org.jaqlib.reflect.MethodInvocation;
 
 /**
  * Implementation of the {@link WhereCondition} interface that matches the
- * single items with a user-defined WHERE clause.
+ * single elements with a user-defined WHERE clause.
  * 
  * @author Werner Fragner
  * 
@@ -12,11 +12,11 @@ import org.jaqlib.reflect.MethodInvocation;
  * @param <DataSourceType>
  * @param <ResultType>
  */
-public class ItemWhereCondition<T, DataSourceType, ResultType> extends
+public class ElementWhereCondition<T, DataSourceType, ResultType> extends
     AbstractComparableWhereCondition<T, DataSourceType, ResultType>
 {
 
-  public ItemWhereCondition(Query<T, DataSourceType> query)
+  public ElementWhereCondition(Query<T, DataSourceType> query)
   {
     super(query);
   }

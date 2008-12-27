@@ -1,5 +1,6 @@
 package org.jaqlib.query;
 
+import org.jaqlib.reflect.MethodInvocation;
 import org.jaqlib.util.reflect.ReflectionUtil;
 
 
@@ -8,33 +9,36 @@ import org.jaqlib.util.reflect.ReflectionUtil;
  * 
  * @param <T>
  */
-public abstract class ComparableFunction<T> extends AbstractCompare<T, T>
+public abstract class ComparableFunction<T, ResultType> extends
+    ReflectiveCompare<T, ResultType>
 {
 
-  public ComparableFunction(T expected)
+  public ComparableFunction(MethodInvocation invocation, ResultType expected)
   {
-    super(expected);
+    super(invocation, expected);
   }
 
 
-  public boolean evaluate(T item)
+  @Override
+  public boolean doEvaluate(ResultType actual)
   {
-    if (item instanceof Comparable)
+    if (actual instanceof Comparable)
     {
-      Comparable<T> actualComp = (Comparable<T>) item;
+      Comparable<ResultType> actualComp = (Comparable<ResultType>) actual;
       return doCompare(actualComp, expected);
     }
-    else if (item == null)
+    else if (actual == null)
     {
       return false;
     }
     throw new IllegalArgumentException(getPlainClassName()
-        + "() can only be used if the item class " + "implements '"
+        + "() can only be used if the element class " + "implements '"
         + Comparable.class.getName() + "'.");
   }
 
 
-  protected abstract boolean doCompare(Comparable<T> actual, T expected);
+  protected abstract boolean doCompare(Comparable<ResultType> actual,
+      ResultType expected);
 
 
   private String getPlainClassName()

@@ -3,7 +3,7 @@ package org.jaqlib;
 /**
  * @author Werner Fragner
  */
-public class SimpleTestItemImpl implements SimpleTestItem
+public class SimpleTestElementImpl implements SimpleTestElement
 {
 
   private boolean match = false;
@@ -11,24 +11,24 @@ public class SimpleTestItemImpl implements SimpleTestItem
   private Integer compareValue = 0;
 
 
-  public SimpleTestItemImpl()
+  public SimpleTestElementImpl()
   {
   }
 
 
-  public SimpleTestItemImpl(boolean match)
+  public SimpleTestElementImpl(boolean match)
   {
     this.match = match;
   }
 
 
-  public SimpleTestItemImpl(Integer compareValue)
+  public SimpleTestElementImpl(Integer compareValue)
   {
     this.compareValue = compareValue;
   }
 
 
-  public SimpleTestItemImpl(Object object)
+  public SimpleTestElementImpl(Object object)
   {
     this(false);
     this.object = object;
@@ -53,13 +53,21 @@ public class SimpleTestItemImpl implements SimpleTestItem
   }
 
 
-  public int compareTo(SimpleTestItem o)
+  public int compareTo(SimpleTestElement o)
   {
     if (compareValue == null)
     {
       return (o.getCompareValue() == null ? 0 : -1);
     }
     return compareValue.compareTo(o.getCompareValue());
+  }
+
+
+  @Override
+  public String toString()
+  {
+    return getClass().getName() + ": compareValue=" + compareValue + "; match="
+        + match + "; object=" + object;
   }
 
 

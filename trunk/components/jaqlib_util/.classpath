@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="java"/>
 	<classpathentry kind="src" path="unittest"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/jaqlib_main/lib/cglib/cglib-nodep-2.1_3.jar"/>
-	<classpathentry kind="lib" path="/jaqlib_main/lib/junit/junit.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_core/lib/cglib/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_core/lib/junit/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

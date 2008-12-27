@@ -17,24 +17,31 @@ public class IsNull<T, ResultType> extends ReflectiveCompare<T, ResultType>
   }
 
 
-  public boolean evaluate(T item)
+  @Override
+  public boolean evaluate(T element)
   {
-    // if no invocation is present then item itself should be checked for null
+    // if no invocation is present then element itself should be checked for
+    // null
     if (!invocationPresent())
     {
-      return (item == null);
+      return (element == null);
     }
 
-    // invocation present but item itself is null; item cannot be evaluated
-    if (item == null)
+    // invocation present but element itself is null; element cannot be
+    // evaluated
+    if (element == null)
     {
       return false;
     }
 
-    // invoke recored method and check for null
-    ResultType actual = getActualValue(item);
-    return actual == null;
+    return doEvaluate(getActualValue(element));
   }
 
+
+  @Override
+  protected boolean doEvaluate(ResultType actual)
+  {
+    return actual == null;
+  }
 
 }
