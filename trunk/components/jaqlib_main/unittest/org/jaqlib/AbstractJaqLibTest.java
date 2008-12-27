@@ -10,6 +10,7 @@ import junit.framework.TestCase;
  * 
  * @param <ResultItemType>
  */
+@SuppressWarnings("unchecked")
 public abstract class AbstractJaqLibTest<ResultItemType extends SimpleTestItem>
     extends TestCase
 {
@@ -63,6 +64,17 @@ public abstract class AbstractJaqLibTest<ResultItemType extends SimpleTestItem>
     items.add(testClass3);
     items.add(testClass4);
     items.add(testClass5);
+    return items;
+  }
+
+
+  public List<? extends ResultItemType> createListWithNulls()
+  {
+    List items = new ArrayList();
+    items.add(new SimpleTestItemImpl());
+    items.add(null);
+    items.add(null);
+    items.add(new SimpleTestItemImpl());
     return items;
   }
 

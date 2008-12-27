@@ -20,7 +20,6 @@ public class Condition<T> implements SyntaxTreeItem<T>
   }
 
 
-  @Override
   public boolean visit(T item)
   {
     return condition.evaluate(item);

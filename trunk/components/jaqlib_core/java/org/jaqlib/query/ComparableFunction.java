@@ -17,7 +17,6 @@ public abstract class ComparableFunction<T> extends AbstractCompare<T, T>
   }
 
 
-  @Override
   public boolean evaluate(T item)
   {
     if (item instanceof Comparable)

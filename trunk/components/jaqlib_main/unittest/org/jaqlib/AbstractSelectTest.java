@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jaqlib.query.WhereCondition;
+
 /**
  * @author Werner Fragner
  */
@@ -129,7 +131,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
     List<? extends ResultItemType> duplicatedItems = createGetCompareItems();
     ((List) duplicatedItems).addAll(items);
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     Map<Integer, ResultItemType> results = QB.select(getResultItemClass())
         .from(items).toMap(testInterface.getCompareValue());
     assertNotNull(results);
@@ -145,7 +148,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
   {
     List<SimpleTestItem> items = new ArrayList<SimpleTestItem>(0);
 
-    SimpleTestItem testInterface = QB.getMethodCallRecorder(SimpleTestItem.class);
+    SimpleTestItem testInterface = QB
+        .getMethodCallRecorder(SimpleTestItem.class);
     Map<Integer, SimpleTestItem> results = QB.select(SimpleTestItem.class)
         .from(items).toMap(testInterface.getCompareValue());
     assertNotNull(results);
@@ -153,11 +157,40 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
   }
 
 
+  public void testSelect_NullItems()
+  {
+    List<? extends ResultItemType> items = createListWithNulls();
+
+    List<? extends ResultItemType> result = QB.select(getResultItemClass())
+        .from(items).where().item().isNull().toList();
+    assertEquals(2, result.size());
+    for (SimpleTestItem item : result)
+    {
+      assertNull(item);
+    }
+  }
+
+
+  public void testSelect_NotNullItems()
+  {
+    List<? extends ResultItemType> items = createListWithNulls();
+
+    List<? extends ResultItemType> result = QB.select(getResultItemClass())
+        .from(items).where().item().isNotNull().toList();
+    assertEquals(2, result.size());
+    for (SimpleTestItem item : result)
+    {
+      assertNotNull(item);
+    }
+  }
+
+
   public void testSelect_UniqueResult_Found()
   {
     List<? extends ResultItemType> items = createGetCompareItems();
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     ResultItemType result = QB.select(getResultItemClass()).from(items).where(
         testInterface.getCompareValue()).isEqual(10).uniqueResult();
     assertNotNull(result);
@@ -169,7 +202,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
   {
     List<? extends ResultItemType> items = createGetCompareItems();
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     ResultItemType result = QB.select(getResultItemClass()).from(items).where(
         testInterface.getCompareValue()).isEqual(100).uniqueResult();
     assertNull(result);
@@ -181,7 +215,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
     List<? extends ResultItemType> items = createGetCompareItems();
     addItem(items, 10);
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     try
     {
       QB.select(SimpleTestItem.class).from(items).where(
@@ -199,7 +234,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
     List<? extends ResultItemType> items = createGetCompareItems();
     addItem(items, 5);
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     ResultItemType result = QB.select(getResultItemClass()).from(items).where(
         testInterface.getCompareValue()).isEqual(5).firstResult();
     assertNotNull(result);
@@ -211,7 +247,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
   {
     List<? extends ResultItemType> items = createGetCompareItems();
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     ResultItemType result = QB.select(getResultItemClass()).from(items).where(
         testInterface.getCompareValue()).isEqual(100).firstResult();
     assertNull(result);
@@ -223,7 +260,8 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
     List<? extends ResultItemType> items = createGetCompareItems();
     addItem(items, 5);
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     ResultItemType result = QB.select(getResultItemClass()).from(items).where(
         testInterface.getCompareValue()).isEqual(5).lastResult();
     assertNotNull(result);
@@ -235,10 +273,48 @@ public abstract class AbstractSelectTest<ResultItemType extends SimpleTestItem>
   {
     List<? extends ResultItemType> items = createGetCompareItems();
 
-    ResultItemType testInterface = QB.getMethodCallRecorder(getResultItemClass());
+    ResultItemType testInterface = QB
+        .getMethodCallRecorder(getResultItemClass());
     ResultItemType result = QB.select(getResultItemClass()).from(items).where(
         testInterface.getCompareValue()).isEqual(100).lastResult();
     assertNull(result);
+  }
+
+
+  public void testSelect_AndCondition()
+  {
+    List<SimpleTestItem> items = (List<SimpleTestItem>) createGetCompareItems();
+
+    WhereCondition<SimpleTestItem> cond1 = new WhereCondition<SimpleTestItem>()
+    {
+
+      public boolean evaluate(SimpleTestItem item)
+      {
+        if (item == null)
+        {
+          return false;
+        }
+        return item.getCompareValue() > 2;
+      }
+    };
+
+
+    WhereCondition<SimpleTestItem> cond2 = new WhereCondition<SimpleTestItem>()
+    {
+
+      public boolean evaluate(SimpleTestItem item)
+      {
+        if (item == null)
+        {
+          return false;
+        }
+        return item.getCompareValue() > 5;
+      }
+    };
+
+    QB.select(SimpleTestItem.class).from(items).where(cond1);//.and(cond2).toList
+                                                             // ();
+
   }
 
 

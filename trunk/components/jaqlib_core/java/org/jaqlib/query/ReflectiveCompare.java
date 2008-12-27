@@ -18,7 +18,7 @@ public abstract class ReflectiveCompare<T, ResultType> extends
   public ReflectiveCompare(MethodInvocation invocation, ResultType expected)
   {
     super(expected);
-    this.invocation = invocation; // Assert.notNull(invocation);
+    this.invocation = invocation;
   }
 
 

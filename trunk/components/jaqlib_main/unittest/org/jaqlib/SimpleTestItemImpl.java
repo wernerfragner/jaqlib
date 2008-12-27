@@ -35,28 +35,24 @@ public class SimpleTestItemImpl implements SimpleTestItem
   }
 
 
-  @Override
   public boolean isMatch()
   {
     return match;
   }
 
 
-  @Override
   public Object getObject()
   {
     return object;
   }
 
 
-  @Override
   public Integer getCompareValue()
   {
     return compareValue;
   }
 
 
-  @Override
   public int compareTo(SimpleTestItem o)
   {
     if (compareValue == null)

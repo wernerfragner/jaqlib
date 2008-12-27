@@ -17,7 +17,6 @@ public class IsSame<T, ResultType> extends ReflectiveCompare<T, ResultType>
   }
 
 
-  @Override
   public boolean evaluate(T item)
   {
     ResultType actual = getActualValue(item);

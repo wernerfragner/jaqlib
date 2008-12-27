@@ -37,6 +37,9 @@ public interface Query<T, DataSourceType> extends
   QueryResult<T, DataSourceType> createQueryResult();
 
 
+  <R> SingleItemWhereCondition<T, DataSourceType, R> addSimpleWhereCondition();
+
+
   <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveWhereCondition();
 
 
@@ -54,5 +57,6 @@ public interface Query<T, DataSourceType> extends
 
 
   QueryResult<T, DataSourceType> addOrWhereCondition(WhereCondition<T> condition);
+
 
 }
