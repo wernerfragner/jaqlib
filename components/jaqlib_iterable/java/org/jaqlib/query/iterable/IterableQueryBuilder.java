@@ -22,7 +22,6 @@ public class IterableQueryBuilder<T> implements QueryBuilder<T, Iterable<T>>
   }
 
 
-  @Override
   public Query<T, Iterable<T>> createQuery()
   {
     return new IterableQuery<T>(invocationRecorder);

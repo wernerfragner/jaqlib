@@ -17,7 +17,6 @@ public class IsNull<T, ResultType> extends ReflectiveCompare<T, ResultType>
   }
 
 
-  @Override
   public boolean evaluate(T item)
   {
     // if no invocation is present then item itself should be checked for null

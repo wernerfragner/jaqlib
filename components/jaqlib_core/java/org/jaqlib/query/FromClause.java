@@ -15,6 +15,12 @@ public class FromClause<T, DataSourceType> extends QueryItem<T, DataSourceType>
   }
 
 
+  /**
+   * Defines the data source for the query.
+   * 
+   * @param dataSource
+   * @return
+   */
   public WhereClause<T, DataSourceType> from(DataSourceType dataSource)
   {
     return getQuery().createWhereClause(dataSource);

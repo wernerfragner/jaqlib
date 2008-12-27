@@ -16,7 +16,6 @@ public abstract class AbstractCustomConditonTest<ResultItemType extends SimpleTe
     WhereCondition<ResultItemType> condition = new WhereCondition<ResultItemType>()
     {
 
-      @Override
       public boolean evaluate(SimpleTestItem item)
       {
         if (item == null)

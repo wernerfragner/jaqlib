@@ -18,7 +18,6 @@ public class IsNotEqual<T, ResultType> extends ReflectiveCompare<T, ResultType>
   }
 
 
-  @Override
   public boolean evaluate(T item)
   {
     ResultType actual = getActualValue(item);

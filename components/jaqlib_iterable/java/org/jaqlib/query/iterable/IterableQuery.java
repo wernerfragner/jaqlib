@@ -14,6 +14,8 @@ import org.jaqlib.query.FromClause;
 import org.jaqlib.query.Query;
 import org.jaqlib.query.QueryResult;
 import org.jaqlib.query.ReflectiveWhereCondition;
+import org.jaqlib.query.SimpleWhereCondition;
+import org.jaqlib.query.SingleItemWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.syntaxtree.And;
@@ -27,8 +29,7 @@ import org.jaqlib.util.Assert;
 /**
  * @author Werner Fragner
  * 
- * @param <T>
- *          the result item class of the query.
+ * @param <T> the result item class of the query.
  */
 public class IterableQuery<T> implements Query<T, Iterable<T>>
 {
@@ -55,14 +56,12 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
    * The item class is not used because IterableQuery only supports one item
    * class.
    */
-  @Override
   public FromClause<T, Iterable<T>> createFromClause(Class<T> resultItemClass)
   {
     return new FromClause<T, Iterable<T>>(this);
   }
 
 
-  @Override
   public FromClause<T, Iterable<T>> createFromClause(
       Class<T>... resultItemClasses)
   {
@@ -77,7 +76,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public WhereClause<T, Iterable<T>> createWhereClause(Iterable<T> dataSource)
   {
     this.dataSource = dataSource;
@@ -85,14 +83,12 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public QueryResult<T, Iterable<T>> createQueryResult()
   {
     return new QueryResult<T, Iterable<T>>(this);
   }
 
 
-  @Override
   public QueryResult<T, Iterable<T>> addWhereCondition(
       WhereCondition<T> condition)
   {
@@ -101,7 +97,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public QueryResult<T, Iterable<T>> addAndWhereCondition(
       WhereCondition<T> condition)
   {
@@ -110,7 +105,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public QueryResult<T, Iterable<T>> addOrWhereCondition(
       WhereCondition<T> condition)
   {
@@ -119,7 +113,15 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
+  public <R> SingleItemWhereCondition<T, Iterable<T>, R> addSimpleWhereCondition()
+  {
+    SimpleWhereCondition<T, Iterable<T>, R> condition = new SimpleWhereCondition<T, Iterable<T>, R>(
+        this);
+    tree.setRoot(new Condition<T>(condition));
+    return condition;
+  }
+
+
   public <R> ReflectiveWhereCondition<T, Iterable<T>, R> addReflectiveWhereCondition()
   {
     ReflectiveWhereCondition<T, Iterable<T>, R> condition = new ReflectiveWhereCondition<T, Iterable<T>, R>(
@@ -129,7 +131,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public <R> ReflectiveWhereCondition<T, Iterable<T>, R> addReflectiveAndWhereCondition()
   {
     ReflectiveWhereCondition<T, Iterable<T>, R> condition = new ReflectiveWhereCondition<T, Iterable<T>, R>(
@@ -139,7 +140,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public <R> ReflectiveWhereCondition<T, Iterable<T>, R> addReflectiveOrWhereCondition()
   {
     ReflectiveWhereCondition<T, Iterable<T>, R> condition = new ReflectiveWhereCondition<T, Iterable<T>, R>(
@@ -149,21 +149,18 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public List<T> getListResult()
   {
     return addResults(new ArrayList<T>());
   }
 
 
-  @Override
   public Vector<T> getVectorResult()
   {
     return addResults(new Vector<T>());
   }
 
 
-  @Override
   public Set<T> getSetResult()
   {
     return addResults(new HashSet<T>());
@@ -183,7 +180,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public T getFirstResult()
   {
     for (T item : dataSource)
@@ -197,7 +193,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public T getLastResult()
   {
     T foundItem = null;
@@ -212,7 +207,6 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public T getUniqueResult()
   {
     final Set<T> setResult = getSetResult();
@@ -229,14 +223,12 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
   }
 
 
-  @Override
   public <KeyType> Map<KeyType, T> getMapResult(KeyType key)
   {
     return addResults(new HashMap<KeyType, T>());
   }
 
 
-  @Override
   public <KeyType> Hashtable<KeyType, T> getHashtableResult(KeyType key)
   {
     return addResults(new Hashtable<KeyType, T>());
