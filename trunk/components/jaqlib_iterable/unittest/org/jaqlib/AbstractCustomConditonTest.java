@@ -4,19 +4,19 @@ import java.util.List;
 
 import org.jaqlib.query.WhereCondition;
 
-public abstract class AbstractCustomConditonTest<ResultElementType extends SimpleTestElement>
-    extends AbstractJaqLibTest<ResultElementType>
+public abstract class AbstractCustomConditonTest<AccountType extends Account>
+    extends AbstractJaqLibTest<AccountType>
 {
 
 
   public void testSelect_CustomAndCondition()
   {
-    List<ResultElementType> elements = createIsMatchElements();
+    List<AccountType> elements = createIsMatchElements();
 
-    WhereCondition<ResultElementType> condition = new WhereCondition<ResultElementType>()
+    WhereCondition<AccountType> condition = new WhereCondition<AccountType>()
     {
 
-      public boolean evaluate(SimpleTestElement element)
+      public boolean evaluate(Account element)
       {
         if (element == null)
         {
@@ -27,7 +27,7 @@ public abstract class AbstractCustomConditonTest<ResultElementType extends Simpl
 
     };
 
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(condition).toList();
     assertNotNull(results);
     assertEquals(1, results.size());

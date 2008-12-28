@@ -4,16 +4,18 @@ import java.util.List;
 
 
 /**
+ * Test class for proxying classes with CGLib.
+ * 
  * @author Werner Fragner
  */
-public class SelectClassTest extends AbstractSelectTest<SimpleTestElementImpl>
+public class SelectClassTest extends AbstractSelectTest<AccountImpl>
 {
 
 
   @Override
-  protected Class<SimpleTestElementImpl> getResultElementClass()
+  protected Class<AccountImpl> getAccountClass()
   {
-    return SimpleTestElementImpl.class;
+    return AccountImpl.class;
   }
 
 
@@ -32,13 +34,11 @@ public class SelectClassTest extends AbstractSelectTest<SimpleTestElementImpl>
 
   public void testCreateResultElement_Class()
   {
-    List<SimpleTestElementImpl> elements = createIsMatchElements();
+    List<AccountImpl> elements = createIsMatchElements();
 
-    SimpleTestElementImpl testInterface = QB
-        .getMethodCallRecorder(SimpleTestElementImpl.class);
-    List<SimpleTestElementImpl> results = QB
-        .select(SimpleTestElementImpl.class).from(elements).where(
-            testInterface.isMatch()).isEqual(true).toList();
+    AccountImpl testInterface = QB.getMethodCallRecorder(AccountImpl.class);
+    List<AccountImpl> results = QB.select(AccountImpl.class).from(elements)
+        .where(testInterface.isMatch()).isEqual(true).toList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));
