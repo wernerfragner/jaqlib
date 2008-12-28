@@ -193,6 +193,7 @@ public class IterableQueryBuilder
    */
   public FromClause<Object, Iterable<Object>> select()
   {
-    return createQuery().createFromClause(new Class[0]);
+    return createQuery().createFromClause(Object.class);
   }
+
 }

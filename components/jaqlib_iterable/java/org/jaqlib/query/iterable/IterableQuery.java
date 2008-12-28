@@ -53,26 +53,14 @@ public class IterableQuery<T> implements Query<T, Iterable<T>>
 
 
   /**
-   * The element class is not used because IterableQuery only supports one
-   * element class.
+   * The resultElementClass is only needed for determining the result element
+   * type.
+   * 
+   * @see Query#createFromClause(Class)
    */
   public FromClause<T, Iterable<T>> createFromClause(Class<T> resultElementClass)
   {
     return new FromClause<T, Iterable<T>>(this);
-  }
-
-
-  public FromClause<T, Iterable<T>> createFromClause(
-      Class<T>... resultElementClasses)
-  {
-    Class<T> resultElementClass = null;
-    if (resultElementClasses != null && resultElementClasses.length > 0)
-    {
-      Assert.size(1, resultElementClasses,
-          "Only one result element class is supported.");
-      resultElementClass = resultElementClasses[0];
-    }
-    return createFromClause(resultElementClass);
   }
 
 

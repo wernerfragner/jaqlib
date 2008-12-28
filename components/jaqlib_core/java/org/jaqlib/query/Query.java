@@ -21,17 +21,6 @@ public interface Query<T, DataSourceType> extends
   FromClause<T, DataSourceType> createFromClause(Class<T> resultElementClass);
 
 
-  /**
-   * Create a from clause with multiple elements in the select clause (=
-   * multiple result element classes).
-   * 
-   * @param resultElementClasses
-   * @return an object representing a from clause.
-   */
-  FromClause<T, DataSourceType> createFromClause(
-      Class<T>... resultElementClasses);
-
-
   WhereClause<T, DataSourceType> createWhereClause(DataSourceType dataSource);
 
 
