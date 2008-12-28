@@ -1,36 +1,129 @@
 package org.jaqlib.query;
 
-
+/**
+ * @author Werner Fragner
+ * 
+ * @param <T>
+ * @param <DataSourceType>
+ * @param <ResultType>
+ */
 public interface ComparableWhereCondition<T, DataSourceType, ResultType>
 {
 
+  /**
+   * Defines the condition that the result of a recorded method call must be
+   * null.
+   * 
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
   QueryResult<T, DataSourceType> isNull();
 
 
+  /**
+   * Defines the condition that the result of a recorded method call must not be
+   * null.
+   * 
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
   QueryResult<T, DataSourceType> isNotNull();
 
 
+  /**
+   * Defines the condition that the result of a recorded method call must be
+   * equal to the given value.
+   * 
+   * @param expected the value that should match the result of the recorded
+   *          method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
   QueryResult<T, DataSourceType> isEqual(ResultType expected);
 
 
-  QueryResult<T, DataSourceType> isGreaterThan(ResultType expected);
-
-
-  QueryResult<T, DataSourceType> isGreaterThanOrEqualTo(ResultType expected);
-
-
-  QueryResult<T, DataSourceType> isSmallerThan(ResultType expected);
-
-
-  QueryResult<T, DataSourceType> isSmallerThanOrEqualTo(ResultType expected);
-
-
+  /**
+   * Defines the condition that the result of a recorded method call must be not
+   * equal to the given value.
+   * 
+   * @param expected the value that should not match the result of the recorded
+   *          method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
   QueryResult<T, DataSourceType> isNotEqual(ResultType expected);
 
 
+  /**
+   * Defines the condition that the result of a recorded method call must be the
+   * same as the given value (object identity is tested).
+   * 
+   * @param expected the value that should match the result of the recorded
+   *          method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
   QueryResult<T, DataSourceType> isSame(ResultType expected);
 
 
+  /**
+   * Defines the condition that the result of a recorded method call must not be
+   * the same as the given value (object identity is tested).
+   * 
+   * @param expected the value that should not match the result of the recorded
+   *          method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
   QueryResult<T, DataSourceType> isNotSame(ResultType expected);
+
+
+  /**
+   * Defines the condition that the result of a recorded method call must be
+   * greater than the given value.
+   * 
+   * @param expected the value that should smaller than or equal to the result
+   *          of the recorded method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
+  QueryResult<T, DataSourceType> isGreaterThan(ResultType expected);
+
+
+  /**
+   * Defines the condition that the result of a recorded method call must be
+   * greater than or equal to the given value.
+   * 
+   * @param expected the value that should smaller than the result of the
+   *          recorded method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
+  QueryResult<T, DataSourceType> isGreaterThanOrEqualTo(ResultType expected);
+
+
+  /**
+   * Defines the condition that the result of a recorded method call must be
+   * smaller than the given value.
+   * 
+   * @param expected the value that should greater than or equal to the result
+   *          of the recorded method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
+  QueryResult<T, DataSourceType> isSmallerThan(ResultType expected);
+
+
+  /**
+   * Defines the condition that the result of a recorded method call must be
+   * smaller than or equal to the given value.
+   * 
+   * @param expected the value that should greater than the result of the
+   *          recorded method call.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
+  QueryResult<T, DataSourceType> isSmallerThanOrEqualTo(ResultType expected);
+
 
 }

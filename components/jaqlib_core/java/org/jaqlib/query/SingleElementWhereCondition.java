@@ -14,7 +14,7 @@ public interface SingleElementWhereCondition<T, DataSourceType, ResultType>
    * This method represents a where condition on a single element of the data
    * source.
    * 
-   * @return an object for defining the condition.
+   * @return an object to specify the condition.
    */
   ComparableWhereCondition<T, DataSourceType, ResultType> element();
 

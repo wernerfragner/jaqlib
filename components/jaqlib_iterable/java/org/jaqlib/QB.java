@@ -32,10 +32,11 @@ import org.jaqlib.util.Assert;
  * <p>
  * The main entry point of JaQLib for {@link Iterable} support. QB stands for
  * QueryBuilder. It provides methods for building queries (
- * {@link #select(Class)}, {@link #select(Class...)}) and adapting the query
- * building process ( {@link #setClassLoader(ClassLoader)}.
+ * {@link #select(Class)}, {@link #select()}) and adapting the query building
+ * process ( {@link #setClassLoader(ClassLoader)}).</br> The Method
  * {@link #getMethodCallRecorder(Class)} can be used to define a WHERE condition
- * by calling a method on a 'dummy' collection element.
+ * where a return value of method call is compared to an other value (see also
+ * the first example below).
  * </p>
  * <p>
  * <b>Usage examples:</b><br>
@@ -45,7 +46,7 @@ import org.jaqlib.util.Assert;
  * // create a 'dummy' object for recording a method call for the WHERE clause
  * Account account = QB.getMethodCallRecorder(Account.class);
  * 
- * // select all accounts with a balance that is greater than 5000
+ * // select all accounts with a balance greater than 5000
  * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where(
  *     account.getBalance()).isGreaterThan(5000).toList();
  * </pre>
@@ -91,6 +92,14 @@ import org.jaqlib.util.Assert;
  * 
  * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where()
  *     .element().isSmallerThan(spec).toList();
+ * </pre>
+ * 
+ * <i>Example using a Map as result:</i>
+ * 
+ *<pre>
+ * Account account = QB.getMethodCallRecorder(Account.class);
+ * Map&lt;String, Account&gt; results = QB.select(Account.class).from(accounts).toMap(
+ *     account.getId());
  * </pre>
  * 
  * </p>
@@ -144,9 +153,9 @@ public class QB
   /**
    * Selects a certain set of objects in a given collection. The collection that
    * should be used must be specified in the returned {@link FromClause}. The
-   * {@link FromClause} hereby returns a {@link WhereClause} with which an
-   * arbitrary WHERE condition can be specified. This WHERE condition supports
-   * AND, OR, the evaluation of user-defined {@link WhereCondition}s and
+   * {@link FromClause} hereby returns a {@link WhereClause} that can be used to
+   * specify an arbitrary WHERE condition. This WHERE condition supports AND and
+   * OR connectors, the evaluation of user-defined {@link WhereCondition}s and
    * user-defined {@link ReflectiveWhereCondition}s.
    * 
    * @param <T> the collection element type.
