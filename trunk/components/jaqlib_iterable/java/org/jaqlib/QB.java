@@ -19,15 +19,17 @@ import org.jaqlib.query.FromClause;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.iterable.IterableQuery;
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.RecordingProxy;
-import org.jaqlib.util.Assert;
 
 
 /**
  * QB stands for QueryBuilder (see {@link IterableQueryBuilder} for further
  * information).
+ * 
+ * <p>
+ * This class provides static helper methods to easily execute queries against
+ * data sources that implement the {@link Iterable} interface. <br>
+ * Examples are given here: {@link IterableQueryBuilder}.
+ * </p>
  * 
  * @see IterableQueryBuilder
  * @author Werner Fragner
@@ -35,18 +37,10 @@ import org.jaqlib.util.Assert;
 public class QB
 {
 
-  private static final ThreadLocal<MethodCallRecorder> methodCallRecorder = new ThreadLocal<MethodCallRecorder>();
-  private static final ThreadLocal<ClassLoader> classLoader = new ThreadLocal<ClassLoader>();
-
-
   /**
-   * Initializes this class with the a default class loader.
+   * Singleton instance.
    */
-  static
-  {
-    // set default class loader
-    classLoader.set(QB.class.getClassLoader());
-  }
+  private static final IterableQueryBuilder QUERYBUILDER = new IterableQueryBuilder();
 
 
   /**
@@ -57,8 +51,7 @@ public class QB
    */
   public static void setClassLoader(ClassLoader classLoader)
   {
-    Assert.notNull(classLoader);
-    QB.classLoader.set(classLoader);
+    QUERYBUILDER.setClassLoader(classLoader);
   }
 
 
@@ -70,9 +63,7 @@ public class QB
    */
   public static <T> T getMethodCallRecorder(Class<T> resultElementClass)
   {
-    RecordingProxy<T> proxy = new RecordingProxy<T>(classLoader.get());
-    methodCallRecorder.set(proxy.getInvocationRecorder());
-    return proxy.getProxy(resultElementClass);
+    return QUERYBUILDER.getMethodCallRecorder(resultElementClass);
   }
 
 
@@ -92,7 +83,7 @@ public class QB
   public static <T> FromClause<T, Iterable<T>> select(
       Class<T> resultElementClass)
   {
-    return QB.<T> createQuery().createFromClause(resultElementClass);
+    return QUERYBUILDER.select(resultElementClass);
   }
 
 
@@ -104,22 +95,8 @@ public class QB
    */
   public static FromClause<Object, Iterable<Object>> select()
   {
-    return QB.createQuery().createFromClause(new Class[0]);
+    return QUERYBUILDER.select();
   }
 
-
-  private static <T> IterableQuery<T> createQuery()
-  {
-    return getQueryBuilder().createQuery();
-  }
-
-
-  /**
-   * @return a new {@link IterableQueryBuilder} instance.
-   */
-  private static IterableQueryBuilder getQueryBuilder()
-  {
-    return new IterableQueryBuilder(methodCallRecorder.get());
-  }
 
 }
