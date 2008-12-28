@@ -6,22 +6,23 @@ import java.lang.reflect.Proxy;
 import org.jaqlib.reflect.RecordingInvocationHandler;
 
 /**
+ * Test class for proxying interfaces with JDK dynamic proxy mechanism.
+ * 
  * @author Werner Fragner
  */
-public class SelectInterfaceTest extends AbstractSelectTest<SimpleTestElement>
+public class SelectInterfaceTest extends AbstractSelectTest<Account>
 {
 
   @Override
-  protected Class<SimpleTestElement> getResultElementClass()
+  protected Class<Account> getAccountClass()
   {
-    return SimpleTestElement.class;
+    return Account.class;
   }
 
 
   public void testCreateResultElement_Interface()
   {
-    SimpleTestElement testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
+    Account testInterface = QB.getMethodCallRecorder(getAccountClass());
     assertNotNull(testInterface);
 
     InvocationHandler iHandler = Proxy.getInvocationHandler(testInterface);
@@ -33,7 +34,7 @@ public class SelectInterfaceTest extends AbstractSelectTest<SimpleTestElement>
   {
     try
     {
-      QB.getMethodCallRecorder(SimpleTestElementImpl.class);
+      QB.getMethodCallRecorder(AccountImpl.class);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException iae)

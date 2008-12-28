@@ -8,22 +8,22 @@ import junit.framework.TestCase;
 /**
  * @author Werner Fragner
  * 
- * @param <ResultElementType>
+ * @param <AccountType>
  */
 @SuppressWarnings("unchecked")
-public abstract class AbstractJaqLibTest<ResultElementType extends SimpleTestElement>
-    extends TestCase
+public abstract class AbstractJaqLibTest<AccountType extends Account> extends
+    TestCase
 {
 
-  protected abstract Class<ResultElementType> getResultElementClass();
+  protected abstract Class<AccountType> getAccountClass();
 
 
-  public List<ResultElementType> createIsMatchElements()
+  public List<AccountType> createIsMatchElements()
   {
-    SimpleTestElementImpl testClass1 = new SimpleTestElementImpl(false);
-    SimpleTestElementImpl testClass2 = new SimpleTestElementImpl(true);
-    SimpleTestElementImpl testClass3 = null;
-    SimpleTestElementImpl testClass4 = new SimpleTestElementImpl(false);
+    AccountImpl testClass1 = new AccountImpl(false);
+    AccountImpl testClass2 = new AccountImpl(true);
+    AccountImpl testClass3 = null;
+    AccountImpl testClass4 = new AccountImpl(false);
 
     List elements = new ArrayList();
     elements.add(testClass1);
@@ -34,12 +34,12 @@ public abstract class AbstractJaqLibTest<ResultElementType extends SimpleTestEle
   }
 
 
-  public List<ResultElementType> createGetObjectElements()
+  public List<AccountType> createGetObjectElements()
   {
-    SimpleTestElementImpl testClass1 = new SimpleTestElementImpl(new Object());
-    SimpleTestElementImpl testClass2 = new SimpleTestElementImpl(new Object());
-    SimpleTestElementImpl testClass3 = null;
-    SimpleTestElementImpl testClass4 = new SimpleTestElementImpl(null);
+    AccountImpl testClass1 = new AccountImpl(new Object());
+    AccountImpl testClass2 = new AccountImpl(new Object());
+    AccountImpl testClass3 = null;
+    AccountImpl testClass4 = new AccountImpl(null);
 
     List elements = new ArrayList();
     elements.add(testClass1);
@@ -50,13 +50,13 @@ public abstract class AbstractJaqLibTest<ResultElementType extends SimpleTestEle
   }
 
 
-  public List<ResultElementType> createGetCompareElements()
+  public List<AccountType> createGetCompareElements()
   {
-    SimpleTestElementImpl testClass1 = new SimpleTestElementImpl(1);
-    SimpleTestElementImpl testClass2 = new SimpleTestElementImpl(10);
-    SimpleTestElementImpl testClass3 = new SimpleTestElementImpl(null);
-    SimpleTestElementImpl testClass4 = null;
-    SimpleTestElementImpl testClass5 = new SimpleTestElementImpl(5);
+    AccountImpl testClass1 = new AccountImpl(1);
+    AccountImpl testClass2 = new AccountImpl(10);
+    AccountImpl testClass3 = new AccountImpl(null);
+    AccountImpl testClass4 = null;
+    AccountImpl testClass5 = new AccountImpl(5);
 
     List elements = new ArrayList();
     elements.add(testClass1);
@@ -68,20 +68,20 @@ public abstract class AbstractJaqLibTest<ResultElementType extends SimpleTestEle
   }
 
 
-  public List<ResultElementType> createListWithNulls()
+  public List<AccountType> createListWithNulls()
   {
     List elements = new ArrayList();
-    elements.add(new SimpleTestElementImpl());
+    elements.add(new AccountImpl());
     elements.add(null);
     elements.add(null);
-    elements.add(new SimpleTestElementImpl());
+    elements.add(new AccountImpl());
     return elements;
   }
 
 
-  public void addElement(List elements, int compareValue)
+  public void addElement(List elements, int balance)
   {
-    elements.add(new SimpleTestElementImpl(compareValue));
+    elements.add(new AccountImpl(balance));
   }
 
 }

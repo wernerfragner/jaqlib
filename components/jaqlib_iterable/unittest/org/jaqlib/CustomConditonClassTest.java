@@ -4,13 +4,13 @@ package org.jaqlib;
  * @author Werner Fragner
  */
 public class CustomConditonClassTest extends
-    AbstractCustomConditonTest<SimpleTestElementImpl>
+    AbstractCustomConditonTest<AccountImpl>
 {
 
   @Override
-  protected Class<SimpleTestElementImpl> getResultElementClass()
+  protected Class<AccountImpl> getAccountClass()
   {
-    return SimpleTestElementImpl.class;
+    return AccountImpl.class;
   }
 
 

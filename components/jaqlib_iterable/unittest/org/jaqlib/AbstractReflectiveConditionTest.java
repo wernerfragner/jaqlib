@@ -2,20 +2,20 @@ package org.jaqlib;
 
 import java.util.List;
 
-public abstract class AbstractReflectiveConditionTest<ResultElementType extends SimpleTestElement>
-    extends AbstractJaqLibTest<ResultElementType>
+public abstract class AbstractReflectiveConditionTest<AccountType extends Account>
+    extends AbstractJaqLibTest<AccountType>
 {
 
-  protected abstract ResultElementType createElement(int compareValue);
+  protected abstract AccountType createAccount(int balance);
 
 
   public void testSelect_ReflectiveCondition_IsEqual()
   {
-    List<ResultElementType> elements = createIsMatchElements();
+    List<AccountType> elements = createIsMatchElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface.isMatch()).isEqual(true).toList();
     assertNotNull(results);
     assertEquals(1, results.size());
@@ -25,13 +25,13 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
 
   public void testSelect_ReflectiveCondition_IsGreaterThan()
   {
-    ResultElementType element = createElement(5);
+    AccountType element = createAccount(5);
 
-    List<ResultElementType> elements = createGetCompareElements();
+    List<AccountType> elements = createGetCompareElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface).isGreaterThan(element).toList();
     assertNotNull(results);
     assertEquals(1, results.size());
@@ -41,13 +41,13 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
 
   public void testSelect_ReflectiveCondition_IsGreaterThanOrEqualTo()
   {
-    ResultElementType element = createElement(5);
+    AccountType element = createAccount(5);
 
-    List<ResultElementType> elements = createGetCompareElements();
+    List<AccountType> elements = createGetCompareElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface).isGreaterThanOrEqualTo(element).toList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -58,13 +58,13 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
 
   public void testSelect_ReflectiveCondition_IsSmallerThan()
   {
-    ResultElementType element = createElement(5);
+    AccountType element = createAccount(5);
 
-    List<ResultElementType> elements = createGetCompareElements();
+    List<AccountType> elements = createGetCompareElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface).isSmallerThan(element).toList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -75,13 +75,13 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
 
   public void testSelect_ReflectiveCondition_IsSmallerThanOrEqualTo()
   {
-    ResultElementType element = createElement(5);
+    AccountType element = createAccount(5);
 
-    List<ResultElementType> elements = createGetCompareElements();
+    List<AccountType> elements = createGetCompareElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface).isSmallerThanOrEqualTo(element).toList();
     assertNotNull(results);
     assertEquals(3, results.size());
@@ -96,11 +96,11 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
    */
   public void testSelect_ReflectiveCondition_IsNull1()
   {
-    List<ResultElementType> elements = createGetObjectElements();
+    List<AccountType> elements = createGetObjectElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface.getObject()).isNull().toList();
     assertNotNull(results);
     assertEquals(1, results.size());
@@ -113,11 +113,11 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
    */
   public void testSelect_ReflectiveCondition_IsNull2()
   {
-    List<ResultElementType> elements = createGetObjectElements();
+    List<AccountType> elements = createGetObjectElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface).isNull().toList();
     assertNotNull(results);
     assertEquals(1, results.size());
@@ -130,11 +130,11 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
    */
   public void testSelect_ReflectiveCondition_IsNotNull1()
   {
-    List<ResultElementType> elements = createGetObjectElements();
+    List<AccountType> elements = createGetObjectElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface.getObject()).isNotNull().toList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -148,11 +148,11 @@ public abstract class AbstractReflectiveConditionTest<ResultElementType extends 
    */
   public void testSelect_ReflectiveCondition_IsNotNull2()
   {
-    List<ResultElementType> elements = createGetObjectElements();
+    List<AccountType> elements = createGetObjectElements();
 
-    ResultElementType testInterface = QB
-        .getMethodCallRecorder(getResultElementClass());
-    List<ResultElementType> results = QB.select(getResultElementClass()).from(
+    AccountType testInterface = QB
+        .getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = QB.select(getAccountClass()).from(
         elements).where(testInterface).isNotNull().toList();
     assertNotNull(results);
     assertEquals(3, results.size());

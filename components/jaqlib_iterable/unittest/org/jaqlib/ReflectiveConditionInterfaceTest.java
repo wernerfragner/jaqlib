@@ -5,20 +5,20 @@ package org.jaqlib;
  * @author Werner Fragner
  */
 public class ReflectiveConditionInterfaceTest extends
-    AbstractReflectiveConditionTest<SimpleTestElement>
+    AbstractReflectiveConditionTest<Account>
 {
 
   @Override
-  protected Class<SimpleTestElement> getResultElementClass()
+  protected Class<Account> getAccountClass()
   {
-    return SimpleTestElement.class;
+    return Account.class;
   }
 
 
   @Override
-  protected SimpleTestElement createElement(int compareValue)
+  protected Account createAccount(int balance)
   {
-    return new SimpleTestElementImpl(compareValue);
+    return new AccountImpl(balance);
   }
 
 
