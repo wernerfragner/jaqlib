@@ -32,6 +32,7 @@
 	<property name="jaqlib_core.base" value="${build.source}/jaqlib_core" />
 	<property name="jaqlib_core.source" value="${jaqlib_core.base}/java" />
 	<property name="jaqlib_core.unittest" value="${jaqlib_core.base}/unittest" />
+	<property name="jaqlib_core.lib" value="${jaqlib_core.base}/lib" />
 
 	<property name="jaqlib_iterable.base" value="${build.source}/jaqlib_iterable" />
 	<property name="jaqlib_iterable.source" value="${jaqlib_iterable.base}/java" />
@@ -43,11 +44,11 @@
 
 	
 	<path id="jaqlib.libs">
-		<fileset file="${jaqlib_main.lib}/cglib/cglib-nodep-2.1_3.jar" />
+		<fileset file="${jaqlib_core.lib}/cglib/cglib-nodep-2.1_3.jar" />
 	</path>
 	
 	<path id="jaqlib.unittest.libs">
-		<fileset file="${jaqlib_main.lib}/junit/junit.jar" />
+		<fileset file="${jaqlib_core.lib}/junit/junit.jar" />
 	</path>	
 	
 	<path id="jaqlib.components">
@@ -218,6 +219,10 @@
 		<copy toDir="${dist.dir}/${version.fullString}/reports/unittest" >
 			<fileset dir="${build.temp}/unittest_reports/jaqlib" />
 		</copy>
+    <mkdir dir="${dist.dir}/${version.fullString}/reports/javadoc" />
+    <copy toDir="${dist.dir}/${version.fullString}/reports/javadoc" >
+      <fileset dir="${build.temp}/javadoc/jaqlib" />
+    </copy>		
 	</target>
 	
 	
