@@ -13,97 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 package org.jaqlib;
 
 import org.jaqlib.query.FromClause;
-import org.jaqlib.query.Query;
-import org.jaqlib.query.QueryBuilder;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.iterable.IterableQueryBuilder;
+import org.jaqlib.query.iterable.IterableQuery;
 import org.jaqlib.reflect.MethodCallRecorder;
 import org.jaqlib.reflect.RecordingProxy;
 import org.jaqlib.util.Assert;
 
 
 /**
- * <p>
- * The main entry point of JaQLib for {@link Iterable} support. QB stands for
- * QueryBuilder. It provides methods for building queries (
- * {@link #select(Class)}, {@link #select()}) and adapting the query building
- * process ( {@link #setClassLoader(ClassLoader)}).</br> The Method
- * {@link #getMethodCallRecorder(Class)} can be used to define a WHERE condition
- * where a return value of method call is compared to an other value (see also
- * the first example below).
- * </p>
- * <p>
- * <b>Usage examples:</b><br>
- * <i>Example with method call recording:</i>
+ * QB stands for QueryBuilder (see {@link IterableQueryBuilder} for further
+ * information).
  * 
- * <pre>
- * // create a 'dummy' object for recording a method call for the WHERE clause
- * Account account = QB.getMethodCallRecorder(Account.class);
- * 
- * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where(
- *     account.getBalance()).isGreaterThan(5000).toList();
- * </pre>
- * 
- * <i>Example with user-defined WHERE conditions:</i>
- * 
- * <pre>
- * // create condition for negative balances
- * WhereCondition deptCondition = new WhereCondition() {
- * 
- *   public boolean evaluate(Account account) {
- *     return (account.getBalance() &lt; 0);
- *   }
- * 
- * };
- * 
- * // create condition for accounts with poor credit rating
- * WhereCondition ratingCondition = new WhereCondition() {
- * 
- *   public boolean evaluate(Account account) {
- *     return (account.getCreditRating() == CreditRating.POOR);
- *   }
- * }
- * 
- * // execute query with these conditions 
- * List&lt;Account&gt; highRiskAccounts = QB.select(Account.class).from(accounts)
- *     .where(deptCondition).and(ratingCondition).toList();
- * </pre>
- * 
- * <i>Example for filtering out null elements:</i>
- * 
- * <pre>
- * List&lt;Account&gt; notNullAccounts = QB.select(Account.class).from(accounts).where()
- *     .element().isNotNull().toList();
- * </pre>
- * 
- * <i>Example for using {@link Comparable} elements:</i>
- * 
- * <pre>
- * // Account implements the Comparable interface; the balance field is used for comparing two accounts
- * Account spec = new Account();
- * account.setBalance(5000);
- * 
- * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where()
- *     .element().isSmallerThan(spec).toList();
- * </pre>
- * 
- * <i>Example using a Map as result:</i>
- * 
- *<pre>
- * Account account = QB.getMethodCallRecorder(Account.class);
- * Map&lt;String, Account&gt; results = QB.select(Account.class).from(accounts).toMap(
- *     account.getId());
- * </pre>
- * 
- * </p>
- * 
+ * @see IterableQueryBuilder
  * @author Werner Fragner
  */
 public class QB
@@ -166,9 +92,7 @@ public class QB
   public static <T> FromClause<T, Iterable<T>> select(
       Class<T> resultElementClass)
   {
-    QueryBuilder<T, Iterable<T>> queryBuilder = getQueryBuilder();
-    Query<T, Iterable<T>> query = queryBuilder.createQuery();
-    return query.createFromClause(resultElementClass);
+    return QB.<T> createQuery().createFromClause(resultElementClass);
   }
 
 
@@ -176,24 +100,26 @@ public class QB
    * This method has basically the same functionality as {@link #select(Class)}.
    * But this method is not type safe regarding the returned result.
    * 
-   * @param <T> the collection element type.
    * @return the FROM clause to specify the source collection of the query.
    */
-  public static <T> FromClause<T, Iterable<T>> select()
+  public static FromClause<Object, Iterable<Object>> select()
   {
-    QueryBuilder<T, Iterable<T>> queryBuilder = getQueryBuilder();
-    Query<T, Iterable<T>> query = queryBuilder.createQuery();
-    return query.createFromClause(new Class[0]);
+    return QB.createQuery().createFromClause(new Class[0]);
+  }
+
+
+  private static <T> IterableQuery<T> createQuery()
+  {
+    return getQueryBuilder().createQuery();
   }
 
 
   /**
-   * @param <T> the collection element type.
-   * @return a new {@link QueryBuilder} instance.
+   * @return a new {@link IterableQueryBuilder} instance.
    */
-  private static <T> QueryBuilder<T, Iterable<T>> getQueryBuilder()
+  private static IterableQueryBuilder getQueryBuilder()
   {
-    return new IterableQueryBuilder<T>(methodCallRecorder.get());
+    return new IterableQueryBuilder(methodCallRecorder.get());
   }
 
 }
