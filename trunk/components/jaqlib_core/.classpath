@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="unittest"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_util"/>
-	<classpathentry exported="true" kind="lib" path="/vendor/cglib/cglib-nodep-2.1_3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/vendor/junit/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="/jaqlib_vendor/cglib/cglib-nodep-2.1_3.jar" sourcepath="/jaqlib_vendor/cglib/cglib-src-2.1_3.jar"/>
+	<classpathentry exported="true" kind="lib" path="/jaqlib_vendor/junit/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
