@@ -18,71 +18,40 @@ public abstract class AbstractJaqLibTest<AccountType extends Account> extends
   protected abstract Class<AccountType> getAccountClass();
 
 
-  public List<AccountType> createIsMatchElements()
+  public List<AccountType> createTestAccounts()
   {
-    AccountImpl testClass1 = new AccountImpl(false);
-    AccountImpl testClass2 = new AccountImpl(true);
-    AccountImpl testClass3 = null;
-    AccountImpl testClass4 = new AccountImpl(false);
-
-    List elements = new ArrayList();
-    elements.add(testClass1);
-    elements.add(testClass2);
-    elements.add(testClass3);
-    elements.add(testClass4);
-    return elements;
+    List accounts = new ArrayList();
+    accounts.add(createAccount(1, "huber"));
+    accounts.add(createAccount(10, "maier"));
+    accounts.add(createAccount(null, null));
+    accounts.add(null);
+    accounts.add(createAccount(5));
+    accounts.add(null);
+    return accounts;
   }
 
 
-  public List<AccountType> createGetObjectElements()
+  public AccountImpl addElement(List elements, int balance)
   {
-    AccountImpl testClass1 = new AccountImpl(new Object());
-    AccountImpl testClass2 = new AccountImpl(new Object());
-    AccountImpl testClass3 = null;
-    AccountImpl testClass4 = new AccountImpl(null);
-
-    List elements = new ArrayList();
-    elements.add(testClass1);
-    elements.add(testClass2);
-    elements.add(testClass3);
-    elements.add(testClass4);
-    return elements;
+    AccountImpl account = createAccount(balance);
+    elements.add(account);
+    return account;
   }
 
 
-  public List<AccountType> createGetCompareElements()
+  protected AccountImpl createAccount(Integer balance)
   {
-    AccountImpl testClass1 = new AccountImpl(1);
-    AccountImpl testClass2 = new AccountImpl(10);
-    AccountImpl testClass3 = new AccountImpl(null);
-    AccountImpl testClass4 = null;
-    AccountImpl testClass5 = new AccountImpl(5);
-
-    List elements = new ArrayList();
-    elements.add(testClass1);
-    elements.add(testClass2);
-    elements.add(testClass3);
-    elements.add(testClass4);
-    elements.add(testClass5);
-    return elements;
+    AccountImpl account = new AccountImpl();
+    account.setBalance(balance);
+    return account;
   }
 
 
-  public List<AccountType> createListWithNulls()
+  protected AccountImpl createAccount(Integer balance, String lastName)
   {
-    List elements = new ArrayList();
-    elements.add(new AccountImpl(1));
-    elements.add(null);
-    elements.add(null);
-    elements.add(new AccountImpl(10));
-    elements.add(new AccountImpl(5));
-    return elements;
-  }
-
-
-  public void addElement(List elements, int balance)
-  {
-    elements.add(new AccountImpl(balance));
+    AccountImpl account = createAccount(balance);
+    account.setLastName(lastName);
+    return account;
   }
 
 }

@@ -11,7 +11,7 @@ public class JaqLibInterfaceTests
   {
     TestSuite suite = new TestSuite("Test for org.jaqlib");
     // $JUnit-BEGIN$
-    suite.addTestSuite(SelectInterfaceTest.class);
+    suite.addTestSuite(IterableInterfaceTest.class);
     suite.addTestSuite(CustomConditonInterfaceTest.class);
     suite.addTestSuite(ReflectiveConditionInterfaceTest.class);
     // $JUnit-END$

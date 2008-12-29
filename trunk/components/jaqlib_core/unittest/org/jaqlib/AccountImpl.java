@@ -6,35 +6,13 @@ package org.jaqlib;
 public class AccountImpl implements Account
 {
 
-  private final Long id = Id.getNext();
+  private Long id = Id.getNext();
+
+  private String lastName;
+  private String firstName;
+
   private Integer balance = 0;
-
-  private boolean match = false;
-  private Object object = null;
-
-
-  public AccountImpl()
-  {
-  }
-
-
-  public AccountImpl(boolean match)
-  {
-    this.match = match;
-  }
-
-
-  public AccountImpl(Integer balance)
-  {
-    this.balance = balance;
-  }
-
-
-  public AccountImpl(Object object)
-  {
-    this(false);
-    this.object = object;
-  }
+  private int creditRating = 0;
 
 
   public Long getId()
@@ -43,21 +21,57 @@ public class AccountImpl implements Account
   }
 
 
-  public boolean isMatch()
+  public void setId(Long id)
   {
-    return match;
+    this.id = id;
   }
 
 
-  public Object getObject()
+  public void setBalance(Integer balance)
   {
-    return object;
+    this.balance = balance;
   }
 
 
   public Integer getBalance()
   {
     return balance;
+  }
+
+
+  public String getLastName()
+  {
+    return lastName;
+  }
+
+
+  public void setLastName(String lastName)
+  {
+    this.lastName = lastName;
+  }
+
+
+  public String getFirstName()
+  {
+    return firstName;
+  }
+
+
+  public void setFirstName(String firstName)
+  {
+    this.firstName = firstName;
+  }
+
+
+  public int getCreditRating()
+  {
+    return creditRating;
+  }
+
+
+  public void setCreditRating(int creditRating)
+  {
+    this.creditRating = creditRating;
   }
 
 
@@ -74,8 +88,7 @@ public class AccountImpl implements Account
   @Override
   public String toString()
   {
-    return getClass().getName() + ": id=" + id + "; balance=" + balance
-        + "; match=" + match + "; object=" + object;
+    return getClass().getName() + ": id=" + id + "; balance=" + balance;
   }
 
 

@@ -6,17 +6,18 @@ package org.jaqlib;
 public interface Account extends Comparable<Account>
 {
 
-
   Long getId();
 
 
   Integer getBalance();
 
 
-  boolean isMatch();
+  String getLastName();
 
 
-  Object getObject();
+  String getFirstName();
 
+
+  int getCreditRating();
 
 }

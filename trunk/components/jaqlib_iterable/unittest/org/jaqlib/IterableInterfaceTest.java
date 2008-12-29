@@ -10,7 +10,7 @@ import org.jaqlib.reflect.RecordingInvocationHandler;
  * 
  * @author Werner Fragner
  */
-public class SelectInterfaceTest extends AbstractSelectTest<Account>
+public class IterableInterfaceTest extends AbstractIterableTest<Account>
 {
 
   @Override
