@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.junit.launchconfig">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/jaqlib_iterable/unittest/org/jaqlib/JaqLibInterfaceTests.java"/>
+<listEntry value="/jaqlib_main/unittest/org/jaqlib/JaqLibInterfaceTests.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -20,5 +20,5 @@
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.jaqlib.JaqLibInterfaceTests"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="jaqlib_iterable"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="jaqlib_main"/>
 </launchConfiguration>
