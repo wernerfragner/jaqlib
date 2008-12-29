@@ -13,12 +13,12 @@ import javax.sql.DataSource;
 import junit.framework.TestCase;
 
 import org.jaqlib.db.DbSelect;
-import org.jaqlib.db.DbSelectResult;
+import org.jaqlib.db.PrimitiveDbSelectResult;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 
 
-public class SingleColumnDatabaseQBTest extends TestCase
+public class PrimitiveDatabaseQBTest extends TestCase
 {
 
   private DatabaseSetup dbSetup;
@@ -37,7 +37,7 @@ public class SingleColumnDatabaseQBTest extends TestCase
 
     final String sql = "SELECT lastname FROM APP.ACCOUNT";
     DbSelect selectDefinition = Db.getSelect(getDataSource(), sql);
-    DbSelectResult<String> resultDefinition = Db.getSingleResult(1);
+    PrimitiveDbSelectResult<String> resultDefinition = Db.getPrimitiveResult(1);
 
     where = DatabaseQB.select(resultDefinition).from(selectDefinition);
   }

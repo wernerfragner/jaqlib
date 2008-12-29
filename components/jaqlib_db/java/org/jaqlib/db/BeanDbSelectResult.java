@@ -8,11 +8,14 @@ import org.jaqlib.util.Assert;
 import org.jaqlib.util.ExceptionUtil;
 
 /**
- * @author Werner Fragner
+ * Defines a mapping between several database columns to the fields of a Java
+ * bean. This class also allows nested Java beans by accepting
+ * {@link DbSelectResult} in the {@link #addResult(DbSelectResult)} method.
  * 
- * @param <T>
+ * @author Werner Fragner
+ * @param <T> the Java bean type of the mapping.
  */
-public class ComplexDbSelectResult<T> extends DbSelectResult<T> implements
+public class BeanDbSelectResult<T> extends DbSelectResult<T> implements
     Iterable<DbSelectResult<?>>
 {
 
@@ -20,12 +23,18 @@ public class ComplexDbSelectResult<T> extends DbSelectResult<T> implements
   private final Class<T> beanClass;
 
 
-  public ComplexDbSelectResult(Class<T> beanClass)
+  /**
+   * @param beanClass a not null class of the bean this mapping belongs to.
+   */
+  public BeanDbSelectResult(Class<T> beanClass)
   {
     this.beanClass = Assert.notNull(beanClass);
   }
 
 
+  /**
+   * @param result a not null mapping (primitive or a bean mapping).
+   */
   public void addResult(DbSelectResult<?> result)
   {
     Assert.notNull(result);
@@ -33,12 +42,19 @@ public class ComplexDbSelectResult<T> extends DbSelectResult<T> implements
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public Iterator<DbSelectResult<?>> iterator()
   {
     return results.iterator();
   }
 
 
+  /**
+   * @return a new Java bean instance for this mapping.
+   * @throws RuntimeException if the bean instance cannot be created.
+   */
   public T newBeanInstance()
   {
     try

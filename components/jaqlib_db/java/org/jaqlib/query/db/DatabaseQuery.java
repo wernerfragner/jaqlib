@@ -13,7 +13,7 @@ import org.jaqlib.util.reflect.MethodCallRecorder;
 /**
  * @author Werner Fragner
  * 
- * @param <T>
+ * @param <T> the result element class of the query.
  */
 public class DatabaseQuery<T> extends AbstractQuery<T, DbSelect>
 {

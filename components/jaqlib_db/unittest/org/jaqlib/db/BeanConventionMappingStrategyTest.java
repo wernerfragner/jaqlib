@@ -10,7 +10,7 @@ import org.jaqlib.AccountImpl;
 public class BeanConventionMappingStrategyTest extends TestCase
 {
 
-  private BeanConventionMappingStrategy strategy;
+  private BeanConventionMappingRetrievalStrategy strategy;
 
 
   @Override
@@ -18,7 +18,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     super.setUp();
 
-    strategy = new BeanConventionMappingStrategy(AccountImpl.class);
+    strategy = new BeanConventionMappingRetrievalStrategy(AccountImpl.class);
   }
 
 
@@ -26,7 +26,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     try
     {
-      new BeanConventionMappingStrategy(null);
+      new BeanConventionMappingRetrievalStrategy(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -39,7 +39,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     try
     {
-      strategy.execute(null);
+      strategy.addMappings(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -50,9 +50,9 @@ public class BeanConventionMappingStrategyTest extends TestCase
 
   public void testExecute()
   {
-    ComplexDbSelectResult<AccountImpl> result = new ComplexDbSelectResult<AccountImpl>(
+    BeanDbSelectResult<AccountImpl> result = new BeanDbSelectResult<AccountImpl>(
         AccountImpl.class);
-    strategy.execute(result);
+    strategy.addMappings(result);
 
     List<String> results = getResults(result);
     assertEquals(5, results.size());
@@ -64,13 +64,13 @@ public class BeanConventionMappingStrategyTest extends TestCase
   }
 
 
-  private List<String> getResults(ComplexDbSelectResult<AccountImpl> result)
+  private List<String> getResults(BeanDbSelectResult<AccountImpl> result)
   {
     List<String> results = new ArrayList<String>();
     for (DbSelectResult<?> dbSelectResult : result)
     {
-      assertEquals(SingleDbSelectResult.class, dbSelectResult.getClass());
-      results.add(((SingleDbSelectResult<?>) dbSelectResult).getColumnName());
+      assertEquals(PrimitiveDbSelectResult.class, dbSelectResult.getClass());
+      results.add(((PrimitiveDbSelectResult<?>) dbSelectResult).getColumnName());
     }
     return results;
   }
