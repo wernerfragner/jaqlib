@@ -13,13 +13,13 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.db.BeanDbSelectResult;
 import org.jaqlib.db.DbSelect;
-import org.jaqlib.db.DbSelectResult;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 
 
-public class MultiColumnDatabaseQBTest extends TestCase
+public class BeanDatabaseQBTest extends TestCase
 {
 
   private static final String HUBER = DatabaseSetup.HUBER_ACCOUNT.getLastName();
@@ -42,8 +42,8 @@ public class MultiColumnDatabaseQBTest extends TestCase
 
     final String sql = "SELECT lastname, firstname, creditrating, balance FROM APP.ACCOUNT";
     DbSelect dataSource = Db.getSelect(getDataSource(), sql);
-    DbSelectResult<AccountImpl> resultDefinition = Db
-        .getComplexResult(AccountImpl.class);
+    BeanDbSelectResult<AccountImpl> resultDefinition = Db
+        .getBeanResult(AccountImpl.class);
 
     where = DatabaseQB.select(resultDefinition).from(dataSource);
   }
@@ -148,19 +148,19 @@ public class MultiColumnDatabaseQBTest extends TestCase
   }
 
 
-  private void assertMaierAccount(AccountImpl account)
+  private void assertMaierAccount(Account account)
   {
     assertEquals(DatabaseSetup.MAIER_ACCOUNT, account);
   }
 
 
-  private void assertHuberAccount(AccountImpl account)
+  private void assertHuberAccount(Account account)
   {
     assertEquals(DatabaseSetup.HUBER_ACCOUNT, account);
   }
 
 
-  private void assertEquals(AccountImpl expected, AccountImpl given)
+  private void assertEquals(Account expected, Account given)
   {
     assertEquals(expected.getLastName(), given.getLastName());
     assertEquals(expected.getFirstName(), given.getFirstName());
@@ -186,7 +186,7 @@ public class MultiColumnDatabaseQBTest extends TestCase
   public void testSelect_MultipleFields_UserDefinedCondition_OneMatch()
   {
     WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
-    AccountImpl account = where.where(condition).uniqueResult();
+    Account account = where.where(condition).uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);
   }
@@ -195,7 +195,7 @@ public class MultiColumnDatabaseQBTest extends TestCase
   public void testSelect_MultipleFields_UserDefinedCondition_NoMatch()
   {
     WhereCondition<AccountImpl> condition = createWhereCondition(100000.0);
-    AccountImpl account = where.where(condition).uniqueResult();
+    Account account = where.where(condition).uniqueResult();
     assertNull(account);
   }
 
@@ -203,7 +203,7 @@ public class MultiColumnDatabaseQBTest extends TestCase
   public void testSelect_MultipleFields_MethodCallCondition_OneMatch()
   {
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
-    AccountImpl account = where.where(dummy.getBalance()).isGreaterThan(3500.0)
+    Account account = where.where(dummy.getBalance()).isGreaterThan(3500.0)
         .uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);
@@ -213,8 +213,8 @@ public class MultiColumnDatabaseQBTest extends TestCase
   public void testSelect_MultipleFields_MethodCallCondition_NoMatch()
   {
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
-    AccountImpl account = where.where(dummy.getBalance()).isGreaterThan(
-        100000.0).uniqueResult();
+    Account account = where.where(dummy.getBalance()).isGreaterThan(100000.0)
+        .uniqueResult();
     assertNull(account);
   }
 
@@ -224,7 +224,7 @@ public class MultiColumnDatabaseQBTest extends TestCase
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
     WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
 
-    AccountImpl account = where.where(condition).andMethodCallResult(
+    Account account = where.where(condition).andMethodCallResult(
         dummy.getCreditRating()).isEqual(CreditRating.GOOD).uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);

@@ -1,9 +1,13 @@
 package org.jaqlib.db;
 
 /**
+ * Defines a primitive mapping between one database column (see columnName and
+ * columnIndex) and a primitive Java type (see generic type T).
+ * 
  * @author Werner Fragner
+ * @param <T> The Java type of the mapping.
  */
-public class SingleDbSelectResult<T> extends DbSelectResult<T>
+public class PrimitiveDbSelectResult<T> extends DbSelectResult<T>
 {
 
   private static final int NO_INDEX = Integer.MIN_VALUE;
@@ -12,14 +16,14 @@ public class SingleDbSelectResult<T> extends DbSelectResult<T>
   private int columnIndex = NO_INDEX;
 
 
-  public SingleDbSelectResult(String columnName)
+  public PrimitiveDbSelectResult(String columnName)
   {
     setFieldName(columnName);
     setColumnName(columnName);
   }
 
 
-  public SingleDbSelectResult(int columnIndex)
+  public PrimitiveDbSelectResult(int columnIndex)
   {
     setColumnIndex(columnIndex);
   }

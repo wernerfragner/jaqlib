@@ -7,23 +7,38 @@ import java.beans.PropertyDescriptor;
 
 import org.jaqlib.Db;
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.ExceptionUtil;
 
 /**
+ * Implementation of the {@link MappingRetrievalStrategy} interface that tries
+ * to retrieve the bean properties of a given class. These properties are added
+ * to a given {@link BeanDbSelectResult} object if they have appropriate get and
+ * set methods (only regarding java bean naming convention).
+ * 
  * @author Werner Fragner
  */
-public class BeanConventionMappingStrategy implements MappingStrategy
+public class BeanConventionMappingRetrievalStrategy implements
+    MappingRetrievalStrategy
 {
 
   private final Class<?> beanClass;
 
 
-  public BeanConventionMappingStrategy(Class<?> beanClass)
+  /**
+   * Default constructor.
+   * 
+   * @param beanClass a not null bean class.
+   */
+  public BeanConventionMappingRetrievalStrategy(Class<?> beanClass)
   {
     this.beanClass = Assert.notNull(beanClass);
   }
 
 
-  public <T> void execute(ComplexDbSelectResult<T> result)
+  /**
+   * {@inheritDoc}
+   */
+  public void addMappings(BeanDbSelectResult<?> result)
   {
     Assert.notNull(result);
 
@@ -32,12 +47,19 @@ public class BeanConventionMappingStrategy implements MappingStrategy
     {
       if (shouldAddBeanProperty(descriptor))
       {
-        result.addResult(Db.getSingleResult(descriptor.getName()));
+        result.addResult(Db.getPrimitiveResult(descriptor.getName()));
       }
     }
   }
 
 
+  /**
+   * This method can be overridden in order to adapt the logic which bean
+   * properties to add to the mapping result.
+   * 
+   * @param descriptor a not null bean property descriptor.
+   * @return true if the property should be added to the mapping result.
+   */
   protected boolean shouldAddBeanProperty(PropertyDescriptor descriptor)
   {
     return hasReadAndWriteMethods(descriptor);
@@ -59,7 +81,7 @@ public class BeanConventionMappingStrategy implements MappingStrategy
     }
     catch (IntrospectionException e)
     {
-      throw new RuntimeException(e);
+      throw ExceptionUtil.toRuntimeException(e);
     }
   }
 

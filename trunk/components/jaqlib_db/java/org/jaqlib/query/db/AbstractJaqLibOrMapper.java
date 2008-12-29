@@ -4,10 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import org.jaqlib.db.ComplexDbSelectResult;
+import org.jaqlib.db.BeanDbSelectResult;
 import org.jaqlib.db.DbSelect;
 import org.jaqlib.db.DbSelectResult;
-import org.jaqlib.db.SingleDbSelectResult;
+import org.jaqlib.db.PrimitiveDbSelectResult;
 import org.jaqlib.query.ElementPredicate;
 import org.jaqlib.util.reflect.MethodInvocation;
 import org.jaqlib.util.reflect.ReflectionUtil;
@@ -71,13 +71,13 @@ public class AbstractJaqLibOrMapper<T>
 
   protected T extractElement(ResultSet rs) throws SQLException
   {
-    if (resultDefinition instanceof SingleDbSelectResult)
+    if (resultDefinition instanceof PrimitiveDbSelectResult)
     {
-      return extractSingleResult(rs, (SingleDbSelectResult<T>) resultDefinition);
+      return extractSingleResult(rs, (PrimitiveDbSelectResult<T>) resultDefinition);
     }
-    else if (resultDefinition instanceof ComplexDbSelectResult)
+    else if (resultDefinition instanceof BeanDbSelectResult)
     {
-      return extractMultiResult(rs, (ComplexDbSelectResult<T>) resultDefinition);
+      return extractMultiResult(rs, (BeanDbSelectResult<T>) resultDefinition);
     }
     else
     {
@@ -92,13 +92,13 @@ public class AbstractJaqLibOrMapper<T>
   private T extractElement(ResultSet rs, DbSelectResult<?> result)
       throws SQLException
   {
-    if (result instanceof SingleDbSelectResult)
+    if (result instanceof PrimitiveDbSelectResult)
     {
-      return extractSingleResult(rs, (SingleDbSelectResult) result);
+      return extractSingleResult(rs, (PrimitiveDbSelectResult) result);
     }
-    else if (result instanceof ComplexDbSelectResult)
+    else if (result instanceof BeanDbSelectResult)
     {
-      return extractMultiResult(rs, (ComplexDbSelectResult) result);
+      return extractMultiResult(rs, (BeanDbSelectResult) result);
     }
     else
     {
@@ -111,7 +111,7 @@ public class AbstractJaqLibOrMapper<T>
 
 
   private T extractMultiResult(ResultSet rs,
-      ComplexDbSelectResult<T> complexResult) throws SQLException
+      BeanDbSelectResult<T> complexResult) throws SQLException
   {
     T bean = complexResult.newBeanInstance();
     for (DbSelectResult<?> selectResult : complexResult)
@@ -134,14 +134,14 @@ public class AbstractJaqLibOrMapper<T>
 
   @SuppressWarnings("unchecked")
   private T extractSingleResult(ResultSet rs,
-      SingleDbSelectResult<T> singleResult) throws SQLException
+      PrimitiveDbSelectResult<T> singleResult) throws SQLException
   {
     return (T) extractObject(rs, singleResult);
   }
 
 
   private Object extractObject(ResultSet rs,
-      SingleDbSelectResult<?> singleResult) throws SQLException
+      PrimitiveDbSelectResult<?> singleResult) throws SQLException
   {
     if (singleResult.hasColumnIndex())
     {
