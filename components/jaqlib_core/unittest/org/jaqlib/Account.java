@@ -9,7 +9,7 @@ public interface Account extends Comparable<Account>
   Long getId();
 
 
-  Integer getBalance();
+  Double getBalance();
 
 
   String getLastName();
@@ -18,6 +18,6 @@ public interface Account extends Comparable<Account>
   String getFirstName();
 
 
-  int getCreditRating();
+  CreditRating getCreditRating();
 
 }

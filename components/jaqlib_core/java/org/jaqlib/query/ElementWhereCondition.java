@@ -1,6 +1,6 @@
 package org.jaqlib.query;
 
-import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.util.reflect.MethodInvocation;
 
 /**
  * Implementation of the {@link WhereCondition} interface that matches the
@@ -23,7 +23,7 @@ public class ElementWhereCondition<T, DataSourceType, ResultType> extends
 
 
   @Override
-  protected MethodInvocation getLastMethodInvocation()
+  protected MethodInvocation getCurrentMethodInvocation()
   {
     // no method invocations are supported by this class
     return null;

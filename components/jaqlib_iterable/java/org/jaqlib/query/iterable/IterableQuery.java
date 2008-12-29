@@ -5,8 +5,8 @@ import java.util.Map;
 
 import org.jaqlib.query.AbstractQuery;
 import org.jaqlib.query.FromClause;
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.util.reflect.MethodCallRecorder;
+import org.jaqlib.util.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner
@@ -40,7 +40,7 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
   {
     for (T element : getDataSource())
     {
-      if (tree.visit(element))
+      if (tree.matches(element))
       {
         result.add(element);
 
@@ -56,10 +56,10 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
   @Override
   protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
-    final MethodInvocation invocation = getLastInvocation();
+    final MethodInvocation invocation = getCurrentInvocation();
     for (T element : getDataSource())
     {
-      if (element != null && tree.visit(element))
+      if (element != null && tree.matches(element))
       {
         final KeyType elementKey = getKey(element, invocation);
         resultMap.put(elementKey, element);

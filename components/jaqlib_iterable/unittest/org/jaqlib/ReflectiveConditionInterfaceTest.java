@@ -16,7 +16,7 @@ public class ReflectiveConditionInterfaceTest extends
 
 
   @Override
-  protected Account createAccountType(Integer balance)
+  protected Account createAccountType(Double balance)
   {
     return createAccount(balance);
   }

@@ -11,8 +11,10 @@ public class AccountImpl implements Account
   private String lastName;
   private String firstName;
 
-  private Integer balance = 0;
-  private int creditRating = 0;
+  private Double balance = 0.0;
+  private int creditRating = CreditRating.POOR.intValue();
+
+  private boolean changed = false;
 
 
   public Long getId()
@@ -21,19 +23,33 @@ public class AccountImpl implements Account
   }
 
 
+  public boolean hasChanged()
+  {
+    return changed;
+  }
+
+
+  private void setChanged()
+  {
+    changed = true;
+  }
+
+
   public void setId(Long id)
   {
+    setChanged();
     this.id = id;
   }
 
 
-  public void setBalance(Integer balance)
+  public void setBalance(Double balance)
   {
+    setChanged();
     this.balance = balance;
   }
 
 
-  public Integer getBalance()
+  public Double getBalance()
   {
     return balance;
   }
@@ -47,6 +63,7 @@ public class AccountImpl implements Account
 
   public void setLastName(String lastName)
   {
+    setChanged();
     this.lastName = lastName;
   }
 
@@ -59,18 +76,26 @@ public class AccountImpl implements Account
 
   public void setFirstName(String firstName)
   {
+    setChanged();
     this.firstName = firstName;
   }
 
 
-  public int getCreditRating()
+  public CreditRating getCreditRating()
   {
-    return creditRating;
+    return CreditRating.rating(creditRating);
   }
 
 
-  public void setCreditRating(int creditRating)
+  public void setCreditRating(CreditRating creditRating)
   {
+    setCreditRating(creditRating.intValue());
+  }
+
+
+  private void setCreditRating(int creditRating)
+  {
+    setChanged();
     this.creditRating = creditRating;
   }
 

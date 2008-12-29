@@ -21,17 +21,17 @@ public abstract class AbstractJaqLibTest<AccountType extends Account> extends
   public List<AccountType> createTestAccounts()
   {
     List accounts = new ArrayList();
-    accounts.add(createAccount(1, "huber"));
-    accounts.add(createAccount(10, "maier"));
+    accounts.add(createAccount(1.0, "huber"));
+    accounts.add(createAccount(10.0, "maier"));
     accounts.add(createAccount(null, null));
     accounts.add(null);
-    accounts.add(createAccount(5));
+    accounts.add(createAccount(5.0));
     accounts.add(null);
     return accounts;
   }
 
 
-  public AccountImpl addElement(List elements, int balance)
+  public AccountImpl addElement(List elements, Double balance)
   {
     AccountImpl account = createAccount(balance);
     elements.add(account);
@@ -39,7 +39,7 @@ public abstract class AbstractJaqLibTest<AccountType extends Account> extends
   }
 
 
-  protected AccountImpl createAccount(Integer balance)
+  protected AccountImpl createAccount(Double balance)
   {
     AccountImpl account = new AccountImpl();
     account.setBalance(balance);
@@ -47,7 +47,7 @@ public abstract class AbstractJaqLibTest<AccountType extends Account> extends
   }
 
 
-  protected AccountImpl createAccount(Integer balance, String lastName)
+  protected AccountImpl createAccount(Double balance, String lastName)
   {
     AccountImpl account = createAccount(balance);
     account.setLastName(lastName);

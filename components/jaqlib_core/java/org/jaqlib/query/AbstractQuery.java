@@ -14,9 +14,9 @@ import org.jaqlib.query.syntaxtree.And;
 import org.jaqlib.query.syntaxtree.Condition;
 import org.jaqlib.query.syntaxtree.Or;
 import org.jaqlib.query.syntaxtree.SyntaxTree;
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.reflect.MethodCallRecorder;
+import org.jaqlib.util.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner
@@ -39,9 +39,9 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  protected MethodInvocation getLastInvocation()
+  protected MethodInvocation getCurrentInvocation()
   {
-    return this.methodCallRecorder.getLastInvocation();
+    return this.methodCallRecorder.getCurrentInvocation();
   }
 
 

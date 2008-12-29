@@ -1,9 +1,11 @@
 package org.jaqlib.util.reflect;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.ExceptionUtil;
 
 /**
  * @author Werner Fragner
@@ -87,6 +89,29 @@ public class ReflectionUtil
       return className.substring(lastDotIdx + 1);
     }
     return className;
+  }
+
+
+  public static void setFieldValue(Object target, String fieldName,
+      Object fieldValue)
+  {
+    Assert.notNull(target);
+    Assert.notNull(fieldName);
+
+    try
+    {
+      Field field = target.getClass().getDeclaredField(fieldName);
+      field.setAccessible(true);
+      field.set(target, fieldValue);
+    }
+    catch (NoSuchFieldException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+    catch (IllegalAccessException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
   }
 
 

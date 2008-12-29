@@ -1,4 +1,4 @@
-package org.jaqlib.reflect;
+package org.jaqlib.util.reflect;
 
 import java.util.Collections;
 import java.util.List;
@@ -9,13 +9,13 @@ import java.util.List;
 public class NullMethodCallRecorder implements MethodCallRecorder
 {
 
-  public List<MethodInvocation> getAllInvocations()
+  public List<MethodInvocation> getAllCurrentInvocations()
   {
     return Collections.EMPTY_LIST;
   }
 
 
-  public MethodInvocation getLastInvocation()
+  public MethodInvocation getCurrentInvocation()
   {
     return null;
   }

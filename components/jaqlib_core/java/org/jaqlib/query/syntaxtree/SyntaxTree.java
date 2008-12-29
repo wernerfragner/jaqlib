@@ -1,5 +1,6 @@
 package org.jaqlib.query.syntaxtree;
 
+import org.jaqlib.query.ElementPredicate;
 import org.jaqlib.util.Assert;
 
 /**
@@ -12,14 +13,14 @@ import org.jaqlib.util.Assert;
  * 
  * @param <T>
  */
-public class SyntaxTree<T>
+public class SyntaxTree<T> implements ElementPredicate<T>
 {
 
   private Root<T> root;
   private Connector<T> current;
 
 
-  public boolean visit(T element)
+  public boolean matches(T element)
   {
     if (root != null)
     {
