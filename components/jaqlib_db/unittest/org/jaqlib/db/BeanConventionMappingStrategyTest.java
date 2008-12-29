@@ -18,20 +18,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     super.setUp();
 
-    strategy = new BeanConventionMappingRetrievalStrategy(AccountImpl.class);
-  }
-
-
-  public void testBeanConventionMappingStrategy_Null()
-  {
-    try
-    {
-      new BeanConventionMappingRetrievalStrategy(null);
-      fail("Did not throw IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e)
-    {
-    }
+    strategy = new BeanConventionMappingRetrievalStrategy();
   }
 
 
@@ -39,7 +26,17 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     try
     {
-      strategy.addMappings(null);
+      strategy.addMappings(null, new BeanDbSelectResult<AccountImpl>(
+          AccountImpl.class));
+      fail("Did not throw IllegalArgumentException");
+    }
+    catch (IllegalArgumentException e)
+    {
+    }
+
+    try
+    {
+      strategy.addMappings(AccountImpl.class, null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -52,7 +49,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     BeanDbSelectResult<AccountImpl> result = new BeanDbSelectResult<AccountImpl>(
         AccountImpl.class);
-    strategy.addMappings(result);
+    strategy.addMappings(AccountImpl.class, result);
 
     List<String> results = getResults(result);
     assertEquals(5, results.size());
@@ -70,7 +67,8 @@ public class BeanConventionMappingStrategyTest extends TestCase
     for (DbSelectResult<?> dbSelectResult : result)
     {
       assertEquals(PrimitiveDbSelectResult.class, dbSelectResult.getClass());
-      results.add(((PrimitiveDbSelectResult<?>) dbSelectResult).getColumnName());
+      results
+          .add(((PrimitiveDbSelectResult<?>) dbSelectResult).getColumnName());
     }
     return results;
   }
