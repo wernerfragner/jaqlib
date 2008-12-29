@@ -94,7 +94,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     assertEquals(elements.size() * 2, duplicatedElements.size());
 
     List<AccountType> results = QB.select(getAccountClass()).from(
-        duplicatedElements).toList();
+        duplicatedElements).asList();
     assertEqualCollections(duplicatedElements, results);
   }
 
@@ -107,7 +107,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     WhereCondition<AccountType> cond2 = createCompareCondition(4);
 
     List<AccountType> results = QB.select(getAccountClass()).from(elements)
-        .where(cond1).or(cond2).toList();
+        .where(cond1).or(cond2).asList();
     assertEquals(2, results.size());
     assertSame(elements.get(1), results.get(0));
     assertSame(elements.get(4), results.get(1));
@@ -128,7 +128,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     AccountType dummy = QB.getMethodCallRecorder(getAccountClass());
     List<AccountType> results = QB.select(getAccountClass()).from(elements)
         .where(dummy.getBalance()).isSmallerThan(6).and(cond1).or(cond2)
-        .toList();
+        .asList();
     assertEquals(1, results.size());
     assertSame(elements.get(4), results.get(0));
   }
@@ -139,7 +139,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     List<AccountType> elements = new ArrayList<AccountType>(0);
 
     List<AccountType> results = QB.select(getAccountClass()).from(elements)
-        .toList();
+        .asList();
     assertNotNull(results);
     assertEquals(0, results.size());
   }
@@ -157,7 +157,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     assertEquals(elements.size() * 2, duplicatedElements.size());
 
     Set<AccountType> results = QB.select(getAccountClass()).from(
-        duplicatedElements).toSet();
+        duplicatedElements).asSet();
     for (AccountType simpleTestElement : results)
     {
       assertTrue(elements.remove(simpleTestElement));
@@ -180,7 +180,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
 
     AccountType dummy = QB.getMethodCallRecorder(getAccountClass());
     Set<AccountType> results = QB.select(getAccountClass()).from(
-        duplicatedElements).where(dummy.getBalance()).isGreaterThan(4).toSet();
+        duplicatedElements).where(dummy.getBalance()).isGreaterThan(4).asSet();
     assertEquals(2, results.size());
     assertTrue(results.contains(elements.get(1)));
     assertTrue(results.contains(elements.get(4)));
@@ -192,7 +192,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     List<AccountType> elements = new ArrayList<AccountType>(0);
 
     Set<AccountType> results = QB.select(getAccountClass()).from(elements)
-        .toSet();
+        .asSet();
     assertNotNull(results);
     assertEquals(0, results.size());
   }
@@ -208,7 +208,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
 
     AccountType account = QB.getMethodCallRecorder(getAccountClass());
     Map<Integer, AccountType> results = QB.select(getAccountClass()).from(
-        duplicatedElements).toMap(account.getBalance());
+        duplicatedElements).asMap(account.getBalance());
     assertNotNull(results);
     assertEquals(4, results.size());
     assertSame(elements.get(0), results.get(1));
@@ -230,7 +230,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
 
     AccountType account = QB.getMethodCallRecorder(getAccountClass());
     Map<Integer, AccountType> results = QB.select(getAccountClass()).from(
-        duplicatedElements).where(cond).toMap(account.getBalance());
+        duplicatedElements).where(cond).asMap(account.getBalance());
     assertNotNull(results);
     assertEquals(2, results.size());
     assertSame(elements.get(1), results.get(10));
@@ -244,7 +244,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
 
     Account account = QB.getMethodCallRecorder(Account.class);
     Map<Integer, Account> results = QB.select(Account.class).from(elements)
-        .toMap(account.getBalance());
+        .asMap(account.getBalance());
     assertNotNull(results);
     assertEquals(0, results.size());
   }
@@ -255,7 +255,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     List<AccountType> elements = createListWithNulls();
 
     List<AccountType> result = QB.select(getAccountClass()).from(elements)
-        .where().element().isNull().toList();
+        .where().element().isNull().asList();
     assertEquals(2, result.size());
     for (Account element : result)
     {
@@ -264,17 +264,43 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
   }
 
 
+  public void testSelect_NullElements_WithCondition()
+  {
+    List<AccountType> elements = createListWithNulls();
+    WhereCondition<AccountType> cond = createCompareCondition(5);
+
+    List<AccountType> result = QB.select(getAccountClass()).from(elements)
+        .where(cond).or().element().isNull().asList();
+    assertEquals(3, result.size());
+    assertNull(result.get(0));
+    assertNull(result.get(1));
+    assertNotNull(result.get(2));
+  }
+
+
   public void testSelect_NotNullElements()
   {
     List<AccountType> elements = createListWithNulls();
 
     List<AccountType> result = QB.select(getAccountClass()).from(elements)
-        .where().element().isNotNull().toList();
-    assertEquals(2, result.size());
+        .where().element().isNotNull().asList();
+    assertEquals(3, result.size());
     for (Account element : result)
     {
       assertNotNull(element);
     }
+  }
+
+
+  public void testSelect_NotNullElements_WithCondition()
+  {
+    List<AccountType> elements = createListWithNulls();
+    WhereCondition<AccountType> cond = createCompareCondition(5);
+
+    List<AccountType> result = QB.select(getAccountClass()).from(elements)
+        .where(cond).and().element().isNotNull().asList();
+    assertEquals(1, result.size());
+    assertNotNull(result.get(0));
   }
 
 
@@ -379,7 +405,7 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     Account dummy = QB.getMethodCallRecorder(Account.class);
 
     List<AccountType> results = QB.select(getAccountClass()).from(elements)
-        .where(dummy.getBalance()).isGreaterThan(5).and(cond1).toList();
+        .where(dummy.getBalance()).isGreaterThan(5).and(cond1).asList();
 
     assertOneCompareElement(results, 10);
   }
@@ -398,13 +424,13 @@ public abstract class AbstractSelectTest<AccountType extends Account> extends
     // check if query returns the right result
 
     List<AccountType> results = QB.select(getAccountClass()).from(elements)
-        .where(cond1).and(cond2).toList();
+        .where(cond1).and(cond2).asList();
     assertOneCompareElement(results, 10);
 
     // check if conditions can be swapped without affecting the result
 
     results = QB.select(getAccountClass()).from(elements).where(cond2).and(
-        cond1).toList();
+        cond1).asList();
     assertOneCompareElement(results, 10);
   }
 
