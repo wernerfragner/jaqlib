@@ -1,8 +1,22 @@
+/*
+ * Copyright 2008 Werner Fragner
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
 package org.jaqlib;
 
-import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.DbSelect;
-import org.jaqlib.db.PrimitiveDbSelectResult;
+import org.jaqlib.db.Column;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
@@ -20,6 +34,7 @@ import org.jaqlib.query.db.DatabaseQueryBuilder;
  * databases via JDBC. <br>
  * Examples are given here: {@link DatabaseQueryBuilder}.
  * </p>
+ * This class is thread-safe.
  * 
  * @see DatabaseQueryBuilder
  * @author Werner Fragner
@@ -27,7 +42,14 @@ import org.jaqlib.query.db.DatabaseQueryBuilder;
 public class DatabaseQB
 {
 
+  /**
+   * Default properties for {@link DatabaseQueryBuilder}.
+   */
   private static final DatabaseQBProperties PROPERTIES = new DatabaseQBProperties();
+
+  /**
+   * Singleton instance.
+   */
   private static final DatabaseQueryBuilder QUERYBUILDER = new DatabaseQueryBuilder(
       PROPERTIES);
 
@@ -92,14 +114,13 @@ public class DatabaseQB
    * </p>
    * 
    * @param <T> the result element type.
-   * @param resultDefinition an object defining the desired result.
+   * @param column an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelect> select(
-      PrimitiveDbSelectResult<T> resultDefinition)
+  public static <T> FromClause<T, DbSelectDataSource> select(Column<T> column)
   {
-    return QUERYBUILDER.select(resultDefinition);
+    return QUERYBUILDER.select(column);
   }
 
 
@@ -121,16 +142,14 @@ public class DatabaseQB
    * </p>
    * 
    * @param <T> the result element type.
-   * @param resultDefinition an object defining the desired result bean
-   *          mappings.
+   * @param beanClass the desired result bean. This bean must provide a default
+   *          constructor (otherwise a {@link RuntimeException} is thrown).
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelect> select(
-      BeanDbSelectResult<T> resultDefinition)
+  public static <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
   {
-    return QUERYBUILDER.select(resultDefinition);
+    return QUERYBUILDER.select(beanClass);
   }
-
 
 }

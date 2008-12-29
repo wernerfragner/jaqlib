@@ -13,8 +13,7 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.DbSelect;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 
@@ -26,7 +25,7 @@ public class BeanDatabaseQBTest extends TestCase
   private static final String MAIER = DatabaseSetup.MAIER_ACCOUNT.getLastName();
 
   private DatabaseSetup dbSetup;
-  private WhereClause<AccountImpl, DbSelect> where;
+  private WhereClause<AccountImpl, DbSelectDataSource> where;
 
 
   @Override
@@ -41,11 +40,9 @@ public class BeanDatabaseQBTest extends TestCase
     dbSetup.insertTestRecords();
 
     final String sql = "SELECT lastname, firstname, creditrating, balance FROM APP.ACCOUNT";
-    DbSelect dataSource = Db.getSelect(getDataSource(), sql);
-    BeanDbSelectResult<AccountImpl> resultDefinition = Db
-        .getBeanResult(AccountImpl.class);
+    DbSelectDataSource dataSource = Database.getSelectDataSource(getDataSource(), sql);
 
-    where = DatabaseQB.select(resultDefinition).from(dataSource);
+    where = DatabaseQB.select(AccountImpl.class).from(dataSource);
   }
 
 
@@ -81,7 +78,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertHashtableResult(WhereClause<AccountImpl, DbSelect> where)
+  private void assertHashtableResult(WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Account account = DatabaseQB.getMethodCallRecorder(Account.class);
     Hashtable<String, AccountImpl> accounts = where.asHashtable(account
@@ -90,7 +87,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertMapResult(WhereClause<AccountImpl, DbSelect> where)
+  private void assertMapResult(WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Account account = DatabaseQB.getMethodCallRecorder(Account.class);
     Map<String, AccountImpl> accounts = where.asMap(account.getLastName());
@@ -105,7 +102,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertSetResult(WhereClause<AccountImpl, DbSelect> where)
+  private void assertSetResult(WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Set<AccountImpl> accounts = where.asSet();
     assertEquals(2, accounts.size());
@@ -114,14 +111,14 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertVectorResult(WhereClause<AccountImpl, DbSelect> where)
+  private void assertVectorResult(WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Vector<AccountImpl> accounts = where.asVector();
     assertListResult(accounts);
   }
 
 
-  private void assertListResult(WhereClause<AccountImpl, DbSelect> where)
+  private void assertListResult(WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     List<AccountImpl> accounts = where.asList();
     assertListResult(accounts);

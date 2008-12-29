@@ -3,7 +3,7 @@ package org.jaqlib.query.db;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.db.DbSelect;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbSelectResult;
 import org.jaqlib.query.AbstractQuery;
 import org.jaqlib.query.FromClause;
@@ -15,7 +15,7 @@ import org.jaqlib.util.reflect.MethodCallRecorder;
  * 
  * @param <T> the result element class of the query.
  */
-public class DatabaseQuery<T> extends AbstractQuery<T, DbSelect>
+public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
   private final DatabaseQBProperties properties;
@@ -30,11 +30,11 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelect>
   }
 
 
-  public FromClause<T, DbSelect> createFromClause(
+  public FromClause<T, DbSelectDataSource> createFromClause(
       DbSelectResult<T> resultDefinition)
   {
     this.resultDefinition = Assert.notNull(resultDefinition);
-    return new FromClause<T, DbSelect>(this);
+    return new FromClause<T, DbSelectDataSource>(this);
   }
 
 

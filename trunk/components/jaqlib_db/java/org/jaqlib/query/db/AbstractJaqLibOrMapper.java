@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.DbSelect;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbSelectResult;
 import org.jaqlib.db.PrimitiveDbSelectResult;
 import org.jaqlib.query.ElementPredicate;
@@ -20,7 +20,7 @@ public class AbstractJaqLibOrMapper<T>
   private static final Logger LOG = Logger
       .getLogger(AbstractJaqLibOrMapper.class.getName());
 
-  private DbSelect dataSource;
+  private DbSelectDataSource dataSource;
   private ElementPredicate<T> predicate;
   private DbSelectResult<T> resultDefinition;
   private MethodInvocation methodInvocation;
@@ -33,13 +33,13 @@ public class AbstractJaqLibOrMapper<T>
   }
 
 
-  public void setDataSource(DbSelect dataSource)
+  public void setDataSource(DbSelectDataSource dataSource)
   {
     this.dataSource = dataSource;
   }
 
 
-  protected DbSelect getDataSource()
+  protected DbSelectDataSource getDataSource()
   {
     return dataSource;
   }
