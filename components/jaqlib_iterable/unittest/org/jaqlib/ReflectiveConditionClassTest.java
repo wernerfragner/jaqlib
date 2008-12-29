@@ -16,10 +16,9 @@ public class ReflectiveConditionClassTest extends
 
 
   @Override
-  protected AccountImpl createAccount(int balance)
+  protected AccountImpl createAccountType(Integer balance)
   {
-    return new AccountImpl(balance);
+    return createAccount(balance);
   }
-
 
 }

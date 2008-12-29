@@ -11,7 +11,7 @@ public class JaqLibClassTests
   {
     TestSuite suite = new TestSuite("Test for org.jaqlib");
     // $JUnit-BEGIN$
-    suite.addTestSuite(SelectClassTest.class);
+    suite.addTestSuite(IterableClassTest.class);
     suite.addTestSuite(CustomConditonClassTest.class);
     suite.addTestSuite(ReflectiveConditionClassTest.class);
     // $JUnit-END$

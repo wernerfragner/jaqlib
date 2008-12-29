@@ -8,7 +8,7 @@ import java.util.List;
  * 
  * @author Werner Fragner
  */
-public class SelectClassTest extends AbstractSelectTest<AccountImpl>
+public class IterableClassTest extends AbstractIterableTest<AccountImpl>
 {
 
 
@@ -34,11 +34,11 @@ public class SelectClassTest extends AbstractSelectTest<AccountImpl>
 
   public void testCreateResultElement_Class()
   {
-    List<AccountImpl> elements = createIsMatchElements();
+    List<AccountImpl> elements = createTestAccounts();
 
     AccountImpl testInterface = QB.getMethodCallRecorder(AccountImpl.class);
     List<AccountImpl> results = QB.select(AccountImpl.class).from(elements)
-        .where(testInterface.isMatch()).isEqual(true).asList();
+        .where(testInterface.getLastName()).isEqual("maier").asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));

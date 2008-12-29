@@ -11,24 +11,24 @@ public abstract class AbstractCustomConditonTest<AccountType extends Account>
 
   public void testSelect_CustomAndCondition()
   {
-    List<AccountType> elements = createIsMatchElements();
+    List<AccountType> elements = createTestAccounts();
 
     WhereCondition<AccountType> condition = new WhereCondition<AccountType>()
     {
 
       public boolean evaluate(Account element)
       {
-        if (element == null)
+        if (element == null || element.getLastName() == null)
         {
           return false;
         }
-        return element.isMatch();
+        return element.getLastName().equals("maier");
       }
 
     };
 
-    List<AccountType> results = QB.select(getAccountClass()).from(
-        elements).where(condition).asList();
+    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+        .where(condition).asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));
