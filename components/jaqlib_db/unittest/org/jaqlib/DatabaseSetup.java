@@ -13,6 +13,29 @@ public class DatabaseSetup
   private SingleConnectionDataSource dataSource;
 
 
+  public static final AccountImpl HUBER_ACCOUNT;
+  public static final AccountImpl MAIER_ACCOUNT;
+
+  public static final AccountImpl[] ACCOUNTS;
+
+  static
+  {
+    HUBER_ACCOUNT = new AccountImpl();
+    HUBER_ACCOUNT.setLastName("huber");
+    HUBER_ACCOUNT.setFirstName("sepp");
+    HUBER_ACCOUNT.setBalance(5000.0);
+    HUBER_ACCOUNT.setCreditRating(CreditRating.GOOD);
+
+    MAIER_ACCOUNT = new AccountImpl();
+    MAIER_ACCOUNT.setLastName("maier");
+    MAIER_ACCOUNT.setFirstName("franz");
+    MAIER_ACCOUNT.setBalance(2000.0);
+    MAIER_ACCOUNT.setCreditRating(CreditRating.POOR);
+
+    ACCOUNTS = new AccountImpl[] { HUBER_ACCOUNT, MAIER_ACCOUNT };
+  }
+
+
   public void clear() throws SQLException
   {
     if (dataSource != null)
@@ -77,8 +100,18 @@ public class DatabaseSetup
 
   public void insertTestRecords() throws SQLException
   {
-    executeStatement("INSERT INTO APP.ACCOUNT (lastname, firstname, phone, email, creditrating) VALUES ('bauer', 'hans', '3983', 'hans.bauer@email.com', 1)");
-    executeStatement("INSERT INTO APP.ACCOUNT (lastname, firstname, phone, email, creditrating) VALUES ('wurm', 'sepp', '222', 'sepp.wurm@email.com', 7)");
+    for (AccountImpl account : ACCOUNTS)
+    {
+      executeStatement("INSERT INTO APP.ACCOUNT (lastname, firstname, creditrating, balance) VALUES ('"
+          + account.getLastName()
+          + "', '"
+          + account.getFirstName()
+          + "', "
+          + account.getCreditRating().intValue()
+          + ", "
+          + account.getBalance()
+          + ")");
+    }
   }
 
 

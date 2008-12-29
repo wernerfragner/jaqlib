@@ -11,15 +11,30 @@ import org.jaqlib.query.FromClause;
 public class DatabaseQueryBuilder extends AbstractQueryBuilder
 {
 
-  public <T> FromClause<T, DbSelect> select(DbSelectResult<T> result)
+  private final DatabaseQBProperties properties;
+
+
+  public DatabaseQueryBuilder()
   {
-    return this.<T> createQuery().createFromClause(result);
+    this(new DatabaseQBProperties());
+  }
+
+
+  public DatabaseQueryBuilder(DatabaseQBProperties properties)
+  {
+    this.properties = properties;
+  }
+
+
+  public <T> FromClause<T, DbSelect> select(DbSelectResult<T> resultDefinition)
+  {
+    return this.<T> createQuery().createFromClause(resultDefinition);
   }
 
 
   private <T> DatabaseQuery<T> createQuery()
   {
-    return new DatabaseQuery<T>(getMethodCallRecorder());
+    return new DatabaseQuery<T>(getMethodCallRecorder(), properties);
   }
 
 }

@@ -1,5 +1,14 @@
 package org.jaqlib;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
@@ -7,10 +16,14 @@ import junit.framework.TestCase;
 import org.jaqlib.db.DbSelect;
 import org.jaqlib.db.DbSelectResult;
 import org.jaqlib.query.WhereClause;
+import org.jaqlib.query.WhereCondition;
 
 
 public class MultiColumnDatabaseQBTest extends TestCase
 {
+
+  private static final String HUBER = DatabaseSetup.HUBER_ACCOUNT.getLastName();
+  private static final String MAIER = DatabaseSetup.MAIER_ACCOUNT.getLastName();
 
   private DatabaseSetup dbSetup;
   private WhereClause<AccountImpl, DbSelect> where;
@@ -21,16 +34,25 @@ public class MultiColumnDatabaseQBTest extends TestCase
   {
     super.setUp();
 
+    disableLogging();
+
     dbSetup = new DatabaseSetup();
     dbSetup.createTestTables();
     dbSetup.insertTestRecords();
 
-    final String sql = "";
+    final String sql = "SELECT lastname, firstname, creditrating, balance FROM APP.ACCOUNT";
     DbSelect dataSource = Db.getSelect(getDataSource(), sql);
     DbSelectResult<AccountImpl> resultDefinition = Db
         .getComplexResult(AccountImpl.class);
 
     where = DatabaseQB.select(resultDefinition).from(dataSource);
+  }
+
+
+  private void disableLogging()
+  {
+    Logger logger = Logger.getLogger("org.jaqlib");
+    logger.setLevel(Level.WARNING);
   }
 
 
@@ -59,53 +81,153 @@ public class MultiColumnDatabaseQBTest extends TestCase
   }
 
 
-  private void assertHashtableResult(WhereClause<AccountImpl, DbSelect> where2)
+  private void assertHashtableResult(WhereClause<AccountImpl, DbSelect> where)
   {
-    // TODO Auto-generated method stub
-
+    Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+    Hashtable<String, AccountImpl> accounts = where.asHashtable(account
+        .getLastName());
+    assertMapResult(accounts);
   }
 
 
-  private void assertMapResult(WhereClause<AccountImpl, DbSelect> where2)
+  private void assertMapResult(WhereClause<AccountImpl, DbSelect> where)
   {
-    // TODO Auto-generated method stub
-
+    Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+    Map<String, AccountImpl> accounts = where.asMap(account.getLastName());
+    assertMapResult(accounts);
   }
 
 
-  private void assertSetResult(WhereClause<AccountImpl, DbSelect> where2)
+  private void assertMapResult(Map<String, AccountImpl> accounts)
   {
-    // TODO Auto-generated method stub
-
+    assertEquals(DatabaseSetup.MAIER_ACCOUNT, accounts.get(MAIER));
+    assertEquals(DatabaseSetup.HUBER_ACCOUNT, accounts.get(HUBER));
   }
 
 
-  private void assertVectorResult(WhereClause<AccountImpl, DbSelect> where2)
+  private void assertSetResult(WhereClause<AccountImpl, DbSelect> where)
   {
-    // TODO Auto-generated method stub
-
+    Set<AccountImpl> accounts = where.asSet();
+    assertEquals(2, accounts.size());
+    List<AccountImpl> accountList = new ArrayList<AccountImpl>(accounts);
+    assertListResult(accountList);
   }
 
 
-  private void assertListResult(WhereClause<AccountImpl, DbSelect> where2)
+  private void assertVectorResult(WhereClause<AccountImpl, DbSelect> where)
   {
-    // TODO Auto-generated method stub
-
+    Vector<AccountImpl> accounts = where.asVector();
+    assertListResult(accounts);
   }
 
 
-  public void testSelect_MultipleFields()
+  private void assertListResult(WhereClause<AccountImpl, DbSelect> where)
   {
+    List<AccountImpl> accounts = where.asList();
+    assertListResult(accounts);
   }
 
 
-  public void testSelect_MultipleFields_UserDefinedCondition()
+  private void assertListResult(List<AccountImpl> accounts)
   {
+    assertEquals(2, accounts.size());
+    if (HUBER.equals(accounts.get(0).getLastName()))
+    {
+      assertHuberAccount(accounts.get(0));
+      assertMaierAccount(accounts.get(1));
+    }
+    else if (MAIER.equals(accounts.get(0).getLastName()))
+    {
+      assertMaierAccount(accounts.get(0));
+      assertHuberAccount(accounts.get(1));
+    }
+    else
+    {
+      fail("No matching account available!");
+    }
   }
 
 
-  public void testSelect_MultipleFields_MethodCallCondition()
+  private void assertMaierAccount(AccountImpl account)
   {
+    assertEquals(DatabaseSetup.MAIER_ACCOUNT, account);
+  }
+
+
+  private void assertHuberAccount(AccountImpl account)
+  {
+    assertEquals(DatabaseSetup.HUBER_ACCOUNT, account);
+  }
+
+
+  private void assertEquals(AccountImpl expected, AccountImpl given)
+  {
+    assertEquals(expected.getLastName(), given.getLastName());
+    assertEquals(expected.getFirstName(), given.getFirstName());
+    assertEquals(expected.getBalance(), given.getBalance());
+    assertEquals(expected.getCreditRating(), given.getCreditRating());
+  }
+
+
+  private WhereCondition<AccountImpl> createWhereCondition(final double balance)
+  {
+    return new WhereCondition<AccountImpl>()
+    {
+
+      public boolean evaluate(AccountImpl element)
+      {
+        return element.getBalance() > balance;
+      }
+
+    };
+  }
+
+
+  public void testSelect_MultipleFields_UserDefinedCondition_OneMatch()
+  {
+    WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
+    AccountImpl account = where.where(condition).uniqueResult();
+    assertNotNull(account);
+    assertHuberAccount(account);
+  }
+
+
+  public void testSelect_MultipleFields_UserDefinedCondition_NoMatch()
+  {
+    WhereCondition<AccountImpl> condition = createWhereCondition(100000.0);
+    AccountImpl account = where.where(condition).uniqueResult();
+    assertNull(account);
+  }
+
+
+  public void testSelect_MultipleFields_MethodCallCondition_OneMatch()
+  {
+    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    AccountImpl account = where.where(dummy.getBalance()).isGreaterThan(3500.0)
+        .uniqueResult();
+    assertNotNull(account);
+    assertHuberAccount(account);
+  }
+
+
+  public void testSelect_MultipleFields_MethodCallCondition_NoMatch()
+  {
+    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    AccountImpl account = where.where(dummy.getBalance()).isGreaterThan(
+        100000.0).uniqueResult();
+    assertNull(account);
+  }
+
+
+  public void testSelect_MultipleFields_MixedConditions()
+  {
+    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
+
+    AccountImpl account = where.where(condition).andMethodCallResult(
+        dummy.getCreditRating()).isEqual(CreditRating.GOOD).uniqueResult();
+    assertNotNull(account);
+    assertHuberAccount(account);
   }
 
 }
