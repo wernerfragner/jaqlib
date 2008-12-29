@@ -57,7 +57,7 @@ public class QB
 
   /**
    * @param <T> the type of the result element(s).
-   * @param resultElementClass a not null class of the result element(s).
+   * @param resultElementClass a not null class of the result element.
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */

@@ -41,7 +41,7 @@ import org.jaqlib.query.iterable.IterableQuery;
  * 
  * // select all accounts with a balance greater than 5000
  * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where(
- *     account.getBalance()).isGreaterThan(5000).toList();
+ *     account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
  * <i>Example with user-defined WHERE conditions:</i>
@@ -66,14 +66,14 @@ import org.jaqlib.query.iterable.IterableQuery;
  * 
  * // execute query with these conditions 
  * List&lt;Account&gt; highRiskAccounts = QB.select(Account.class).from(accounts)
- *     .where(deptCondition).and(ratingCondition).toList();
+ *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
  * <i>Example for filtering out null elements:</i>
  * 
  * <pre>
  * List&lt;Account&gt; notNullAccounts = QB.select(Account.class).from(accounts).where()
- *     .element().isNotNull().toList();
+ *     .element().isNotNull().asList();
  * </pre>
  * 
  * <i>Example for using {@link Comparable} elements:</i>
@@ -84,14 +84,14 @@ import org.jaqlib.query.iterable.IterableQuery;
  * account.setBalance(5000);
  * 
  * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where()
- *     .element().isSmallerThan(spec).toList();
+ *     .element().isSmallerThan(spec).asList();
  * </pre>
  * 
  * <i>Example using a Map as result:</i>
  * 
  *<pre>
  * Account account = QB.getMethodCallRecorder(Account.class);
- * Map&lt;String, Account&gt; results = QB.select(Account.class).from(accounts).toMap(
+ * Map&lt;String, Account&gt; results = QB.select(Account.class).from(accounts).asMap(
  *     account.getId());
  * </pre>
  * 
@@ -101,7 +101,6 @@ import org.jaqlib.query.iterable.IterableQuery;
  */
 public class IterableQueryBuilder extends AbstractQueryBuilder
 {
-
 
   /**
    * Selects a certain set of objects in a given collection. The collection that
