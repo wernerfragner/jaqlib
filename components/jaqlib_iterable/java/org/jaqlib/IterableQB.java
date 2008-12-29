@@ -30,11 +30,12 @@ import org.jaqlib.query.WhereCondition;
  * data sources that implement the {@link Iterable} interface. <br>
  * Examples are given here: {@link IterableQueryBuilder}.
  * </p>
+ * This class is thread-safe.
  * 
  * @see IterableQueryBuilder
  * @author Werner Fragner
  */
-public class QB
+public class IterableQB
 {
 
   /**

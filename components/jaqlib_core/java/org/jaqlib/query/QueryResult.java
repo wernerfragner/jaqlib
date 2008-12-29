@@ -66,9 +66,9 @@ public class QueryResult<T, DataSourceType> extends
    * <b>Example:</b>
    * 
    * <pre>
-   * Account account = QB.getMethodCallRecorder(Account.class);
-   * Map&lt;String, Account&gt; results = QB.select(Account.class).from(accounts).asMap(
-   *     account.getId());
+   * Account account = IterableQB.getMethodCallRecorder(Account.class);
+   * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
+   *     .asMap(account.getId());
    * </pre>
    * 
    * </p>
