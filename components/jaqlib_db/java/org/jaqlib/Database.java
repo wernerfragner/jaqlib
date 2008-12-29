@@ -4,23 +4,41 @@ import javax.sql.DataSource;
 
 import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
 import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.DbSelect;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.MappingRetrievalStrategy;
-import org.jaqlib.db.PrimitiveDbSelectResult;
+import org.jaqlib.util.Assert;
 
 /**
  * Helper class that builds objects for executing queries against databases.
- * This class only provides static helper methods and is not intended to be
- * instantiated. <br>
+ * This class provides static helper methods but can also be instantiated to
+ * make the creation of {@link DbSelectDataSource} objects more comfortable. <br>
  * This class is thread-safe.
  * 
  * @author Werner Fragner
  */
-public class Db
+public class Database
 {
 
-  private Db()
+  private final DataSource dataSource;
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   */
+  public Database(DataSource dataSource)
   {
+    this.dataSource = Assert.notNull(dataSource);
+  }
+
+
+  /**
+   * @param sql a not null SELECT statement.
+   * @return a object representing the source for a database query.
+   */
+  public DbSelectDataSource getSelectDataSource(String sql)
+  {
+    return new DbSelectDataSource(dataSource, sql);
   }
 
 
@@ -30,41 +48,9 @@ public class Db
    * @param sql a not null SELECT statement.
    * @return a object representing the source for a database query.
    */
-  public static DbSelect getSelect(DataSource dataSource, String sql)
+  public static DbSelectDataSource getSelectDataSource(DataSource dataSource, String sql)
   {
-    return new DbSelect(dataSource, sql);
-  }
-
-
-  /**
-   * This method can be used if only one column should be selected into a
-   * primitive Java type.
-   * 
-   * @param <T> the type of the column.
-   * @param columnIndex the index of the column (starting with 1).
-   * @return an object defining the result of a SELECT statement with only one
-   *         column as result.
-   */
-  public static <T> PrimitiveDbSelectResult<T> getPrimitiveResult(
-      int columnIndex)
-  {
-    return new PrimitiveDbSelectResult<T>(columnIndex);
-  }
-
-
-  /**
-   * This method can be used if only one column should be selected into a
-   * primitive Java type.
-   * 
-   * @param <T> the type of the column.
-   * @param columnName the name of the column
-   * @return an object defining the result of a SELECT statement with only one
-   *         column as result.
-   */
-  public static <T> PrimitiveDbSelectResult<T> getPrimitiveResult(
-      String columnName)
-  {
-    return new PrimitiveDbSelectResult<T>(columnName);
+    return new Database(dataSource).getSelectDataSource(sql);
   }
 
 

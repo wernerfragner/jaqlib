@@ -12,8 +12,8 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.db.DbSelect;
-import org.jaqlib.db.PrimitiveDbSelectResult;
+import org.jaqlib.db.Column;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 
@@ -23,7 +23,7 @@ public class PrimitiveDatabaseQBTest extends TestCase
 
   private DatabaseSetup dbSetup;
 
-  private WhereClause<String, DbSelect> where;
+  private WhereClause<String, DbSelectDataSource> where;
 
 
   @Override
@@ -36,10 +36,9 @@ public class PrimitiveDatabaseQBTest extends TestCase
     dbSetup.insertTestRecords();
 
     final String sql = "SELECT lastname FROM APP.ACCOUNT";
-    DbSelect selectDefinition = Db.getSelect(getDataSource(), sql);
-    PrimitiveDbSelectResult<String> resultDefinition = Db.getPrimitiveResult(1);
+    DbSelectDataSource dataSource = Database.getSelectDataSource(getDataSource(), sql);
 
-    where = DatabaseQB.select(resultDefinition).from(selectDefinition);
+    where = DatabaseQB.select(new Column<String>(1)).from(dataSource);
   }
 
 
@@ -58,33 +57,33 @@ public class PrimitiveDatabaseQBTest extends TestCase
   }
 
 
-  private void assertLastResult(WhereClause<String, DbSelect> where)
+  private void assertLastResult(WhereClause<String, DbSelectDataSource> where)
   {
     assertEquals(MAIER_ACCOUNT.getLastName(), where.lastResult());
   }
 
 
-  private void assertFirstResult(WhereClause<String, DbSelect> where)
+  private void assertFirstResult(WhereClause<String, DbSelectDataSource> where)
   {
     assertEquals(HUBER_ACCOUNT.getLastName(), where.firstResult());
   }
 
 
-  private void assertSetResult(WhereClause<String, DbSelect> where)
+  private void assertSetResult(WhereClause<String, DbSelectDataSource> where)
   {
     Set<String> result = where.asSet();
     assertAllLastNames(result);
   }
 
 
-  private void assertVectorResult(WhereClause<String, DbSelect> where)
+  private void assertVectorResult(WhereClause<String, DbSelectDataSource> where)
   {
     Vector<String> result = where.asVector();
     assertAllLastNames(result);
   }
 
 
-  private void assertListResult(WhereClause<String, DbSelect> where)
+  private void assertListResult(WhereClause<String, DbSelectDataSource> where)
   {
     List<String> result = where.asList();
     assertAllLastNames(result);

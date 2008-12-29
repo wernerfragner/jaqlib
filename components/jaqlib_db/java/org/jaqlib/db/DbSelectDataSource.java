@@ -12,7 +12,7 @@ import org.jaqlib.util.Assert;
 /**
  * @author Werner Fragner
  */
-public class DbSelect
+public class DbSelectDataSource
 {
 
   private final String sql;
@@ -25,7 +25,7 @@ public class DbSelect
   private DbResultSetMetaData resultSetMetaData;
 
 
-  public DbSelect(DataSource dataSource, String sql)
+  public DbSelectDataSource(DataSource dataSource, String sql)
   {
     this.dataSource = Assert.notNull(dataSource);
     this.sql = Assert.notNull(sql);

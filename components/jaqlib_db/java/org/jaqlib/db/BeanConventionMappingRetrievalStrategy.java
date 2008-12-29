@@ -5,7 +5,6 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 
-import org.jaqlib.Db;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.ExceptionUtil;
 
@@ -47,9 +46,15 @@ public class BeanConventionMappingRetrievalStrategy implements
     {
       if (shouldAddBeanProperty(descriptor))
       {
-        result.addResult(Db.getPrimitiveResult(descriptor.getName()));
+        result.addResult(getPrimitiveResult(descriptor.getName()));
       }
     }
+  }
+
+
+  private <T> PrimitiveDbSelectResult<T> getPrimitiveResult(String columnName)
+  {
+    return new PrimitiveDbSelectResult<T>(columnName);
   }
 
 
