@@ -11,7 +11,8 @@ import org.jaqlib.util.Assert;
 /**
  * Helper class that builds objects for executing queries against databases.
  * This class provides static helper methods but can also be instantiated to
- * make the creation of {@link DbSelectDataSource} objects more comfortable. <br>
+ * make the creation of {@link DbSelectDataSource} and
+ * {@link BeanDbSelectResult} objects more comfortable. <br>
  * This class is thread-safe.
  * 
  * @author Werner Fragner
@@ -19,7 +20,10 @@ import org.jaqlib.util.Assert;
 public class Database
 {
 
+  private static MappingRetrievalStrategy defaultMappingRetrievalStrategy = new BeanConventionMappingRetrievalStrategy();
+
   private final DataSource dataSource;
+  private MappingRetrievalStrategy mappingRetrievalStrategy;
 
 
   /**
@@ -29,6 +33,48 @@ public class Database
   public Database(DataSource dataSource)
   {
     this.dataSource = Assert.notNull(dataSource);
+  }
+
+
+  /**
+   * Sets the user-defined mapping retrieval strategy for this database
+   * instance. By default the {@link BeanConventionMappingRetrievalStrategy} is
+   * used to retrieve the mappings between database columns and Java bean
+   * instance fields. <br>
+   * This method can be used if another mapping strategy than using bean naming
+   * conventions should be applied.
+   * 
+   * @param strategy a user-defined strategy how to map SELECT statement results
+   *          to the fields of a given bean.
+   */
+  public void setMappingRetrievalStrategy(MappingRetrievalStrategy strategy)
+  {
+    this.mappingRetrievalStrategy = Assert.notNull(mappingRetrievalStrategy);
+  }
+
+
+  private MappingRetrievalStrategy getMappingRetrievalStrategy()
+  {
+    if (this.mappingRetrievalStrategy == null)
+    {
+      return defaultMappingRetrievalStrategy;
+    }
+    else
+    {
+      return this.mappingRetrievalStrategy;
+    }
+  }
+
+
+  /**
+   * 
+   * @param beanClass the class that should be used to hold the result of the
+   *          SELECT statement.
+   * @return an object describing a SELECT statement result.
+   */
+  public <T> BeanDbSelectResult<T> getBeanResult(Class<T> beanClass)
+  {
+    return getBeanResult(getMappingRetrievalStrategy(), beanClass);
   }
 
 
@@ -43,12 +89,37 @@ public class Database
 
 
   /**
+   * Sets the default user-defined mapping retrieval strategy. By default the
+   * {@link BeanConventionMappingRetrievalStrategy} is used to retrieve the
+   * mappings between database columns and Java bean instance fields.<br>
+   * This method can be used if another mapping strategy than using bean naming
+   * conventions should be applied.
+   * 
+   * @param strategy a user-defined strategy how to map SELECT statement results
+   *          to the fields of a given bean.
+   */
+  public static void setDefaultMappingRetrievalStrategy(
+      MappingRetrievalStrategy strategy)
+  {
+    defaultMappingRetrievalStrategy = Assert.notNull(strategy);
+  }
+
+
+  private static <T> MappingRetrievalStrategy getDefaultMappingRetrievalStrategy(
+      Class<T> beanClass)
+  {
+    return defaultMappingRetrievalStrategy;
+  }
+
+
+  /**
    * @param dataSource a not null {@link DataSource} for obtaining a JDBC
    *          connection.
    * @param sql a not null SELECT statement.
    * @return a object representing the source for a database query.
    */
-  public static DbSelectDataSource getSelectDataSource(DataSource dataSource, String sql)
+  public static DbSelectDataSource getSelectDataSource(DataSource dataSource,
+      String sql)
   {
     return new Database(dataSource).getSelectDataSource(sql);
   }
@@ -65,10 +136,10 @@ public class Database
    *          bean properties for storing the result of the SELECT statement.
    * @return an object describing a SELECT statement result.
    */
-  public static <T> BeanDbSelectResult<T> getBeanResult(Class<T> beanClass)
+  public static <T> BeanDbSelectResult<T> getDefaultBeanResult(
+      Class<T> beanClass)
   {
-    final MappingRetrievalStrategy strategy = new BeanConventionMappingRetrievalStrategy(
-        beanClass);
+    final MappingRetrievalStrategy strategy = getDefaultMappingRetrievalStrategy(beanClass);
     return getBeanResult(strategy, beanClass);
   }
 
@@ -84,8 +155,9 @@ public class Database
       MappingRetrievalStrategy mappingStrategy, Class<T> beanClass)
   {
     BeanDbSelectResult<T> result = new BeanDbSelectResult<T>(beanClass);
-    mappingStrategy.addMappings(result);
+    mappingStrategy.addMappings(beanClass, result);
     return result;
   }
+
 
 }

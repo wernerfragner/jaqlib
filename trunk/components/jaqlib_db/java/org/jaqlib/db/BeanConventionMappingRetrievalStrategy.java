@@ -12,7 +12,7 @@ import org.jaqlib.util.ExceptionUtil;
  * Implementation of the {@link MappingRetrievalStrategy} interface that tries
  * to retrieve the bean properties of a given class. These properties are added
  * to a given {@link BeanDbSelectResult} object if they have appropriate get and
- * set methods (only regarding java bean naming convention).
+ * set methods (only regarding Java bean naming convention).
  * 
  * @author Werner Fragner
  */
@@ -20,28 +20,15 @@ public class BeanConventionMappingRetrievalStrategy implements
     MappingRetrievalStrategy
 {
 
-  private final Class<?> beanClass;
-
-
-  /**
-   * Default constructor.
-   * 
-   * @param beanClass a not null bean class.
-   */
-  public BeanConventionMappingRetrievalStrategy(Class<?> beanClass)
-  {
-    this.beanClass = Assert.notNull(beanClass);
-  }
-
-
   /**
    * {@inheritDoc}
    */
-  public void addMappings(BeanDbSelectResult<?> result)
+  public void addMappings(Class<?> beanClass, BeanDbSelectResult<?> result)
   {
+    Assert.notNull(beanClass);
     Assert.notNull(result);
 
-    BeanInfo beanInfo = getBeanInfo();
+    BeanInfo beanInfo = getBeanInfo(beanClass);
     for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
     {
       if (shouldAddBeanProperty(descriptor))
@@ -78,7 +65,7 @@ public class BeanConventionMappingRetrievalStrategy implements
   }
 
 
-  private BeanInfo getBeanInfo()
+  private BeanInfo getBeanInfo(Class<?> beanClass)
   {
     try
     {

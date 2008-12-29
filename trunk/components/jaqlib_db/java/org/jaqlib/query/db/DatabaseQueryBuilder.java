@@ -159,7 +159,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
   }
 
 
-  private <T> FromClause<T, DbSelectDataSource> select(
+  public <T> FromClause<T, DbSelectDataSource> select(
       BeanDbSelectResult<T> resultDefinition)
   {
     return this.<T> createQuery().createFromClause(resultDefinition);
@@ -221,7 +221,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    */
   public <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
   {
-    BeanDbSelectResult<T> beanResult = Database.getBeanResult(beanClass);
+    BeanDbSelectResult<T> beanResult = Database.getDefaultBeanResult(beanClass);
     return select(beanResult);
   }
 

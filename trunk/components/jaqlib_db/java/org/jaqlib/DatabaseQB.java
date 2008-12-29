@@ -15,6 +15,7 @@
  */
 package org.jaqlib;
 
+import org.jaqlib.db.BeanDbSelectResult;
 import org.jaqlib.db.Column;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.FromClause;
@@ -150,6 +151,13 @@ public class DatabaseQB
   public static <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
   {
     return QUERYBUILDER.select(beanClass);
+  }
+
+
+  public static <T> FromClause<T, DbSelectDataSource> select(
+      BeanDbSelectResult<T> resultDefinition)
+  {
+    return QUERYBUILDER.select(resultDefinition);
   }
 
 }
