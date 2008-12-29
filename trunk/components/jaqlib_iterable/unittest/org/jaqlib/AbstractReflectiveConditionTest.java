@@ -13,8 +13,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface.getLastName()).isEqual("maier").asList();
     assertNotNull(results);
     assertEquals(1, results.size());
@@ -28,8 +28,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isGreaterThan(element).asList();
     assertNotNull(results);
     assertEquals(1, results.size());
@@ -43,8 +43,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isGreaterThanOrEqualTo(element).asList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -59,8 +59,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isSmallerThan(element).asList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -75,8 +75,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isSmallerThanOrEqualTo(element).asList();
     assertNotNull(results);
     assertEquals(3, results.size());
@@ -93,8 +93,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface.getLastName()).isNull().asList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -110,8 +110,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isNull().asList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -127,8 +127,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface.getLastName()).isNotNull().asList();
     assertNotNull(results);
     assertEquals(2, results.size());
@@ -144,8 +144,8 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = QB.getMethodCallRecorder(getAccountClass());
-    List<AccountType> results = QB.select(getAccountClass()).from(elements)
+    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isNotNull().asList();
     assertNotNull(results);
     assertEquals(4, results.size());

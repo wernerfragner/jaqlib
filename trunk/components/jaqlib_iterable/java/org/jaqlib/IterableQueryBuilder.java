@@ -37,10 +37,10 @@ import org.jaqlib.query.iterable.IterableQuery;
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
- * Account account = QB.getMethodCallRecorder(Account.class);
+ * Account account = IterableQB.getMethodCallRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where(
+ * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
  *     account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
@@ -48,7 +48,7 @@ import org.jaqlib.query.iterable.IterableQuery;
  * 
  * <pre>
  * // create condition for negative balances
- * WhereCondition deptCondition = new WhereCondition() {
+ * WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;() {
  * 
  *   public boolean evaluate(Account account) {
  *     return (account.getBalance() &lt; 0);
@@ -57,7 +57,7 @@ import org.jaqlib.query.iterable.IterableQuery;
  * };
  * 
  * // create condition for accounts with poor credit rating
- * WhereCondition ratingCondition = new WhereCondition() {
+ * WhereCondition&lt;Account&gt; ratingCondition = new WhereCondition&lt;Account&gt;() {
  * 
  *   public boolean evaluate(Account account) {
  *     return (account.getCreditRating() == CreditRating.POOR);
@@ -65,34 +65,34 @@ import org.jaqlib.query.iterable.IterableQuery;
  * }
  * 
  * // execute query with these conditions 
- * List&lt;Account&gt; highRiskAccounts = QB.select(Account.class).from(accounts)
+ * List&lt;Account&gt; highRiskAccounts = IterableQB.select(Account.class).from(accounts)
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
  * <i>Example for filtering out null elements:</i>
  * 
  * <pre>
- * List&lt;Account&gt; notNullAccounts = QB.select(Account.class).from(accounts).where()
- *     .element().isNotNull().asList();
+ * List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
+ *     .where().element().isNotNull().asList();
  * </pre>
  * 
  * <i>Example for using {@link Comparable} elements:</i>
  * 
  * <pre>
  * // Account implements the Comparable interface; the balance field is used for comparing two accounts
- * Account spec = new Account();
+ * AccountImpl spec = new AccountImpl();
  * account.setBalance(5000);
  * 
- * List&lt;Account&gt; result = QB.select(Account.class).from(accounts).where()
+ * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where()
  *     .element().isSmallerThan(spec).asList();
  * </pre>
  * 
  * <i>Example using a Map as result:</i>
  * 
  *<pre>
- * Account account = QB.getMethodCallRecorder(Account.class);
- * Map&lt;String, Account&gt; results = QB.select(Account.class).from(accounts).asMap(
- *     account.getId());
+ * Account account = IterableQB.getMethodCallRecorder(Account.class);
+ * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
+ *     .asMap(account.getId());
  * </pre>
  * 
  * </p>

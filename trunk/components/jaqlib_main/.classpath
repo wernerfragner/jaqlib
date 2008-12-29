@@ -6,5 +6,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_iterable"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_db"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
