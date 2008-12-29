@@ -29,7 +29,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return a list containing the matching elements. If no matches have been
    *         found then an empty list is returned.
    */
-  public List<T> toList()
+  public List<T> asList()
   {
     return getQuery().getListResult();
   }
@@ -39,7 +39,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return a vector containing the matching elements. If no matches have been
    *         found then an empty vector is returned.
    */
-  public Vector<T> toVector()
+  public Vector<T> asVector()
   {
     return getQuery().getVectorResult();
   }
@@ -49,7 +49,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return a set containing the matching elements. If no matches have been
    *         found then an empty set is returned.
    */
-  public Set<T> toSet()
+  public Set<T> asSet()
   {
     return getQuery().getSetResult();
   }
@@ -77,20 +77,20 @@ public class QueryResult<T, DataSourceType> extends
    * @return a map containing the matching elements. If no matches have been
    *         found then an empty map is returned.
    */
-  public <KeyType> Map<KeyType, T> toMap(KeyType key)
+  public <KeyType> Map<KeyType, T> asMap(KeyType key)
   {
     return getQuery().getMapResult(key);
   }
 
 
   /**
-   * Basically the same as {@link #toMap(Object)}, but this method returns a
+   * Basically the same as {@link #asMap(Object)}, but this method returns a
    * {@link Hashtable} instead of a {@link Map}.
    * 
    * @return a hashtable containing the matching elements. If no matches have
    *         been found then an empty hashtable is returned.
    */
-  public <KeyType> Hashtable<KeyType, T> toHashtable(KeyType key)
+  public <KeyType> Hashtable<KeyType, T> asHashtable(KeyType key)
   {
     return getQuery().getHashtableResult(key);
   }
@@ -130,8 +130,8 @@ public class QueryResult<T, DataSourceType> extends
 
 
   /**
-   * Simple condition that can be used to test all elements for various
-   * conditions.
+   * Simple condition that can be used to test all elements for a specific
+   * condition. This condition is appended using an AND connector.
    * 
    * @param <R> the result element type.
    * @return an object that represents a WHERE condition on a single element of
@@ -139,7 +139,21 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> SingleElementWhereCondition<T, DataSourceType, R> and()
   {
-    return getQuery().addSimpleWhereCondition();
+    return getQuery().addSimpleAndWhereCondition();
+  }
+
+
+  /**
+   * Simple condition that can be used to test all elements for a specific
+   * condition. This condition is appended using an OR connector.
+   * 
+   * @param <R> the result element type.
+   * @return an object that represents a WHERE condition on a single element of
+   *         the source collection.
+   */
+  public <R> SingleElementWhereCondition<T, DataSourceType, R> or()
+  {
+    return getQuery().addSimpleOrWhereCondition();
   }
 
 

@@ -15,14 +15,12 @@
  */
 package org.jaqlib;
 
+import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.iterable.IterableQuery;
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.RecordingProxy;
-import org.jaqlib.util.Assert;
 
 /**
  * <p>
@@ -101,41 +99,8 @@ import org.jaqlib.util.Assert;
  * 
  * @author Werner Fragner
  */
-public class IterableQueryBuilder
+public class IterableQueryBuilder extends AbstractQueryBuilder
 {
-
-  private final ThreadLocal<MethodCallRecorder> methodCallRecorder = new ThreadLocal<MethodCallRecorder>();
-  private final ThreadLocal<ClassLoader> classLoader = new ThreadLocal<ClassLoader>();
-
-
-  public IterableQueryBuilder(MethodCallRecorder methodCallRecorder)
-  {
-    this();
-    Assert.notNull(methodCallRecorder);
-    this.methodCallRecorder.set(methodCallRecorder);
-  }
-
-
-  /**
-   * Initializes this class with the a default class loader.
-   */
-  public IterableQueryBuilder()
-  {
-    classLoader.set(getClass().getClassLoader());
-  }
-
-
-  /**
-   * Sets a user-defined classloader that is used when creating proxy classes
-   * using the {@link #getMethodCallRecorder(Class)} method.
-   * 
-   * @param classLoader a not null class loader.
-   */
-  public void setClassLoader(ClassLoader classLoader)
-  {
-    Assert.notNull(classLoader);
-    this.classLoader.set(classLoader);
-  }
 
 
   /**
@@ -148,21 +113,7 @@ public class IterableQueryBuilder
    */
   <T> IterableQuery<T> createQuery()
   {
-    return new IterableQuery<T>(methodCallRecorder.get());
-  }
-
-
-  /**
-   * @param <T> the type of the result element(s).
-   * @param resultElementClass a not null class of the result element(s).
-   * @return a proxy object that records all method calls. These calls are used
-   *         when evaluating the WHERE clause of a query (see examples).
-   */
-  public <T> T getMethodCallRecorder(Class<T> resultElementClass)
-  {
-    RecordingProxy<T> proxy = new RecordingProxy<T>(classLoader.get());
-    methodCallRecorder.set(proxy.getInvocationRecorder());
-    return proxy.getProxy(resultElementClass);
+    return new IterableQuery<T>(getMethodCallRecorder());
   }
 
 

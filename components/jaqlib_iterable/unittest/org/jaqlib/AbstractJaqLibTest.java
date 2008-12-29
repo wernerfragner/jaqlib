@@ -71,10 +71,11 @@ public abstract class AbstractJaqLibTest<AccountType extends Account> extends
   public List<AccountType> createListWithNulls()
   {
     List elements = new ArrayList();
-    elements.add(new AccountImpl());
+    elements.add(new AccountImpl(1));
     elements.add(null);
     elements.add(null);
-    elements.add(new AccountImpl());
+    elements.add(new AccountImpl(10));
+    elements.add(new AccountImpl(5));
     return elements;
   }
 

@@ -7,6 +7,12 @@ import java.util.Set;
 import java.util.Vector;
 
 
+/**
+ * @author Werner Fragner
+ * 
+ * @param <T>
+ * @param <DataSourceType>
+ */
 public interface ResultProvider<T, DataSourceType>
 {
 

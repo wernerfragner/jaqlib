@@ -38,7 +38,7 @@ public class SelectClassTest extends AbstractSelectTest<AccountImpl>
 
     AccountImpl testInterface = QB.getMethodCallRecorder(AccountImpl.class);
     List<AccountImpl> results = QB.select(AccountImpl.class).from(elements)
-        .where(testInterface.isMatch()).isEqual(true).toList();
+        .where(testInterface.isMatch()).isEqual(true).asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));
