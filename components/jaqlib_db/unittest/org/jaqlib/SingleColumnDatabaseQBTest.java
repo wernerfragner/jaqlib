@@ -1,0 +1,157 @@
+package org.jaqlib;
+
+import java.util.List;
+import java.util.Set;
+import java.util.Vector;
+
+import javax.sql.DataSource;
+
+import junit.framework.TestCase;
+
+import org.jaqlib.db.DbSelect;
+import org.jaqlib.db.DbSelectResult;
+import org.jaqlib.query.WhereClause;
+import org.jaqlib.query.WhereCondition;
+
+
+public class SingleColumnDatabaseQBTest extends TestCase
+{
+
+  private DatabaseSetup dbSetup;
+
+  private WhereClause<String, DbSelect> where;
+
+
+  @Override
+  public void setUp() throws Exception
+  {
+    super.setUp();
+
+    dbSetup = new DatabaseSetup();
+    dbSetup.createTestTables();
+    dbSetup.insertTestRecords();
+
+    final String sql = "SELECT lastname FROM APP.ACCOUNT";
+    DbSelect selectDefinition = Db.getSelect(getDataSource(), sql);
+    DbSelectResult<String> resultDefinition = Db.getSingleResult(1);
+
+    where = DatabaseQB.select(resultDefinition).from(selectDefinition);
+  }
+
+
+  @Override
+  public void tearDown() throws Exception
+  {
+    super.tearDown();
+
+    dbSetup.clear();
+  }
+
+
+  private DataSource getDataSource()
+  {
+    return dbSetup.getDataSource();
+  }
+
+
+  private void assertLastResult(WhereClause<String, DbSelect> where)
+  {
+    assertEquals("wurm", where.lastResult());
+  }
+
+
+  private void assertFirstResult(WhereClause<String, DbSelect> where)
+  {
+    assertEquals("bauer", where.firstResult());
+  }
+
+
+  private void assertSetResult(WhereClause<String, DbSelect> where)
+  {
+    Set<String> result = where.asSet();
+    assertEquals(2, result.size());
+    assertTrue(result.contains("bauer"));
+    assertTrue(result.contains("wurm"));
+  }
+
+
+  private void assertVectorResult(WhereClause<String, DbSelect> where)
+  {
+    Vector<String> result = where.asVector();
+    assertEquals(2, result.size());
+    assertEquals("bauer", result.get(0));
+    assertEquals("wurm", result.get(1));
+  }
+
+
+  private void assertListResult(WhereClause<String, DbSelect> where)
+  {
+    List<String> result = where.asList();
+    assertAllLastNames(result);
+  }
+
+
+  private WhereCondition<String> createWhereCondition(final String pattern)
+  {
+    return new WhereCondition<String>()
+    {
+
+      public boolean evaluate(String element)
+      {
+        return element.matches(pattern);
+      }
+    };
+  }
+
+
+  public void testSelect()
+  {
+    assertListResult(where);
+    assertVectorResult(where);
+    assertSetResult(where);
+    assertFirstResult(where);
+    assertLastResult(where);
+  }
+
+
+  public void testSelect_SimpleCondition()
+  {
+    String result = where.where().element().isEqual("bauer").uniqueResult();
+    assertEquals("bauer", result);
+  }
+
+
+  public void testSelect_MultipleSimpleConditions()
+  {
+    List<String> result = where.where().element().isEqual("bauer").or()
+        .element().isEqual("wurm").asList();
+    assertAllLastNames(result);
+  }
+
+
+  public void testSelect_UserDefinedCondition()
+  {
+    WhereCondition<String> condition = createWhereCondition("b.*");
+    assertEquals("bauer", where.where(condition).uniqueResult());
+  }
+
+
+  public void testSelect_MultipleUserDefinedConditions()
+  {
+    WhereCondition<String> condition1 = createWhereCondition("b.*");
+    WhereCondition<String> condition2 = createWhereCondition(".*urm");
+
+    List<String> result = where.where(condition1).or(condition2).asList();
+    assertAllLastNames(result);
+  }
+
+
+  private void assertAllLastNames(List<String> result)
+  {
+    assertEquals(2, result.size());
+    assertEquals("bauer", result.get(0));
+    assertEquals("wurm", result.get(1));
+  }
+
+
+}
