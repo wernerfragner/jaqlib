@@ -8,61 +8,57 @@ public class SingleDbSelectResult<T> extends DbSelectResult<T>
 
   private static final int NO_INDEX = Integer.MIN_VALUE;
 
-  private String name;
-  private int index = NO_INDEX;
+  private String columnName;
+  private int columnIndex = NO_INDEX;
 
 
-  public SingleDbSelectResult()
+  public SingleDbSelectResult(String columnName)
   {
+    setFieldName(columnName);
+    setColumnName(columnName);
   }
 
 
-  public SingleDbSelectResult(String name)
+  public SingleDbSelectResult(int columnIndex)
   {
-    this.name = name;
+    setColumnIndex(columnIndex);
   }
 
 
-  public SingleDbSelectResult(int index)
+  public void setColumnName(String name)
   {
-    this.index = index;
+    this.columnName = name;
   }
 
 
-  public void setName(String name)
+  public void setColumnIndex(int index)
   {
-    this.name = name;
+    this.columnIndex = index;
   }
 
 
-  public void setIndex(int index)
+  public String getColumnName()
   {
-    this.index = index;
+    return columnName;
   }
 
 
-  public String getName()
+  public int getColumnIndex()
   {
-    return name;
+    return columnIndex;
   }
 
 
-  public int getIndex()
+  public boolean hasColumnName()
   {
-    return index;
+    return columnName != null;
   }
 
 
-  public boolean hasName()
-  {
-    return name != null;
-  }
-
-
-  public boolean hasIndex()
+  public boolean hasColumnIndex()
   {
     // DB column index starts with 1
-    return index > 0;
+    return columnIndex > 0;
   }
 
 

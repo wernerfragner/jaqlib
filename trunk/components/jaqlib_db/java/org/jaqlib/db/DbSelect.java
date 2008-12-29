@@ -22,6 +22,8 @@ public class DbSelect
   private Statement statement;
   private ResultSet resultSet;
 
+  private DbResultSetMetaData resultSetMetaData;
+
 
   public DbSelect(DataSource dataSource, String sql)
   {
@@ -39,7 +41,16 @@ public class DbSelect
   public ResultSet execute() throws SQLException
   {
     resultSet = getStatement().executeQuery(sql);
+    resultSetMetaData = new DbResultSetMetaData(resultSet.getMetaData());
     return resultSet;
+  }
+
+
+  public boolean hasColumn(String columnName) throws SQLException
+  {
+    Assert.notNull(resultSetMetaData,
+        "The SELECT statement must be executed before calling this method.");
+    return resultSetMetaData.hasColumn(columnName);
   }
 
 
@@ -47,6 +58,7 @@ public class DbSelect
   {
     DbUtil.close(resultSet);
     resultSet = null;
+    resultSetMetaData = null;
     DbUtil.close(statement);
     statement = null;
     DbUtil.close(connection);

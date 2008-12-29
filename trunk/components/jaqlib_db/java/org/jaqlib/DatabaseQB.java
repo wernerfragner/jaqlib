@@ -6,6 +6,7 @@ import org.jaqlib.query.FromClause;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
+import org.jaqlib.query.db.DatabaseQBProperties;
 import org.jaqlib.query.db.DatabaseQueryBuilder;
 
 
@@ -25,7 +26,28 @@ import org.jaqlib.query.db.DatabaseQueryBuilder;
 public class DatabaseQB
 {
 
-  private static final DatabaseQueryBuilder QUERYBUILDER = new DatabaseQueryBuilder();
+  private static final DatabaseQBProperties PROPERTIES = new DatabaseQBProperties();
+  private static final DatabaseQueryBuilder QUERYBUILDER = new DatabaseQueryBuilder(
+      PROPERTIES);
+
+
+  /**
+   * Enables/disables strict checking if a column in the desired result does not
+   * exist in the SELECT statement. If strict column check is enabled then an
+   * exception is thrown if a column does exist in the SELECT statement. If
+   * strict column check is disabled (DEFAULT) then an INFO log message is
+   * issued and the column is ignored. If these INFO messages should not be
+   * issued anymore then the JDK logger for
+   * 'org.jaqlib.query.db.AbstractJaqLibOrMapper' must be disabled (see <a href=
+   * "http//java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
+   * Logging</a>).
+   * 
+   * @param strictColumnCheck
+   */
+  public void setStrictColumnCheck(boolean strictColumnCheck)
+  {
+    PROPERTIES.setStrictColumnCheck(strictColumnCheck);
+  }
 
 
   /**
@@ -38,13 +60,14 @@ public class DatabaseQB
    * {@link ReflectiveWhereCondition}s.
    * 
    * @param <T> the result element type.
-   * @param result an object defining the desired result.
+   * @param resultDefinition an object defining the desired result.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelect> select(DbSelectResult<T> result)
+  public static <T> FromClause<T, DbSelect> select(
+      DbSelectResult<T> resultDefinition)
   {
-    return QUERYBUILDER.select(result);
+    return QUERYBUILDER.select(resultDefinition);
   }
 
 

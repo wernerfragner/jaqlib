@@ -9,10 +9,10 @@ public class DatabaseQBTests
   public static Test suite()
   {
     TestSuite suite = new TestSuite("Test for org.jaqlib");
-    //$JUnit-BEGIN$
+    // $JUnit-BEGIN$
     suite.addTestSuite(SingleColumnDatabaseQBTest.class);
     suite.addTestSuite(MultiColumnDatabaseQBTest.class);
-    //$JUnit-END$
+    // $JUnit-END$
     return suite;
   }
 

@@ -25,11 +25,29 @@ public class BeanConventionMappingStrategy implements MappingStrategy
 
   public <T> void execute(ComplexDbSelectResult<T> result)
   {
+    Assert.notNull(result);
+
     BeanInfo beanInfo = getBeanInfo();
     for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
     {
-      result.addResult(Db.getSingleResult(descriptor.getName()));
+      if (shouldAddBeanProperty(descriptor))
+      {
+        result.addResult(Db.getSingleResult(descriptor.getName()));
+      }
     }
+  }
+
+
+  protected boolean shouldAddBeanProperty(PropertyDescriptor descriptor)
+  {
+    return hasReadAndWriteMethods(descriptor);
+  }
+
+
+  private boolean hasReadAndWriteMethods(PropertyDescriptor descriptor)
+  {
+    return descriptor.getReadMethod() != null
+        && descriptor.getWriteMethod() != null;
   }
 
 
