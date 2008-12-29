@@ -104,20 +104,6 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
 
 
   /**
-   * Package private because client code should not be able to access this
-   * method. This method is only meant for internal usage and for usage by the
-   * static helper class {@link QB}.
-   * 
-   * @param <T> the type of the result element(s).
-   * @return a query object.
-   */
-  <T> IterableQuery<T> createQuery()
-  {
-    return new IterableQuery<T>(getMethodCallRecorder());
-  }
-
-
-  /**
    * Selects a certain set of objects in a given collection. The collection that
    * should be used must be specified in the returned {@link FromClause}. The
    * {@link FromClause} hereby returns a {@link WhereClause} that can be used to
@@ -145,6 +131,12 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
   public FromClause<Object, Iterable<Object>> select()
   {
     return createQuery().createFromClause(Object.class);
+  }
+
+
+  private <T> IterableQuery<T> createQuery()
+  {
+    return new IterableQuery<T>(getMethodCallRecorder());
   }
 
 }

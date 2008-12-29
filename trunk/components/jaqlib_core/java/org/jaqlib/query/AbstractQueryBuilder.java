@@ -15,10 +15,10 @@
  */
 package org.jaqlib.query;
 
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.NullMethodCallRecorder;
-import org.jaqlib.reflect.RecordingProxy;
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.reflect.MethodCallRecorder;
+import org.jaqlib.util.reflect.RecordingProxy;
+import org.jaqlib.util.reflect.ThreadLocalMethodCallRecorder;
 
 /**
  * @author Werner Fragner
@@ -26,7 +26,7 @@ import org.jaqlib.util.Assert;
 public abstract class AbstractQueryBuilder
 {
 
-  private final ThreadLocal<MethodCallRecorder> methodCallRecorder = new ThreadLocal<MethodCallRecorder>();
+  private final ThreadLocalMethodCallRecorder methodCallRecorder = new ThreadLocalMethodCallRecorder();
   private final ThreadLocal<ClassLoader> classLoader = new ThreadLocal<ClassLoader>();
 
 
@@ -36,7 +36,6 @@ public abstract class AbstractQueryBuilder
   public AbstractQueryBuilder()
   {
     classLoader.set(getClass().getClassLoader());
-    methodCallRecorder.set(new NullMethodCallRecorder());
   }
 
 
@@ -59,7 +58,7 @@ public abstract class AbstractQueryBuilder
    */
   protected MethodCallRecorder getMethodCallRecorder()
   {
-    return methodCallRecorder.get();
+    return methodCallRecorder;
   }
 
 
@@ -72,7 +71,7 @@ public abstract class AbstractQueryBuilder
   public <T> T getMethodCallRecorder(Class<T> resultElementClass)
   {
     RecordingProxy<T> proxy = new RecordingProxy<T>(classLoader.get());
-    methodCallRecorder.set(proxy.getInvocationRecorder());
+    methodCallRecorder.set(proxy.getMethodCallRecorder());
     return proxy.getProxy(resultElementClass);
   }
 

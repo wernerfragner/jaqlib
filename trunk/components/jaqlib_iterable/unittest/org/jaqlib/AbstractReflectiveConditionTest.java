@@ -6,7 +6,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
     extends AbstractJaqLibTest<AccountType>
 {
 
-  protected abstract AccountType createAccountType(Integer balance);
+  protected abstract AccountType createAccountType(Double balance);
 
 
   public void testSelect_ReflectiveCondition_IsEqual()
@@ -24,7 +24,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
   public void testSelect_ReflectiveCondition_IsGreaterThan()
   {
-    AccountType element = createAccountType(5);
+    AccountType element = createAccountType(5.0);
 
     List<AccountType> elements = createTestAccounts();
 
@@ -39,7 +39,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
   public void testSelect_ReflectiveCondition_IsGreaterThanOrEqualTo()
   {
-    AccountType element = createAccountType(5);
+    AccountType element = createAccountType(5.0);
 
     List<AccountType> elements = createTestAccounts();
 
@@ -55,7 +55,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
   public void testSelect_ReflectiveCondition_IsSmallerThan()
   {
-    AccountType element = createAccountType(5);
+    AccountType element = createAccountType(5.0);
 
     List<AccountType> elements = createTestAccounts();
 
@@ -71,7 +71,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
   public void testSelect_ReflectiveCondition_IsSmallerThanOrEqualTo()
   {
-    AccountType element = createAccountType(5);
+    AccountType element = createAccountType(5.0);
 
     List<AccountType> elements = createTestAccounts();
 

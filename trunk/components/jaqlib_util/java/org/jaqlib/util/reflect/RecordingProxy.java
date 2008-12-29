@@ -1,9 +1,6 @@
-package org.jaqlib.reflect;
+package org.jaqlib.util.reflect;
 
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.reflect.CgLibProxy;
-import org.jaqlib.util.reflect.JdkProxy;
-import org.jaqlib.util.reflect.ReflectionUtil;
 
 /**
  * @author Werner Fragner
@@ -14,7 +11,7 @@ public class RecordingProxy<T>
 {
 
   private final ClassLoader classLoader;
-  private final RecordingInvocationHandler invocationHandler = new RecordingInvocationHandler();
+  private final RecordingInvocationHandler methodCallRecorder = new RecordingInvocationHandler();
 
 
   public RecordingProxy(ClassLoader classLoader)
@@ -52,7 +49,7 @@ public class RecordingProxy<T>
   {
     assertHasDefaultConstructor(targetClass);
 
-    CgLibProxy<T> proxy = new CgLibProxy<T>(classLoader, invocationHandler);
+    CgLibProxy<T> proxy = new CgLibProxy<T>(classLoader, methodCallRecorder);
     return proxy.getProxy(targetClass);
   }
 
@@ -80,14 +77,14 @@ public class RecordingProxy<T>
 
   private T getJdkProxy(Class<T> targetClass)
   {
-    JdkProxy<T> proxy = new JdkProxy<T>(classLoader, invocationHandler);
+    JdkProxy<T> proxy = new JdkProxy<T>(classLoader, methodCallRecorder);
     return proxy.getProxy(targetClass);
   }
 
 
-  public MethodCallRecorder getInvocationRecorder()
+  public MethodCallRecorder getMethodCallRecorder()
   {
-    return invocationHandler;
+    return methodCallRecorder;
   }
 
 }

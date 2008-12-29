@@ -1,8 +1,8 @@
 package org.jaqlib.query;
 
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.reflect.MethodCallRecorder;
+import org.jaqlib.util.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner
@@ -27,9 +27,9 @@ public class ReflectiveWhereCondition<T, DataSourceType, ResultType> extends
 
 
   @Override
-  protected MethodInvocation getLastMethodInvocation()
+  protected MethodInvocation getCurrentMethodInvocation()
   {
-    return invocationRecorder.getLastInvocation();
+    return invocationRecorder.getCurrentInvocation();
   }
 
 
