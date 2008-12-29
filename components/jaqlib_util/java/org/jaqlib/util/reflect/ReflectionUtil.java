@@ -1,6 +1,8 @@
 package org.jaqlib.util.reflect;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -111,6 +113,64 @@ public class ReflectionUtil
     catch (IllegalAccessException e)
     {
       throw ExceptionUtil.toRuntimeException(e);
+    }
+  }
+
+
+  public static <T> T newInstance(Class<T> cls, Class<?>[] argTypes,
+      Object[] args)
+  {
+    try
+    {
+      Constructor<T> c = cls.getConstructor(argTypes);
+      return c.newInstance(args);
+    }
+    catch (NoSuchMethodException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+    catch (InstantiationException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+    catch (IllegalAccessException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+    catch (InvocationTargetException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+  }
+
+
+  public static <T> T newInstance(Class<T> cls)
+  {
+    try
+    {
+      return cls.newInstance();
+    }
+    catch (InstantiationException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+    catch (IllegalAccessException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+  }
+
+
+  public static boolean hasConstructor(Class<?> cls, Class<?>[] argTypes)
+  {
+    try
+    {
+      cls.getConstructor(argTypes);
+      return true;
+    }
+    catch (NoSuchMethodException e)
+    {
+      return false;
     }
   }
 
