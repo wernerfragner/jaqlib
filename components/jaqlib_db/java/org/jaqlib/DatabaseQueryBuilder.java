@@ -17,15 +17,15 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.db.BeanMapping;
+import org.jaqlib.db.ColumnMapping;
+import org.jaqlib.db.DatabaseQuery;
+import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.java.typehandler.BeanFieldTypeHandler;
 import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.BeanMapping;
-import org.jaqlib.query.db.ColumnMapping;
-import org.jaqlib.query.db.DatabaseQuery;
-import org.jaqlib.query.db.DbSelectDataSource;
-import org.jaqlib.util.bean.typehandler.BeanFieldTypeHandler;
 
 /**
  * <p>

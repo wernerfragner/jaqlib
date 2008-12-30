@@ -3,9 +3,6 @@ package org.jaqlib.util;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.jaqlib.util.reflect.ReflectionUtilTest;
-
-
 public class JaqLibUtilTests
 {
 

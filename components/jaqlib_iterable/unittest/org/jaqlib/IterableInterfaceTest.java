@@ -3,7 +3,7 @@ package org.jaqlib;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
-import org.jaqlib.util.reflect.RecordingInvocationHandler;
+import org.jaqlib.reflect.RecordingInvocationHandler;
 
 /**
  * Test class for proxying interfaces with JDK dynamic proxy mechanism.
