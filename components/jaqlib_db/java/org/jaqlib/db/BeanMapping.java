@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
+import org.jaqlib.db.java.typehandler.JavaTypeHandler;
+import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.ExceptionUtil;
 import org.jaqlib.util.ReflectionUtil;
 
 /**
@@ -23,6 +25,8 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
   private final List<AbstractMapping<?>> mappings = new ArrayList<AbstractMapping<?>>();
   private final Class<T> beanClass;
+  private BeanFactory beanFactory = DefaultBeanFactory.INSTANCE;
+  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
 
 
   /**
@@ -31,6 +35,42 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public BeanMapping(Class<T> beanClass)
   {
     this.beanClass = Assert.notNull(beanClass);
+  }
+
+
+  /**
+   * Sets a custom bean factory for creating bean instances.
+   * 
+   * @param beanFactory a not null bean factory.
+   */
+  public void setBeanFactory(BeanFactory beanFactory)
+  {
+    this.beanFactory = Assert.notNull(beanFactory);
+  }
+
+
+  /**
+   * Registers a custom java type handler with a given java type.
+   * 
+   * @param fieldType a not null java type.
+   * @param typeHandler a not null custom java type handler.
+   */
+  public void registerJavaTypeHandler(Class<?> fieldType,
+      JavaTypeHandler typeHandler)
+  {
+    javaTypeHandlerRegistry.registerTypeHandler(fieldType, typeHandler);
+  }
+
+
+  /**
+   * Changes the java type handler registry to a custom implementation. By
+   * default no type handlers are available.
+   * 
+   * @param registry a user-defined java type handler registry.
+   */
+  public void setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry registry)
+  {
+    this.javaTypeHandlerRegistry = registry;
   }
 
 
@@ -59,18 +99,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    */
   private T newBeanInstance()
   {
-    try
-    {
-      return beanClass.newInstance();
-    }
-    catch (InstantiationException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
-    catch (IllegalAccessException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
+    return beanFactory.newInstance(beanClass);
   }
 
 
@@ -83,26 +112,36 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
       Object value = mapping.getValue(rs);
       if (value != DbResultSet.NO_RESULT)
       {
-        final String fieldName = mapping.getFieldName();
-        value = applyBeanFieldTypeHandler(rs, fieldName, value);
-        setValue(bean, fieldName, value);
+        setValue(bean, mapping.getFieldName(), value);
       }
     }
     return bean;
   }
 
 
-  private Object applyBeanFieldTypeHandler(DbResultSet rs, String fieldName,
-      Object value)
+  private Object applyBeanFieldTypeHandler(String fieldName, Object value)
   {
     Class<?> fieldType = ReflectionUtil.getFieldType(beanClass, fieldName);
-    return rs.applyJavaTypeHandler(fieldType, value);
+    return applyJavaTypeHandler(fieldType, value);
   }
 
 
   private void setValue(T bean, String fieldName, Object value)
   {
+    value = applyBeanFieldTypeHandler(fieldName, value);
     ReflectionUtil.setFieldValue(bean, fieldName, value);
+  }
+
+
+  public Object applyJavaTypeHandler(Class<?> fieldType, Object value)
+  {
+    return getJavaTypeHandler(fieldType).getObject(value);
+  }
+
+
+  private JavaTypeHandler getJavaTypeHandler(Class<?> fieldType)
+  {
+    return javaTypeHandlerRegistry.getTypeHandler(fieldType);
   }
 
 }

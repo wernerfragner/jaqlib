@@ -4,8 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -22,7 +20,6 @@ public class DbResultSet
       .getName());
 
   private final SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
-  private final JavaTypeHandlerRegistry javaTypeHandlerRegistry;
 
   private final ResultSet resultSet;
   private final DbResultSetMetaData resultSetMetaData;
@@ -30,14 +27,12 @@ public class DbResultSet
 
 
   public DbResultSet(ResultSet resultSet,
-      SqlTypeHandlerRegistry sqlTypeHandlerRegistry,
-      JavaTypeHandlerRegistry javaTypeHandlerRegistry, boolean strictColumnCheck)
+      SqlTypeHandlerRegistry sqlTypeHandlerRegistry, boolean strictColumnCheck)
       throws SQLException
   {
     this.resultSet = Assert.notNull(resultSet);
     this.resultSetMetaData = new DbResultSetMetaData(resultSet.getMetaData());
     this.sqlTypeHandlerRegistry = Assert.notNull(sqlTypeHandlerRegistry);
-    this.javaTypeHandlerRegistry = Assert.notNull(javaTypeHandlerRegistry);
     this.strictColumnCheck = strictColumnCheck;
   }
 
@@ -94,16 +89,5 @@ public class DbResultSet
     return sqlTypeHandlerRegistry.getTypeHandler(columnDataType);
   }
 
-
-  public Object applyJavaTypeHandler(Class<?> fieldType, Object value)
-  {
-    return getJavaTypeHandler(fieldType).getObject(value);
-  }
-
-
-  private JavaTypeHandler getJavaTypeHandler(Class<?> fieldType)
-  {
-    return javaTypeHandlerRegistry.getTypeHandler(fieldType);
-  }
 
 }

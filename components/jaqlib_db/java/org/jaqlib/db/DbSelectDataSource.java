@@ -7,9 +7,6 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
-import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
@@ -24,8 +21,6 @@ import org.jaqlib.util.db.DbUtil;
  * <li>{@link #setStrictColumnCheck(boolean)}</li>
  * <li>{@link #setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry)}</li>
  * <li>{@link #registerSqlTypeHandler(int, SqlTypeHandler)}</li>
- * <li>{@link #setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry)}</li>
- * <li>{@link #registerJavaTypeHandler(Class, JavaTypeHandler)}</li>
  * </ul>
  * See according method javadoc for further details).
  * </p>
@@ -39,9 +34,7 @@ public class DbSelectDataSource
   private final DataSource dataSource;
 
   private boolean strictColumnCheck;
-
   private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
-  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
 
   private Connection connection;
   private Statement statement;
@@ -80,31 +73,6 @@ public class DbSelectDataSource
 
 
   /**
-   * Registers a custom java type handler with a given java type.
-   * 
-   * @param fieldType a not null java type.
-   * @param typeHandler a not null custom java type handler.
-   */
-  public void registerJavaTypeHandler(Class<?> fieldType,
-      JavaTypeHandler typeHandler)
-  {
-    javaTypeHandlerRegistry.registerTypeHandler(fieldType, typeHandler);
-  }
-
-
-  /**
-   * Changes the java type handler registry to a custom implementation. By
-   * default no type handlers are available.
-   * 
-   * @param registry a user-defined java type handler registry.
-   */
-  public void setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry registry)
-  {
-    this.javaTypeHandlerRegistry = registry;
-  }
-
-
-  /**
    * Enables/disables strict checking if a field in a Java bean does not exist
    * in the SELECT statement. If strict column check is enabled then an
    * exception is thrown if a Java bean field does exist in the SELECT
@@ -133,8 +101,7 @@ public class DbSelectDataSource
   public DbResultSet execute() throws SQLException
   {
     final ResultSet rs = getStatement().executeQuery(sql);
-    resultSet = new DbResultSet(rs, sqlTypeHandlerRegistry,
-        javaTypeHandlerRegistry, strictColumnCheck);
+    resultSet = new DbResultSet(rs, sqlTypeHandlerRegistry, strictColumnCheck);
     return resultSet;
   }
 
