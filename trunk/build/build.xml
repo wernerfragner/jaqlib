@@ -213,20 +213,23 @@
 	
 	<target name="jar" depends="compile, javadoc">
 		<mkdir dir="${build.temp}/jar" />
+		
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}.jar" >
-			<fileset dir="${build.temp}/zip" />
+			<zipgroupfileset dir="${build.temp}/zip" />
 			<fileset file="${build.base}/doc/apache_license-2.0.txt" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-src.zip" >
 			<fileset dir="${jaqlib_util.source}" />
 			<fileset dir="${jaqlib_core.source}" />
 			<fileset dir="${jaqlib_iterable.source}" />
+			<fileset dir="${jaqlib_db.source}" />
 			<fileset dir="${jaqlib_main.source}" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-unittest.zip" >
 			<fileset dir="${jaqlib_util.unittest}" />
 			<fileset dir="${jaqlib_core.unittest}" />
 			<fileset dir="${jaqlib_iterable.unittest}" />
+			<fileset dir="${jaqlib_db.unittest}" />
 			<fileset dir="${jaqlib_main.unittest}" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-doc.zip" basedir="${build.temp}/javadoc/jaqlib" />
