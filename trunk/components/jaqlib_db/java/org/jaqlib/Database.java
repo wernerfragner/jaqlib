@@ -2,10 +2,10 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.query.db.BeanConventionMappingRetrievalStrategy;
-import org.jaqlib.query.db.BeanMapping;
-import org.jaqlib.query.db.DbSelectDataSource;
-import org.jaqlib.query.db.MappingRetrievalStrategy;
+import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
+import org.jaqlib.db.BeanMapping;
+import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.MappingRetrievalStrategy;
 import org.jaqlib.util.Assert;
 
 /**

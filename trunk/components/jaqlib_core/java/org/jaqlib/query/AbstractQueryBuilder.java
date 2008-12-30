@@ -15,10 +15,10 @@
  */
 package org.jaqlib.query;
 
+import org.jaqlib.reflect.MethodCallRecorder;
+import org.jaqlib.reflect.RecordingProxy;
+import org.jaqlib.reflect.ThreadLocalMethodCallRecorder;
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.reflect.MethodCallRecorder;
-import org.jaqlib.util.reflect.RecordingProxy;
-import org.jaqlib.util.reflect.ThreadLocalMethodCallRecorder;
 
 /**
  * @author Werner Fragner

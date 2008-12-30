@@ -1,7 +1,7 @@
 package org.jaqlib.query;
 
-import org.jaqlib.util.reflect.MethodInvocation;
-import org.jaqlib.util.reflect.RecordingProxy;
+import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.reflect.RecordingProxy;
 
 /**
  * @author Werner Fragner

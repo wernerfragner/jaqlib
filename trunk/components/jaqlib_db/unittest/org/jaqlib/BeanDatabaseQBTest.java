@@ -13,10 +13,10 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.DbSelectDataSource;
-import org.jaqlib.util.bean.typehandler.CreditRatingTypeHandler;
 
 
 public class BeanDatabaseQBTest extends TestCase

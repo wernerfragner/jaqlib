@@ -15,12 +15,12 @@
  */
 package org.jaqlib;
 
+import org.jaqlib.iterable.IterableQuery;
 import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.iterable.IterableQuery;
 
 /**
  * <p>

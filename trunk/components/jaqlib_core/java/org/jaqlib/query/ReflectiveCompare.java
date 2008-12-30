@@ -1,6 +1,6 @@
 package org.jaqlib.query;
 
-import org.jaqlib.util.reflect.MethodInvocation;
+import org.jaqlib.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner
