@@ -47,6 +47,7 @@ import org.jaqlib.util.Assert;
  * element. The result of this method call is then evaluated against the
  * specified condition.
  * </p>
+ * This class is thread-safe.
  * <p>
  * <b>Usage examples:</b><br>
  * All examples use following statements to define the database connection and

@@ -27,7 +27,7 @@ public class Database
   private static MappingRetrievalStrategy defaultMappingRetrievalStrategy = new BeanConventionMappingRetrievalStrategy();
 
   private final DataSource dataSource;
-  private MappingRetrievalStrategy mappingRetrievalStrategy;
+  private volatile MappingRetrievalStrategy mappingRetrievalStrategy;
 
 
   /**
