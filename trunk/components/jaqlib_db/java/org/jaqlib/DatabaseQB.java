@@ -18,8 +18,8 @@ package org.jaqlib;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.BeanDbSelectResult;
-import org.jaqlib.query.db.Column;
+import org.jaqlib.query.db.BeanMapping;
+import org.jaqlib.query.db.ColumnMapping;
 import org.jaqlib.query.db.DbSelectDataSource;
 
 
@@ -50,35 +50,9 @@ public class DatabaseQB
   }
 
   /**
-   * Default properties for {@link DatabaseQueryBuilder}.
-   */
-  private static final DatabaseQBProperties PROPERTIES = new DatabaseQBProperties();
-
-  /**
    * Singleton instance.
    */
-  private static final DatabaseQueryBuilder QUERYBUILDER = new DatabaseQueryBuilder(
-      PROPERTIES);
-
-
-  /**
-   * Enables/disables strict checking if a field in a Java bean does not exist
-   * in the SELECT statement. If strict column check is enabled then an
-   * exception is thrown if a Java bean field does exist in the SELECT
-   * statement. If strict column check is disabled (DEFAULT) then an INFO log
-   * message is issued and the field is ignored (= is not set). If these INFO
-   * messages should not be issued then the JDK logger for
-   * 'org.jaqlib.query.db.AbstractJaqLibOrMapper' must be disabled (see <a
-   * href="
-   * http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
-   * Logging</a>).
-   * 
-   * @param strictColumnCheck enable/disable strict column check.
-   */
-  public void setStrictColumnCheck(boolean strictColumnCheck)
-  {
-    PROPERTIES.setStrictColumnCheck(strictColumnCheck);
-  }
+  private static final DatabaseQueryBuilder QUERYBUILDER = new DatabaseQueryBuilder();
 
 
   /**
@@ -124,11 +98,12 @@ public class DatabaseQB
    * </p>
    * 
    * @param <T> the result column type.
-   * @param column an object defining the desired column.
+   * @param columnMapping an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelectDataSource> select(Column<T> column)
+  public static <T> FromClause<T, DbSelectDataSource> select(
+      ColumnMapping<T> column)
   {
     return QUERYBUILDER.select(column);
   }
@@ -167,8 +142,8 @@ public class DatabaseQB
    * This method basically provides the same functionality as
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between SELECT statement results to Java bean instance fields. This
-   * mapping can defined with a {@link BeanDbSelectResult} instance. For build
-   * these instances see {@link Database}.
+   * mapping can defined with a {@link BeanMapping} instance. For build these
+   * instances see {@link Database}.
    * 
    * @param <T> the result bean type.
    * @param resultDefinition a bean definition that holds information how to map
@@ -177,7 +152,7 @@ public class DatabaseQB
    *         query.
    */
   public static <T> FromClause<T, DbSelectDataSource> select(
-      BeanDbSelectResult<T> resultDefinition)
+      BeanMapping<T> resultDefinition)
   {
     return QUERYBUILDER.select(resultDefinition);
   }

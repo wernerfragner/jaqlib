@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.Column;
+import org.jaqlib.query.db.ColumnMapping;
 import org.jaqlib.query.db.DbSelectDataSource;
 
 
@@ -39,7 +39,7 @@ public class PrimitiveDatabaseQBTest extends TestCase
     DbSelectDataSource dataSource = Database.getSelectDataSource(
         getDataSource(), sql);
 
-    where = DatabaseQB.select(new Column<String>(1)).from(dataSource);
+    where = DatabaseQB.select(new ColumnMapping<String>(1)).from(dataSource);
   }
 
 

@@ -3,7 +3,7 @@ package org.jaqlib;
 import javax.sql.DataSource;
 
 import org.jaqlib.query.db.BeanConventionMappingRetrievalStrategy;
-import org.jaqlib.query.db.BeanDbSelectResult;
+import org.jaqlib.query.db.BeanMapping;
 import org.jaqlib.query.db.DbSelectDataSource;
 import org.jaqlib.query.db.MappingRetrievalStrategy;
 import org.jaqlib.util.Assert;
@@ -13,7 +13,7 @@ import org.jaqlib.util.Assert;
  * Helper class that builds objects for executing queries against databases.
  * This class provides static helper methods but can also be instantiated to
  * make the creation of {@link DbSelectDataSource} and
- * {@link BeanDbSelectResult} objects more comfortable. <br>
+ * {@link BeanMapping} objects more comfortable. <br>
  * </p>
  * <p>
  * This class is thread-safe.
@@ -76,7 +76,7 @@ public class Database
    *          SELECT statement.
    * @return an object describing a SELECT statement result.
    */
-  public <T> BeanDbSelectResult<T> getBeanResult(Class<T> beanClass)
+  public <T> BeanMapping<T> getBeanResult(Class<T> beanClass)
   {
     return getBeanResult(getMappingRetrievalStrategy(), beanClass);
   }
@@ -130,9 +130,9 @@ public class Database
 
 
   /**
-   * Creates a {@link BeanDbSelectResult} instance by using the bean properties
+   * Creates a {@link BeanMapping} instance by using the bean properties
    * of the given class. Bean properties must have a valid get and set method in
-   * order to be in the returned {@link BeanDbSelectResult}.
+   * order to be in the returned {@link BeanMapping}.
    * 
    * @param <T> the type of the result bean.
    * @param beanClass the class that should be used to hold the result of the
@@ -140,7 +140,7 @@ public class Database
    *          bean properties for storing the result of the SELECT statement.
    * @return an object describing a SELECT statement result.
    */
-  public static <T> BeanDbSelectResult<T> getDefaultBeanResult(
+  public static <T> BeanMapping<T> getDefaultBeanResult(
       Class<T> beanClass)
   {
     final MappingRetrievalStrategy strategy = getDefaultMappingRetrievalStrategy(beanClass);
@@ -155,10 +155,10 @@ public class Database
    *          SELECT statement.
    * @return an object describing a SELECT statement result.
    */
-  public static <T> BeanDbSelectResult<T> getBeanResult(
+  public static <T> BeanMapping<T> getBeanResult(
       MappingRetrievalStrategy mappingStrategy, Class<T> beanClass)
   {
-    BeanDbSelectResult<T> result = new BeanDbSelectResult<T>(beanClass);
+    BeanMapping<T> result = new BeanMapping<T>(beanClass);
     mappingStrategy.addMappings(beanClass, result);
     return result;
   }
