@@ -141,16 +141,18 @@ import org.jaqlib.query.WhereCondition;
  * <i>Example for custom java type handler:</i>
  * 
  * <pre>
- * // get DbSelectDataSource
+ * // get DbSelectDataSource and BeanMapping
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
- * DbSelectDataSource accounts = Database.getSelectDataSource(getJdbcDataSource(),
- *     sql);
+ * Database db = new Database(getDataSource());
+ * DbSelectDataSource dataSource = db.getSelectDataSource(sql);
+ * BeanMapping&lt;AccountImpl&gt; mapping = db.getBeanMapping(AccountImpl.class);
  * 
  * // register custom type handler for CreditRating bean fields
- * accounts.registerJavaTypeHandler(CreditRating.class,
+ * mapping.registerJavaTypeHandler(CreditRating.class,
  *     new CreditRatingTypeHandler());
  * 
- * // perform select with DatabaseQB.select() ...
+ * // perform query 
+ * DatabaseQB.select(mapping).from(dataSource) ...
  * 
  * // custom java type handler that converts Integer values from DB into CreditRating enumerations  
  * public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
@@ -228,7 +230,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    */
   public <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
   {
-    BeanMapping<T> beanResult = Database.getDefaultBeanResult(beanClass);
+    BeanMapping<T> beanResult = Database.getDefaultBeanMapping(beanClass);
     return select(beanResult);
   }
 

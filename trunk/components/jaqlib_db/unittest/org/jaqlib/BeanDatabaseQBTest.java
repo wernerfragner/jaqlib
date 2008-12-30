@@ -13,6 +13,7 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 import org.jaqlib.query.WhereClause;
@@ -40,13 +41,14 @@ public class BeanDatabaseQBTest extends TestCase
     dbSetup.createTestTables();
     dbSetup.insertTestRecords();
 
-    final String sql = "SELECT lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
-    DbSelectDataSource dataSource = Database.getSelectDataSource(
-        getDataSource(), sql);
-    dataSource.registerJavaTypeHandler(CreditRating.class,
+    String sql = "SELECT lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
+    Database db = new Database(getDataSource());
+    DbSelectDataSource dataSource = db.getSelectDataSource(sql);
+    BeanMapping<AccountImpl> mapping = db.getBeanMapping(AccountImpl.class);
+    mapping.registerJavaTypeHandler(CreditRating.class,
         new CreditRatingTypeHandler());
 
-    where = DatabaseQB.select(AccountImpl.class).from(dataSource);
+    where = DatabaseQB.select(mapping).from(dataSource);
   }
 
 

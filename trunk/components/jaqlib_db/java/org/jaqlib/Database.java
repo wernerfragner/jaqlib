@@ -3,8 +3,10 @@ package org.jaqlib;
 import javax.sql.DataSource;
 
 import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
+import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DefaultBeanFactory;
 import org.jaqlib.db.MappingRetrievalStrategy;
 import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
@@ -30,6 +32,8 @@ import org.jaqlib.util.Assert;
 public class Database
 {
 
+  // static fields
+
   private static MappingRetrievalStrategy defaultMappingRetrievalStrategy = new BeanConventionMappingRetrievalStrategy();
 
   // mandatory fields
@@ -41,6 +45,7 @@ public class Database
   private MappingRetrievalStrategy mappingRetrievalStrategy = defaultMappingRetrievalStrategy;
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
   private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
+  private BeanFactory beanFactory = DefaultBeanFactory.INSTANCE;
   private boolean strictColumnCheck = false;
 
 
@@ -116,7 +121,18 @@ public class Database
    */
   public void setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry registry)
   {
-    this.javaTypeHandlerRegistry = registry;
+    this.javaTypeHandlerRegistry = Assert.notNull(registry);
+  }
+
+
+  /**
+   * Sets a custom bean factory for creating bean instances.
+   * 
+   * @param beanFactory a not null bean factory.
+   */
+  public void setBeanFactory(BeanFactory beanFactory)
+  {
+    this.beanFactory = Assert.notNull(beanFactory);
   }
 
 
@@ -144,11 +160,14 @@ public class Database
    * 
    * @param beanClass the class that should be used to hold the result of the
    *          SELECT statement.
-   * @return an object describing a SELECT statement result.
+   * @return an object describing where to store a SELECT statement result.
    */
-  public <T> BeanMapping<T> getBeanResult(Class<T> beanClass)
+  public <T> BeanMapping<T> getBeanMapping(Class<T> beanClass)
   {
-    return getBeanResult(mappingRetrievalStrategy, beanClass);
+    BeanMapping<T> mapping = getBeanMapping(mappingRetrievalStrategy, beanClass);
+    mapping.setBeanFactory(beanFactory);
+    mapping.setJavaTypeHandlerRegistry(javaTypeHandlerRegistry);
+    return mapping;
   }
 
 
@@ -159,7 +178,6 @@ public class Database
   public DbSelectDataSource getSelectDataSource(String sql)
   {
     DbSelectDataSource ds = new DbSelectDataSource(dataSource, sql);
-    ds.setJavaTypeHandlerRegistry(javaTypeHandlerRegistry);
     ds.setSqlTypeHandlerRegistry(sqlTypeHandlerRegistry);
     ds.setStrictColumnCheck(strictColumnCheck);
     return ds;
@@ -180,13 +198,6 @@ public class Database
       MappingRetrievalStrategy strategy)
   {
     defaultMappingRetrievalStrategy = Assert.notNull(strategy);
-  }
-
-
-  private static <T> MappingRetrievalStrategy getDefaultMappingRetrievalStrategy(
-      Class<T> beanClass)
-  {
-    return defaultMappingRetrievalStrategy;
   }
 
 
@@ -212,12 +223,11 @@ public class Database
    * @param beanClass the class that should be used to hold the result of the
    *          SELECT statement. Additionally this class is used to retrieve the
    *          bean properties for storing the result of the SELECT statement.
-   * @return an object describing a SELECT statement result.
+   * @return an object describing where to store a SELECT statement result.
    */
-  public static <T> BeanMapping<T> getDefaultBeanResult(Class<T> beanClass)
+  public static <T> BeanMapping<T> getDefaultBeanMapping(Class<T> beanClass)
   {
-    final MappingRetrievalStrategy strategy = getDefaultMappingRetrievalStrategy(beanClass);
-    return getBeanResult(strategy, beanClass);
+    return getBeanMapping(defaultMappingRetrievalStrategy, beanClass);
   }
 
 
@@ -226,15 +236,14 @@ public class Database
    *          results to the fields of the given bean.
    * @param beanClass the class that should be used to hold the result of the
    *          SELECT statement.
-   * @return an object describing a SELECT statement result.
+   * @return an object describing where to store a SELECT statement result.
    */
-  public static <T> BeanMapping<T> getBeanResult(
+  public static <T> BeanMapping<T> getBeanMapping(
       MappingRetrievalStrategy mappingStrategy, Class<T> beanClass)
   {
     BeanMapping<T> result = new BeanMapping<T>(beanClass);
     mappingStrategy.addMappings(beanClass, result);
     return result;
   }
-
 
 }
