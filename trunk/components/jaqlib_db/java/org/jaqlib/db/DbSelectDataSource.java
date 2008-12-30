@@ -8,6 +8,8 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.db.DbResultSetMetaData;
+import org.jaqlib.util.db.DbUtil;
 
 /**
  * @author Werner Fragner

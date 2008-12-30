@@ -25,11 +25,20 @@ import org.jaqlib.query.iterable.IterableQuery;
 /**
  * <p>
  * The main entry point of JaQLib for {@link Iterable} support. It provides
- * methods for building queries ( {@link #select(Class)}, {@link #select()}) and
- * adapting the query building process ( {@link #setClassLoader(ClassLoader)}
- * ).</br> The Method {@link #getMethodCallRecorder(Class)} can be used to
- * define a WHERE condition where a return value of method call is compared to
- * an other value (see also the first example below).
+ * following methods for building queries:
+ * <ul>
+ * <li>{@link #select(Class)}</li>
+ * <li>{@link #select()}</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The Method {@link #getMethodCallRecorder(Class)} can be used to define a
+ * WHERE condition using a method call recording mechanism (see also the first
+ * example below). First the programmer must call the desired method on the
+ * returned proxy object. This method call is recorded by JaQLib. When
+ * evaluating the WHERE condition this method call is replayed on every element.
+ * The result of this method call is then evaluated against the specified
+ * condition.
  * </p>
  * <p>
  * <b>Usage examples:</b><br>

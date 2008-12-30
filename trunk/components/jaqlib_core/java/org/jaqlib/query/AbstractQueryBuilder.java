@@ -53,8 +53,8 @@ public abstract class AbstractQueryBuilder
 
 
   /**
-   * @return the method call recorder for the current thread. Can return null if
-   *         no method call recorder has been created previously.
+   * @return the method call recorder for the current thread. Never returns
+   *         null.
    */
   protected MethodCallRecorder getMethodCallRecorder()
   {
@@ -63,8 +63,8 @@ public abstract class AbstractQueryBuilder
 
 
   /**
-   * @param <T> the type of the result element(s).
-   * @param resultElementClass a not null class of the result element(s).
+   * @param <T> the type of the result element.
+   * @param resultElementClass a not null class of the result element.
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */
@@ -74,6 +74,5 @@ public abstract class AbstractQueryBuilder
     methodCallRecorder.set(proxy.getMethodCallRecorder());
     return proxy.getProxy(resultElementClass);
   }
-
 
 }

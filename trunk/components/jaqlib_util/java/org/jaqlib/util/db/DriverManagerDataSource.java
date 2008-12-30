@@ -1,16 +1,13 @@
-package org.jaqlib.db;
+package org.jaqlib.util.db;
 
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 /**
  * @author Werner Fragner
  */
-public class DriverManagerDataSource implements DataSource
+public class DriverManagerDataSource extends DataSourceAdapter
 {
 
   private String driverClassName;
@@ -43,6 +40,7 @@ public class DriverManagerDataSource implements DataSource
   }
 
 
+  @Override
   public Connection getConnection() throws SQLException
   {
     registerDriver();
@@ -50,48 +48,12 @@ public class DriverManagerDataSource implements DataSource
   }
 
 
+  @Override
   public Connection getConnection(String username, String password)
       throws SQLException
   {
     registerDriver();
     return DriverManager.getConnection(url, username, password);
   }
-
-
-  public PrintWriter getLogWriter() throws SQLException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-
-  public int getLoginTimeout() throws SQLException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-
-  public void setLogWriter(PrintWriter out) throws SQLException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-
-  public void setLoginTimeout(int seconds) throws SQLException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-
-  public boolean isWrapperFor(Class<?> iface) throws SQLException
-  {
-    throw new UnsupportedOperationException();
-  }
-
-
-  public <T> T unwrap(Class<T> iface) throws SQLException
-  {
-    throw new UnsupportedOperationException();
-  }
-
 
 }

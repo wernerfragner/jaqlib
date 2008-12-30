@@ -3,9 +3,9 @@ package org.jaqlib;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.jaqlib.db.DbUtil;
-import org.jaqlib.db.DriverManagerDataSource;
-import org.jaqlib.db.SingleConnectionDataSource;
+import org.jaqlib.util.db.DbUtil;
+import org.jaqlib.util.db.DriverManagerDataSource;
+import org.jaqlib.util.db.SingleConnectionDataSource;
 
 public class DatabaseSetup
 {

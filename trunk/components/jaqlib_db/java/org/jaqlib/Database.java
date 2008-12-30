@@ -9,11 +9,15 @@ import org.jaqlib.db.MappingRetrievalStrategy;
 import org.jaqlib.util.Assert;
 
 /**
+ * <p>
  * Helper class that builds objects for executing queries against databases.
  * This class provides static helper methods but can also be instantiated to
  * make the creation of {@link DbSelectDataSource} and
  * {@link BeanDbSelectResult} objects more comfortable. <br>
+ * </p>
+ * <p>
  * This class is thread-safe.
+ * </p>
  * 
  * @author Werner Fragner
  */
@@ -80,7 +84,7 @@ public class Database
 
   /**
    * @param sql a not null SELECT statement.
-   * @return a object representing the source for a database query.
+   * @return an object representing the source for a database query.
    */
   public DbSelectDataSource getSelectDataSource(String sql)
   {
@@ -116,7 +120,7 @@ public class Database
    * @param dataSource a not null {@link DataSource} for obtaining a JDBC
    *          connection.
    * @param sql a not null SELECT statement.
-   * @return a object representing the source for a database query.
+   * @return an object representing the source for a database query.
    */
   public static DbSelectDataSource getSelectDataSource(DataSource dataSource,
       String sql)
@@ -126,9 +130,9 @@ public class Database
 
 
   /**
-   * Creates a {@link BeanDbSelectResult} instance by using the given bean
-   * properties of the given class. Bean properties must have a valid get and
-   * set method in order to be in the returned {@link BeanDbSelectResult}.
+   * Creates a {@link BeanDbSelectResult} instance by using the bean properties
+   * of the given class. Bean properties must have a valid get and set method in
+   * order to be in the returned {@link BeanDbSelectResult}.
    * 
    * @param <T> the type of the result bean.
    * @param beanClass the class that should be used to hold the result of the

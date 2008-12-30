@@ -20,11 +20,11 @@ public class WhereClause<T, DataSourceType> extends
 
 
   /**
-   * Simple where clause that can be used to test all elements of the data
-   * source for various conditions.
+   * Simple WHERE clause that can be used to test all elements of the data
+   * source for a specific condition.
    * 
    * @param <R> the result element type.
-   * @return an object that represents a where condition on a single element of
+   * @return an object that represents a WHERE condition on a single element of
    *         the data source.
    */
   public <R> SingleElementWhereCondition<T, DataSourceType, R> where()
@@ -36,10 +36,10 @@ public class WhereClause<T, DataSourceType> extends
   /**
    * Uses a recorded method call to test all elements for a specific condition.
    * This condition can be specified in the returned
-   * {@link ComparableWhereCondition}. The condition is added to the query by
-   * using a AND connector.
+   * {@link ComparableWhereCondition}.
    * 
-   * @param evalResult the result of the recorded method call.
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
    * @return an object to specify the condition.
    */
   public <R> ComparableWhereCondition<T, DataSourceType, R> where(R evalResult)
@@ -49,10 +49,10 @@ public class WhereClause<T, DataSourceType> extends
 
 
   /**
-   * Where clause with user a defined condition.
+   * WHERE clause with user a defined condition.
    * 
    * @param condition a not null condition.
-   * @return the result of the query (including methods to add other where
+   * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
   public QueryResult<T, DataSourceType> where(WhereCondition<T> condition)
