@@ -2,7 +2,6 @@ package org.jaqlib.query.db;
 
 import java.sql.SQLException;
 
-import org.jaqlib.util.db.DbResultSet;
 
 
 /**

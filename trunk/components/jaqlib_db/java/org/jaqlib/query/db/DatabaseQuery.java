@@ -7,7 +7,6 @@ import java.util.Map;
 import org.jaqlib.query.AbstractQuery;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.db.DbResultSet;
 import org.jaqlib.util.reflect.MethodCallRecorder;
 import org.jaqlib.util.reflect.MethodInvocation;
 
@@ -19,7 +18,7 @@ import org.jaqlib.util.reflect.MethodInvocation;
 public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
-  private AbstractMapping<T> resultDefinition;
+  private AbstractMapping<T> mapping;
 
 
   public DatabaseQuery(MethodCallRecorder methodCallRecorder)
@@ -29,9 +28,9 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 
 
   public FromClause<T, DbSelectDataSource> createFromClause(
-      AbstractMapping<T> resultDefinition)
+      AbstractMapping<T> mapping)
   {
-    this.resultDefinition = Assert.notNull(resultDefinition);
+    this.mapping = Assert.notNull(mapping);
     return new FromClause<T, DbSelectDataSource>(this);
   }
 
@@ -105,7 +104,7 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 
   private T extractElement(DbResultSet rs) throws SQLException
   {
-    return resultDefinition.getValue(rs);
+    return mapping.getValue(rs);
   }
 
 

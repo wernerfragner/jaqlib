@@ -1,4 +1,4 @@
-package org.jaqlib.util.db;
+package org.jaqlib.util.db.typehandler;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public interface TypeHandler
+public interface DbFieldTypeHandler
 {
 
   Object getObject(ResultSet resultSet, String columnLabel) throws SQLException;

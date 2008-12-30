@@ -12,7 +12,7 @@ public class AccountImpl implements Account
   private String firstName;
 
   private Double balance = 0.0;
-  private int creditRating = CreditRating.POOR.intValue();
+  private CreditRating creditRating = CreditRating.POOR;
 
   private boolean changed = false;
 
@@ -83,17 +83,11 @@ public class AccountImpl implements Account
 
   public CreditRating getCreditRating()
   {
-    return CreditRating.rating(creditRating);
+    return creditRating;
   }
 
 
   public void setCreditRating(CreditRating creditRating)
-  {
-    setCreditRating(creditRating.intValue());
-  }
-
-
-  private void setCreditRating(int creditRating)
   {
     setChanged();
     this.creditRating = creditRating;

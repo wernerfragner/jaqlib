@@ -3,13 +3,12 @@ package org.jaqlib.util.db.typehandler;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jaqlib.util.db.TypeHandler;
 
 
 /**
  * @author Werner Fragner
  */
-public class ShortTypeHandler implements TypeHandler
+public class ShortTypeHandler implements DbFieldTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

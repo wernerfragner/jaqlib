@@ -1,32 +1,10 @@
-package org.jaqlib.util.db;
+package org.jaqlib.util.db.typehandler;
 
-import org.jaqlib.util.db.typehandler.ArrayTypeHandler;
-import org.jaqlib.util.db.typehandler.BigDecimalTypeHandler;
-import org.jaqlib.util.db.typehandler.BlobTypeHandler;
-import org.jaqlib.util.db.typehandler.BooleanTypeHandler;
-import org.jaqlib.util.db.typehandler.BytesTypeHandler;
-import org.jaqlib.util.db.typehandler.ClobTypeHandler;
-import org.jaqlib.util.db.typehandler.DateTypeHandler;
-import org.jaqlib.util.db.typehandler.DoubleTypeHandler;
-import org.jaqlib.util.db.typehandler.FloatTypeHandler;
-import org.jaqlib.util.db.typehandler.IntegerTypeHandler;
-import org.jaqlib.util.db.typehandler.LongTypeHandler;
-import org.jaqlib.util.db.typehandler.LongVarbinaryTypeHandler;
-import org.jaqlib.util.db.typehandler.LongVarcharTypeHandler;
-import org.jaqlib.util.db.typehandler.NCharTypeHandler;
-import org.jaqlib.util.db.typehandler.NClobTypeHandler;
-import org.jaqlib.util.db.typehandler.RefTypeHandler;
-import org.jaqlib.util.db.typehandler.RowIdTypeHandler;
-import org.jaqlib.util.db.typehandler.ShortTypeHandler;
-import org.jaqlib.util.db.typehandler.SqlXmlTypeHandler;
-import org.jaqlib.util.db.typehandler.StringTypeHandler;
-import org.jaqlib.util.db.typehandler.TimeTypeHandler;
-import org.jaqlib.util.db.typehandler.TimestampTypeHandler;
 
 /**
  * @author Werner Fragner
  */
-public interface TypeHandlerRegistry
+public interface DbFieldTypeHandlerRegistry
 {
 
   SqlXmlTypeHandler SQLXML_TYPEHANDLER = new SqlXmlTypeHandler();
@@ -58,7 +36,7 @@ public interface TypeHandlerRegistry
    * @return a type handler instance for the given DB data type. Must not return
    *         null.
    */
-  TypeHandler getTypeHandler(int dbDataType);
+  DbFieldTypeHandler getTypeHandler(int dbDataType);
 
 
   /**
@@ -67,6 +45,6 @@ public interface TypeHandlerRegistry
    * @param dbDataType a DB data type as defined at {@link java.sql.Types}.
    * @param typeHandler a custom type handler instance; must not be null.
    */
-  void registerTypeHandler(int dbDataType, TypeHandler typeHandler);
+  void registerTypeHandler(int dbDataType, DbFieldTypeHandler typeHandler);
 
 }

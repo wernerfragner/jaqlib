@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.ExceptionUtil;
-import org.jaqlib.util.db.DbResultSet;
 import org.jaqlib.util.reflect.ReflectionUtil;
 
 /**
@@ -79,15 +78,25 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public T getValue(DbResultSet rs) throws SQLException
   {
     T bean = newBeanInstance();
-    for (AbstractMapping<?> selectResult : this)
+    for (AbstractMapping<?> mapping : this)
     {
-      Object value = selectResult.getValue(rs);
+      Object value = mapping.getValue(rs);
       if (value != DbResultSet.NO_RESULT)
       {
-        setValue(bean, selectResult.getFieldName(), value);
+        final String fieldName = mapping.getFieldName();
+        value = applyBeanFieldTypeHandler(rs, fieldName, value);
+        setValue(bean, fieldName, value);
       }
     }
     return bean;
+  }
+
+
+  private Object applyBeanFieldTypeHandler(DbResultSet rs, String fieldName,
+      Object value)
+  {
+    Class<?> fieldType = ReflectionUtil.getFieldType(beanClass, fieldName);
+    return rs.applyBeanFieldTypeHandler(fieldType, value);
   }
 
 
