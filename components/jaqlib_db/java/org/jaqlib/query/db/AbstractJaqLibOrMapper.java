@@ -4,10 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.db.DbSelectResult;
-import org.jaqlib.db.PrimitiveDbSelectResult;
 import org.jaqlib.query.ElementPredicate;
 import org.jaqlib.util.reflect.MethodInvocation;
 import org.jaqlib.util.reflect.ReflectionUtil;

@@ -1,4 +1,4 @@
-package org.jaqlib.query.db;
+package org.jaqlib;
 
 import java.util.Properties;
 

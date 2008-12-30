@@ -13,9 +13,9 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
+import org.jaqlib.query.db.DbSelectDataSource;
 
 
 public class BeanDatabaseQBTest extends TestCase

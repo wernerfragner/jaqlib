@@ -6,6 +6,10 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.jaqlib.AccountImpl;
+import org.jaqlib.query.db.BeanConventionMappingRetrievalStrategy;
+import org.jaqlib.query.db.BeanDbSelectResult;
+import org.jaqlib.query.db.DbSelectResult;
+import org.jaqlib.query.db.PrimitiveDbSelectResult;
 
 public class BeanConventionMappingStrategyTest extends TestCase
 {

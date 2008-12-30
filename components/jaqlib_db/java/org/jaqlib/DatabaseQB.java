@@ -15,13 +15,12 @@
  */
 package org.jaqlib;
 
-import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.Column;
-import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.DatabaseQBProperties;
+import org.jaqlib.query.db.BeanDbSelectResult;
+import org.jaqlib.query.db.Column;
+import org.jaqlib.query.db.DbSelectDataSource;
 
 
 /**
