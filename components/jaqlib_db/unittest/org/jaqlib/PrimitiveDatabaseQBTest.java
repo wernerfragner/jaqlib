@@ -35,8 +35,9 @@ public class PrimitiveDatabaseQBTest extends TestCase
     dbSetup.createTestTables();
     dbSetup.insertTestRecords();
 
-    final String sql = "SELECT lastname FROM APP.ACCOUNT";
-    DbSelectDataSource dataSource = Database.getSelectDataSource(getDataSource(), sql);
+    final String sql = "SELECT lname AS lastname FROM APP.ACCOUNT";
+    DbSelectDataSource dataSource = Database.getSelectDataSource(
+        getDataSource(), sql);
 
     where = DatabaseQB.select(new Column<String>(1)).from(dataSource);
   }

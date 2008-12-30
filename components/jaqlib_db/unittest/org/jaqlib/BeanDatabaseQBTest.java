@@ -39,17 +39,11 @@ public class BeanDatabaseQBTest extends TestCase
     dbSetup.createTestTables();
     dbSetup.insertTestRecords();
 
-    final String sql = "SELECT lastname, firstname, creditrating, balance FROM APP.ACCOUNT";
-    DbSelectDataSource dataSource = Database.getSelectDataSource(getDataSource(), sql);
+    final String sql = "SELECT lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
+    DbSelectDataSource dataSource = Database.getSelectDataSource(
+        getDataSource(), sql);
 
     where = DatabaseQB.select(AccountImpl.class).from(dataSource);
-  }
-
-
-  private void disableLogging()
-  {
-    Logger logger = Logger.getLogger("org.jaqlib");
-    logger.setLevel(Level.WARNING);
   }
 
 
@@ -62,23 +56,21 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
+  private void disableLogging()
+  {
+    Logger logger = Logger.getLogger("org.jaqlib");
+    logger.setLevel(Level.WARNING);
+  }
+
+
   private DataSource getDataSource()
   {
     return dbSetup.getDataSource();
   }
 
 
-  public void testSelect_NoCondition()
-  {
-    assertListResult(where);
-    assertVectorResult(where);
-    assertSetResult(where);
-    assertMapResult(where);
-    assertHashtableResult(where);
-  }
-
-
-  private void assertHashtableResult(WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertHashtableResult(
+      WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Account account = DatabaseQB.getMethodCallRecorder(Account.class);
     Hashtable<String, AccountImpl> accounts = where.asHashtable(account
@@ -87,7 +79,8 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertMapResult(WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertMapResult(
+      WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Account account = DatabaseQB.getMethodCallRecorder(Account.class);
     Map<String, AccountImpl> accounts = where.asMap(account.getLastName());
@@ -102,7 +95,8 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertSetResult(WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertSetResult(
+      WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Set<AccountImpl> accounts = where.asSet();
     assertEquals(2, accounts.size());
@@ -111,14 +105,16 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private void assertVectorResult(WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertVectorResult(
+      WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     Vector<AccountImpl> accounts = where.asVector();
     assertListResult(accounts);
   }
 
 
-  private void assertListResult(WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertListResult(
+      WhereClause<AccountImpl, DbSelectDataSource> where)
   {
     List<AccountImpl> accounts = where.asList();
     assertListResult(accounts);
@@ -180,7 +176,17 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_MultipleFields_UserDefinedCondition_OneMatch()
+  public void testSelect_NoCondition()
+  {
+    assertListResult(where);
+    assertVectorResult(where);
+    assertSetResult(where);
+    assertMapResult(where);
+    assertHashtableResult(where);
+  }
+
+
+  public void testSelect_UserDefinedCondition_OneMatch()
   {
     WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
     Account account = where.where(condition).uniqueResult();
@@ -189,7 +195,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_MultipleFields_UserDefinedCondition_NoMatch()
+  public void testSelect_UserDefinedCondition_NoMatch()
   {
     WhereCondition<AccountImpl> condition = createWhereCondition(100000.0);
     Account account = where.where(condition).uniqueResult();
@@ -197,7 +203,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_MultipleFields_MethodCallCondition_OneMatch()
+  public void testSelect_MethodCallCondition_OneMatch()
   {
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
     Account account = where.where(dummy.getBalance()).isGreaterThan(3500.0)
@@ -207,7 +213,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_MultipleFields_MethodCallCondition_NoMatch()
+  public void testSelect_MethodCallCondition_NoMatch()
   {
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
     Account account = where.where(dummy.getBalance()).isGreaterThan(100000.0)
@@ -216,7 +222,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_MultipleFields_MixedConditions()
+  public void testSelect_MixedConditions()
   {
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
     WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);

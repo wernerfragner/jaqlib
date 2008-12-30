@@ -231,10 +231,9 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  @SuppressWarnings("unchecked")
-  protected <KeyType> KeyType getKey(T element, MethodInvocation invocation)
+  protected Object getKey(T element, MethodInvocation invocation)
   {
-    return (KeyType) invocation.invoke(element);
+    return invocation.invoke(element);
   }
 
 

@@ -73,7 +73,8 @@ public class AbstractJaqLibOrMapper<T>
   {
     if (resultDefinition instanceof PrimitiveDbSelectResult)
     {
-      return extractSingleResult(rs, (PrimitiveDbSelectResult<T>) resultDefinition);
+      return extractSingleResult(rs,
+          (PrimitiveDbSelectResult<T>) resultDefinition);
     }
     else if (resultDefinition instanceof BeanDbSelectResult)
     {
@@ -110,8 +111,8 @@ public class AbstractJaqLibOrMapper<T>
   }
 
 
-  private T extractMultiResult(ResultSet rs,
-      BeanDbSelectResult<T> complexResult) throws SQLException
+  private T extractMultiResult(ResultSet rs, BeanDbSelectResult<T> complexResult)
+      throws SQLException
   {
     T bean = complexResult.newBeanInstance();
     for (DbSelectResult<?> selectResult : complexResult)
@@ -183,10 +184,9 @@ public class AbstractJaqLibOrMapper<T>
   }
 
 
-  @SuppressWarnings("unchecked")
-  protected <KeyType> KeyType getKey(T element)
+  protected Object getKey(T element)
   {
-    return (KeyType) methodInvocation.invoke(element);
+    return methodInvocation.invoke(element);
   }
 
 }

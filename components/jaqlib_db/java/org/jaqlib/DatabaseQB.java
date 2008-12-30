@@ -23,7 +23,6 @@ import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.db.DatabaseQBProperties;
-import org.jaqlib.query.db.DatabaseQueryBuilder;
 
 
 /**

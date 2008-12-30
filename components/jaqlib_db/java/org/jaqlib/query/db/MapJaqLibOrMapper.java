@@ -17,7 +17,8 @@ public class MapJaqLibOrMapper<T> extends AbstractJaqLibOrMapper<T>
         T element = extractElement(rs);
         if (element != null && shouldAddToResult(element))
         {
-          final KeyType elementKey = getKey(element);
+          @SuppressWarnings("unchecked")
+          final KeyType elementKey = (KeyType) getKey(element);
           resultMap.put(elementKey, element);
         }
       }

@@ -9,6 +9,7 @@ import java.util.List;
 public class NullMethodCallRecorder implements MethodCallRecorder
 {
 
+  @SuppressWarnings("unchecked")
   public List<MethodInvocation> getAllCurrentInvocations()
   {
     return Collections.EMPTY_LIST;

@@ -24,6 +24,8 @@ public abstract class ComparableFunction<T, ResultType> extends
   {
     if (actual instanceof Comparable)
     {
+      // 'actual' is a Comparable and is a ResultType --> safe type cast
+      @SuppressWarnings("unchecked")
       Comparable<ResultType> actualComp = (Comparable<ResultType>) actual;
       return doCompare(actualComp, expected);
     }
