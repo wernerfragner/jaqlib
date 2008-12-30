@@ -9,22 +9,22 @@ import org.jaqlib.util.Assert;
 /**
  * @author Werner Fragner
  */
-public class DefaultBeanFieldTypeHandlerRegistry implements
-    BeanFieldTypeHandlerRegistry
+public class DefaultJavaTypeHandlerRegistry implements
+    JavaTypeHandlerRegistry
 {
 
-  private final Map<Class<?>, BeanFieldTypeHandler> handlers = newDefaultMap();
-  private final BeanFieldTypeHandler defaultHandler = new NullBeanFieldTypeHandler();
+  private final Map<Class<?>, JavaTypeHandler> handlers = newDefaultMap();
+  private final JavaTypeHandler defaultHandler = new NullJavaTypeHandler();
 
 
   /**
    * {@inheritDoc}
    */
-  public BeanFieldTypeHandler getTypeHandler(Class<?> fieldType)
+  public JavaTypeHandler getTypeHandler(Class<?> fieldType)
   {
     Assert.notNull(fieldType);
 
-    final BeanFieldTypeHandler handler = handlers.get(fieldType);
+    final JavaTypeHandler handler = handlers.get(fieldType);
     if (handler != null)
     {
       return handler;
@@ -40,7 +40,7 @@ public class DefaultBeanFieldTypeHandlerRegistry implements
    * {@inheritDoc}
    */
   public void registerTypeHandler(Class<?> fieldType,
-      BeanFieldTypeHandler typeHandler)
+      JavaTypeHandler typeHandler)
   {
     Assert.notNull(fieldType);
     Assert.notNull(typeHandler);

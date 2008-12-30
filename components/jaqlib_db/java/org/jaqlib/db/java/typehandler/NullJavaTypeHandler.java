@@ -3,10 +3,10 @@ package org.jaqlib.db.java.typehandler;
 /**
  * @author Werner Fragner
  */
-public class NullBeanFieldTypeHandler implements BeanFieldTypeHandler
+public class NullJavaTypeHandler implements JavaTypeHandler
 {
 
-  public Object getValue(Object value)
+  public Object getObject(Object value)
   {
     return value;
   }

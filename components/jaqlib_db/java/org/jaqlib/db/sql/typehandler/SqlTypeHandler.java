@@ -6,7 +6,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public interface DbFieldTypeHandler
+public interface SqlTypeHandler
 {
 
   Object getObject(ResultSet resultSet, String columnLabel) throws SQLException;

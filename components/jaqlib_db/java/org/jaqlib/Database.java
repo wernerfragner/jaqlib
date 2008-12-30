@@ -6,14 +6,20 @@ import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.MappingRetrievalStrategy;
+import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
+import org.jaqlib.db.java.typehandler.JavaTypeHandler;
+import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
+import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
+import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
+import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
 
 /**
  * <p>
  * Helper class that builds objects for executing queries against databases.
  * This class provides static helper methods but can also be instantiated to
- * make the creation of {@link DbSelectDataSource} and
- * {@link BeanMapping} objects more comfortable. <br>
+ * make the creation of {@link DbSelectDataSource} and {@link BeanMapping}
+ * objects more comfortable. <br>
  * </p>
  * <p>
  * This class is thread-safe.
@@ -26,8 +32,16 @@ public class Database
 
   private static MappingRetrievalStrategy defaultMappingRetrievalStrategy = new BeanConventionMappingRetrievalStrategy();
 
+  // mandatory fields
+
   private final DataSource dataSource;
-  private volatile MappingRetrievalStrategy mappingRetrievalStrategy;
+
+  // optional / configurable fields
+
+  private MappingRetrievalStrategy mappingRetrievalStrategy = defaultMappingRetrievalStrategy;
+  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
+  private boolean strictColumnCheck = false;
 
 
   /**
@@ -57,16 +71,72 @@ public class Database
   }
 
 
-  private MappingRetrievalStrategy getMappingRetrievalStrategy()
+  /**
+   * Registers the given custom SQL type handler with the given SQL data type.
+   * 
+   * @param sqlDataType a SQL data type as defined at {@link java.sql.Types}.
+   * @param typeHandler a not null type handler.
+   */
+  public void registerSqlTypeHandler(int sqlDataType, SqlTypeHandler typeHandler)
   {
-    if (this.mappingRetrievalStrategy == null)
-    {
-      return defaultMappingRetrievalStrategy;
-    }
-    else
-    {
-      return this.mappingRetrievalStrategy;
-    }
+    sqlTypeHandlerRegistry.registerTypeHandler(sqlDataType, typeHandler);
+  }
+
+
+  /**
+   * Changes the SQL type handler registry to a custom implementation. By
+   * default the standard SQL types are supported.
+   * 
+   * @param registry a user-defined SQL type handler registry.
+   */
+  public void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
+  {
+    this.sqlTypeHandlerRegistry = Assert.notNull(registry);
+  }
+
+
+  /**
+   * Registers a custom java type handler with a given java type.
+   * 
+   * @param fieldType a not null java type.
+   * @param typeHandler a not null custom java type handler.
+   */
+  public void registerJavaTypeHandler(Class<?> fieldType,
+      JavaTypeHandler typeHandler)
+  {
+    javaTypeHandlerRegistry.registerTypeHandler(fieldType, typeHandler);
+  }
+
+
+  /**
+   * Changes the java type handler registry to a custom implementation. By
+   * default no type handlers are available.
+   * 
+   * @param registry a user-defined java type handler registry.
+   */
+  public void setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry registry)
+  {
+    this.javaTypeHandlerRegistry = registry;
+  }
+
+
+  /**
+   * Enables/disables strict checking if a field in a Java bean does not exist
+   * in the SELECT statement. If strict column check is enabled then an
+   * exception is thrown if a Java bean field does exist in the SELECT
+   * statement. If strict column check is disabled (DEFAULT) then an INFO log
+   * message is issued and the field is ignored (= is not set). If these INFO
+   * messages should not be issued then the JDK logger for
+   * 'org.jaqlib.query.db.AbstractJaqLibOrMapper' must be disabled (see <a
+   * href="
+   * http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
+   * Logging</a>).
+   * 
+   * @param strictColumnCheck enable/disable strict column check.
+   */
+  public void setStrictColumnCheck(boolean strictColumnCheck)
+  {
+    this.strictColumnCheck = strictColumnCheck;
   }
 
 
@@ -78,7 +148,7 @@ public class Database
    */
   public <T> BeanMapping<T> getBeanResult(Class<T> beanClass)
   {
-    return getBeanResult(getMappingRetrievalStrategy(), beanClass);
+    return getBeanResult(mappingRetrievalStrategy, beanClass);
   }
 
 
@@ -88,7 +158,11 @@ public class Database
    */
   public DbSelectDataSource getSelectDataSource(String sql)
   {
-    return new DbSelectDataSource(dataSource, sql);
+    DbSelectDataSource ds = new DbSelectDataSource(dataSource, sql);
+    ds.setJavaTypeHandlerRegistry(javaTypeHandlerRegistry);
+    ds.setSqlTypeHandlerRegistry(sqlTypeHandlerRegistry);
+    ds.setStrictColumnCheck(strictColumnCheck);
+    return ds;
   }
 
 
@@ -130,9 +204,9 @@ public class Database
 
 
   /**
-   * Creates a {@link BeanMapping} instance by using the bean properties
-   * of the given class. Bean properties must have a valid get and set method in
-   * order to be in the returned {@link BeanMapping}.
+   * Creates a {@link BeanMapping} instance by using the bean properties of the
+   * given class. Bean properties must have a valid get and set method in order
+   * to be in the returned {@link BeanMapping}.
    * 
    * @param <T> the type of the result bean.
    * @param beanClass the class that should be used to hold the result of the
@@ -140,8 +214,7 @@ public class Database
    *          bean properties for storing the result of the SELECT statement.
    * @return an object describing a SELECT statement result.
    */
-  public static <T> BeanMapping<T> getDefaultBeanResult(
-      Class<T> beanClass)
+  public static <T> BeanMapping<T> getDefaultBeanResult(Class<T> beanClass)
   {
     final MappingRetrievalStrategy strategy = getDefaultMappingRetrievalStrategy(beanClass);
     return getBeanResult(strategy, beanClass);

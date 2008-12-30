@@ -10,17 +10,17 @@ import org.jaqlib.util.Assert;
 /**
  * @author Werner Fragner
  */
-public class DefaultDbFieldTypeHandlerRegistry implements DbFieldTypeHandlerRegistry
+public class DefaultSqlTypeHandlerRegistry implements SqlTypeHandlerRegistry
 {
 
-  private final Map<Integer, DbFieldTypeHandler> handlers = newDefaultMap();
-  private final DbFieldTypeHandler defaultTypeHandler = new ObjectTypeHandler();
+  private final Map<Integer, SqlTypeHandler> handlers = newDefaultMap();
+  private final SqlTypeHandler defaultTypeHandler = new ObjectTypeHandler();
 
 
   /**
    * Default constructor that registers default type handler instances.
    */
-  public DefaultDbFieldTypeHandlerRegistry()
+  public DefaultSqlTypeHandlerRegistry()
   {
     registerDefaultHandlers();
   }
@@ -65,9 +65,9 @@ public class DefaultDbFieldTypeHandlerRegistry implements DbFieldTypeHandlerRegi
   /**
    * {@inheritDoc}
    */
-  public DbFieldTypeHandler getTypeHandler(int dbDataType)
+  public SqlTypeHandler getTypeHandler(int sqlDataType)
   {
-    DbFieldTypeHandler handler = handlers.get(dbDataType);
+    SqlTypeHandler handler = handlers.get(sqlDataType);
     if (handler != null)
     {
       return handler;
@@ -82,10 +82,10 @@ public class DefaultDbFieldTypeHandlerRegistry implements DbFieldTypeHandlerRegi
   /**
    * {@inheritDoc}
    */
-  public void registerTypeHandler(int dbDataType, DbFieldTypeHandler typeHandler)
+  public void registerTypeHandler(int sqlDataType, SqlTypeHandler typeHandler)
   {
     Assert.notNull(typeHandler);
-    handlers.put(dbDataType, typeHandler);
+    handlers.put(sqlDataType, typeHandler);
   }
 
 

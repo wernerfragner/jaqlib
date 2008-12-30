@@ -4,7 +4,7 @@ package org.jaqlib.db.sql.typehandler;
 /**
  * @author Werner Fragner
  */
-public interface DbFieldTypeHandlerRegistry
+public interface SqlTypeHandlerRegistry
 {
 
   SqlXmlTypeHandler SQLXML_TYPEHANDLER = new SqlXmlTypeHandler();
@@ -32,19 +32,19 @@ public interface DbFieldTypeHandlerRegistry
 
 
   /**
-   * @param dbDataType the DB data type as defined at {@link java.sql.Types}.
-   * @return a type handler instance for the given DB data type. Must not return
-   *         null.
+   * @param sqlDataType the SQL data type as defined at {@link java.sql.Types}.
+   * @return a type handler instance for the given SQL data type. Must not
+   *         return null.
    */
-  DbFieldTypeHandler getTypeHandler(int dbDataType);
+  SqlTypeHandler getTypeHandler(int sqlDataType);
 
 
   /**
-   * Registers a custom type handler with a DB data type.
+   * Registers the given custom SQL type handler with the given SQL data type.
    * 
-   * @param dbDataType a DB data type as defined at {@link java.sql.Types}.
-   * @param typeHandler a custom type handler instance; must not be null.
+   * @param sqlDataType a SQL data type as defined at {@link java.sql.Types}.
+   * @param typeHandler a not null type handler.
    */
-  void registerTypeHandler(int dbDataType, DbFieldTypeHandler typeHandler);
+  void registerTypeHandler(int sqlDataType, SqlTypeHandler typeHandler);
 
 }

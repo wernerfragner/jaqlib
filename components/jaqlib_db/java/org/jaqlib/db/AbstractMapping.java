@@ -2,8 +2,6 @@ package org.jaqlib.db;
 
 import java.sql.SQLException;
 
-
-
 /**
  * @author Werner Fragner
  */

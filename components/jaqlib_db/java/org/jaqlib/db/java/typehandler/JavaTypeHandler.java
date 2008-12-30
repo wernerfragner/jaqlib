@@ -5,7 +5,7 @@ package org.jaqlib.db.java.typehandler;
  * 
  * @author Werner Fragner
  */
-public interface BeanFieldTypeHandler
+public interface JavaTypeHandler
 {
 
   /**
@@ -13,6 +13,6 @@ public interface BeanFieldTypeHandler
    * @return the converted or untouched object (depending on the type handler
    *         implementation).
    */
-  Object getValue(Object value);
+  Object getObject(Object value);
 
 }

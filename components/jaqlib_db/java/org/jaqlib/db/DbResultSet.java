@@ -4,9 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
-import org.jaqlib.db.java.typehandler.BeanFieldTypeHandlerRegistry;
-import org.jaqlib.db.sql.typehandler.DbFieldTypeHandler;
-import org.jaqlib.db.sql.typehandler.DbFieldTypeHandlerRegistry;
+import org.jaqlib.db.java.typehandler.JavaTypeHandler;
+import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
+import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
+import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.db.DbUtil;
 
@@ -20,8 +21,8 @@ public class DbResultSet
   private static final Logger LOG = Logger.getLogger(DbResultSet.class
       .getName());
 
-  private final DbFieldTypeHandlerRegistry typeHandlerRegistry;
-  private final BeanFieldTypeHandlerRegistry beanFieldTypeHandlerRegistry;
+  private final SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
+  private final JavaTypeHandlerRegistry javaTypeHandlerRegistry;
 
   private final ResultSet resultSet;
   private final DbResultSetMetaData resultSetMetaData;
@@ -29,15 +30,14 @@ public class DbResultSet
 
 
   public DbResultSet(ResultSet resultSet,
-      DbFieldTypeHandlerRegistry typeHandlerRegistry,
-      BeanFieldTypeHandlerRegistry beanFieldTypeHandlerRegistry,
-      boolean strictColumnCheck) throws SQLException
+      SqlTypeHandlerRegistry sqlTypeHandlerRegistry,
+      JavaTypeHandlerRegistry javaTypeHandlerRegistry, boolean strictColumnCheck)
+      throws SQLException
   {
     this.resultSet = Assert.notNull(resultSet);
     this.resultSetMetaData = new DbResultSetMetaData(resultSet.getMetaData());
-    this.typeHandlerRegistry = Assert.notNull(typeHandlerRegistry);
-    this.beanFieldTypeHandlerRegistry = Assert
-        .notNull(beanFieldTypeHandlerRegistry);
+    this.sqlTypeHandlerRegistry = Assert.notNull(sqlTypeHandlerRegistry);
+    this.javaTypeHandlerRegistry = Assert.notNull(javaTypeHandlerRegistry);
     this.strictColumnCheck = strictColumnCheck;
   }
 
@@ -71,7 +71,7 @@ public class DbResultSet
   {
     if (strictColumnCheck || hasColumn(columnName))
     {
-      return getTypeHandler(columnDataType).getObject(resultSet, columnName);
+      return getSqlTypeHandler(columnDataType).getObject(resultSet, columnName);
     }
     else
     {
@@ -85,20 +85,25 @@ public class DbResultSet
   public Object getObject(int columnDataType, int columnIndex)
       throws SQLException
   {
-    return getTypeHandler(columnDataType).getObject(resultSet, columnIndex);
+    return getSqlTypeHandler(columnDataType).getObject(resultSet, columnIndex);
   }
 
 
-  private DbFieldTypeHandler getTypeHandler(int columnDataType)
+  private SqlTypeHandler getSqlTypeHandler(int columnDataType)
   {
-    return typeHandlerRegistry.getTypeHandler(columnDataType);
+    return sqlTypeHandlerRegistry.getTypeHandler(columnDataType);
   }
 
 
-  public Object applyBeanFieldTypeHandler(Class<?> fieldType, Object value)
+  public Object applyJavaTypeHandler(Class<?> fieldType, Object value)
   {
-    return beanFieldTypeHandlerRegistry.getTypeHandler(fieldType).getValue(
-        value);
+    return getJavaTypeHandler(fieldType).getObject(value);
+  }
+
+
+  private JavaTypeHandler getJavaTypeHandler(Class<?> fieldType)
+  {
+    return javaTypeHandlerRegistry.getTypeHandler(fieldType);
   }
 
 }
