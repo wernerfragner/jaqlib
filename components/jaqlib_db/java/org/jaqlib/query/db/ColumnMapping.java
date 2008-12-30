@@ -3,7 +3,6 @@ package org.jaqlib.query.db;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.jaqlib.util.db.DbResultSet;
 
 /**
  * Defines a primitive mapping between one database column (see columnName and

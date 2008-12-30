@@ -94,6 +94,19 @@ public class ReflectionUtil
   }
 
 
+  public static Class<?> getFieldType(Class<?> clz, String fieldName)
+  {
+    try
+    {
+      return clz.getDeclaredField(fieldName).getType();
+    }
+    catch (NoSuchFieldException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
+  }
+
+
   public static void setFieldValue(Object target, String fieldName,
       Object fieldValue)
   {

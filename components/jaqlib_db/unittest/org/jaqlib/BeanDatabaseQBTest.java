@@ -16,6 +16,7 @@ import junit.framework.TestCase;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.db.DbSelectDataSource;
+import org.jaqlib.util.bean.typehandler.CreditRatingTypeHandler;
 
 
 public class BeanDatabaseQBTest extends TestCase
@@ -42,6 +43,8 @@ public class BeanDatabaseQBTest extends TestCase
     final String sql = "SELECT lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
     DbSelectDataSource dataSource = Database.getSelectDataSource(
         getDataSource(), sql);
+    dataSource.registerBeanFieldTypeHandler(CreditRating.class,
+        new CreditRatingTypeHandler());
 
     where = DatabaseQB.select(AccountImpl.class).from(dataSource);
   }

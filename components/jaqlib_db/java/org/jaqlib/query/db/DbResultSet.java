@@ -1,10 +1,14 @@
-package org.jaqlib.util.db;
+package org.jaqlib.query.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.bean.typehandler.BeanFieldTypeHandlerRegistry;
+import org.jaqlib.util.db.DbUtil;
+import org.jaqlib.util.db.typehandler.DbFieldTypeHandler;
+import org.jaqlib.util.db.typehandler.DbFieldTypeHandlerRegistry;
 
 /**
  * @author Werner Fragner
@@ -16,19 +20,24 @@ public class DbResultSet
   private static final Logger LOG = Logger.getLogger(DbResultSet.class
       .getName());
 
-  private final TypeHandlerRegistry typeHandlerRegistry;
+  private final DbFieldTypeHandlerRegistry typeHandlerRegistry;
+  private final BeanFieldTypeHandlerRegistry beanFieldTypeHandlerRegistry;
+
   private final ResultSet resultSet;
   private final DbResultSetMetaData resultSetMetaData;
   private final boolean strictColumnCheck;
 
 
   public DbResultSet(ResultSet resultSet,
-      TypeHandlerRegistry typeHandlerRegistry, boolean strictColumnCheck)
-      throws SQLException
+      DbFieldTypeHandlerRegistry typeHandlerRegistry,
+      BeanFieldTypeHandlerRegistry beanFieldTypeHandlerRegistry,
+      boolean strictColumnCheck) throws SQLException
   {
     this.resultSet = Assert.notNull(resultSet);
     this.resultSetMetaData = new DbResultSetMetaData(resultSet.getMetaData());
     this.typeHandlerRegistry = Assert.notNull(typeHandlerRegistry);
+    this.beanFieldTypeHandlerRegistry = Assert
+        .notNull(beanFieldTypeHandlerRegistry);
     this.strictColumnCheck = strictColumnCheck;
   }
 
@@ -45,9 +54,9 @@ public class DbResultSet
   }
 
 
-  public void close() throws SQLException
+  public void close()
   {
-    resultSet.close();
+    DbUtil.close(resultSet);
   }
 
 
@@ -80,9 +89,16 @@ public class DbResultSet
   }
 
 
-  private TypeHandler getTypeHandler(int columnDataType)
+  private DbFieldTypeHandler getTypeHandler(int columnDataType)
   {
     return typeHandlerRegistry.getTypeHandler(columnDataType);
+  }
+
+
+  public Object applyBeanFieldTypeHandler(Class<?> fieldType, Object value)
+  {
+    return beanFieldTypeHandlerRegistry.getTypeHandler(fieldType).getValue(
+        value);
   }
 
 }

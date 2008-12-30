@@ -25,6 +25,7 @@ import org.jaqlib.query.db.BeanMapping;
 import org.jaqlib.query.db.ColumnMapping;
 import org.jaqlib.query.db.DatabaseQuery;
 import org.jaqlib.query.db.DbSelectDataSource;
+import org.jaqlib.util.bean.typehandler.BeanFieldTypeHandler;
 
 /**
  * <p>
@@ -130,6 +131,44 @@ import org.jaqlib.query.db.DbSelectDataSource;
  * </pre>
  * 
  * </p>
+ * <p>
+ * 
+ * Database column data types can be converted to custom Java types with
+ * so-called {@link BeanFieldTypeHandler}s. These handlers can be registered
+ * with
+ * {@link DbSelectDataSource#registerBeanFieldTypeHandler(Class, BeanFieldTypeHandler)}
+ * .
+ * </p>
+ * <p>
+ * <i>Example for custom bean field type handler:</i>
+ * 
+ * <pre>
+ * // get DbSelectDataSource
+ * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+ * DbSelectDataSource accounts = Database.getSelectDataSource(getJdbcDataSource(),
+ *     sql);
+ * 
+ * // register custom type handler for CreditRating bean fields
+ * accounts.registerBeanFieldTypeHandler(CreditRating.class,
+ *     new CreditRatingTypeHandler());
+ * 
+ * // perform select with DatabaseQB.select() ...
+ * 
+ * // custom bean field type handler that converts Integer values from DB into CreditRating enumerations  
+ * public class CreditRatingTypeHandler extends AbstractBeanFieldTypeHandler
+ * {
+ *   public Object getValue(Object value)
+ *   {
+ *     if (value instanceof Integer)
+ *       return CreditRating.rating((Integer) value);
+ *     else
+ *       throw handleIllegalInputValue(value, CreditRating.class);
+ *   }
+ * }
+ * 
+ * </pre>
+ * 
+ * </p>
  * 
  * @see DatabaseQB
  * @see Database
@@ -204,15 +243,14 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * instances see {@link Database}.
    * 
    * @param <T> the result bean type.
-   * @param resultDefinition a bean definition that holds information how to map
-   *          the result of the SELECT statement to a Java bean.
+   * @param bean a bean definition that holds information how to map the result
+   *          of the SELECT statement to a Java bean.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T, DbSelectDataSource> select(
-      BeanMapping<T> resultDefinition)
+  public <T> FromClause<T, DbSelectDataSource> select(BeanMapping<T> bean)
   {
-    return this.<T> createQuery().createFromClause(resultDefinition);
+    return this.<T> createQuery().createFromClause(bean);
   }
 
 

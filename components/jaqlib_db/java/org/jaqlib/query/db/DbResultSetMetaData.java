@@ -1,4 +1,4 @@
-package org.jaqlib.util.db;
+package org.jaqlib.query.db;
 
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;

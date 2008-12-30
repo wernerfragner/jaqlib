@@ -1,4 +1,4 @@
-package org.jaqlib.util.db;
+package org.jaqlib.util.db.typehandler;
 
 import static org.jaqlib.util.CollectionUtil.newDefaultMap;
 
@@ -6,22 +6,21 @@ import java.sql.Types;
 import java.util.Map;
 
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.db.typehandler.ObjectTypeHandler;
 
 /**
  * @author Werner Fragner
  */
-public class DefaultTypeHandlerRegistry implements TypeHandlerRegistry
+public class DefaultDbFieldTypeHandlerRegistry implements DbFieldTypeHandlerRegistry
 {
 
-  private final Map<Integer, TypeHandler> handlers = newDefaultMap();
-  private final TypeHandler defaultTypeHandler = new ObjectTypeHandler();
+  private final Map<Integer, DbFieldTypeHandler> handlers = newDefaultMap();
+  private final DbFieldTypeHandler defaultTypeHandler = new ObjectTypeHandler();
 
 
   /**
    * Default constructor that registers default type handler instances.
    */
-  public DefaultTypeHandlerRegistry()
+  public DefaultDbFieldTypeHandlerRegistry()
   {
     registerDefaultHandlers();
   }
@@ -66,9 +65,9 @@ public class DefaultTypeHandlerRegistry implements TypeHandlerRegistry
   /**
    * {@inheritDoc}
    */
-  public TypeHandler getTypeHandler(int dbDataType)
+  public DbFieldTypeHandler getTypeHandler(int dbDataType)
   {
-    TypeHandler handler = handlers.get(dbDataType);
+    DbFieldTypeHandler handler = handlers.get(dbDataType);
     if (handler != null)
     {
       return handler;
@@ -83,7 +82,7 @@ public class DefaultTypeHandlerRegistry implements TypeHandlerRegistry
   /**
    * {@inheritDoc}
    */
-  public void registerTypeHandler(int dbDataType, TypeHandler typeHandler)
+  public void registerTypeHandler(int dbDataType, DbFieldTypeHandler typeHandler)
   {
     Assert.notNull(typeHandler);
     handlers.put(dbDataType, typeHandler);

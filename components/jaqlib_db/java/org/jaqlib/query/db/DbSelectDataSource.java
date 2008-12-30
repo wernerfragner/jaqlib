@@ -8,18 +8,27 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.db.DbResultSet;
+import org.jaqlib.util.bean.typehandler.BeanFieldTypeHandler;
+import org.jaqlib.util.bean.typehandler.BeanFieldTypeHandlerRegistry;
+import org.jaqlib.util.bean.typehandler.DefaultBeanFieldTypeHandlerRegistry;
 import org.jaqlib.util.db.DbUtil;
-import org.jaqlib.util.db.DefaultTypeHandlerRegistry;
-import org.jaqlib.util.db.TypeHandler;
-import org.jaqlib.util.db.TypeHandlerRegistry;
+import org.jaqlib.util.db.typehandler.DbFieldTypeHandler;
+import org.jaqlib.util.db.typehandler.DbFieldTypeHandlerRegistry;
+import org.jaqlib.util.db.typehandler.DefaultDbFieldTypeHandlerRegistry;
 
 /**
+ * <p>
  * Represents a SELECT statement on a given JDBC connection. The result mapping
- * can be customized using the methods {@link #setStrictColumnCheck(boolean)},
- * {@link #setTypeHandlerRegistry(TypeHandlerRegistry)} and
- * {@link #getTypeHandlerRegistry()} (see according method javadoc for further
- * details).
+ * can be customized using following methods:
+ * <ul>
+ * <li>{@link #setStrictColumnCheck(boolean)}</li>
+ * <li>{@link #setDbFieldTypeHandlerRegistry(DbFieldTypeHandlerRegistry)}</li>
+ * <li>{@link #registerDbFieldTypeHandler(int, DbFieldTypeHandler)}</li>
+ * <li>{@link #setBeanFieldTypeHandlerRegistry(BeanFieldTypeHandlerRegistry)}</li>
+ * <li>{@link #registerBeanFieldTypeHandler(Class, BeanFieldTypeHandler)}</li>
+ * </ul>
+ * See according method javadoc for further details).
+ * </p>
  * 
  * @author Werner Fragner
  */
@@ -28,12 +37,15 @@ public class DbSelectDataSource
 
   private final String sql;
   private final DataSource dataSource;
-  private TypeHandlerRegistry typeHandlerRegistry = new DefaultTypeHandlerRegistry();
+
+  private boolean strictColumnCheck;
+
+  private DbFieldTypeHandlerRegistry dbFieldtypeHandlerRegistry = new DefaultDbFieldTypeHandlerRegistry();
+  private BeanFieldTypeHandlerRegistry beanFieldTypeHandlerRegistry = new DefaultBeanFieldTypeHandlerRegistry();
 
   private Connection connection;
   private Statement statement;
   private DbResultSet resultSet;
-  private boolean strictColumnCheck;
 
 
   public DbSelectDataSource(DataSource dataSource, String sql)
@@ -44,25 +56,53 @@ public class DbSelectDataSource
 
 
   /**
+   * Registers the given custom type handler with the given DB data type.
+   * 
+   * @param dbDataType a DB data type as defined at {@link java.sql.Types}.
+   * @param typeHandler a not null type handler.
+   */
+  public void registerDbFieldTypeHandler(int dbDataType,
+      DbFieldTypeHandler typeHandler)
+  {
+    dbFieldtypeHandlerRegistry.registerTypeHandler(dbDataType, typeHandler);
+  }
+
+
+  /**
    * Changes the type handler registry to a custom implementation. By default
    * the standard SQL types are supported.
    * 
    * @param registry a user-defined type handler registry.
    */
-  public void setTypeHandlerRegistry(TypeHandlerRegistry registry)
+  public void setDbFieldTypeHandlerRegistry(DbFieldTypeHandlerRegistry registry)
   {
-    this.typeHandlerRegistry = Assert.notNull(registry);
+    this.dbFieldtypeHandlerRegistry = Assert.notNull(registry);
   }
 
 
   /**
-   * @return the registry for {@link TypeHandler} instances. Custom
-   *         {@link TypeHandler} instances can be added to the returned registry
-   *         (each {@link DbSelectDataSource} has its own registry instance).
+   * Registers a custom bean field type handler with a given bean field type.
+   * 
+   * @param fieldType a not null bean field type.
+   * @param typeHandler a not null custom bean field type handler.
    */
-  public TypeHandlerRegistry getTypeHandlerRegistry()
+  public void registerBeanFieldTypeHandler(Class<?> fieldType,
+      BeanFieldTypeHandler typeHandler)
   {
-    return typeHandlerRegistry;
+    beanFieldTypeHandlerRegistry.registerTypeHandler(fieldType, typeHandler);
+  }
+
+
+  /**
+   * Changes the bean field type handler registry to a custom implementation. By
+   * default no type handles are available.
+   * 
+   * @param registry a user-defined bean field type handler registry.
+   */
+  public void setBeanFieldTypeHandlerRegistry(
+      BeanFieldTypeHandlerRegistry registry)
+  {
+    this.beanFieldTypeHandlerRegistry = registry;
   }
 
 
@@ -94,15 +134,16 @@ public class DbSelectDataSource
 
   public DbResultSet execute() throws SQLException
   {
-    ResultSet rs = getStatement().executeQuery(sql);
-    resultSet = new DbResultSet(rs, typeHandlerRegistry, strictColumnCheck);
+    final ResultSet rs = getStatement().executeQuery(sql);
+    resultSet = new DbResultSet(rs, dbFieldtypeHandlerRegistry,
+        beanFieldTypeHandlerRegistry, strictColumnCheck);
     return resultSet;
   }
 
 
   public void close()
   {
-    DbUtil.close(resultSet);
+    close(resultSet);
     resultSet = null;
     DbUtil.close(statement);
     statement = null;
@@ -129,5 +170,15 @@ public class DbSelectDataSource
     }
     return connection;
   }
+
+
+  private void close(DbResultSet rs)
+  {
+    if (rs != null)
+    {
+      rs.close();
+    }
+  }
+
 
 }
