@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public class LongTypeHandler implements DbFieldTypeHandler
+public class LongTypeHandler implements SqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

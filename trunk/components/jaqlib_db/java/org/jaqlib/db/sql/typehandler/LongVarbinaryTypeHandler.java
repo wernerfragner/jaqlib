@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public class LongVarbinaryTypeHandler implements DbFieldTypeHandler
+public class LongVarbinaryTypeHandler implements SqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

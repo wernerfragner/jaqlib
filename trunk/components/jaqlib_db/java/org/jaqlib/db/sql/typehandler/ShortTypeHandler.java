@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public class ShortTypeHandler implements DbFieldTypeHandler
+public class ShortTypeHandler implements SqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

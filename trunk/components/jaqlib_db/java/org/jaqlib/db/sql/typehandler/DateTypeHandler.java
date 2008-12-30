@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public class DateTypeHandler implements DbFieldTypeHandler
+public class DateTypeHandler implements SqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

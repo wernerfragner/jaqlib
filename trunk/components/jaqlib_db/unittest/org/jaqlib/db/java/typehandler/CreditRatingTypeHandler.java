@@ -1,15 +1,15 @@
 package org.jaqlib.db.java.typehandler;
 
 import org.jaqlib.CreditRating;
-import org.jaqlib.db.java.typehandler.AbstractBeanFieldTypeHandler;
+import org.jaqlib.db.java.typehandler.AbstractJavaTypeHandler;
 
 /**
  * @author Werner Fragner
  */
-public class CreditRatingTypeHandler extends AbstractBeanFieldTypeHandler
+public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 {
 
-  public Object getValue(Object value)
+  public Object getObject(Object value)
   {
     if (value instanceof Integer)
     {

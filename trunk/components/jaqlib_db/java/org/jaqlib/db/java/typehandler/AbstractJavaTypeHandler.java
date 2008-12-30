@@ -5,8 +5,8 @@ import org.jaqlib.util.ReflectionUtil;
 /**
  * @author Werner Fragner
  */
-public abstract class AbstractBeanFieldTypeHandler implements
-    BeanFieldTypeHandler
+public abstract class AbstractJavaTypeHandler implements
+    JavaTypeHandler
 {
 
   protected RuntimeException handleIllegalInputValue(Object value,

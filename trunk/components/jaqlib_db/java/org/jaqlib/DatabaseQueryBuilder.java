@@ -21,7 +21,7 @@ import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DatabaseQuery;
 import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.db.java.typehandler.BeanFieldTypeHandler;
+import org.jaqlib.db.java.typehandler.JavaTypeHandler;
 import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.WhereClause;
@@ -134,13 +134,11 @@ import org.jaqlib.query.WhereCondition;
  * <p>
  * 
  * Database column data types can be converted to custom Java types with
- * so-called {@link BeanFieldTypeHandler}s. These handlers can be registered
- * with
- * {@link DbSelectDataSource#registerBeanFieldTypeHandler(Class, BeanFieldTypeHandler)}
- * .
+ * so-called {@link JavaTypeHandler}s. These handlers can be registered with
+ * {@link DbSelectDataSource#registerJavaTypeHandler(Class, JavaTypeHandler)} .
  * </p>
  * <p>
- * <i>Example for custom bean field type handler:</i>
+ * <i>Example for custom java type handler:</i>
  * 
  * <pre>
  * // get DbSelectDataSource
@@ -149,15 +147,15 @@ import org.jaqlib.query.WhereCondition;
  *     sql);
  * 
  * // register custom type handler for CreditRating bean fields
- * accounts.registerBeanFieldTypeHandler(CreditRating.class,
+ * accounts.registerJavaTypeHandler(CreditRating.class,
  *     new CreditRatingTypeHandler());
  * 
  * // perform select with DatabaseQB.select() ...
  * 
- * // custom bean field type handler that converts Integer values from DB into CreditRating enumerations  
- * public class CreditRatingTypeHandler extends AbstractBeanFieldTypeHandler
+ * // custom java type handler that converts Integer values from DB into CreditRating enumerations  
+ * public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
  * {
- *   public Object getValue(Object value)
+ *   public Object getObject(Object value)
  *   {
  *     if (value instanceof Integer)
  *       return CreditRating.rating((Integer) value);

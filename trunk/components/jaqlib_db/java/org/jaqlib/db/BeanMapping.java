@@ -96,7 +96,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
       Object value)
   {
     Class<?> fieldType = ReflectionUtil.getFieldType(beanClass, fieldName);
-    return rs.applyBeanFieldTypeHandler(fieldType, value);
+    return rs.applyJavaTypeHandler(fieldType, value);
   }
 
 
