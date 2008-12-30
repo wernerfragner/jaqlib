@@ -40,6 +40,7 @@ import org.jaqlib.query.iterable.IterableQuery;
  * The result of this method call is then evaluated against the specified
  * condition.
  * </p>
+ * This class is thread-safe.
  * <p>
  * <b>Usage examples:</b><br>
  * <i>Example with method call recording:</i>

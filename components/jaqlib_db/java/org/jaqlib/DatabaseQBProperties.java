@@ -3,7 +3,10 @@ package org.jaqlib;
 import java.util.Properties;
 
 /**
+ * <p>
  * Holds all properties of JaqLib for database query support.
+ * </p>
+ * This class is thread-safe.
  * 
  * @author Werner Fragner
  */
