@@ -23,7 +23,6 @@ public class DefaultBeanFactory implements BeanFactory
 
   private DefaultBeanFactory()
   {
-    throw new UnsupportedOperationException();
   }
 
 
