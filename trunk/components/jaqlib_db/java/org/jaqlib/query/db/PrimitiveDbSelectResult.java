@@ -1,16 +1,13 @@
-package org.jaqlib.db;
+package org.jaqlib.query.db;
 
 /**
- * Represents a database table column. The column can be identified using the
- * column name (the actual name or the alias defined in the SELECT statements)
- * or the column index of the SELECT statement (starting with 1 - in conformity
- * with JDBC conventions).
+ * Defines a primitive mapping between one database column (see columnName and
+ * columnIndex) and a primitive Java type (see generic type T).
  * 
  * @author Werner Fragner
- * 
- * @param <T> the java type of the database table column.
+ * @param <T> The Java type of the mapping.
  */
-public class Column<T>
+public class PrimitiveDbSelectResult<T> extends DbSelectResult<T>
 {
 
   private static final int NO_INDEX = Integer.MIN_VALUE;
@@ -19,13 +16,19 @@ public class Column<T>
   private int columnIndex = NO_INDEX;
 
 
-  public Column(String columnName)
+  public PrimitiveDbSelectResult()
   {
+  }
+
+
+  public PrimitiveDbSelectResult(String columnName)
+  {
+    setFieldName(columnName);
     setColumnName(columnName);
   }
 
 
-  public Column(int columnIndex)
+  public PrimitiveDbSelectResult(int columnIndex)
   {
     setColumnIndex(columnIndex);
   }
@@ -66,5 +69,6 @@ public class Column<T>
     // DB column index starts with 1
     return columnIndex > 0;
   }
+
 
 }

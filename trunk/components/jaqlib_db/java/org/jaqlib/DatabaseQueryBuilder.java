@@ -17,16 +17,15 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.db.BeanDbSelectResult;
-import org.jaqlib.db.Column;
-import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.db.PrimitiveDbSelectResult;
 import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.DatabaseQBProperties;
+import org.jaqlib.query.db.BeanDbSelectResult;
+import org.jaqlib.query.db.Column;
 import org.jaqlib.query.db.DatabaseQuery;
+import org.jaqlib.query.db.DbSelectDataSource;
+import org.jaqlib.query.db.PrimitiveDbSelectResult;
 import org.jaqlib.util.Assert;
 
 /**

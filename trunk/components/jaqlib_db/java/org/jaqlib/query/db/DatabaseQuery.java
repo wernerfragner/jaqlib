@@ -3,8 +3,7 @@ package org.jaqlib.query.db;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.db.DbSelectResult;
+import org.jaqlib.DatabaseQBProperties;
 import org.jaqlib.query.AbstractQuery;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.util.Assert;
