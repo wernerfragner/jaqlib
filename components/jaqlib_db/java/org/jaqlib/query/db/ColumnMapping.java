@@ -52,18 +52,18 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   /**
    * @param columnName the database column name.
    */
-  public void setColumnName(String name)
+  public void setColumnName(String columnName)
   {
-    this.columnName = name;
+    this.columnName = columnName;
   }
 
 
   /**
    * @param columnIndex the database column index.
    */
-  public void setColumnIndex(int index)
+  public void setColumnIndex(int columnIndex)
   {
-    this.columnIndex = index;
+    this.columnIndex = columnIndex;
   }
 
 

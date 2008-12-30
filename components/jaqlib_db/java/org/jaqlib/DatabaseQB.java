@@ -98,7 +98,7 @@ public class DatabaseQB
    * </p>
    * 
    * @param <T> the result column type.
-   * @param columnMapping an object defining the desired column.
+   * @param column an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
