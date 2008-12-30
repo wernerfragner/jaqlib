@@ -61,7 +61,8 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
     {
       if (element != null && tree.matches(element))
       {
-        final KeyType elementKey = getKey(element, invocation);
+        @SuppressWarnings("unchecked")
+        final KeyType elementKey = (KeyType) getKey(element, invocation);
         resultMap.put(elementKey, element);
       }
     }

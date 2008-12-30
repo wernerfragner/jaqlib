@@ -13,11 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package org.jaqlib.query.db;
+package org.jaqlib;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.Database;
 import org.jaqlib.db.BeanDbSelectResult;
 import org.jaqlib.db.Column;
 import org.jaqlib.db.DbSelectDataSource;
@@ -27,14 +26,16 @@ import org.jaqlib.query.FromClause;
 import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
+import org.jaqlib.query.db.DatabaseQBProperties;
+import org.jaqlib.query.db.DatabaseQuery;
 import org.jaqlib.util.Assert;
 
 /**
  * <p>
  * The main entry point of JaQLib for database query support. It provides
- * methods for building queries ( {@link #select(PrimitiveDbSelectResult),
- * #select(BeanDbSelectResult) }) and adapting the query building process (
- * {@link #setClassLoader(ClassLoader)} ).</br> The Method
+ * methods for building queries ( {@link #select(PrimitiveDbSelectResult)},
+ * {@link #select(BeanDbSelectResult) }) and adapting the query building process
+ * ( {@link #setClassLoader(ClassLoader)} ).</br> The Method
  * {@link #getMethodCallRecorder(Class)} can be used to define a WHERE condition
  * where a return value of method call is compared to an other value (see also
  * the first example below).
@@ -45,7 +46,7 @@ import org.jaqlib.util.Assert;
  * the SQL SELECT statement that should act as data source for the accounts.<br>
  * 
  * <pre>
- * String sql = &quot;SELECT lastname, firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+ * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
  * DbSelectDataSource accounts = Database.getSelectDataSource(getJdbcDataSource(),
  *     sql);
  * </pre>
@@ -54,7 +55,7 @@ import org.jaqlib.util.Assert;
  * {@link DataSource}).
  * 
  * <pre>
- * String sql = &quot;SELECT lastname, firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+ * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
  * Database db = new Database(getJdbcDataSource());
  * DbSelectDataSource accounts = db.getSelectDataSource(sql);
  * </pre>

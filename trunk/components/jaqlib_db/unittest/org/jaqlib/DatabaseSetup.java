@@ -91,8 +91,8 @@ public class DatabaseSetup
     String createAccount = "CREATE table APP.ACCOUNT ("
         + "ID          INTEGER NOT NULL "
         + "PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
-        + "(START WITH 1, INCREMENT BY 1)," + "LASTNAME    VARCHAR(30), "
-        + "FIRSTNAME   VARCHAR(30)," + "CREDITRATING INTEGER, BALANCE DOUBLE)";
+        + "(START WITH 1, INCREMENT BY 1)," + "LNAME    VARCHAR(30), "
+        + "FNAME   VARCHAR(30)," + "CREDITRATING INTEGER, BALANCE DOUBLE)";
 
     executeStatement(createAccount);
   }
@@ -102,7 +102,7 @@ public class DatabaseSetup
   {
     for (AccountImpl account : ACCOUNTS)
     {
-      executeStatement("INSERT INTO APP.ACCOUNT (lastname, firstname, creditrating, balance) VALUES ('"
+      executeStatement("INSERT INTO APP.ACCOUNT (lname, fname, creditrating, balance) VALUES ('"
           + account.getLastName()
           + "', '"
           + account.getFirstName()

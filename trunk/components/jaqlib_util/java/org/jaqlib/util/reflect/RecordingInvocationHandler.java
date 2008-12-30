@@ -8,9 +8,9 @@ import java.util.List;
 import org.jaqlib.util.Assert;
 
 /**
- * This class records all method invocations on a {@link Proxy} object. <b>The
- * invocations are not delegated to the target. So the invocations always return
- * <tt>null</code>.</b>
+ * This class records all method invocations on a
+ * {@link java.lang.reflect.Proxy} object. <b>The invocations are not delegated
+ * to the target. So the invocations always return <tt>null</code>.</b>
  * 
  * @author Werner Fragner
  */
