@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.util.db;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;

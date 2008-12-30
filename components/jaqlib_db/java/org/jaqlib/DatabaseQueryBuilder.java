@@ -23,7 +23,6 @@ import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.PrimitiveDbSelectResult;
 import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
-import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.db.DatabaseQBProperties;
@@ -33,17 +32,27 @@ import org.jaqlib.util.Assert;
 /**
  * <p>
  * The main entry point of JaQLib for database query support. It provides
- * methods for building queries ( {@link #select(PrimitiveDbSelectResult)},
- * {@link #select(BeanDbSelectResult) }) and adapting the query building process
- * ( {@link #setClassLoader(ClassLoader)} ).</br> The Method
- * {@link #getMethodCallRecorder(Class)} can be used to define a WHERE condition
- * where a return value of method call is compared to an other value (see also
- * the first example below).
+ * following methods for building queries:
+ * <ul>
+ * <li>{@link #select(Column)}</li>
+ * <li>{@link #select(Class)}</li>
+ * <li>{@link #select(BeanDbSelectResult)}</li>
+ * </ul>
+ * </p>
+ * <p>
+ * The Method {@link #getMethodCallRecorder(Class)} can be used to define a
+ * WHERE condition using a method call recording mechanism (see also the first
+ * example below). First the programmer must call the desired method on the
+ * returned proxy object. This method call is recorded by JaQLib. When
+ * evaluating the WHERE condition this method call is replayed on every selected
+ * element. The result of this method call is then evaluated against the
+ * specified condition.
  * </p>
  * <p>
  * <b>Usage examples:</b><br>
  * All examples use following statements to define the database connection and
- * the SQL SELECT statement that should act as data source for the accounts.<br>
+ * the SQL SELECT statement that should act as data source for some bank
+ * accounts.<br>
  * 
  * <pre>
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
@@ -124,6 +133,8 @@ import org.jaqlib.util.Assert;
  * 
  * </p>
  * 
+ * @see DatabaseQB
+ * @see Database
  * @author Werner Fragner
  */
 public class DatabaseQueryBuilder extends AbstractQueryBuilder
@@ -160,13 +171,6 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
   }
 
 
-  public <T> FromClause<T, DbSelectDataSource> select(
-      BeanDbSelectResult<T> resultDefinition)
-  {
-    return this.<T> createQuery().createFromClause(resultDefinition);
-  }
-
-
   /**
    * <p>
    * Selects one column of a given database SELECT statement. The SELECT
@@ -175,7 +179,8 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of user-defined {@link WhereCondition}s and user-defined
-   * {@link ReflectiveWhereCondition}s.
+   * conditions using a method call recording mechanism (see examples and
+   * {@link #getMethodCallRecorder(Class)} for further details).
    * </p>
    * <p>
    * <b>NOTE: the WHERE condition is not executed at database-side but at Java
@@ -183,7 +188,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result element type.
+   * @param <T> the result column type.
    * @param column an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
@@ -214,7 +219,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result element type.
+   * @param <T> the result bean type.
    * @param beanClass the desired result bean. This bean must provide a default
    *          constructor (otherwise a {@link RuntimeException} is thrown).
    * @return the FROM clause to specify the database SELECT statement for the
@@ -224,6 +229,26 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
   {
     BeanDbSelectResult<T> beanResult = Database.getDefaultBeanResult(beanClass);
     return select(beanResult);
+  }
+
+
+  /**
+   * This method basically provides the same functionality as
+   * {@link #select(Class)}. But it gives more flexibility in defining the
+   * mapping between SELECT statement results to Java bean instance fields. This
+   * mapping can defined with a {@link BeanDbSelectResult} instance. For build
+   * these instances see {@link Database}.
+   * 
+   * @param <T> the result bean type.
+   * @param resultDefinition a bean definition that holds information how to map
+   *          the result of the SELECT statement to a Java bean.
+   * @return the FROM clause to specify the database SELECT statement for the
+   *         query.
+   */
+  public <T> FromClause<T, DbSelectDataSource> select(
+      BeanDbSelectResult<T> resultDefinition)
+  {
+    return this.<T> createQuery().createFromClause(resultDefinition);
   }
 
 

@@ -10,6 +10,35 @@ import java.util.Set;
 public class CollectionUtil
 {
 
+  public static String toString(Iterable<?> iterable, String separator)
+  {
+    if (iterable == null)
+    {
+      return "";
+    }
+    if (separator == null)
+    {
+      separator = "";
+    }
+
+    boolean first = true;
+    final StringBuilder sb = new StringBuilder();
+    for (Object o : iterable)
+    {
+      if (!first)
+      {
+        sb.append(separator);
+      }
+      else
+      {
+        first = false;
+      }
+      sb.append(o);
+    }
+    return sb.toString();
+  }
+
+
   public static <K, V> Map<K, V> newDefaultMap()
   {
     return new HashMap<K, V>();

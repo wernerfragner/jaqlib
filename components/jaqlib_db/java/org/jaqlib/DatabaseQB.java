@@ -19,7 +19,6 @@ import org.jaqlib.db.BeanDbSelectResult;
 import org.jaqlib.db.Column;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.query.FromClause;
-import org.jaqlib.query.ReflectiveWhereCondition;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 import org.jaqlib.query.db.DatabaseQBProperties;
@@ -37,6 +36,7 @@ import org.jaqlib.query.db.DatabaseQBProperties;
  * This class is thread-safe.
  * 
  * @see DatabaseQueryBuilder
+ * @see Database
  * @author Werner Fragner
  */
 public class DatabaseQB
@@ -63,17 +63,18 @@ public class DatabaseQB
 
 
   /**
-   * Enables/disables strict checking if a column in the desired result does not
-   * exist in the SELECT statement. If strict column check is enabled then an
-   * exception is thrown if a column does exist in the SELECT statement. If
-   * strict column check is disabled (DEFAULT) then an INFO log message is
-   * issued and the column is ignored. If these INFO messages should not be
-   * issued anymore then the JDK logger for
-   * 'org.jaqlib.query.db.AbstractJaqLibOrMapper' must be disabled (see <a href=
-   * "http//java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
+   * Enables/disables strict checking if a field in a Java bean does not exist
+   * in the SELECT statement. If strict column check is enabled then an
+   * exception is thrown if a Java bean field does exist in the SELECT
+   * statement. If strict column check is disabled (DEFAULT) then an INFO log
+   * message is issued and the field is ignored (= is not set). If these INFO
+   * messages should not be issued then the JDK logger for
+   * 'org.jaqlib.query.db.AbstractJaqLibOrMapper' must be disabled (see <a
+   * href="
+   * http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
    * Logging</a>).
    * 
-   * @param strictColumnCheck
+   * @param strictColumnCheck enable/disable strict column check.
    */
   public void setStrictColumnCheck(boolean strictColumnCheck)
   {
@@ -94,14 +95,15 @@ public class DatabaseQB
 
 
   /**
-   * @param <T> the type of the result element(s).
-   * @param resultElementClass a not null class of the result element.
+   * @param <T> the type of the result bean.
+   * @param beanClass a not null bean class where to store the result of the
+   *          query.
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */
-  public static <T> T getMethodCallRecorder(Class<T> resultElementClass)
+  public static <T> T getMethodCallRecorder(Class<T> beanClass)
   {
-    return QUERYBUILDER.getMethodCallRecorder(resultElementClass);
+    return QUERYBUILDER.getMethodCallRecorder(beanClass);
   }
 
 
@@ -113,7 +115,8 @@ public class DatabaseQB
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of user-defined {@link WhereCondition}s and user-defined
-   * {@link ReflectiveWhereCondition}s.
+   * conditions using a method call recording mechanism (see examples and
+   * {@link #getMethodCallRecorder(Class)} for further details).
    * </p>
    * <p>
    * <b>NOTE: the WHERE condition is not executed at database-side but at Java
@@ -121,7 +124,7 @@ public class DatabaseQB
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result element type.
+   * @param <T> the result column type.
    * @param column an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
@@ -149,7 +152,7 @@ public class DatabaseQB
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result element type.
+   * @param <T> the result bean type.
    * @param beanClass the desired result bean. This bean must provide a default
    *          constructor (otherwise a {@link RuntimeException} is thrown).
    * @return the FROM clause to specify the database SELECT statement for the
@@ -161,6 +164,19 @@ public class DatabaseQB
   }
 
 
+  /**
+   * This method basically provides the same functionality as
+   * {@link #select(Class)}. But it gives more flexibility in defining the
+   * mapping between SELECT statement results to Java bean instance fields. This
+   * mapping can defined with a {@link BeanDbSelectResult} instance. For build
+   * these instances see {@link Database}.
+   * 
+   * @param <T> the result bean type.
+   * @param resultDefinition a bean definition that holds information how to map
+   *          the result of the SELECT statement to a Java bean.
+   * @return the FROM clause to specify the database SELECT statement for the
+   *         query.
+   */
   public static <T> FromClause<T, DbSelectDataSource> select(
       BeanDbSelectResult<T> resultDefinition)
   {

@@ -3,9 +3,10 @@ package org.jaqlib.query;
 /**
  * @author Werner Fragner
  * 
- * @param <T>
- * @param <DataSourceType>
- * @param <ResultType>
+ * @param <T> the element type.
+ * @param <DataSourceType> the data source type.
+ * @param <ResultType> the type to which the condition should be evaluated
+ *          against.
  */
 public interface ComparableWhereCondition<T, DataSourceType, ResultType>
 {
@@ -56,7 +57,7 @@ public interface ComparableWhereCondition<T, DataSourceType, ResultType>
 
   /**
    * Defines the condition that the result of a recorded method call must be the
-   * same as the given value (object identity is tested).
+   * same as the given value (regarding object identity).
    * 
    * @param expected the value that should match the result of the recorded
    *          method call.
@@ -68,7 +69,7 @@ public interface ComparableWhereCondition<T, DataSourceType, ResultType>
 
   /**
    * Defines the condition that the result of a recorded method call must not be
-   * the same as the given value (object identity is tested).
+   * the same as the given value (regarding object identity).
    * 
    * @param expected the value that should not match the result of the recorded
    *          method call.
@@ -82,8 +83,8 @@ public interface ComparableWhereCondition<T, DataSourceType, ResultType>
    * Defines the condition that the result of a recorded method call must be
    * greater than the given value.
    * 
-   * @param expected the value that should smaller than or equal to the result
-   *          of the recorded method call.
+   * @param expected the value that should be smaller than or equal to the
+   *          result of the recorded method call.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
@@ -94,7 +95,7 @@ public interface ComparableWhereCondition<T, DataSourceType, ResultType>
    * Defines the condition that the result of a recorded method call must be
    * greater than or equal to the given value.
    * 
-   * @param expected the value that should smaller than the result of the
+   * @param expected the value that should be smaller than the result of the
    *          recorded method call.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
@@ -106,8 +107,8 @@ public interface ComparableWhereCondition<T, DataSourceType, ResultType>
    * Defines the condition that the result of a recorded method call must be
    * smaller than the given value.
    * 
-   * @param expected the value that should greater than or equal to the result
-   *          of the recorded method call.
+   * @param expected the value that should be greater than or equal to the
+   *          result of the recorded method call.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
@@ -118,7 +119,7 @@ public interface ComparableWhereCondition<T, DataSourceType, ResultType>
    * Defines the condition that the result of a recorded method call must be
    * smaller than or equal to the given value.
    * 
-   * @param expected the value that should greater than the result of the
+   * @param expected the value that should be greater than the result of the
    *          recorded method call.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.

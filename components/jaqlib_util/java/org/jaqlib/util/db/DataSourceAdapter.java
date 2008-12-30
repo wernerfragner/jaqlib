@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.util.db;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -7,6 +7,10 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 /**
+ * Adapter implementation of the {@link javax.sql.DataSource} interface. All
+ * implemented methods throw {@link UnsupportedOperationException}. Extending
+ * classes are meant to override all desired methods.
+ * 
  * @author Werner Fragner
  */
 public class DataSourceAdapter implements DataSource

@@ -14,6 +14,7 @@ public class JaqLibUtilTests
     TestSuite suite = new TestSuite("Test for org.jaqlib.util");
     // $JUnit-BEGIN$
     suite.addTestSuite(ReflectionUtilTest.class);
+    suite.addTestSuite(CollectionUtilTest.class);
     // $JUnit-END$
     return suite;
   }

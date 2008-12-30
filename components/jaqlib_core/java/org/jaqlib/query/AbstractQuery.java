@@ -15,6 +15,7 @@ import org.jaqlib.query.syntaxtree.Condition;
 import org.jaqlib.query.syntaxtree.Or;
 import org.jaqlib.query.syntaxtree.SyntaxTree;
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.reflect.MethodCallRecorder;
 import org.jaqlib.util.reflect.MethodInvocation;
 
@@ -156,9 +157,19 @@ public abstract class AbstractQuery<T, DataSourceType> implements
     }
 
     // check if only one result has been found
-    Assert.size(1, setResult,
-        "There exists multiple results but only one is allowed.");
+    if (setResult.size() > 1)
+    {
+      throw new InvalidQueryResultException(
+          "There exist multiple results but only one is allowed. Results: "
+              + getCommaSeparatedString(setResult));
+    }
     return setResult.iterator().next();
+  }
+
+
+  private String getCommaSeparatedString(Iterable<T> iterable)
+  {
+    return CollectionUtil.toString(iterable, ", ");
   }
 
 
