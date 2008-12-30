@@ -22,8 +22,8 @@ import org.jaqlib.query.WhereCondition;
 
 
 /**
- * QB stands for QueryBuilder (see {@link IterableQueryBuilder} for further
- * information).
+ * Helper class with static methods for {@link java.lang.Iterable} support (see
+ * {@link IterableQueryBuilder} for further information).
  * 
  * <p>
  * This class provides static helper methods to easily execute queries against
@@ -37,6 +37,14 @@ import org.jaqlib.query.WhereCondition;
  */
 public class IterableQB
 {
+
+  /**
+   * This class is not intended to be instantiated.
+   */
+  private IterableQB()
+  {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Singleton instance.
