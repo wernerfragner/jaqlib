@@ -185,7 +185,7 @@
 		</junit>
 		
 	  <!-- DB tests -->
-	  <junit haltonfailure="false" failureproperty="junit.failure">
+	  <junit haltonfailure="false" failureproperty="junit.failure" fork="true">
       <classpath refid="jaqlib.components" />
       <classpath refid="jaqlib.unittest.components" />
       <classpath refid="jaqlib.libs" />
@@ -245,7 +245,9 @@
     <mkdir dir="${dist.dir}/${version.fullString}/reports/javadoc" />
     <copy toDir="${dist.dir}/${version.fullString}/reports/javadoc" >
       <fileset dir="${build.temp}/javadoc/jaqlib" />
-    </copy>		
+    </copy>
+		
+		<delete dir="./dbunittest" failonerror="false" />
 	</target>
 	
 	
