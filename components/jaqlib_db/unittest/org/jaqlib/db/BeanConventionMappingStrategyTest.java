@@ -7,9 +7,9 @@ import junit.framework.TestCase;
 
 import org.jaqlib.AccountImpl;
 import org.jaqlib.query.db.BeanConventionMappingRetrievalStrategy;
-import org.jaqlib.query.db.BeanDbSelectResult;
-import org.jaqlib.query.db.DbSelectResult;
-import org.jaqlib.query.db.PrimitiveDbSelectResult;
+import org.jaqlib.query.db.BeanMapping;
+import org.jaqlib.query.db.AbstractMapping;
+import org.jaqlib.query.db.ColumnMapping;
 
 public class BeanConventionMappingStrategyTest extends TestCase
 {
@@ -30,7 +30,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     try
     {
-      strategy.addMappings(null, new BeanDbSelectResult<AccountImpl>(
+      strategy.addMappings(null, new BeanMapping<AccountImpl>(
           AccountImpl.class));
       fail("Did not throw IllegalArgumentException");
     }
@@ -51,7 +51,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
 
   public void testExecute()
   {
-    BeanDbSelectResult<AccountImpl> result = new BeanDbSelectResult<AccountImpl>(
+    BeanMapping<AccountImpl> result = new BeanMapping<AccountImpl>(
         AccountImpl.class);
     strategy.addMappings(AccountImpl.class, result);
 
@@ -65,14 +65,14 @@ public class BeanConventionMappingStrategyTest extends TestCase
   }
 
 
-  private List<String> getResults(BeanDbSelectResult<AccountImpl> result)
+  private List<String> getResults(BeanMapping<AccountImpl> result)
   {
     List<String> results = new ArrayList<String>();
-    for (DbSelectResult<?> dbSelectResult : result)
+    for (AbstractMapping<?> dbSelectResult : result)
     {
-      assertEquals(PrimitiveDbSelectResult.class, dbSelectResult.getClass());
+      assertEquals(ColumnMapping.class, dbSelectResult.getClass());
       results
-          .add(((PrimitiveDbSelectResult<?>) dbSelectResult).getColumnName());
+          .add(((ColumnMapping<?>) dbSelectResult).getColumnName());
     }
     return results;
   }

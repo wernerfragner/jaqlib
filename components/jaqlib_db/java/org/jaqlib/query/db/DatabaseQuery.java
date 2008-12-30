@@ -1,13 +1,15 @@
 package org.jaqlib.query.db;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.DatabaseQBProperties;
 import org.jaqlib.query.AbstractQuery;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.db.DbResultSet;
 import org.jaqlib.util.reflect.MethodCallRecorder;
+import org.jaqlib.util.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner
@@ -17,59 +19,107 @@ import org.jaqlib.util.reflect.MethodCallRecorder;
 public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
-  private final DatabaseQBProperties properties;
-  private DbSelectResult<T> resultDefinition;
+  private AbstractMapping<T> resultDefinition;
 
 
-  public DatabaseQuery(MethodCallRecorder methodCallRecorder,
-      DatabaseQBProperties properties)
+  public DatabaseQuery(MethodCallRecorder methodCallRecorder)
   {
     super(methodCallRecorder);
-    this.properties = Assert.notNull(properties);
   }
 
 
   public FromClause<T, DbSelectDataSource> createFromClause(
-      DbSelectResult<T> resultDefinition)
+      AbstractMapping<T> resultDefinition)
   {
     this.resultDefinition = Assert.notNull(resultDefinition);
     return new FromClause<T, DbSelectDataSource>(this);
   }
 
 
-  private boolean getStrictColumnCheck()
-  {
-    return properties.getStrictColumnCheck();
-  }
-
-
   @Override
   protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
   {
-    CollectionJaqLibOrMapper<T> orMapper = new CollectionJaqLibOrMapper<T>();
-    configureOrMapper(orMapper);
+    try
+    {
+      DbResultSet rs = queryDatabase();
+      while (rs.next())
+      {
+        T element = extractElement(rs);
+        if (shouldAddToResult(element))
+        {
+          result.add(element);
 
-    orMapper.addResults(result, stopAtFirstMatch);
+          if (stopAtFirstMatch)
+          {
+            return;
+          }
+        }
+      }
+    }
+    catch (SQLException sqle)
+    {
+      handleSqlException(sqle);
+    }
+    finally
+    {
+      getDataSource().close();
+    }
   }
 
 
   @Override
-  protected <KeyType> void addResults(Map<KeyType, T> resultMap)
+  protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
-    MapJaqLibOrMapper<T> orMapper = new MapJaqLibOrMapper<T>();
-    configureOrMapper(orMapper);
+    final MethodInvocation invocation = getCurrentInvocation();
 
-    orMapper.addResults(resultMap);
+    try
+    {
+      DbResultSet rs = queryDatabase();
+      while (rs.next())
+      {
+        T element = extractElement(rs);
+        if (element != null && shouldAddToResult(element))
+        {
+          @SuppressWarnings("unchecked")
+          final KeyType elementKey = (KeyType) getKey(element, invocation);
+          resultMap.put(elementKey, element);
+        }
+      }
+    }
+    catch (SQLException sqle)
+    {
+      handleSqlException(sqle);
+    }
+    finally
+    {
+      getDataSource().close();
+    }
   }
 
 
-  private void configureOrMapper(AbstractJaqLibOrMapper<T> orMapper)
+  private boolean shouldAddToResult(T element)
   {
-    orMapper.setDataSource(getDataSource());
-    orMapper.setElementPredicate(tree);
-    orMapper.setResultDefinition(resultDefinition);
-    orMapper.setMethodInvocation(getCurrentInvocation());
-    orMapper.setStrictColumnCheck(getStrictColumnCheck());
+    return tree.matches(element);
+  }
+
+
+  private T extractElement(DbResultSet rs) throws SQLException
+  {
+    return resultDefinition.getValue(rs);
+  }
+
+
+  private void handleSqlException(SQLException sqle)
+  {
+    QueryDataSourceException e = new QueryDataSourceException(sqle);
+    e.setStackTrace(sqle.getStackTrace());
+    throw e;
+  }
+
+
+  private DbResultSet queryDatabase() throws SQLException
+  {
+    return getDataSource().execute();
   }
 
 }

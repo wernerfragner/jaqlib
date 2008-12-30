@@ -16,6 +16,6 @@ public interface MappingRetrievalStrategy
    * @param beanClass the not null Java bean class.
    * @param result a not null result where to store the mappings.
    */
-  void addMappings(Class<?> beanClass, BeanDbSelectResult<?> result);
+  void addMappings(Class<?> beanClass, BeanMapping<?> result);
 
 }

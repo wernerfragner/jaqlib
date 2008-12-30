@@ -80,4 +80,20 @@ public class DbUtil
       }
     }
   }
+
+
+  public static void close(DbResultSet rs)
+  {
+    if (rs != null)
+    {
+      try
+      {
+        rs.close();
+      }
+      catch (SQLException e)
+      {
+        LOG.info("Could not close JDBC result set");
+      }
+    }
+  }
 }

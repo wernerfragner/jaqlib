@@ -21,21 +21,19 @@ import org.jaqlib.query.AbstractQueryBuilder;
 import org.jaqlib.query.FromClause;
 import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
-import org.jaqlib.query.db.BeanDbSelectResult;
-import org.jaqlib.query.db.Column;
+import org.jaqlib.query.db.BeanMapping;
+import org.jaqlib.query.db.ColumnMapping;
 import org.jaqlib.query.db.DatabaseQuery;
 import org.jaqlib.query.db.DbSelectDataSource;
-import org.jaqlib.query.db.PrimitiveDbSelectResult;
-import org.jaqlib.util.Assert;
 
 /**
  * <p>
  * The main entry point of JaQLib for database query support. It provides
  * following methods for building queries:
  * <ul>
- * <li>{@link #select(Column)}</li>
+ * <li>{@link #select(ColumnMapping)}</li>
  * <li>{@link #select(Class)}</li>
- * <li>{@link #select(BeanDbSelectResult)}</li>
+ * <li>{@link #select(BeanMapping)}</li>
  * </ul>
  * </p>
  * <p>
@@ -140,37 +138,6 @@ import org.jaqlib.util.Assert;
 public class DatabaseQueryBuilder extends AbstractQueryBuilder
 {
 
-  private final DatabaseQBProperties properties;
-
-
-  /**
-   * Default constructor that initializes this class with the default
-   * properties.
-   */
-  public DatabaseQueryBuilder()
-  {
-    this(new DatabaseQBProperties());
-  }
-
-
-  /**
-   * Constructor for specifying user-defined properties.
-   * 
-   * @param properties a not null properties object.
-   */
-  public DatabaseQueryBuilder(DatabaseQBProperties properties)
-  {
-    this.properties = Assert.notNull(properties);
-  }
-
-
-  private <T> FromClause<T, DbSelectDataSource> select(
-      PrimitiveDbSelectResult<T> resultDefinition)
-  {
-    return this.<T> createQuery().createFromClause(resultDefinition);
-  }
-
-
   /**
    * <p>
    * Selects one column of a given database SELECT statement. The SELECT
@@ -193,12 +160,9 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T, DbSelectDataSource> select(Column<T> column)
+  public <T> FromClause<T, DbSelectDataSource> select(ColumnMapping<T> column)
   {
-    PrimitiveDbSelectResult<T> primitiveResult = new PrimitiveDbSelectResult<T>();
-    primitiveResult.setColumnIndex(column.getColumnIndex());
-    primitiveResult.setColumnName(column.getColumnName());
-    return select(primitiveResult);
+    return this.<T> createQuery().createFromClause(column);
   }
 
 
@@ -227,7 +191,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    */
   public <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
   {
-    BeanDbSelectResult<T> beanResult = Database.getDefaultBeanResult(beanClass);
+    BeanMapping<T> beanResult = Database.getDefaultBeanResult(beanClass);
     return select(beanResult);
   }
 
@@ -236,8 +200,8 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * This method basically provides the same functionality as
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between SELECT statement results to Java bean instance fields. This
-   * mapping can defined with a {@link BeanDbSelectResult} instance. For build
-   * these instances see {@link Database}.
+   * mapping can defined with a {@link BeanMapping} instance. For build these
+   * instances see {@link Database}.
    * 
    * @param <T> the result bean type.
    * @param resultDefinition a bean definition that holds information how to map
@@ -246,7 +210,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    *         query.
    */
   public <T> FromClause<T, DbSelectDataSource> select(
-      BeanDbSelectResult<T> resultDefinition)
+      BeanMapping<T> resultDefinition)
   {
     return this.<T> createQuery().createFromClause(resultDefinition);
   }
@@ -254,7 +218,8 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
 
   private <T> DatabaseQuery<T> createQuery()
   {
-    return new DatabaseQuery<T>(getMethodCallRecorder(), properties);
+    return new DatabaseQuery<T>(getMethodCallRecorder());
   }
+
 
 }
