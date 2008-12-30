@@ -26,8 +26,8 @@ import org.jaqlib.query.db.DatabaseQBProperties;
 
 
 /**
- * QB stands for QueryBuilder (see {@link DatabaseQueryBuilder} for further
- * information).
+ * Helper class with static methods for database query support (see
+ * {@link DatabaseQueryBuilder} for further information).
  * 
  * <p>
  * This class provides static helper methods to easily execute queries against
@@ -41,6 +41,14 @@ import org.jaqlib.query.db.DatabaseQBProperties;
  */
 public class DatabaseQB
 {
+
+  /**
+   * This class is not intended to be instantiated.
+   */
+  private DatabaseQB()
+  {
+    throw new UnsupportedOperationException();
+  }
 
   /**
    * Default properties for {@link DatabaseQueryBuilder}.
