@@ -4,5 +4,6 @@
 	<classpathentry kind="lib" path="cglib/cglib-nodep-2.1_3.jar" sourcepath="cglib/cglib-src-2.1_3.jar"/>
 	<classpathentry kind="lib" path="junit/junit.jar"/>
 	<classpathentry kind="lib" path="derby/derby.jar"/>
+	<classpathentry kind="lib" path="easymock/easymock.jar" sourcepath="easymock/src.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
