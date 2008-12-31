@@ -1,5 +1,7 @@
 package org.jaqlib.db;
 
+import java.util.List;
+
 
 /**
  * Defines a strategy how to retrieve the mapping between database columns and
@@ -11,11 +13,11 @@ public interface MappingRetrievalStrategy
 {
 
   /**
-   * Fills the given result object with mappings.
+   * Gets the mappings for the given bean class.
    * 
    * @param beanClass the not null Java bean class.
-   * @param result a not null result where to store the mappings.
+   * @return a list containing all mappings for the given bean class.
    */
-  void addMappings(Class<?> beanClass, BeanMapping<?> result);
+  List<AbstractMapping<?>> getMappings(Class<?> beanClass);
 
 }

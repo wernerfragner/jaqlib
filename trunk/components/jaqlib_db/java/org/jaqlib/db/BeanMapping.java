@@ -1,11 +1,9 @@
 package org.jaqlib.db;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
 import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -13,8 +11,9 @@ import org.jaqlib.util.ReflectionUtil;
 
 /**
  * Defines a mapping between several database columns to the fields of a Java
- * bean. This class also allows nested Java beans by accepting
- * {@link AbstractMapping} in the {@link #addResult(AbstractMapping)} method.
+ * bean. The strategy how to do this mapping can be defined by setting a custom
+ * {@link MappingRetrievalStrategy}. By default the
+ * {@link BeanConventionMappingRetrievalStrategy} is used.
  * 
  * @author Werner Fragner
  * @param <T> the Java bean type of the mapping.
@@ -23,10 +22,18 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
     Iterable<AbstractMapping<?>>
 {
 
-  private final List<AbstractMapping<?>> mappings = new ArrayList<AbstractMapping<?>>();
+  // state
+
   private final Class<T> beanClass;
-  private BeanFactory beanFactory = DefaultBeanFactory.INSTANCE;
-  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
+  private List<AbstractMapping<?>> mappings;
+
+  // infrastructure
+
+  private BeanFactory beanFactory = Defaults.getBeanFactory();
+  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
+      .getJavaTypeHandlerRegistry();
+  private MappingRetrievalStrategy mappingRetrievalStrategy = Defaults
+      .getMappingRetrievalStrategy();
 
 
   /**
@@ -35,6 +42,18 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public BeanMapping(Class<T> beanClass)
   {
     this.beanClass = Assert.notNull(beanClass);
+  }
+
+
+  /**
+   * Sets a custom strategy how to retrieve the mapping between database columns
+   * and Java bean fields.
+   * 
+   * @param strategy a not null custom strategy.
+   */
+  public void setMappingRetrievalStrategy(MappingRetrievalStrategy strategy)
+  {
+    this.mappingRetrievalStrategy = Assert.notNull(strategy);
   }
 
 
@@ -70,17 +89,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    */
   public void setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry registry)
   {
-    this.javaTypeHandlerRegistry = registry;
-  }
-
-
-  /**
-   * @param result a not null mapping (primitive or a bean mapping).
-   */
-  public void addResult(AbstractMapping<?> result)
-  {
-    Assert.notNull(result);
-    mappings.add(result);
+    this.javaTypeHandlerRegistry = Assert.notNull(registry);
   }
 
 
@@ -89,7 +98,17 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    */
   public Iterator<AbstractMapping<?>> iterator()
   {
-    return mappings.iterator();
+    return getMappings().iterator();
+  }
+
+
+  private List<AbstractMapping<?>> getMappings()
+  {
+    if (mappings == null)
+    {
+      mappings = mappingRetrievalStrategy.getMappings(beanClass);
+    }
+    return mappings;
   }
 
 
@@ -143,5 +162,6 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   {
     return javaTypeHandlerRegistry.getTypeHandler(fieldType);
   }
+
 
 }

@@ -1,8 +1,13 @@
 package org.jaqlib;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
+import org.easymock.EasyMock;
+import org.jaqlib.db.DbResultSet;
+import org.jaqlib.db.Defaults;
 import org.jaqlib.util.db.DbUtil;
 import org.jaqlib.util.db.DriverManagerDataSource;
 import org.jaqlib.util.db.SingleConnectionDataSource;
@@ -118,6 +123,37 @@ public class DatabaseSetup
   private void executeStatement(String sql) throws SQLException
   {
     DbUtil.executeStatement(getConnection(), sql);
+  }
+
+
+  public static ResultSet getMockResultSet() throws SQLException
+  {
+    // id and lastname columns are available in ResultSet
+
+    ResultSet rs = EasyMock.createNiceMock(ResultSet.class);
+    ResultSetMetaData metaData = EasyMock
+        .createNiceMock(ResultSetMetaData.class);
+    EasyMock.expect(rs.getMetaData()).andReturn(metaData);
+    EasyMock.expect(metaData.getColumnCount()).andReturn(2);
+    EasyMock.expect(metaData.getColumnLabel(1)).andReturn("id");
+    EasyMock.expect(metaData.getColumnLabel(2)).andReturn("lastname");
+
+    EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(1));
+    EasyMock.expect(rs.getObject("lastName")).andReturn(
+        HUBER_ACCOUNT.getLastName());
+    EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(1));
+    EasyMock.expect(rs.getObject(2)).andReturn(HUBER_ACCOUNT.getLastName());
+
+    EasyMock.replay(rs, metaData);
+
+    return rs;
+  }
+
+
+  public static DbResultSet getMockDbResultSet() throws SQLException
+  {
+    return new DbResultSet(getMockResultSet(), Defaults
+        .getSqlTypeHandlerRegistry(), Defaults.getStrictColumnCheck());
   }
 
 

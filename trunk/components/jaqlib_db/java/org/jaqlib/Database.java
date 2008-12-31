@@ -6,12 +6,10 @@ import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.db.DefaultBeanFactory;
+import org.jaqlib.db.Defaults;
 import org.jaqlib.db.MappingRetrievalStrategy;
-import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
 import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
-import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -32,21 +30,20 @@ import org.jaqlib.util.Assert;
 public class Database
 {
 
-  // static fields
-
-  private static MappingRetrievalStrategy defaultMappingRetrievalStrategy = new BeanConventionMappingRetrievalStrategy();
-
   // mandatory fields
 
   private final DataSource dataSource;
 
   // optional / configurable fields
 
-  private MappingRetrievalStrategy mappingRetrievalStrategy = defaultMappingRetrievalStrategy;
-  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
-  private BeanFactory beanFactory = DefaultBeanFactory.INSTANCE;
-  private boolean strictColumnCheck = false;
+  private MappingRetrievalStrategy mappingRetrievalStrategy = Defaults
+      .getMappingRetrievalStrategy();
+  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
+      .getJavaTypeHandlerRegistry();
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = Defaults
+      .getSqlTypeHandlerRegistry();
+  private BeanFactory beanFactory = Defaults.getBeanFactory();
+  private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
 
 
   /**
@@ -60,19 +57,18 @@ public class Database
 
 
   /**
-   * Sets the user-defined mapping retrieval strategy for this database
-   * instance. By default the {@link BeanConventionMappingRetrievalStrategy} is
-   * used to retrieve the mappings between database columns and Java bean
-   * instance fields. <br>
+   * Sets a custom mapping retrieval strategy. By default the
+   * {@link BeanConventionMappingRetrievalStrategy} is used to retrieve the
+   * mappings between database columns and Java bean instance fields.<br>
    * This method can be used if another mapping strategy than using bean naming
    * conventions should be applied.
    * 
-   * @param strategy a user-defined strategy how to map SELECT statement results
-   *          to the fields of a given bean.
+   * @param strategy a custom strategy how to map SELECT statement results to
+   *          the fields of a given bean.
    */
   public void setMappingRetrievalStrategy(MappingRetrievalStrategy strategy)
   {
-    this.mappingRetrievalStrategy = Assert.notNull(mappingRetrievalStrategy);
+    mappingRetrievalStrategy = Assert.notNull(strategy);
   }
 
 
@@ -185,23 +181,6 @@ public class Database
 
 
   /**
-   * Sets the default user-defined mapping retrieval strategy. By default the
-   * {@link BeanConventionMappingRetrievalStrategy} is used to retrieve the
-   * mappings between database columns and Java bean instance fields.<br>
-   * This method can be used if another mapping strategy than using bean naming
-   * conventions should be applied.
-   * 
-   * @param strategy a user-defined strategy how to map SELECT statement results
-   *          to the fields of a given bean.
-   */
-  public static void setDefaultMappingRetrievalStrategy(
-      MappingRetrievalStrategy strategy)
-  {
-    defaultMappingRetrievalStrategy = Assert.notNull(strategy);
-  }
-
-
-  /**
    * @param dataSource a not null {@link DataSource} for obtaining a JDBC
    *          connection.
    * @param sql a not null SELECT statement.
@@ -227,7 +206,7 @@ public class Database
    */
   public static <T> BeanMapping<T> getDefaultBeanMapping(Class<T> beanClass)
   {
-    return getBeanMapping(defaultMappingRetrievalStrategy, beanClass);
+    return getBeanMapping(Defaults.getMappingRetrievalStrategy(), beanClass);
   }
 
 
@@ -242,7 +221,7 @@ public class Database
       MappingRetrievalStrategy mappingStrategy, Class<T> beanClass)
   {
     BeanMapping<T> result = new BeanMapping<T>(beanClass);
-    mappingStrategy.addMappings(beanClass, result);
+    result.setMappingRetrievalStrategy(mappingStrategy);
     return result;
   }
 

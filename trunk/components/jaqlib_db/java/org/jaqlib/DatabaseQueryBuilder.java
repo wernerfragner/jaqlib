@@ -135,7 +135,7 @@ import org.jaqlib.query.WhereCondition;
  * 
  * Database column data types can be converted to custom Java types with
  * so-called {@link JavaTypeHandler}s. These handlers can be registered with
- * {@link DbSelectDataSource#registerJavaTypeHandler(Class, JavaTypeHandler)} .
+ * {@link BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)} .
  * </p>
  * <p>
  * <i>Example for custom java type handler:</i>

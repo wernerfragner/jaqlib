@@ -3,7 +3,7 @@ package org.jaqlib;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.jaqlib.db.BeanConventionMappingStrategyTest;
+import org.jaqlib.db.JaqlibDbTests;
 
 public class DatabaseQBTests
 {
@@ -14,7 +14,9 @@ public class DatabaseQBTests
     // $JUnit-BEGIN$
     suite.addTestSuite(PrimitiveDatabaseQBTest.class);
     suite.addTestSuite(BeanDatabaseQBTest.class);
-    suite.addTestSuite(BeanConventionMappingStrategyTest.class);
+
+    suite.addTest(JaqlibDbTests.suite());
+
     // $JUnit-END$
     return suite;
   }

@@ -4,6 +4,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Map;
 
+import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
 
 /**
@@ -19,7 +20,7 @@ public class DbResultSetMetaData
 
   public DbResultSetMetaData(ResultSetMetaData metaData)
   {
-    this.metaData = metaData;
+    this.metaData = Assert.notNull(metaData);
   }
 
 
@@ -44,7 +45,8 @@ public class DbResultSetMetaData
   {
     Map<String, DbColumnMetaData> columns = CollectionUtil.newDefaultMap();
 
-    for (int i = 1; i < metaData.getColumnCount() + 1; i++)
+    final int columnCount = metaData.getColumnCount() + 1;
+    for (int i = 1; i < columnCount; i++)
     {
       DbColumnMetaData columnMetaData = createColumnMetaData(metaData, i);
       columns.put(columnMetaData.getName(), columnMetaData);

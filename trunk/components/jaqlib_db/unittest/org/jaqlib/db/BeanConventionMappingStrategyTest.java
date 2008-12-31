@@ -6,10 +6,6 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.jaqlib.AccountImpl;
-import org.jaqlib.db.AbstractMapping;
-import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
-import org.jaqlib.db.BeanMapping;
-import org.jaqlib.db.ColumnMapping;
 
 public class BeanConventionMappingStrategyTest extends TestCase
 {
@@ -30,17 +26,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     try
     {
-      strategy.addMappings(null, new BeanMapping<AccountImpl>(
-          AccountImpl.class));
-      fail("Did not throw IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e)
-    {
-    }
-
-    try
-    {
-      strategy.addMappings(AccountImpl.class, null);
+      strategy.getMappings(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -51,11 +37,11 @@ public class BeanConventionMappingStrategyTest extends TestCase
 
   public void testExecute()
   {
-    BeanMapping<AccountImpl> result = new BeanMapping<AccountImpl>(
+    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
         AccountImpl.class);
-    strategy.addMappings(AccountImpl.class, result);
+    mapping.setMappingRetrievalStrategy(strategy);
 
-    List<String> results = getResults(result);
+    List<String> results = getResults(mapping);
     assertEquals(5, results.size());
     assertTrue(results.contains("id"));
     assertTrue(results.contains("lastName"));
@@ -71,8 +57,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
     for (AbstractMapping<?> dbSelectResult : result)
     {
       assertEquals(ColumnMapping.class, dbSelectResult.getClass());
-      results
-          .add(((ColumnMapping<?>) dbSelectResult).getColumnName());
+      results.add(((ColumnMapping<?>) dbSelectResult).getColumnName());
     }
     return results;
   }
