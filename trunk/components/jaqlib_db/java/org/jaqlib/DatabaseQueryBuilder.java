@@ -124,7 +124,7 @@ import org.jaqlib.query.WhereCondition;
  * 
  * <i>Example using a Map as result:</i>
  * 
- *<pre>
+ * <pre>
  * Account account = QB.getMethodCallRecorder(Account.class);
  * Map&lt;Long, AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).asMap(account.getId());

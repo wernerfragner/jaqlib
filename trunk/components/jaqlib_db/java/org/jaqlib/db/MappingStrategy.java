@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author Werner Fragner
  */
-public interface MappingRetrievalStrategy
+public interface MappingStrategy
 {
 
   /**

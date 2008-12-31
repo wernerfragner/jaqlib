@@ -21,7 +21,7 @@ public class Defaults
 
 
   private static BeanFactory beanFactory = DefaultBeanFactory.INSTANCE;
-  private static MappingRetrievalStrategy mappingRetrievalStrategy = new BeanConventionMappingRetrievalStrategy();
+  private static MappingStrategy mappingStrategy = new BeanConventionMappingStrategy();
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
   private static SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
   private static boolean strictColumnCheck = false;
@@ -39,17 +39,15 @@ public class Defaults
   }
 
 
-  public static MappingRetrievalStrategy getMappingRetrievalStrategy()
+  public static MappingStrategy getMappingStrategy()
   {
-    return mappingRetrievalStrategy;
+    return mappingStrategy;
   }
 
 
-  public static void setMappingRetrievalStrategy(
-      MappingRetrievalStrategy mappingRetrievalStrategy)
+  public static void setMappingStrategy(MappingStrategy strategy)
   {
-    Defaults.mappingRetrievalStrategy = Assert
-        .notNull(mappingRetrievalStrategy);
+    Defaults.mappingStrategy = Assert.notNull(strategy);
   }
 
 

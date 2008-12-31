@@ -99,7 +99,7 @@ import org.jaqlib.query.WhereCondition;
  * 
  * <i>Example using a Map as result:</i>
  * 
- *<pre>
+ * <pre>
  * Account account = IterableQB.getMethodCallRecorder(Account.class);
  * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
  *     .asMap(account.getId());
