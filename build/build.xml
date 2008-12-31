@@ -54,6 +54,7 @@
 	
 	<path id="jaqlib.unittest.libs">
 		<fileset file="${vendor.base}/junit/junit.jar" />
+		<fileset file="${vendor.base}/easymock/easymock.jar" />
 	</path>	
 	
 	<path id="jaqlib.components">
