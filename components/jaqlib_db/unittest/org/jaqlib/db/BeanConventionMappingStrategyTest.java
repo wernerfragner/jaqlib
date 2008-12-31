@@ -10,7 +10,7 @@ import org.jaqlib.AccountImpl;
 public class BeanConventionMappingStrategyTest extends TestCase
 {
 
-  private BeanConventionMappingRetrievalStrategy strategy;
+  private BeanConventionMappingStrategy strategy;
 
 
   @Override
@@ -18,7 +18,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     super.setUp();
 
-    strategy = new BeanConventionMappingRetrievalStrategy();
+    strategy = new BeanConventionMappingStrategy();
   }
 
 
@@ -39,7 +39,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
   {
     BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
         AccountImpl.class);
-    mapping.setMappingRetrievalStrategy(strategy);
+    mapping.setMappingStrategy(strategy);
 
     List<String> results = getResults(mapping);
     assertEquals(5, results.size());

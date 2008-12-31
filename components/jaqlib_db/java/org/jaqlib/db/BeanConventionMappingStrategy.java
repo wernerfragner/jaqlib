@@ -11,15 +11,14 @@ import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.ExceptionUtil;
 
 /**
- * Implementation of the {@link MappingRetrievalStrategy} interface that tries
- * to retrieve the bean properties of a given class. These properties are added
- * to a given {@link BeanMapping} object if they have appropriate get and set
+ * Implementation of the {@link MappingStrategy} interface that tries to
+ * retrieve the bean properties of a given class. These properties are added to
+ * a given {@link BeanMapping} object if they have appropriate get and set
  * methods (only regarding Java bean naming convention).
  * 
  * @author Werner Fragner
  */
-public class BeanConventionMappingRetrievalStrategy implements
-    MappingRetrievalStrategy
+public class BeanConventionMappingStrategy implements MappingStrategy
 {
 
   /**

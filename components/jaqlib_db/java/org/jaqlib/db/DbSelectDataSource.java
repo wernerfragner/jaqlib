@@ -7,7 +7,6 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -33,8 +32,9 @@ public class DbSelectDataSource
   private final String sql;
   private final DataSource dataSource;
 
-  private boolean strictColumnCheck;
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
+  private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = Defaults
+      .getSqlTypeHandlerRegistry();
 
   private Connection connection;
   private Statement statement;

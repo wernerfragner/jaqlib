@@ -12,8 +12,8 @@ import org.jaqlib.util.ReflectionUtil;
 /**
  * Defines a mapping between several database columns to the fields of a Java
  * bean. The strategy how to do this mapping can be defined by setting a custom
- * {@link MappingRetrievalStrategy}. By default the
- * {@link BeanConventionMappingRetrievalStrategy} is used.
+ * {@link MappingStrategy}. By default the {@link BeanConventionMappingStrategy}
+ * is used.
  * 
  * @author Werner Fragner
  * @param <T> the Java bean type of the mapping.
@@ -32,8 +32,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   private BeanFactory beanFactory = Defaults.getBeanFactory();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
       .getJavaTypeHandlerRegistry();
-  private MappingRetrievalStrategy mappingRetrievalStrategy = Defaults
-      .getMappingRetrievalStrategy();
+  private MappingStrategy mappingStrategy = Defaults.getMappingStrategy();
 
 
   /**
@@ -51,9 +50,9 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * 
    * @param strategy a not null custom strategy.
    */
-  public void setMappingRetrievalStrategy(MappingRetrievalStrategy strategy)
+  public void setMappingStrategy(MappingStrategy strategy)
   {
-    this.mappingRetrievalStrategy = Assert.notNull(strategy);
+    this.mappingStrategy = Assert.notNull(strategy);
   }
 
 
@@ -106,7 +105,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   {
     if (mappings == null)
     {
-      mappings = mappingRetrievalStrategy.getMappings(beanClass);
+      mappings = mappingStrategy.getMappings(beanClass);
     }
     return mappings;
   }

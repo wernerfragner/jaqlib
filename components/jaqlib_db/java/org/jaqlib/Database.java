@@ -2,12 +2,12 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.db.BeanConventionMappingRetrievalStrategy;
+import org.jaqlib.db.BeanConventionMappingStrategy;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.Defaults;
-import org.jaqlib.db.MappingRetrievalStrategy;
+import org.jaqlib.db.MappingStrategy;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
 import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
@@ -36,8 +36,7 @@ public class Database
 
   // optional / configurable fields
 
-  private MappingRetrievalStrategy mappingRetrievalStrategy = Defaults
-      .getMappingRetrievalStrategy();
+  private MappingStrategy mappingStrategy = Defaults.getMappingStrategy();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
       .getJavaTypeHandlerRegistry();
   private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = Defaults
@@ -57,18 +56,18 @@ public class Database
 
 
   /**
-   * Sets a custom mapping retrieval strategy. By default the
-   * {@link BeanConventionMappingRetrievalStrategy} is used to retrieve the
-   * mappings between database columns and Java bean instance fields.<br>
+   * Sets a custom mapping strategy. By default the
+   * {@link BeanConventionMappingStrategy} is used to retrieve the mappings
+   * between database columns and Java bean instance fields.<br>
    * This method can be used if another mapping strategy than using bean naming
    * conventions should be applied.
    * 
    * @param strategy a custom strategy how to map SELECT statement results to
    *          the fields of a given bean.
    */
-  public void setMappingRetrievalStrategy(MappingRetrievalStrategy strategy)
+  public void setMappingStrategy(MappingStrategy strategy)
   {
-    mappingRetrievalStrategy = Assert.notNull(strategy);
+    mappingStrategy = Assert.notNull(strategy);
   }
 
 
@@ -160,7 +159,7 @@ public class Database
    */
   public <T> BeanMapping<T> getBeanMapping(Class<T> beanClass)
   {
-    BeanMapping<T> mapping = getBeanMapping(mappingRetrievalStrategy, beanClass);
+    BeanMapping<T> mapping = getBeanMapping(mappingStrategy, beanClass);
     mapping.setBeanFactory(beanFactory);
     mapping.setJavaTypeHandlerRegistry(javaTypeHandlerRegistry);
     return mapping;
@@ -206,7 +205,7 @@ public class Database
    */
   public static <T> BeanMapping<T> getDefaultBeanMapping(Class<T> beanClass)
   {
-    return getBeanMapping(Defaults.getMappingRetrievalStrategy(), beanClass);
+    return getBeanMapping(Defaults.getMappingStrategy(), beanClass);
   }
 
 
@@ -218,10 +217,10 @@ public class Database
    * @return an object describing where to store a SELECT statement result.
    */
   public static <T> BeanMapping<T> getBeanMapping(
-      MappingRetrievalStrategy mappingStrategy, Class<T> beanClass)
+      MappingStrategy mappingStrategy, Class<T> beanClass)
   {
     BeanMapping<T> result = new BeanMapping<T>(beanClass);
-    result.setMappingRetrievalStrategy(mappingStrategy);
+    result.setMappingStrategy(mappingStrategy);
     return result;
   }
 

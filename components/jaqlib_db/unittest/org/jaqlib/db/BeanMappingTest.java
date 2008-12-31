@@ -23,7 +23,7 @@ public class BeanMappingTest extends TestCase
 
     mapping = new BeanMapping<AccountImpl>(AccountImpl.class);
     mapping
-        .setMappingRetrievalStrategy(new BeanConventionMappingRetrievalStrategy());
+        .setMappingStrategy(new BeanConventionMappingStrategy());
   }
 
 
