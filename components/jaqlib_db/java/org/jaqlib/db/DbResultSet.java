@@ -37,12 +37,6 @@ public class DbResultSet
   }
 
 
-  public ResultSet getResultSet()
-  {
-    return resultSet;
-  }
-
-
   public boolean hasColumn(String columnName) throws SQLException
   {
     return resultSetMetaData.hasColumn(columnName);
@@ -61,12 +55,12 @@ public class DbResultSet
   }
 
 
-  public Object getObject(int columnDataType, String columnName)
+  public Object getObject(int sqlDataType, String columnName)
       throws SQLException
   {
     if (strictColumnCheck || hasColumn(columnName))
     {
-      return getSqlTypeHandler(columnDataType).getObject(resultSet, columnName);
+      return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnName);
     }
     else
     {
@@ -77,16 +71,15 @@ public class DbResultSet
   }
 
 
-  public Object getObject(int columnDataType, int columnIndex)
-      throws SQLException
+  public Object getObject(int sqlDataType, int columnIndex) throws SQLException
   {
-    return getSqlTypeHandler(columnDataType).getObject(resultSet, columnIndex);
+    return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnIndex);
   }
 
 
-  private SqlTypeHandler getSqlTypeHandler(int columnDataType)
+  private SqlTypeHandler getSqlTypeHandler(int sqlDataType)
   {
-    return sqlTypeHandlerRegistry.getTypeHandler(columnDataType);
+    return sqlTypeHandlerRegistry.getTypeHandler(sqlDataType);
   }
 
 

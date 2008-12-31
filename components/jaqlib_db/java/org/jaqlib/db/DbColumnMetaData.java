@@ -33,5 +33,4 @@ public class DbColumnMetaData
     this.name = name.toUpperCase();
   }
 
-
 }

@@ -4,15 +4,17 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.List;
 
 import org.jaqlib.util.Assert;
+import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.ExceptionUtil;
 
 /**
  * Implementation of the {@link MappingRetrievalStrategy} interface that tries
  * to retrieve the bean properties of a given class. These properties are added
- * to a given {@link BeanMapping} object if they have appropriate get and
- * set methods (only regarding Java bean naming convention).
+ * to a given {@link BeanMapping} object if they have appropriate get and set
+ * methods (only regarding Java bean naming convention).
  * 
  * @author Werner Fragner
  */
@@ -23,19 +25,20 @@ public class BeanConventionMappingRetrievalStrategy implements
   /**
    * {@inheritDoc}
    */
-  public void addMappings(Class<?> beanClass, BeanMapping<?> result)
+  public List<AbstractMapping<?>> getMappings(Class<?> beanClass)
   {
     Assert.notNull(beanClass);
-    Assert.notNull(result);
 
+    List<AbstractMapping<?>> mappings = CollectionUtil.newDefaultList();
     BeanInfo beanInfo = getBeanInfo(beanClass);
     for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
     {
       if (shouldAddBeanProperty(descriptor))
       {
-        result.addResult(getPrimitiveResult(descriptor.getName()));
+        mappings.add(getPrimitiveResult(descriptor.getName()));
       }
     }
+    return mappings;
   }
 
 
