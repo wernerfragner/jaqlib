@@ -1,8 +1,6 @@
 package org.jaqlib.util;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,6 +48,11 @@ public class ReflectionUtil
   private static void addAllInterfaces(Class<?> clazz,
       Set<Class<?>> interfaceSet)
   {
+    if (clazz.isInterface())
+    {
+      interfaceSet.add(clazz);
+    }
+
     Class<?>[] interfaces = clazz.getInterfaces();
     Class<?> superClass = clazz.getSuperclass();
 
@@ -94,6 +97,9 @@ public class ReflectionUtil
 
   public static Class<?> getFieldType(Class<?> clz, String fieldName)
   {
+    Assert.notNull(clz);
+    Assert.notNull(fieldName);
+
     try
     {
       return clz.getDeclaredField(fieldName).getType();
@@ -128,33 +134,6 @@ public class ReflectionUtil
   }
 
 
-  public static <T> T newInstance(Class<T> cls, Class<?>[] argTypes,
-      Object[] args)
-  {
-    try
-    {
-      Constructor<T> c = cls.getConstructor(argTypes);
-      return c.newInstance(args);
-    }
-    catch (NoSuchMethodException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
-    catch (InstantiationException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
-    catch (IllegalAccessException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
-    catch (InvocationTargetException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
-  }
-
-
   public static <T> T newInstance(Class<T> cls)
   {
     try
@@ -170,20 +149,5 @@ public class ReflectionUtil
       throw ExceptionUtil.toRuntimeException(e);
     }
   }
-
-
-  public static boolean hasConstructor(Class<?> cls, Class<?>[] argTypes)
-  {
-    try
-    {
-      cls.getConstructor(argTypes);
-      return true;
-    }
-    catch (NoSuchMethodException e)
-    {
-      return false;
-    }
-  }
-
 
 }

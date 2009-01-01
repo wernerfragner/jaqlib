@@ -14,7 +14,7 @@ public class DefaultSqlTypeHandlerRegistry implements SqlTypeHandlerRegistry
 {
 
   private final Map<Integer, SqlTypeHandler> handlers = newDefaultMap();
-  private final SqlTypeHandler defaultTypeHandler = new ObjectTypeHandler();
+  private final SqlTypeHandler defaultTypeHandler = OBJECT_TYPEHANDLER;
 
 
   /**
