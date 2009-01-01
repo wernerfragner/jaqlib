@@ -8,7 +8,7 @@ import java.util.List;
  * 
  * @author Werner Fragner
  */
-public class IterableClassTest extends AbstractIterableTest<AccountImpl>
+public class IterableQBClassTest extends AbstractIterableTest<AccountImpl>
 {
 
 
