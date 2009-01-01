@@ -3,7 +3,7 @@ package org.jaqlib.util;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class JaqLibUtilTests
+public class UtilTests
 {
 
   public static Test suite()
