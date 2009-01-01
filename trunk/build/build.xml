@@ -166,22 +166,22 @@
 	<target name="unittest" depends="compile_unittest">
 		<mkdir dir="${build.temp}/unittest_results/jaqlib" />
 		
-		<!-- Unittests with CGLib on classpath -->
+		<!-- Iterable tests with CGLib on classpath -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.libs" />
 			<classpath refid="jaqlib.unittest.libs" />
-			<test name="org.jaqlib.JaqLibClassTests" toDir="${build.temp}/unittest_results/jaqlib" />
+			<test name="org.jaqlib.IterableQBClassTests" toDir="${build.temp}/unittest_results/jaqlib" />
 			<formatter type="xml"/>
 		</junit>
 		
-		<!-- Unittests without CGLib on classpath -->
+		<!-- Iterable tests without CGLib on classpath -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.unittest.libs" />
-			<test name="org.jaqlib.JaqLibInterfaceTests" toDir="${build.temp}/unittest_results/jaqlib" />
+			<test name="org.jaqlib.IterableQBInterfaceTests" toDir="${build.temp}/unittest_results/jaqlib" />
 			<formatter type="xml"/>
 		</junit>
 		
@@ -200,7 +200,7 @@
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.unittest.libs" />
-			<test name="org.jaqlib.util.JaqLibUtilTests" toDir="${build.temp}/unittest_results/jaqlib" />
+			<test name="org.jaqlib.util.UtilTests" toDir="${build.temp}/unittest_results/jaqlib" />
 			<formatter type="xml"/>
 		</junit>		
 		
