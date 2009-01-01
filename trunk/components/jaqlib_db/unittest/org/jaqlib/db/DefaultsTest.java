@@ -12,6 +12,14 @@ import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 public class DefaultsTest extends TestCase
 {
 
+
+  @Override
+  public void tearDown()
+  {
+    Defaults.reset();
+  }
+
+
   public void testGetBeanFactory()
   {
     assertNotNull(Defaults.getBeanFactory());
