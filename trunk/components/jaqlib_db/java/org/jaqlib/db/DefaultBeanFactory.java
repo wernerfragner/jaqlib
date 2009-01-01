@@ -9,7 +9,6 @@ import org.jaqlib.util.ReflectionUtil;
  * then a {@link RuntimeException} is thrown.
  * </p>
  * <p>
- * This class is implemented as a singleton and cannot be instantiated.<br>
  * This class is thread-safe.
  * </p>
  * 
@@ -17,14 +16,6 @@ import org.jaqlib.util.ReflectionUtil;
  */
 public class DefaultBeanFactory implements BeanFactory
 {
-
-  public static final BeanFactory INSTANCE = new DefaultBeanFactory();
-
-
-  private DefaultBeanFactory()
-  {
-  }
-
 
   public <T> T newInstance(Class<T> beanClass)
   {
