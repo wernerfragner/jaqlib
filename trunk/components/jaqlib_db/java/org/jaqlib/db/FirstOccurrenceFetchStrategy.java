@@ -8,7 +8,7 @@ package org.jaqlib.db;
  * 
  * @param <T> the element type of the query.
  */
-public class SimpleFetchStrategy<T> extends AbstractFetchStrategy<T>
+public class FirstOccurrenceFetchStrategy<T> extends AbstractFetchStrategy<T>
 {
 
   /**

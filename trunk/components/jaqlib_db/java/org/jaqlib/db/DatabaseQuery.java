@@ -65,13 +65,13 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 
   private AbstractFetchStrategy<T> getOptimizedFetchStrategy()
   {
-    return initFetchStrategy(new OptimizedFetchStrategy<T>(getCache()));
+    return initFetchStrategy(new CachingFetchStrategy<T>(getCache()));
   }
 
 
   private AbstractFetchStrategy<T> getSimpleFetchStrategy()
   {
-    return initFetchStrategy(new SimpleFetchStrategy<T>());
+    return initFetchStrategy(new FirstOccurrenceFetchStrategy<T>());
   }
 
 
