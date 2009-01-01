@@ -162,7 +162,24 @@ public class DatabaseSetup
   }
 
 
-  public static DataSource getMockDataSource() throws SQLException
+  public static DataSource getStrictMockDataSource(String sql)
+      throws SQLException
+  {
+    ResultSet resultSet = getMockResultSet();
+    Statement stmt = EasyMock.createNiceMock(Statement.class);
+    Connection conn = EasyMock.createNiceMock(Connection.class);
+    DataSource ds = EasyMock.createNiceMock(DataSource.class);
+
+    EasyMock.expect(ds.getConnection()).andReturn(conn).once();
+    EasyMock.expect(conn.createStatement()).andReturn(stmt).once();
+    EasyMock.expect(stmt.executeQuery(sql)).andReturn(resultSet).once();
+
+    EasyMock.replay(ds, conn, stmt);
+    return ds;
+  }
+
+
+  public static DataSource getNiceMockDataSource() throws SQLException
   {
     ResultSet resultSet = getMockResultSet();
     Statement stmt = EasyMock.createNiceMock(Statement.class);

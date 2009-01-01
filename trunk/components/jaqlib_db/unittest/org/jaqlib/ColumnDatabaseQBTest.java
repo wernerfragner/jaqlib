@@ -3,6 +3,7 @@ package org.jaqlib;
 import static org.jaqlib.DatabaseSetup.HUBER_ACCOUNT;
 import static org.jaqlib.DatabaseSetup.MAIER_ACCOUNT;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -18,7 +19,7 @@ import org.jaqlib.query.WhereClause;
 import org.jaqlib.query.WhereCondition;
 
 
-public class PrimitiveDatabaseQBTest extends TestCase
+public class ColumnDatabaseQBTest extends TestCase
 {
 
   private DatabaseSetup dbSetup;
@@ -158,6 +159,33 @@ public class PrimitiveDatabaseQBTest extends TestCase
 
     List<String> result = where.where(condition1).or(condition2).asList();
     assertAllLastNames(result);
+  }
+
+
+  /**
+   * SELECT statement must only be executed once when using the WhereClause for
+   * different conditions with different results.
+   */
+  public void testSelect_CacheResultSet() throws SQLException
+  {
+    final String sql = "SELECT lname AS lastname FROM APP.ACCOUNT";
+    DbSelectDataSource dataSource = Database.getSelectDataSource(
+        getStrictMockDataSource(sql), sql);
+
+    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    WhereClause<AccountImpl, DbSelectDataSource> where = DatabaseQB.select(
+        AccountImpl.class).from(dataSource);
+
+    assertNotNull(where.asList());
+    assertNotNull(where.asVector());
+    assertNotNull(where.asMap(dummy.getLastName()));
+    assertNotNull(where.asHashtable(dummy.getLastName()));
+  }
+
+
+  private DataSource getStrictMockDataSource(String sql) throws SQLException
+  {
+    return DatabaseSetup.getStrictMockDataSource(sql);
   }
 
 

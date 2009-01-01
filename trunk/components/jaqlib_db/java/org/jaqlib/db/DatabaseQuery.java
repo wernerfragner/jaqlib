@@ -1,6 +1,5 @@
 package org.jaqlib.db;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -19,6 +18,7 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
   private AbstractMapping<T> mapping;
+  private DatabaseQueryCache<T> cache;
 
 
   public DatabaseQuery(MethodCallRecorder methodCallRecorder)
@@ -36,89 +36,62 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 
 
   @Override
-  protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
+  protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
-    try
-    {
-      DbResultSet rs = queryDatabase();
-      while (rs.next())
-      {
-        T element = extractElement(rs);
-        if (shouldAddToResult(element))
-        {
-          result.add(element);
-
-          if (stopAtFirstMatch)
-          {
-            return;
-          }
-        }
-      }
-    }
-    catch (SQLException sqle)
-    {
-      handleSqlException(sqle);
-    }
-    finally
-    {
-      getDataSource().close();
-    }
+    final MethodInvocation invocation = getCurrentInvocation();
+    getOptimizedFetchStrategy().addResults(resultMap, invocation);
   }
 
 
   @Override
-  protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
+  protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
   {
-    final MethodInvocation invocation = getCurrentInvocation();
+    getFetchStrategy(stopAtFirstMatch).addResults(result);
+  }
 
-    try
+
+  private AbstractFetchStrategy<T> getFetchStrategy(boolean stopAtFirstMatch)
+  {
+    if (stopAtFirstMatch)
     {
-      DbResultSet rs = queryDatabase();
-      while (rs.next())
-      {
-        T element = extractElement(rs);
-        if (element != null && shouldAddToResult(element))
-        {
-          @SuppressWarnings("unchecked")
-          final KeyType elementKey = (KeyType) getKey(element, invocation);
-          resultMap.put(elementKey, element);
-        }
-      }
+      return getSimpleFetchStrategy();
     }
-    catch (SQLException sqle)
+    else
     {
-      handleSqlException(sqle);
-    }
-    finally
-    {
-      getDataSource().close();
+      return getOptimizedFetchStrategy();
     }
   }
 
 
-  private boolean shouldAddToResult(T element)
+  private AbstractFetchStrategy<T> getOptimizedFetchStrategy()
   {
-    return tree.matches(element);
+    return initFetchStrategy(new OptimizedFetchStrategy<T>(getCache()));
   }
 
 
-  private T extractElement(DbResultSet rs) throws SQLException
+  private AbstractFetchStrategy<T> getSimpleFetchStrategy()
   {
-    return mapping.getValue(rs);
+    return initFetchStrategy(new SimpleFetchStrategy<T>());
   }
 
 
-  private void handleSqlException(SQLException sqle)
+  private AbstractFetchStrategy<T> initFetchStrategy(
+      AbstractFetchStrategy<T> strategy)
   {
-    QueryDataSourceException e = new QueryDataSourceException(sqle);
-    e.setStackTrace(sqle.getStackTrace());
-    throw e;
+    strategy.setDataSource(getDataSource());
+    strategy.setMapping(mapping);
+    strategy.setPredicate(tree);
+    return strategy;
   }
 
 
-  private DbResultSet queryDatabase() throws SQLException
+  private DatabaseQueryCache<T> getCache()
   {
-    return getDataSource().execute();
+    if (cache == null)
+    {
+      cache = new DatabaseQueryCache<T>(tree);
+    }
+    return cache;
   }
 
 }

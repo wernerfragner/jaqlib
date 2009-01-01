@@ -30,7 +30,7 @@ public class DbSelectDataSourceTest extends TestCase
   {
     try
     {
-      return DatabaseSetup.getMockDataSource();
+      return DatabaseSetup.getNiceMockDataSource();
     }
     catch (SQLException e)
     {
