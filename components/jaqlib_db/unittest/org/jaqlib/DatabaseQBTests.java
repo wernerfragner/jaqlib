@@ -12,7 +12,7 @@ public class DatabaseQBTests
   {
     TestSuite suite = new TestSuite("Test for org.jaqlib");
     // $JUnit-BEGIN$
-    suite.addTestSuite(PrimitiveDatabaseQBTest.class);
+    suite.addTestSuite(ColumnDatabaseQBTest.class);
     suite.addTestSuite(BeanDatabaseQBTest.class);
 
     suite.addTest(JaqlibDbTests.suite());
