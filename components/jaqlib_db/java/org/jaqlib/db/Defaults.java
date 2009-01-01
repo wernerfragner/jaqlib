@@ -26,13 +26,38 @@ public class Defaults
   }
 
 
-  private static BeanFactory beanFactory = new DefaultBeanFactory();
-  private static MappingStrategy mappingStrategy = new BeanConventionMappingStrategy();
-  private static JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
-  private static SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
-  private static boolean strictColumnCheck = false;
+  private static BeanFactory beanFactory;
+  private static MappingStrategy mappingStrategy;
+  private static JavaTypeHandlerRegistry javaTypeHandlerRegistry;
+  private static SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
+  private static boolean strictColumnCheck;
 
 
+  /**
+   * Initializes the static fields with default values.
+   */
+  static
+  {
+    reset();
+  }
+
+
+  /**
+   * Resets the static fields to their original default values.
+   */
+  public static void reset()
+  {
+    beanFactory = new DefaultBeanFactory();
+    mappingStrategy = new BeanConventionMappingStrategy();
+    javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
+    sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
+    strictColumnCheck = false;
+  }
+
+
+  /**
+   * @return the default bean factory.
+   */
   public static BeanFactory getBeanFactory()
   {
     return beanFactory;
