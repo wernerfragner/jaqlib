@@ -167,7 +167,7 @@
 		<mkdir dir="${build.temp}/unittest_results/jaqlib" />
 		
 		<!-- Unittests with CGLib on classpath -->
-		<junit haltonfailure="false" failureproperty="junit.cglibtests.failure" >
+		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.libs" />
@@ -177,7 +177,7 @@
 		</junit>
 		
 		<!-- Unittests without CGLib on classpath -->
-		<junit haltonfailure="false" failureproperty="junit.failure">
+		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.unittest.libs" />
@@ -196,7 +196,7 @@
 	  </junit>		
 		
 		<!-- Util tests -->
-		<junit haltonfailure="false" failureproperty="junit.failure">
+		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.unittest.libs" />
@@ -209,6 +209,8 @@
 			<fileset dir="${build.temp}/unittest_results/jaqlib" />
 			<report todir="${build.temp}/unittest_reports/jaqlib"/>
 		</junitreport>
+		
+		<fail if="junit.failure" message="Unittests failed" />
 	</target>
 	
 	
