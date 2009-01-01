@@ -7,6 +7,7 @@ package org.jaqlib.db.sql.typehandler;
 public interface SqlTypeHandlerRegistry
 {
 
+  ObjectTypeHandler OBJECT_TYPEHANDLER = new ObjectTypeHandler();
   SqlXmlTypeHandler SQLXML_TYPEHANDLER = new SqlXmlTypeHandler();
   RowIdTypeHandler ROWID_TYPEHANDLER = new RowIdTypeHandler();
   RefTypeHandler REF_TYPEHANDLER = new RefTypeHandler();

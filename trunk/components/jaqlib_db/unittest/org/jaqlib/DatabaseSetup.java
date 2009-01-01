@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+
+import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
 import org.jaqlib.db.DbResultSet;
@@ -17,11 +20,13 @@ public class DatabaseSetup
 
   private SingleConnectionDataSource dataSource;
 
+  public static final String SELECT_SQL = "SELET column FROM table";
 
   public static final AccountImpl HUBER_ACCOUNT;
   public static final AccountImpl MAIER_ACCOUNT;
 
   public static final AccountImpl[] ACCOUNTS;
+
 
   static
   {
@@ -133,7 +138,7 @@ public class DatabaseSetup
     ResultSet rs = EasyMock.createNiceMock(ResultSet.class);
     ResultSetMetaData metaData = EasyMock
         .createNiceMock(ResultSetMetaData.class);
-    EasyMock.expect(rs.getMetaData()).andReturn(metaData);
+    EasyMock.expect(rs.getMetaData()).andReturn(metaData).anyTimes();
     EasyMock.expect(metaData.getColumnCount()).andReturn(2);
     EasyMock.expect(metaData.getColumnLabel(1)).andReturn("id");
     EasyMock.expect(metaData.getColumnLabel(2)).andReturn("lastname");
@@ -156,5 +161,21 @@ public class DatabaseSetup
         .getSqlTypeHandlerRegistry(), Defaults.getStrictColumnCheck());
   }
 
+
+  public static DataSource getMockDataSource() throws SQLException
+  {
+    ResultSet resultSet = getMockResultSet();
+    Statement stmt = EasyMock.createNiceMock(Statement.class);
+    Connection conn = EasyMock.createNiceMock(Connection.class);
+    DataSource ds = EasyMock.createNiceMock(DataSource.class);
+
+    EasyMock.expect(ds.getConnection()).andReturn(conn);
+    EasyMock.expect(conn.createStatement()).andReturn(stmt);
+    EasyMock.expect(stmt.executeQuery(SELECT_SQL)).andReturn(resultSet)
+        .anyTimes();
+
+    EasyMock.replay(ds, conn, stmt);
+    return ds;
+  }
 
 }
