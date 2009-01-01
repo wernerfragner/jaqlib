@@ -13,13 +13,13 @@ import org.jaqlib.util.Assert;
  * 
  * @param <T> the element type of the query.
  */
-public class OptimizedFetchStrategy<T> extends AbstractFetchStrategy<T>
+public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
 {
 
   private final DatabaseQueryCache<T> cache;
 
 
-  public OptimizedFetchStrategy(DatabaseQueryCache<T> cache)
+  public CachingFetchStrategy(DatabaseQueryCache<T> cache)
   {
     this.cache = Assert.notNull(cache);
   }
