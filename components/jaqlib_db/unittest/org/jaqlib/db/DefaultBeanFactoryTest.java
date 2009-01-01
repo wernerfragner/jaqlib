@@ -15,7 +15,7 @@ public class DefaultBeanFactoryTest extends TestCase
   {
     super.setUp();
 
-    beanFactory = DefaultBeanFactory.INSTANCE;
+    beanFactory = new DefaultBeanFactory();
   }
 
 

@@ -26,7 +26,7 @@ public class Defaults
   }
 
 
-  private static BeanFactory beanFactory = DefaultBeanFactory.INSTANCE;
+  private static BeanFactory beanFactory = new DefaultBeanFactory();
   private static MappingStrategy mappingStrategy = new BeanConventionMappingStrategy();
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
   private static SqlTypeHandlerRegistry sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
