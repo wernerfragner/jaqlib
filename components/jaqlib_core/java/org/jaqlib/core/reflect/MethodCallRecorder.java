@@ -24,4 +24,10 @@ public interface MethodCallRecorder
    */
   List<MethodInvocation> getAllCurrentInvocations();
 
+
+  /**
+   * @return a string representation of the current invocation.
+   */
+  String getCurrentInvocationString();
+
 }

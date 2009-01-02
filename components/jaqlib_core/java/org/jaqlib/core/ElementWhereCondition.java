@@ -29,4 +29,11 @@ public class ElementWhereCondition<T, DataSourceType, ResultType> extends
     return null;
   }
 
+
+  public void appendLogString(StringBuilder sb)
+  {
+    sb.append("element().");
+    compare.appendLogString(sb);
+  }
+
 }

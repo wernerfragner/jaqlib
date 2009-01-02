@@ -38,4 +38,10 @@ public abstract class AbstractMapping<T>
    */
   public abstract T getValue(DbResultSet rs) throws SQLException;
 
+
+  /**
+   * @return a printable log string describing this mapping.
+   */
+  public abstract String getLogString();
+
 }

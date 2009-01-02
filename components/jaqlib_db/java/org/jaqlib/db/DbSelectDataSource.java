@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -11,6 +12,7 @@ import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.DbUtil;
+import org.jaqlib.util.LogUtil;
 
 /**
  * <p>
@@ -28,6 +30,8 @@ import org.jaqlib.util.DbUtil;
  */
 public class DbSelectDataSource
 {
+
+  private final Logger log = LogUtil.getLogger(this);
 
   private final String sql;
   private final DataSource dataSource;
@@ -100,6 +104,8 @@ public class DbSelectDataSource
 
   public DbResultSet execute() throws SQLException
   {
+    log.fine("Executing SQL statement: " + sql);
+
     final ResultSet rs = getStatement().executeQuery(sql);
     resultSet = new DbResultSet(rs, sqlTypeHandlerRegistry, strictColumnCheck);
     return resultSet;
@@ -121,6 +127,8 @@ public class DbSelectDataSource
   {
     if (statement == null)
     {
+      log.fine("Creating SQL statement");
+
       statement = getConnection().createStatement();
     }
     return statement;
@@ -131,6 +139,8 @@ public class DbSelectDataSource
   {
     if (connection == null)
     {
+      log.fine("Getting JDBC connection");
+
       connection = dataSource.getConnection();
     }
     return connection;
@@ -143,6 +153,13 @@ public class DbSelectDataSource
     {
       rs.close();
     }
+  }
+
+
+  @Override
+  public String toString()
+  {
+    return "[SQL: " + sql + "]";
   }
 
 

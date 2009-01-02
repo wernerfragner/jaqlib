@@ -14,9 +14,6 @@ import java.util.logging.Logger;
 public class DbUtil
 {
 
-  private static final Logger LOG = Logger.getLogger(DbUtil.class.getName());
-
-
   public static void executeStatement(Connection c, String sql)
       throws SQLException
   {
@@ -44,7 +41,7 @@ public class DbUtil
       }
       catch (SQLException e)
       {
-        LOG.info("Could not close JDBC connection");
+        getLog().info("Could not close JDBC connection");
       }
     }
   }
@@ -60,7 +57,7 @@ public class DbUtil
       }
       catch (SQLException e)
       {
-        LOG.info("Could not close JDBC statement");
+        getLog().info("Could not close JDBC statement");
       }
     }
   }
@@ -76,9 +73,15 @@ public class DbUtil
       }
       catch (SQLException e)
       {
-        LOG.info("Could not close JDBC result set");
+        getLog().info("Could not close JDBC result set");
       }
     }
+  }
+
+
+  private static Logger getLog()
+  {
+    return LogUtil.getLogger(DbUtil.class);
   }
 
 }

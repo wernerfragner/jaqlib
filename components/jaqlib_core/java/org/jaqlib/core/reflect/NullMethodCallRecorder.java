@@ -21,4 +21,10 @@ public class NullMethodCallRecorder implements MethodCallRecorder
     return null;
   }
 
+
+  public String getCurrentInvocationString()
+  {
+    return "";
+  }
+
 }

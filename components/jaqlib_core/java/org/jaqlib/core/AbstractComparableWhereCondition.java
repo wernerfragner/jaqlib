@@ -12,10 +12,10 @@ import org.jaqlib.core.reflect.RecordingProxy;
  */
 public abstract class AbstractComparableWhereCondition<T, DataSourceType, ResultType>
     extends QueryItem<T, DataSourceType> implements WhereCondition<T>,
-    ComparableWhereCondition<T, DataSourceType, ResultType>
+    ComparableWhereCondition<T, DataSourceType, ResultType>, LoggableQueryItem
 {
 
-  private Compare<T, ResultType> compare;
+  protected Compare<T, ResultType> compare;
 
 
   public AbstractComparableWhereCondition(Query<T, DataSourceType> query)
@@ -119,5 +119,6 @@ public abstract class AbstractComparableWhereCondition<T, DataSourceType, Result
    *         object. Can return null if no method invocations are supported.
    */
   protected abstract MethodInvocation getCurrentMethodInvocation();
+
 
 }

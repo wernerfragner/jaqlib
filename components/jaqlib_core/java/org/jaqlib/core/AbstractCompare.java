@@ -1,5 +1,7 @@
 package org.jaqlib.core;
 
+import org.jaqlib.util.ReflectionUtil;
+
 
 /**
  * @author Werner Fragner
@@ -19,5 +21,16 @@ public abstract class AbstractCompare<T, ResultType> implements
     this.expected = expected;
   }
 
+
+  public void appendLogString(StringBuilder sb)
+  {
+    sb.append(ReflectionUtil.getPlainClassName(this));
+    sb.append("(");
+    if (expected != null)
+    {
+      sb.append(expected.toString());
+    }
+    sb.append(")");
+  }
 
 }

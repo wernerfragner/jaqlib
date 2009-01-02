@@ -171,4 +171,13 @@ public class ReflectionUtilTest extends TestCase
     assertTrue(interfaceList.contains(SomeBaseInterface.class));
     assertTrue(interfaceList.contains(SomeAbstractInterface.class));
   }
+
+
+  public void testHasDeclaredMethod()
+  {
+    assertFalse(ReflectionUtil.hasDeclaredMethod(getClass(), "toString"));
+    assertTrue(ReflectionUtil.hasDeclaredMethod(getClass(),
+        "testHasDeclaredMethod"));
+  }
+
 }

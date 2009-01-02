@@ -35,10 +35,15 @@ public class ThreadLocalMethodCallRecorder implements MethodCallRecorder
   }
 
 
+  public String getCurrentInvocationString()
+  {
+    return getRecorder().getCurrentInvocationString();
+  }
+
+
   private MethodCallRecorder getRecorder()
   {
     return methodCallRecorder.get();
   }
-
 
 }

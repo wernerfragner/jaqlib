@@ -1,17 +1,20 @@
 package org.jaqlib;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.jaqlib.db.JaqlibDbTests;
-import org.jaqlib.util.LogUtil;
 
 public class DatabaseQBTests
 {
 
   public static Test suite()
   {
-    LogUtil.disableJaqLibLogging();
+    // disable root logger
+    Logger.getLogger("").setLevel(Level.OFF);
 
     TestSuite suite = new TestSuite("Test for org.jaqlib");
     // $JUnit-BEGIN$
@@ -23,5 +26,4 @@ public class DatabaseQBTests
     // $JUnit-END$
     return suite;
   }
-
 }

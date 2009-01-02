@@ -163,4 +163,10 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
+  @Override
+  public String getLogString()
+  {
+    return ReflectionUtil.getPlainClassName(beanClass);
+  }
+
 }

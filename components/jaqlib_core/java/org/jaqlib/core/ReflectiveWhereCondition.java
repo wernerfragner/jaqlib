@@ -33,4 +33,10 @@ public class ReflectiveWhereCondition<T, DataSourceType, ResultType> extends
   }
 
 
+  public void appendLogString(StringBuilder sb)
+  {
+    sb.append("element.");
+    compare.appendLogString(sb);
+  }
+
 }

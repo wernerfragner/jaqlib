@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.MethodInvocation;
@@ -18,6 +20,7 @@ import org.jaqlib.core.syntaxtree.Or;
 import org.jaqlib.core.syntaxtree.SyntaxTree;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
+import org.jaqlib.util.LogUtil;
 
 /**
  * @author Werner Fragner
@@ -28,6 +31,8 @@ import org.jaqlib.util.CollectionUtil;
 public abstract class AbstractQuery<T, DataSourceType> implements
     Query<T, DataSourceType>
 {
+
+  private final Logger log = LogUtil.getLogger(this);
 
   protected final SyntaxTree<T> tree = new SyntaxTree<T>();
   private final MethodCallRecorder methodCallRecorder;
@@ -147,8 +152,16 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  private String getCommaSeparatedString(Iterable<T> iterable)
+  {
+    return CollectionUtil.toString(iterable, ", ");
+  }
+
+
   public T getUniqueResult()
   {
+    logQuery("UniqueResult");
+
     final Set<T> setResult = getSetResult();
     if (setResult.isEmpty())
     {
@@ -167,14 +180,10 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  private String getCommaSeparatedString(Iterable<T> iterable)
-  {
-    return CollectionUtil.toString(iterable, ", ");
-  }
-
-
   public T getFirstResult()
   {
+    logQuery("FirstResult");
+
     List<T> result = new ArrayList<T>();
     addResults(result, true);
     if (result.size() > 0)
@@ -190,6 +199,8 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
   public T getLastResult()
   {
+    logQuery("LastResult");
+
     List<T> result = getListResult();
     if (result.size() > 0)
     {
@@ -204,6 +215,8 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
   public List<T> getListResult()
   {
+    logQuery("List");
+
     List<T> result = new ArrayList<T>();
     addResults(result, false);
     return result;
@@ -212,6 +225,8 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
   public Set<T> getSetResult()
   {
+    logQuery("Set");
+
     Set<T> result = new HashSet<T>();
     addResults(result, false);
     return result;
@@ -220,6 +235,8 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
   public Vector<T> getVectorResult()
   {
+    logQuery("Vector");
+
     Vector<T> result = new Vector<T>();
     addResults(result, false);
     return result;
@@ -228,6 +245,8 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
   public <KeyType> Map<KeyType, T> getMapResult(KeyType key)
   {
+    logQuery("Map");
+
     Map<KeyType, T> result = new HashMap<KeyType, T>();
     addResults(result);
     return result;
@@ -236,6 +255,8 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
   public <KeyType> Hashtable<KeyType, T> getHashtableResult(KeyType key)
   {
+    logQuery("Hashtable");
+
     Hashtable<KeyType, T> result = new Hashtable<KeyType, T>();
     addResults(result);
     return result;
@@ -253,5 +274,18 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
 
   protected abstract <KeyType> void addResults(final Map<KeyType, T> resultMap);
+
+
+  private void logQuery(String resultType)
+  {
+    if (log.isLoggable(Level.FINER))
+    {
+      log.finer("SELECT " + getResultDefinitionString() + " FROM "
+          + getDataSource() + tree.getLogString() + " AS " + resultType);
+    }
+  }
+
+
+  protected abstract String getResultDefinitionString();
 
 }
