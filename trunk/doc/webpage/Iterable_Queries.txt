@@ -62,6 +62,42 @@ Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(account
     .asMap(account.getId());
 </pre>
 
+<b>Examples with executing a task on each element:</b>
+
+<pre>
+// create task that should be executed for each element
+Task&lt;Account&gt; task = new Task&lt;Account&gt;()
+{
+
+  public void execute(Account account)
+  {
+    account.sendInfoEmail();
+  }
+
+};
+IterableQB.select(Account.class).from(accounts).execute(task);
+</pre>
+
+<pre>
+// create condition for negative balances
+WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;()
+{
+
+  public boolean evaluate(Account account)
+  {
+    return (account.getBalance() &lt; 0);
+  }
+
+};
+
+// execute task only on elements that match the given condition 
+IterableQB.select(Account.class).from(accounts).where(deptCond).execute(task);
+
+// or ...
+List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
+    deptCond).executeWithResult(task).asList();
+</pre>
+
 
 ----
 [[Main_Page]]

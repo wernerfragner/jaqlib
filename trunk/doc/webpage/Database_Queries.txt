@@ -9,7 +9,7 @@ JaQLib also supports custom type handlers for mapping database data types to Jav
 Beans that are the result of a SQL SELECT statement are created by a <b>BeanFactory</b>. By default the default constructor is used to instantiate these beans. But the programmer has the possibility to exchange this BeanFactory by a custom implementation.
 </p>
 <p>
-When mapping the result of a SQL SELECT statement to the fields of a Java bean then an INFO log message is issued when a Java bean field does not exist in the SQL SELECT statement result. This behavior can be changed by setting the property <b>strictColumnCheck</b> to true (see <tt>Database.setStrictColumnCheck()</tt>). In that case a <tt>DataSourceQueryException</tt> is thrown instead of issuing the INFO log message. If no INFO log message should be issued then the JDK logger for <tt>org.jaqlib.db.DbResultSet</tt> must be disabled. This can be done using the utility class <tt>org.jaqlib.util.LogUtil</tt> or by manually disabling the JDK logger (see 
+When mapping the result of a SQL SELECT statement to the fields of a Java bean then an INFO log message is issued when a Java bean field does not exist in the SQL SELECT statement result. This behavior can be changed by setting the property <b>strictColumnCheck</b> to true (see <tt>Database.setStrictColumnCheck()</tt>). In that case a <tt>DataSourceQueryException</tt> is thrown instead of issuing the INFO log message. If no INFO log message should be issued then the JDK logger for <tt>org.jaqlib.db.DbResultSet</tt> must be disabled (see 
 [http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html Java Logging]).
 </p>
 <p>
@@ -100,10 +100,47 @@ Map&lt;Long, AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from
     accounts).asMap(account.getId());
 </pre>
 
+
+<b>Examples with executing a task on each element:</b>
+
+<pre>
+// create task that should be executed for each element
+Task&lt;Account&gt; task = new Task&lt;Account&gt;()
+{
+
+  public void execute(Account account)
+  {
+    account.sendInfoEmail();
+  }
+
+};
+IterableQB.select(Account.class).from(accounts).execute(task);
+</pre>
+
+<pre>
+// create condition for negative balances
+WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;()
+{
+
+  public boolean evaluate(Account account)
+  {
+    return (account.getBalance() &lt; 0);
+  }
+
+};
+
+// execute task only on elements that match the given condition 
+IterableQB.select(Account.class).from(accounts).where(deptCond).execute(task);
+
+// or ...
+List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
+    deptCond).executeWithResult(task).asList();
+</pre>
+
 <p>
 Database column data types can be converted to custom Java types with
-so-called {@link JavaTypeHandler}s. These handlers can be registered with
-{@link BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)} .
+so-called <tt>JavaTypeHandler</tt>s. These handlers can be registered with
+<tt>BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)</tt> .
 </p>
 
 <b>Example for custom Java type handler:</b>
