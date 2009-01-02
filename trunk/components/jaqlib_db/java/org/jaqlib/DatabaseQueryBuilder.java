@@ -228,7 +228,8 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
+  public <T> FromClause<T, DbSelectDataSource> select(
+      Class<? extends T> beanClass)
   {
     BeanMapping<T> beanResult = Database.getDefaultBeanMapping(beanClass);
     return select(beanResult);

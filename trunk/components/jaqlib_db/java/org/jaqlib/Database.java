@@ -158,7 +158,7 @@ public class Database
    *          SELECT statement.
    * @return an object describing where to store a SELECT statement result.
    */
-  public <T> BeanMapping<T> getBeanMapping(Class<T> beanClass)
+  public <T> BeanMapping<T> getBeanMapping(Class<? extends T> beanClass)
   {
     BeanMapping<T> mapping = getBeanMapping(mappingStrategy, beanClass);
     mapping.setBeanFactory(beanFactory);
@@ -204,7 +204,8 @@ public class Database
    *          bean properties for storing the result of the SELECT statement.
    * @return an object describing where to store a SELECT statement result.
    */
-  public static <T> BeanMapping<T> getDefaultBeanMapping(Class<T> beanClass)
+  public static <T> BeanMapping<T> getDefaultBeanMapping(
+      Class<? extends T> beanClass)
   {
     return getBeanMapping(Defaults.getMappingStrategy(), beanClass);
   }
@@ -218,7 +219,7 @@ public class Database
    * @return an object describing where to store a SELECT statement result.
    */
   public static <T> BeanMapping<T> getBeanMapping(
-      MappingStrategy mappingStrategy, Class<T> beanClass)
+      MappingStrategy mappingStrategy, Class<? extends T> beanClass)
   {
     BeanMapping<T> result = new BeanMapping<T>(beanClass);
     result.setMappingStrategy(mappingStrategy);
