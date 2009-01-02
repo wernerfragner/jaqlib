@@ -13,7 +13,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface.getLastName()).isEqual("maier").asList();
     assertNotNull(results);
@@ -28,7 +28,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isGreaterThan(element).asList();
     assertNotNull(results);
@@ -43,7 +43,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isGreaterThanOrEqualTo(element).asList();
     assertNotNull(results);
@@ -59,7 +59,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isSmallerThan(element).asList();
     assertNotNull(results);
@@ -75,7 +75,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isSmallerThanOrEqualTo(element).asList();
     assertNotNull(results);
@@ -93,7 +93,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface.getLastName()).isNull().asList();
     assertNotNull(results);
@@ -110,7 +110,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isNull().asList();
     assertNotNull(results);
@@ -127,7 +127,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface.getLastName()).isNotNull().asList();
     assertNotNull(results);
@@ -144,7 +144,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
         .where(testInterface).isNotNull().asList();
     assertNotNull(results);

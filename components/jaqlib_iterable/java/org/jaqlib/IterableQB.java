@@ -54,7 +54,7 @@ public class IterableQB
 
   /**
    * Sets a user-defined classloader that is used when creating proxy classes
-   * using the {@link #getMethodCallRecorder(Class)} method.
+   * using the {@link #getRecorder(Class)} method.
    * 
    * @param classLoader a not null class loader.
    */
@@ -70,9 +70,9 @@ public class IterableQB
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */
-  public static <T> T getMethodCallRecorder(Class<T> resultElementClass)
+  public static <T> T getRecorder(Class<T> resultElementClass)
   {
-    return QUERYBUILDER.getMethodCallRecorder(resultElementClass);
+    return QUERYBUILDER.getRecorder(resultElementClass);
   }
 
 

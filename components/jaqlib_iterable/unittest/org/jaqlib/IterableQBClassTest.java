@@ -23,7 +23,7 @@ public class IterableQBClassTest extends AbstractIterableTest<AccountImpl>
   {
     try
     {
-      IterableQB.getMethodCallRecorder(NoDefaultConstructurClass.class);
+      IterableQB.getRecorder(NoDefaultConstructurClass.class);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException iae)
@@ -36,7 +36,7 @@ public class IterableQBClassTest extends AbstractIterableTest<AccountImpl>
   {
     List<AccountImpl> elements = createTestAccounts();
 
-    AccountImpl testInterface = IterableQB.getMethodCallRecorder(AccountImpl.class);
+    AccountImpl testInterface = IterableQB.getRecorder(AccountImpl.class);
     List<AccountImpl> results = IterableQB.select(AccountImpl.class).from(elements)
         .where(testInterface.getLastName()).isEqual("maier").asList();
     assertNotNull(results);

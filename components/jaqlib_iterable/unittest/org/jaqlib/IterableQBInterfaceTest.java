@@ -22,7 +22,7 @@ public class IterableQBInterfaceTest extends AbstractIterableTest<Account>
 
   public void testCreateResultElement_Interface()
   {
-    Account testInterface = IterableQB.getMethodCallRecorder(getAccountClass());
+    Account testInterface = IterableQB.getRecorder(getAccountClass());
     assertNotNull(testInterface);
 
     InvocationHandler iHandler = Proxy.getInvocationHandler(testInterface);
@@ -34,7 +34,7 @@ public class IterableQBInterfaceTest extends AbstractIterableTest<Account>
   {
     try
     {
-      IterableQB.getMethodCallRecorder(AccountImpl.class);
+      IterableQB.getRecorder(AccountImpl.class);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException iae)

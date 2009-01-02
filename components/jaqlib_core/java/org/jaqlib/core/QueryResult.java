@@ -133,6 +133,30 @@ public class QueryResult<T, DataSourceType> extends
 
 
   /**
+   * Executes the given task for each element in the data source.
+   * 
+   * @param task the not null task to be executed.
+   * @return an object to retrieve the result of the query or to add more WHERE
+   *         conditions to the query.
+   */
+  public QueryResult<T, DataSourceType> executeWithResult(Task<T> task)
+  {
+    return getQuery().addTask(task);
+  }
+
+
+  /**
+   * Executes the given task for each element in the data source immediately.
+   * 
+   * @param task the not null task to be executed.
+   */
+  public void execute(Task<T> task)
+  {
+    getQuery().addTaskAndExecute(task);
+  }
+
+
+  /**
    * Simple condition that can be used to test all elements for a specific
    * condition. This condition is appended using an AND connector.
    * 
@@ -196,8 +220,7 @@ public class QueryResult<T, DataSourceType> extends
    *          only needed for type safety. The object itself is not used.
    * @return an object to specify the condition.
    */
-  public <R> ComparableWhereCondition<T, DataSourceType, R> andMethodCallResult(
-      R evalResult)
+  public <R> ComparableWhereCondition<T, DataSourceType, R> andCall(R evalResult)
   {
     return getQuery().addReflectiveAndWhereCondition();
   }
@@ -213,10 +236,73 @@ public class QueryResult<T, DataSourceType> extends
    *          only needed for type safety. The object itself is not used.
    * @return an object to specify the condition.
    */
-  public <R> ComparableWhereCondition<T, DataSourceType, R> orMethodCallResult(
-      R evalResult)
+  public <R> ComparableWhereCondition<T, DataSourceType, R> orCall(R evalResult)
   {
     return getQuery().addReflectiveOrWhereCondition();
+  }
+
+
+  /**
+   * Uses a recored method call to test all elements for a boolean condition.
+   * The condition must return true in order to add the element to the result
+   * set.
+   * 
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public <R> QueryResult<T, DataSourceType> orCallIsTrue(boolean evalResult)
+  {
+    return getQuery().addReflectiveWhereCondition().isEqual(true);
+  }
+
+
+  /**
+   * Uses a recored method call to test all elements for a boolean condition.
+   * The condition must return false in order to add the element to the result
+   * set.
+   * 
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public <R> QueryResult<T, DataSourceType> orCallIsFalse(boolean evalResult)
+  {
+    return getQuery().addReflectiveWhereCondition().isEqual(false);
+  }
+
+
+  /**
+   * Uses a recored method call to test all elements for a boolean condition.
+   * The condition must return true in order to add the element to the result
+   * set.
+   * 
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public <R> QueryResult<T, DataSourceType> andCallIsTrue(boolean evalResult)
+  {
+    return getQuery().addReflectiveWhereCondition().isEqual(true);
+  }
+
+
+  /**
+   * Uses a recored method call to test all elements for a boolean condition.
+   * The condition must return false in order to add the element to the result
+   * set.
+   * 
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public <R> QueryResult<T, DataSourceType> andCallIsFalse(boolean evalResult)
+  {
+    return getQuery().addReflectiveWhereCondition().isEqual(false);
   }
 
 }

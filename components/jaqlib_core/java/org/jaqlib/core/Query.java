@@ -44,4 +44,10 @@ public interface Query<T, DataSourceType> extends
 
   <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveOrWhereCondition();
 
+
+  QueryResult<T, DataSourceType> addTask(Task<T> task);
+
+
+  void addTaskAndExecute(Task<T> task);
+
 }

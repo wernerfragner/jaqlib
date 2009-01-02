@@ -172,7 +172,7 @@ public class ColumnDatabaseQBTest extends TestCase
     DbSelectDataSource dataSource = Database.getSelectDataSource(
         getStrictMockDataSource(sql), sql);
 
-    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    Account dummy = DatabaseQB.getRecorder(Account.class);
     WhereClause<AccountImpl, DbSelectDataSource> where = DatabaseQB.select(
         AccountImpl.class).from(dataSource);
 

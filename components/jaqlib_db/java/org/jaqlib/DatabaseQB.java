@@ -57,7 +57,7 @@ public class DatabaseQB
 
   /**
    * Sets a user-defined classloader that is used when creating proxy classes
-   * using the {@link #getMethodCallRecorder(Class)} method.
+   * using the {@link #getRecorder(Class)} method.
    * 
    * @param classLoader a not null class loader.
    */
@@ -74,9 +74,9 @@ public class DatabaseQB
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */
-  public static <T> T getMethodCallRecorder(Class<T> beanClass)
+  public static <T> T getRecorder(Class<T> beanClass)
   {
-    return QUERYBUILDER.getMethodCallRecorder(beanClass);
+    return QUERYBUILDER.getRecorder(beanClass);
   }
 
 
@@ -89,7 +89,7 @@ public class DatabaseQB
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of custom {@link WhereCondition}s and custom conditions using a
    * method call recording mechanism (see examples and
-   * {@link #getMethodCallRecorder(Class)} for further details).
+   * {@link #getRecorder(Class)} for further details).
    * </p>
    * <p>
    * <b>NOTE: the WHERE condition is not executed at database-side but at Java
@@ -118,7 +118,7 @@ public class DatabaseQB
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of custom {@link WhereCondition}s and custom conditions using a
    * method call recording mechanism (see examples and
-   * {@link #getMethodCallRecorder(Class)} for further details).
+   * {@link #getRecorder(Class)} for further details).
    * </p>
    * <p>
    * <b>NOTE: the WHERE condition is not executed at database-side but at Java

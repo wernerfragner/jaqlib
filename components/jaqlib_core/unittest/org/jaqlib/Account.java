@@ -20,4 +20,7 @@ public interface Account extends Comparable<Account>
 
   CreditRating getCreditRating();
 
+
+  void sendInfoEmail();
+
 }

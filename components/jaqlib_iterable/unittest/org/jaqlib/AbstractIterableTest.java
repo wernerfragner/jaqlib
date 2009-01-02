@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jaqlib.core.InvalidQueryResultException;
+import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereCondition;
 
 /**
@@ -135,7 +136,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     WhereCondition<AccountType> cond1 = createCompareCondition(500);
     WhereCondition<AccountType> cond2 = createCompareCondition(4);
 
-    AccountType dummy = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType dummy = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(
         elements).where(dummy.getBalance()).isSmallerThan(6.0).and(cond1).or(
         cond2).asList();
@@ -197,7 +198,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
 
     assertEquals(elements.size() * 2, duplicatedElements.size());
 
-    AccountType dummy = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType dummy = IterableQB.getRecorder(getAccountClass());
     Set<AccountType> results = IterableQB.select(getAccountClass()).from(
         duplicatedElements).where(dummy.getBalance()).isGreaterThan(4.0)
         .asSet();
@@ -226,7 +227,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     List<AccountType> elements = createTestAccounts();
     List<AccountType> duplicatedElements = createDuplicatedElements(elements);
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     Map<Double, AccountType> results = IterableQB.select(getAccountClass())
         .from(duplicatedElements).asMap(account.getBalance());
     assertNotNull(results);
@@ -248,7 +249,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
 
     WhereCondition<AccountType> cond = createCompareCondition(4);
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     Map<Double, AccountType> results = IterableQB.select(getAccountClass())
         .from(duplicatedElements).where(cond).asMap(account.getBalance());
     assertNotNull(results);
@@ -262,7 +263,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   {
     List<Account> elements = new ArrayList<Account>(0);
 
-    Account account = IterableQB.getMethodCallRecorder(Account.class);
+    Account account = IterableQB.getRecorder(Account.class);
     Map<Double, Account> results = IterableQB.select(Account.class).from(
         elements).asMap(account.getBalance());
     assertNotNull(results);
@@ -327,7 +328,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     AccountType result = IterableQB.select(getAccountClass()).from(elements)
         .where(account.getBalance()).isEqual(10.0).uniqueResult();
     assertNotNull(result);
@@ -339,7 +340,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     AccountType result = IterableQB.select(getAccountClass()).from(elements)
         .where(account.getBalance()).isEqual(100.0).uniqueResult();
     assertNull(result);
@@ -351,7 +352,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     List<AccountType> elements = createTestAccounts();
     addElement(elements, 10.0);
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     try
     {
       IterableQB.select(getAccountClass()).from(elements).where(
@@ -369,7 +370,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     List<AccountType> elements = createTestAccounts();
     addElement(elements, 5.0);
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     AccountType result = IterableQB.select(getAccountClass()).from(elements)
         .where(account.getBalance()).isEqual(5.0).firstResult();
     assertNotNull(result);
@@ -381,7 +382,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     AccountType result = IterableQB.select(getAccountClass()).from(elements)
         .where(account.getBalance()).isEqual(100.0).firstResult();
     assertNull(result);
@@ -393,7 +394,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     List<AccountType> elements = createTestAccounts();
     addElement(elements, 5.0);
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     AccountType result = IterableQB.select(getAccountClass()).from(elements)
         .where(account.getBalance()).isEqual(5.0).lastResult();
     assertNotNull(result);
@@ -405,7 +406,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   {
     List<AccountType> elements = createTestAccounts();
 
-    AccountType account = IterableQB.getMethodCallRecorder(getAccountClass());
+    AccountType account = IterableQB.getRecorder(getAccountClass());
     AccountType result = IterableQB.select(getAccountClass()).from(elements)
         .where(account.getBalance()).isEqual(100.0).lastResult();
     assertNull(result);
@@ -421,7 +422,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     List<AccountType> elements = createTestAccounts();
 
     WhereCondition<AccountType> cond1 = createCompareCondition(2);
-    Account dummy = IterableQB.getMethodCallRecorder(Account.class);
+    Account dummy = IterableQB.getRecorder(Account.class);
 
     List<AccountType> results = IterableQB.select(getAccountClass()).from(
         elements).where(dummy.getBalance()).isGreaterThan(5.0).and(cond1)
@@ -439,13 +440,13 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   {
     List<AccountType> elements = createTestAccounts();
 
-    Account dummy = IterableQB.getMethodCallRecorder(Account.class);
+    Account dummy = IterableQB.getRecorder(Account.class);
     dummy.getBalance();
     dummy.getCreditRating();
 
     List<AccountType> results = IterableQB.select(getAccountClass()).from(
-        elements).where(0.0).isGreaterThan(5.0).andMethodCallResult(
-        CreditRating.POOR).isEqual(CreditRating.POOR).asList();
+        elements).where(0.0).isGreaterThan(5.0).andCall(CreditRating.GOOD)
+        .isEqual(CreditRating.GOOD).asList();
 
     assertOneCompareElement(results, 10.0);
   }
@@ -474,5 +475,75 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     assertOneCompareElement(results, 10.0);
   }
 
+
+  /**
+   * Immediately execute a task without any WHERE conditions.
+   */
+  public void testSelectExecute()
+  {
+    List<AccountType> elements = createTestAccounts();
+
+    MockTask<AccountType> task = new MockTask<AccountType>();
+    IterableQB.select(getAccountClass()).from(elements).execute(task);
+
+    assertEquals(elements.size(), task.executeVisited);
+  }
+
+
+  /**
+   * Execute task after applying various WHERE conditions.
+   */
+  public void testSelectExecute_WithCondition()
+  {
+    List<AccountType> elements = createTestAccounts();
+
+    WhereCondition<AccountType> cond = createCompareCondition(2);
+    AccountType dummy = IterableQB.getRecorder(getAccountClass());
+
+    MockTask<AccountType> task = new MockTask<AccountType>();
+    List<AccountType> result = IterableQB.select(getAccountClass()).from(
+        elements).where(cond).andCall(dummy.getCreditRating()).isEqual(
+        CreditRating.POOR).executeWithResult(task).asList();
+
+    assertEquals(1, result.size());
+    assertEquals(1, task.executeVisited);
+  }
+
+
+  /**
+   * Apply one condition then execute task and then apply another condition.
+   * Task must be executed on results of first conditions.
+   */
+  public void testSelectExecute_WithNestedCondition()
+  {
+    List<AccountType> elements = createTestAccounts();
+
+    WhereCondition<AccountType> cond = createCompareCondition(2);
+    AccountType dummy = IterableQB.getRecorder(getAccountClass());
+
+    MockTask<AccountType> task = new MockTask<AccountType>();
+    List<AccountType> result = IterableQB.select(getAccountClass()).from(
+        elements).where(cond).executeWithResult(task).andCall(
+        dummy.getCreditRating()).isEqual(CreditRating.POOR).asList();
+
+    // second condtions restricts result set by one
+    // --> task must be executed twice, actual result set size is one
+    assertEquals(1, result.size());
+    assertEquals(2, task.executeVisited);
+  }
+
+
+  private static class MockTask<AccountType> implements Task<AccountType>
+  {
+
+    int executeVisited = 0;
+
+
+    public void execute(AccountType element)
+    {
+      executeVisited++;
+    }
+
+  }
 
 }
