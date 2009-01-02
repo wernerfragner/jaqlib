@@ -1,0 +1,140 @@
+==Overview==
+<p>
+JaQLib supports quering databases using JDBC. The programmer has to specify a SQL SELECT statement and a JDBC <tt>DataSource</tt>. After that the programmer can select single columns from a database table or a Java bean from the result of SQL SELECT statement. The mapping of database columns to the Java bean fields is automatically done using Java Bean naming conventions. This mapping strategy can easily be exchanged by using a custom <b>MappingStrategy</b> (see examples below).
+</p>
+<p>
+JaQLib also supports custom type handlers for mapping database data types to Java types. This can be done using a <b>SqlDataTypeHandler</b> which controls the extraction of data from a JDBC <tt>ResultSet</tt>. Or it can be done using a <b>JavaDataTypeHandler</b> which can convert database values to Java types (e.g. a database Integer to a custom Enumeration type).
+</p>
+<p>
+Beans that are the result of a SQL SELECT statement are created by a <b>BeanFactory</b>. By default the default constructor is used to instantiate these beans. But the programmer has the possibility to exchange this BeanFactory by a custom implementation.
+</p>
+<p>
+When mapping the result of a SQL SELECT statement to the fields of a Java bean then an INFO log message is issued when a Java bean field does not exist in the SQL SELECT statement result. This behavior can be changed by setting the property <b>strictColumnCheck</b> to true (see <tt>Database.setStrictColumnCheck()</tt>). In that case a <tt>DataSourceQueryException</tt> is thrown instead of issuing the INFO log message. If no INFO log message should be issued then the JDK logger for <tt>org.jaqlib.db.DbResultSet</tt> must be disabled. This can be done using the utility class <tt>org.jaqlib.util.LogUtil</tt> or by manually disabling the JDK logger (see 
+[http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html Java Logging]).
+</p>
+<p>
+Default values for the described mechanisms are defined at <b>org.jaqlib.db.Defaults</b>. This class provides static methods to get and set the default values for the entire application. So be aware when, for instance, registering new type handlers at these default instances. These type handlers are then available in the entire application.
+</p>
+
+==Examples==
+<p>
+All examples use following statements to define the database connection and
+the SQL SELECT statement that should act as data source for some bank
+accounts.
+</p>
+
+<pre>
+String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+DbSelectDataSource accounts = Database.getSelectDataSource(getJdbcDataSource(),
+    sql);
+</pre>
+
+or (if multiple SQL SELECT statements should be executed against the same JDBC
+<tt>DataSource</tt>).
+
+<pre>
+String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+Database db = new Database(getJdbcDataSource());
+DbSelectDataSource accounts = db.getSelectDataSource(sql);
+</pre>
+
+<b>Example using the method call recording mechanism:</b>
+
+<pre>
+// create a 'dummy' object for recording a method call for the WHERE clause
+Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+
+// select all accounts with a balance greater than 5000
+List&lt;AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(accounts)
+    .where(account.getBalance()).isGreaterThan(5000).asList();
+</pre>
+
+<b>Example with custom WHERE conditions:</b>
+
+<pre>
+// create condition for negative balances
+WhereCondition&lt;AccountImpl&gt; deptCondition = new WhereCondition&lt;AccountImpl&gt;() {
+
+  public boolean evaluate(AccountImpl account) {
+    return (account.getBalance() &lt; 0);
+  }
+
+};
+
+// create condition for accounts with poor credit rating
+WhereCondition&lt;AccountImpl&gt; ratingCondition = new WhereCondition&lt;AccountImpl&gt;() {
+
+  public boolean evaluate(AccountImpl account) {
+    return (account.getCreditRating() == CreditRating.POOR);
+  }
+}
+
+// execute query with these conditions 
+List&lt;AccountImpl&gt; highRiskAccounts = DatabaseQB.select(AccountImpl.class).from(accounts)
+    .where(deptCondition).and(ratingCondition).asList();
+</pre>
+
+<b>Example for filtering out null elements:</b>
+
+<pre>
+List&lt;AccountImpl&gt; notNullAccounts = DatabaseQB.select(AccountImpl.class).from(
+    accounts).where().element().isNotNull().asList();
+</pre>
+
+<b>Example for using <tt>Comparable</tt> elements:</b>
+
+<pre>
+// Account implements the Comparable interface; the balance field is used for comparing two accounts
+AccountImpl spec = new AccountImpl();
+account.setBalance(5000);
+
+List&lt;AccountImpl&gt; result = DatabaseQB.select(AccountImpl.class).from(accounts)
+    .where().element().isSmallerThan(spec).asList();
+</pre>
+
+<b>Example using a Map as result:</b>
+
+<pre>
+Account account = QB.getMethodCallRecorder(Account.class);
+Map&lt;Long, AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(
+    accounts).asMap(account.getId());
+</pre>
+
+<p>
+Database column data types can be converted to custom Java types with
+so-called {@link JavaTypeHandler}s. These handlers can be registered with
+{@link BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)} .
+</p>
+
+<b>Example for custom Java type handler:</b>
+
+<pre>
+// get DbSelectDataSource and BeanMapping
+String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+Database db = new Database(getDataSource());
+DbSelectDataSource dataSource = db.getSelectDataSource(sql);
+BeanMapping&lt;AccountImpl&gt; mapping = db.getBeanMapping(AccountImpl.class);
+
+// register custom type handler for CreditRating bean fields
+mapping.registerJavaTypeHandler(CreditRating.class,
+    new CreditRatingTypeHandler());
+
+// perform query 
+DatabaseQB.select(mapping).from(dataSource) ...
+
+// custom java type handler that converts Integer values from DB into CreditRating enumerations  
+public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
+{
+  public Object getObject(Object value)
+  {
+    if (value instanceof Integer)
+      return CreditRating.rating((Integer) value);
+    else
+      throw handleIllegalInputValue(value, CreditRating.class);
+  }
+}
+</pre>
+
+
+----
+[[Main_Page]]
