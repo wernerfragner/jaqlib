@@ -20,9 +20,12 @@ public abstract class AbstractJaqLibTest<AccountType extends Account> extends
 
   public List<AccountType> createTestAccounts()
   {
+    AccountImpl goodAccount = createAccount(10.0, "maier");
+    goodAccount.setCreditRating(CreditRating.GOOD);
+
     List accounts = new ArrayList();
     accounts.add(createAccount(1.0, "huber"));
-    accounts.add(createAccount(10.0, "maier"));
+    accounts.add(goodAccount);
     accounts.add(createAccount(null, null));
     accounts.add(null);
     accounts.add(createAccount(5.0));

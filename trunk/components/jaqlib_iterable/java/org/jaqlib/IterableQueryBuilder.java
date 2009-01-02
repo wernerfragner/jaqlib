@@ -32,13 +32,12 @@ import org.jaqlib.iterable.IterableQuery;
  * </ul>
  * </p>
  * <p>
- * The Method {@link #getMethodCallRecorder(Class)} can be used to define a
- * WHERE condition using a method call recording mechanism (see also the first
- * example below). First the programmer must call the desired method on the
- * returned proxy object. This method call is recorded by JaQLib. When
- * evaluating the WHERE condition this method call is replayed on every element.
- * The result of this method call is then evaluated against the specified
- * condition.
+ * The Method {@link #getRecorder(Class)} can be used to define a WHERE
+ * condition using a method call recording mechanism (see also the first example
+ * below). First the programmer must call the desired method on the returned
+ * proxy object. This method call is recorded by JaQLib. When evaluating the
+ * WHERE condition this method call is replayed on every element. The result of
+ * this method call is then evaluated against the specified condition.
  * </p>
  * This class is thread-safe.
  * <p>
@@ -103,6 +102,42 @@ import org.jaqlib.iterable.IterableQuery;
  * Account account = IterableQB.getMethodCallRecorder(Account.class);
  * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
  *     .asMap(account.getId());
+ * </pre>
+ * 
+ * <i>Examples with executing a task on each element:</i>
+ * 
+ * <pre>
+ * // create task that should be executed for each element
+ * Task&lt;Account&gt; task = new Task&lt;Account&gt;()
+ * {
+ * 
+ *   public void execute(Account account)
+ *   {
+ *     account.sendInfoEmail();
+ *   }
+ * 
+ * };
+ * IterableQB.select(Account.class).from(accounts).execute(task);
+ * </pre>
+ * 
+ * <pre>
+ * // create condition for negative balances
+ * WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;()
+ * {
+ * 
+ *   public boolean evaluate(Account account)
+ *   {
+ *     return (account.getBalance() &lt; 0);
+ *   }
+ * 
+ * };
+ * 
+ * // execute task only on elements that match the given condition 
+ * IterableQB.select(Account.class).from(accounts).where(deptCond).execute(task);
+ * 
+ * // or ...
+ * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
+ *     deptCond).executeWithResult(task).asList();
  * </pre>
  * 
  * </p>

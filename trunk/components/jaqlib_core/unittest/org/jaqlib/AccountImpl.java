@@ -111,4 +111,9 @@ public class AccountImpl implements Account
   }
 
 
+  public void sendInfoEmail()
+  {
+    // send email to account holder
+  }
+
 }

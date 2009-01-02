@@ -67,7 +67,7 @@ public class BeanDatabaseQBTest extends TestCase
   private void assertHashtableResult(
       WhereClause<Account, DbSelectDataSource> where)
   {
-    Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+    Account account = DatabaseQB.getRecorder(Account.class);
     Hashtable<String, Account> accounts = where.asHashtable(account
         .getLastName());
     assertMapResult(accounts);
@@ -76,7 +76,7 @@ public class BeanDatabaseQBTest extends TestCase
 
   private void assertMapResult(WhereClause<Account, DbSelectDataSource> where)
   {
-    Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+    Account account = DatabaseQB.getRecorder(Account.class);
     Map<String, Account> accounts = where.asMap(account.getLastName());
     assertMapResult(accounts);
   }
@@ -196,7 +196,7 @@ public class BeanDatabaseQBTest extends TestCase
 
   public void testSelect_MethodCallCondition_OneMatch()
   {
-    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    Account dummy = DatabaseQB.getRecorder(Account.class);
     Account account = where.where(dummy.getBalance()).isGreaterThan(3500.0)
         .uniqueResult();
     assertNotNull(account);
@@ -206,7 +206,7 @@ public class BeanDatabaseQBTest extends TestCase
 
   public void testSelect_MethodCallCondition_NoMatch()
   {
-    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    Account dummy = DatabaseQB.getRecorder(Account.class);
     Account account = where.where(dummy.getBalance()).isGreaterThan(100000.0)
         .uniqueResult();
     assertNull(account);
@@ -215,11 +215,11 @@ public class BeanDatabaseQBTest extends TestCase
 
   public void testSelect_MixedConditions()
   {
-    Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
+    Account dummy = DatabaseQB.getRecorder(Account.class);
     WhereCondition<Account> condition = createWhereCondition(3500.0);
 
-    Account account = where.where(condition).andMethodCallResult(
-        dummy.getCreditRating()).isEqual(CreditRating.GOOD).uniqueResult();
+    Account account = where.where(condition).andCall(dummy.getCreditRating())
+        .isEqual(CreditRating.GOOD).uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);
   }

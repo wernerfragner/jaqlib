@@ -49,6 +49,38 @@ public class WhereClause<T, DataSourceType> extends
 
 
   /**
+   * Uses a recored method call to test all elements for a boolean condition.
+   * The condition must return true in order to add the element to the result
+   * set.
+   * 
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public <R> QueryResult<T, DataSourceType> whereIsTrue(boolean evalResult)
+  {
+    return getQuery().addReflectiveWhereCondition().isEqual(true);
+  }
+
+
+  /**
+   * Uses a recored method call to test all elements for a boolean condition.
+   * The condition must return false in order to add the element to the result
+   * set.
+   * 
+   * @param evalResult the result of the recorded method call. This result is
+   *          only needed for type safety. The object itself is not used.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public <R> QueryResult<T, DataSourceType> whereIsFalse(boolean evalResult)
+  {
+    return getQuery().addReflectiveWhereCondition().isEqual(false);
+  }
+
+
+  /**
    * WHERE clause with a custom condition.
    * 
    * @param condition a not null condition.

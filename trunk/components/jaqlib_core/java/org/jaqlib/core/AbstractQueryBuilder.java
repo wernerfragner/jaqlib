@@ -41,7 +41,7 @@ public abstract class AbstractQueryBuilder
 
   /**
    * Sets a user-defined classloader that is used when creating proxy classes
-   * using the {@link #getMethodCallRecorder(Class)} method.
+   * using the {@link #getRecorder(Class)} method.
    * 
    * @param classLoader a not null class loader.
    */
@@ -68,7 +68,7 @@ public abstract class AbstractQueryBuilder
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */
-  public <T> T getMethodCallRecorder(Class<T> resultElementClass)
+  public <T> T getRecorder(Class<T> resultElementClass)
   {
     RecordingProxy<T> proxy = new RecordingProxy<T>(classLoader.get());
     methodCallRecorder.set(proxy.getMethodCallRecorder());

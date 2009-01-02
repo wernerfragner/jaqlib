@@ -32,6 +32,12 @@ public class SyntaxTree<T> implements ElementPredicate<T>
   }
 
 
+  public boolean hasRoot()
+  {
+    return root != null;
+  }
+
+
   public void setRoot(SyntaxTreeNode<T> root)
   {
     Assert.state(this.root == null, "Root condition can be set only once.");
@@ -67,5 +73,6 @@ public class SyntaxTree<T> implements ElementPredicate<T>
       return "";
     }
   }
+
 
 }

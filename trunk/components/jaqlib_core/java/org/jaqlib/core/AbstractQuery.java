@@ -57,6 +57,12 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  private <R> void setRoot(WhereCondition<T> condition)
+  {
+    tree.setRoot(new Condition<T>(condition));
+  }
+
+
   public WhereClause<T, DataSourceType> createWhereClause(
       DataSourceType dataSource)
   {
@@ -80,7 +86,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   public <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleWhereCondition()
   {
     SimpleWhereCondition<T, DataSourceType, R> condition = createSimpleWhereCondition();
-    tree.setRoot(new Condition<T>(condition));
+    setRoot(condition);
     return condition;
   }
 
@@ -104,7 +110,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   public QueryResult<T, DataSourceType> addWhereCondition(
       WhereCondition<T> condition)
   {
-    tree.setRoot(new Condition<T>(condition));
+    setRoot(condition);
     return createQueryResult();
   }
 
@@ -129,7 +135,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   {
     ReflectiveWhereCondition<T, DataSourceType, R> condition = new ReflectiveWhereCondition<T, DataSourceType, R>(
         this, methodCallRecorder);
-    tree.setRoot(new Condition<T>(condition));
+    setRoot(condition);
     return condition;
   }
 
@@ -149,6 +155,30 @@ public abstract class AbstractQuery<T, DataSourceType> implements
         this, methodCallRecorder);
     addOrWhereCondition(condition);
     return condition;
+  }
+
+
+  public QueryResult<T, DataSourceType> addTask(Task<T> task)
+  {
+    TaskWhereCondition<T> condition = new TaskWhereCondition<T>(task);
+    if (!tree.hasRoot())
+    {
+      setRoot(condition);
+    }
+    else
+    {
+      addAndWhereCondition(condition);
+    }
+    return createQueryResult();
+  }
+
+
+  public void addTaskAndExecute(Task<T> task)
+  {
+    addTask(task);
+
+    logQuery("ExecuteTask");
+    addResults(new ArrayList<T>(), false);
   }
 
 
