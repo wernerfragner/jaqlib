@@ -3,6 +3,24 @@ Java Query Library (JaqLib)
 Copyright 2008 Werner Fragner
 
 
+jaqlib-1.0beta1
+----------
+database query support:
+- bean factory
+- mapping strategy
+- strict column check
+- java type handler
+- SQL type handler
+- column select
+- bean select
+- Defaults
+
+iterable query support:
+- conditions on single elements
+- conditions on comparable elements
+- conditions with method call recording mechanism
+- custom conditions
+
 
 jaqlib-0.9
 ----------
