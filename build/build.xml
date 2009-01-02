@@ -320,6 +320,8 @@
     </copy>
 		
 		<delete dir="./dbunittest" failonerror="false" />
+		<delete file="./derby.log" failonerror="false" />
+		<delete file="./cobertuna.ser" failonerror="false" />
 	</target>
 	
 	
