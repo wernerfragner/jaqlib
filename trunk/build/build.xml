@@ -1,5 +1,5 @@
 <project name="JaqLib" default="deploy" basedir=".">
-
+	
 	<!-- ========================================= -->
 	<!-- User defined paths -->
 	<!-- ========================================= -->
@@ -24,6 +24,8 @@
 	<property name="build.source" value="${build.base}/components" />
 	<property name="build.temp.javadoc" value="${build.temp}/javadoc" />
 	
+	<property name="cobertura.dir" value="E:/programmieren/cobertura-1.9/" />
+	<property name="instrumented.dir" value="${build.temp}/bin_instrumented" />
 	<property name="vendor.base" value="${build.base}/vendor" />
 	
 	<property name="jaqlib_main.base" value="${build.source}/jaqlib_main" />
@@ -64,6 +66,15 @@
 	<path id="jaqlib.unittest.components">
 		<fileset dir="${build.temp}/zip_unittest" />
 	</path>	
+
+	<path id="cobertura.classpath">
+	  <fileset dir="${cobertura.dir}">
+	    <include name="cobertura.jar" />
+	    <include name="lib/**/*.jar" />
+	  </fileset>
+	</path>
+
+	<taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
 	
 	
 	<!-- ========================================= -->
@@ -79,6 +90,34 @@
 		<mkdir dir="${build.temp}" />
 		<mkdir dir="${build.temp}/zip" />
 		<mkdir dir="${build.temp}/zip_unittest" />
+		<mkdir dir="${instrumented.dir}" />
+	</target>
+
+	
+	<target name="instrument" depends="init, compile">
+	    <!--
+	      Remove the coverage data file and any old instrumentation.
+	    -->
+	    <delete file="cobertura.ser"/>
+	    <delete dir="${instrumented.dir}" />
+
+	    <!--
+	      Instrument the application classes, writing the
+	      instrumented classes into ${build.instrumented.dir}.
+	    -->
+	    <cobertura-instrument todir="${instrumented.dir}">
+	      <!--
+	        The following line causes instrument to ignore any
+	        source line containing a reference to log4j, for the
+	        purposes of coverage reporting.
+	      -->
+	      <ignore regex="org.apache.log4j.*" />
+
+	      <fileset dir="${build.temp}/bin/jaqlib_util" includes="**/*.class" />
+	    	<fileset dir="${build.temp}/bin/jaqlib_core" includes="**/*.class" />
+	      <fileset dir="${build.temp}/bin/jaqlib_db" includes="**/*.class" />
+	      <fileset dir="${build.temp}/bin/jaqlib_iterable" includes="**/*.class" />
+	    </cobertura-instrument>
 	</target>
 	
 	
@@ -86,9 +125,10 @@
 		<!-- Compile component -->
 		<property name="compile.target.dir" value="${build.temp}/bin/${component.name}" />
 		<mkdir dir="${compile.target.dir}" />
-		<javac destdir="${compile.target.dir}" srcDir="${build.source}/${component.name}/java" source="1.5" target="1.5" debug="false" failonerror="true" optimize="true" >
+		<javac destdir="${compile.target.dir}" srcDir="${build.source}/${component.name}/java" source="1.5" target="1.5" debug="true" failonerror="true" optimize="true" >
 			<classpath refid="jaqlib.libs" />
 			<classpath refid="jaqlib.components" />
+			<classpath refid="cobertura.classpath" />
 		</javac>
 		
 		<!-- ZIP compiled classes -->
@@ -100,7 +140,7 @@
 		<!-- Compile component -->
 		<property name="compile.unittest.target.dir" value="${build.temp}/bin/${component.name}" />
 		<mkdir dir="${compile.unittest.target.dir}" />
-		<javac destdir="${compile.unittest.target.dir}" srcDir="${build.source}/${component.name}/unittest" source="1.5" target="1.5" debug="false" failonerror="true" optimize="true" >
+		<javac destdir="${compile.unittest.target.dir}" srcDir="${build.source}/${component.name}/unittest" source="1.5" target="1.5" debug="true" failonerror="true" optimize="true" >
 			<classpath refid="jaqlib.libs" />
       <classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.libs" />
@@ -168,6 +208,8 @@
 		
 		<!-- Iterable tests with CGLib on classpath -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+			<classpath location="${instrumented.dir}" />
+			<classpath refid="cobertura.classpath" />
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.libs" />
@@ -178,6 +220,8 @@
 		
 		<!-- Iterable tests without CGLib on classpath -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+      <classpath location="${instrumented.dir}" />
+      <classpath refid="cobertura.classpath" />
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.unittest.libs" />
@@ -187,7 +231,9 @@
 		
 	  <!-- DB tests -->
 	  <junit haltonfailure="false" failureproperty="junit.failure" fork="true">
-      <classpath refid="jaqlib.components" />
+      <classpath location="${instrumented.dir}" />
+      <classpath refid="cobertura.classpath" />
+	  	<classpath refid="jaqlib.components" />
       <classpath refid="jaqlib.unittest.components" />
       <classpath refid="jaqlib.libs" />
       <classpath refid="jaqlib.unittest.libs" />
@@ -197,6 +243,8 @@
 		
 		<!-- Util tests -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+	    <classpath location="${instrumented.dir}" />
+	    <classpath refid="cobertura.classpath" />
 			<classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.components" />
 			<classpath refid="jaqlib.unittest.libs" />
@@ -212,6 +260,20 @@
 		
 		<fail if="junit.failure" message="Unittests failed" />
 	</target>
+
+	
+  <target name="coverage_report">
+    <!--
+      Generate a series of HTML files containing the coverage
+      data in a user-readable form using nested source filesets.
+    -->
+    <cobertura-report destdir="${build.temp}/coverage_reports/jaqlib">
+      <fileset dir="${jaqlib_util.source}" includes="**/*.java" />
+    	<fileset dir="${jaqlib_core.source}" includes="**/*.java" />
+      <fileset dir="${jaqlib_db.source}" includes="**/*.java" />
+      <fileset dir="${jaqlib_iterable.source}" includes="**/*.java" />
+    </cobertura-report>
+  </target>
 	
 	
 	<target name="jar" depends="compile, javadoc">
@@ -239,7 +301,7 @@
 	</target>
 	
 	
-	<target name="deploy" depends="clean, init, unittest, jar">
+	<target name="deploy" depends="clean, init, compile, instrument, unittest, coverage_report, jar">
 		<mkdir dir="${dist.dir}/${version.fullString}/dist" />
 		<copy toDir="${dist.dir}/${version.fullString}/dist" >
 			<fileset dir="${build.temp}/jar" />
@@ -248,6 +310,10 @@
 		<copy toDir="${dist.dir}/${version.fullString}/reports/unittest" >
 			<fileset dir="${build.temp}/unittest_reports/jaqlib" />
 		</copy>
+	  <mkdir dir="${dist.dir}/${version.fullString}/reports/coverage" />
+	  <copy toDir="${dist.dir}/${version.fullString}/reports/coverage" >
+	    <fileset dir="${build.temp}/coverage_reports/jaqlib" />
+	  </copy>
     <mkdir dir="${dist.dir}/${version.fullString}/reports/javadoc" />
     <copy toDir="${dist.dir}/${version.fullString}/reports/javadoc" >
       <fileset dir="${build.temp}/javadoc/jaqlib" />
