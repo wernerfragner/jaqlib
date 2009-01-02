@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.core.WhereClause;
+import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
-import org.jaqlib.query.WhereClause;
-import org.jaqlib.query.WhereCondition;
 
 
 public class BeanDatabaseQBTest extends TestCase
@@ -34,8 +32,6 @@ public class BeanDatabaseQBTest extends TestCase
   public void setUp() throws Exception
   {
     super.setUp();
-
-    disableLogging();
 
     dbSetup = new DatabaseSetup();
     dbSetup.createTestTables();
@@ -58,13 +54,6 @@ public class BeanDatabaseQBTest extends TestCase
     super.tearDown();
 
     dbSetup.clear();
-  }
-
-
-  private void disableLogging()
-  {
-    Logger logger = Logger.getLogger("org.jaqlib");
-    logger.setLevel(Level.WARNING);
   }
 
 
@@ -191,7 +180,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_UserDefinedCondition_OneMatch()
+  public void testSelect_CustomCondition_OneMatch()
   {
     WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
     Account account = where.where(condition).uniqueResult();
@@ -200,7 +189,7 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_UserDefinedCondition_NoMatch()
+  public void testSelect_CustomCondition_NoMatch()
   {
     WhereCondition<AccountImpl> condition = createWhereCondition(100000.0);
     Account account = where.where(condition).uniqueResult();

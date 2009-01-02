@@ -17,15 +17,15 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.AbstractQueryBuilder;
+import org.jaqlib.core.FromClause;
+import org.jaqlib.core.WhereClause;
+import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DatabaseQuery;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.query.AbstractQueryBuilder;
-import org.jaqlib.query.FromClause;
-import org.jaqlib.query.WhereClause;
-import org.jaqlib.query.WhereCondition;
 
 /**
  * <p>
@@ -59,8 +59,8 @@ import org.jaqlib.query.WhereCondition;
  *     sql);
  * </pre>
  * 
- * or (if multiple SQL SELECT statements should be execute against the same JDBC
- * {@link DataSource}).
+ * or (if multiple SQL SELECT statements should be executed against the same
+ * JDBC {@link DataSource}).
  * 
  * <pre>
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
@@ -68,7 +68,7 @@ import org.jaqlib.query.WhereCondition;
  * DbSelectDataSource accounts = db.getSelectDataSource(sql);
  * </pre>
  * 
- * <i>Example with method call recording:</i>
+ * <i>Example using the method call recording mechanism:</i>
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
@@ -79,7 +79,7 @@ import org.jaqlib.query.WhereCondition;
  *     .where(account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
- * <i>Example with user-defined WHERE conditions:</i>
+ * <i>Example with custom WHERE conditions:</i>
  * 
  * <pre>
  * // create condition for negative balances
@@ -184,8 +184,8 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * {@link FromClause}. The {@link FromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
-   * evaluation of user-defined {@link WhereCondition}s and user-defined
-   * conditions using a method call recording mechanism (see examples and
+   * evaluation of custom {@link WhereCondition}s and custom conditions using a
+   * method call recording mechanism (see examples and
    * {@link #getMethodCallRecorder(Class)} for further details).
    * </p>
    * <p>
@@ -212,8 +212,8 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * {@link FromClause}. The {@link FromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
-   * evaluation of user-defined {@link WhereCondition}s and user-defined
-   * conditions using a method call recording mechanism (see examples and
+   * evaluation of custom {@link WhereCondition}s and custom conditions using a
+   * method call recording mechanism (see examples and
    * {@link #getMethodCallRecorder(Class)} for further details).
    * </p>
    * <p>

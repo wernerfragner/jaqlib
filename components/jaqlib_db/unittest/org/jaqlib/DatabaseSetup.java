@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
 import org.jaqlib.db.DbResultSet;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.Defaults;
 import org.jaqlib.util.db.DbUtil;
 import org.jaqlib.util.db.DriverManagerDataSource;
@@ -143,11 +144,21 @@ public class DatabaseSetup
     EasyMock.expect(metaData.getColumnLabel(1)).andReturn("id");
     EasyMock.expect(metaData.getColumnLabel(2)).andReturn("lastname");
 
+    EasyMock.expect(rs.next()).andReturn(true);
     EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(1));
     EasyMock.expect(rs.getObject("lastName")).andReturn(
         HUBER_ACCOUNT.getLastName());
     EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(1));
     EasyMock.expect(rs.getObject(2)).andReturn(HUBER_ACCOUNT.getLastName());
+
+    EasyMock.expect(rs.next()).andReturn(true);
+    EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(2));
+    EasyMock.expect(rs.getObject("lastName")).andReturn(
+        MAIER_ACCOUNT.getLastName());
+    EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(2));
+    EasyMock.expect(rs.getObject(2)).andReturn(MAIER_ACCOUNT.getLastName());
+
+    EasyMock.expect(rs.next()).andReturn(false);
 
     EasyMock.replay(rs, metaData);
 
@@ -193,6 +204,12 @@ public class DatabaseSetup
 
     EasyMock.replay(ds, conn, stmt);
     return ds;
+  }
+
+
+  public static DbSelectDataSource getDbSelectDataSource() throws SQLException
+  {
+    return new DbSelectDataSource(getNiceMockDataSource(), SELECT_SQL);
   }
 
 }

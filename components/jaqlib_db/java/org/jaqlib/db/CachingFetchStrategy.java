@@ -3,7 +3,7 @@ package org.jaqlib.db;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
 
 /**

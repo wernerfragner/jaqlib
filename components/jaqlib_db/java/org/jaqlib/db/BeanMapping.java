@@ -84,7 +84,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * Changes the java type handler registry to a custom implementation. By
    * default no type handlers are available.
    * 
-   * @param registry a user-defined java type handler registry.
+   * @param registry a custom java type handler registry.
    */
   public void setJavaTypeHandlerRegistry(JavaTypeHandlerRegistry registry)
   {

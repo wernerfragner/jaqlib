@@ -13,10 +13,10 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.core.WhereClause;
+import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.query.WhereClause;
-import org.jaqlib.query.WhereCondition;
 
 
 public class ColumnDatabaseQBTest extends TestCase
@@ -143,7 +143,7 @@ public class ColumnDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_UserDefinedCondition()
+  public void testSelect_CustomCondition()
   {
     String huber = HUBER_ACCOUNT.getLastName();
 
@@ -152,7 +152,7 @@ public class ColumnDatabaseQBTest extends TestCase
   }
 
 
-  public void testSelect_MultipleUserDefinedConditions()
+  public void testSelect_MultipleCustomConditions()
   {
     WhereCondition<String> condition1 = createWhereCondition("h.*");
     WhereCondition<String> condition2 = createWhereCondition(".*ier");

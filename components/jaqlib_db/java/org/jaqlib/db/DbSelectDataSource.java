@@ -64,7 +64,7 @@ public class DbSelectDataSource
    * Changes the SQL type handler registry to a custom implementation. By
    * default the standard SQL types are supported.
    * 
-   * @param registry a user-defined SQL type handler registry.
+   * @param registry a custom SQL type handler registry.
    */
   public void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
   {
@@ -73,16 +73,16 @@ public class DbSelectDataSource
 
 
   /**
-   * Enables/disables strict checking if a field in a Java bean does not exist
-   * in the SELECT statement. If strict column check is enabled then an
-   * exception is thrown if a Java bean field does exist in the SELECT
-   * statement. If strict column check is disabled (DEFAULT) then an INFO log
-   * message is issued and the field is ignored (= is not set). If these INFO
-   * messages should not be issued then the JDK logger for
-   * 'org.jaqlib.query.db.AbstractJaqLibOrMapper' must be disabled (see <a
-   * href="
-   * http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
-   * Logging</a>).
+   * When mapping the result of a SQL SELECT statement to the fields of a Java
+   * bean then an INFO log message is issued when a Java bean field does not
+   * exist in the SQL SELECT statement result. This behavior can be changed by
+   * setting the property <b>strictColumnCheck</b> to true. In that case a
+   * {@link DataSourceQueryException} is thrown instead of issuing the INFO log
+   * message. If no INFO log message should be issued then the JDK logger for
+   * <tt>org.jaqlib.dbDbResultSet</tt> must be disabled. How to do that is
+   * described at <a href=
+   * "http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
+   * Logging</a>.
    * 
    * @param strictColumnCheck enable/disable strict column check.
    */
