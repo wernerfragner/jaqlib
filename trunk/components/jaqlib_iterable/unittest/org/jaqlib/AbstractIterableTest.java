@@ -63,6 +63,14 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
         }
         return element.getBalance() > balance;
       }
+
+
+      @Override
+      public String toString()
+      {
+        return "CompareBalanceCondition[expected=" + balance + "]";
+      }
+
     };
   }
 

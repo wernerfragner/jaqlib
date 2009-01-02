@@ -1,5 +1,7 @@
 package org.jaqlib.core.syntaxtree;
 
+import org.jaqlib.util.ReflectionUtil;
+
 /**
  * @author Werner Fragner
  * 
@@ -35,5 +37,17 @@ public abstract class Connector<T> implements SyntaxTreeNode<T>
     return right;
   }
 
+
+  public void appendLogString(StringBuilder sb)
+  {
+    if (!(getLeft() instanceof NullSyntraxTreeNode))
+    {
+      getLeft().appendLogString(sb);
+      sb.append(" ");
+      sb.append(ReflectionUtil.getPlainClassName(this).toUpperCase());
+    }
+    sb.append(" ");
+    getRight().appendLogString(sb);
+  }
 
 }

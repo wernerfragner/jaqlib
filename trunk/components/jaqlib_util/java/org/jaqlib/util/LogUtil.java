@@ -1,5 +1,6 @@
 package org.jaqlib.util;
 
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,35 +14,44 @@ import java.util.logging.Logger;
 public class LogUtil
 {
 
-
   /**
-   * Completely disable logging of JaQLib.
+   * Enables logging of all JaQLib messages to the console.
    */
-  public static void disableJaqLibLogging()
+  public static void enableConsoleLogging()
   {
-    setJaqLibLogLevel(Level.OFF);
+    ConsoleHandler handler = new ConsoleHandler();
+    handler.setLevel(Level.ALL);
+
+    Logger logger = Logger.getLogger("org.jaqlib");
+    logger.setLevel(Level.ALL);
+    logger.addHandler(handler);
   }
 
 
   /**
-   * Sets the log level of the JaQLib JDK logger.
-   * 
-   * @param level
+   * @param cls a not null class.
+   * @return the logger for the given class.
    */
-  public static void setJaqLibLogLevel(Level level)
+  public static Logger getLogger(Class<?> cls)
   {
-    getJaqLibLogger().setLevel(level);
+    return Logger.getLogger(cls.getName());
   }
 
 
   /**
-   * @return the JDK logger for JaQLib. This logger can be used to add
-   *         additional {@link java.util.logging.Handler}s or to customize the
-   *         logging process.
+   * @param obj a not null object.
+   * @return the logger for the given object.
    */
-  public static Logger getJaqLibLogger()
+  public static Logger getLogger(Object obj)
   {
-    return Logger.getLogger("org.jaqlib");
+    if (obj instanceof Class)
+    {
+      return getLogger((Class<?>) obj);
+    }
+    else
+    {
+      return getLogger(obj.getClass());
+    }
   }
 
 }

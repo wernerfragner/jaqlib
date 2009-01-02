@@ -39,7 +39,7 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
   protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
     final MethodInvocation invocation = getCurrentInvocation();
-    getOptimizedFetchStrategy().addResults(resultMap, invocation);
+    getCachingFetchStrategy().addResults(resultMap, invocation);
   }
 
 
@@ -54,22 +54,22 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
   {
     if (stopAtFirstMatch)
     {
-      return getSimpleFetchStrategy();
+      return getFirstOccurenceFetchStrategy();
     }
     else
     {
-      return getOptimizedFetchStrategy();
+      return getCachingFetchStrategy();
     }
   }
 
 
-  private AbstractFetchStrategy<T> getOptimizedFetchStrategy()
+  private AbstractFetchStrategy<T> getCachingFetchStrategy()
   {
     return initFetchStrategy(new CachingFetchStrategy<T>(getCache()));
   }
 
 
-  private AbstractFetchStrategy<T> getSimpleFetchStrategy()
+  private AbstractFetchStrategy<T> getFirstOccurenceFetchStrategy()
   {
     return initFetchStrategy(new FirstOccurrenceFetchStrategy<T>());
   }
@@ -92,6 +92,13 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
       cache = new DatabaseQueryCache<T>(tree);
     }
     return cache;
+  }
+
+
+  @Override
+  protected String getResultDefinitionString()
+  {
+    return mapping.getLogString();
   }
 
 }

@@ -9,7 +9,8 @@ package org.jaqlib.core;
  */
 public class SimpleWhereCondition<T, DataSourceType, ResultType> extends
     QueryItem<T, DataSourceType> implements WhereCondition<T>,
-    SingleElementWhereCondition<T, DataSourceType, ResultType>
+    SingleElementWhereCondition<T, DataSourceType, ResultType>,
+    LoggableQueryItem
 {
 
   private ElementWhereCondition<T, DataSourceType, ResultType> element;
@@ -32,6 +33,12 @@ public class SimpleWhereCondition<T, DataSourceType, ResultType> extends
   public boolean evaluate(T element)
   {
     return this.element.evaluate(element);
+  }
+
+
+  public void appendLogString(StringBuilder sb)
+  {
+    element.appendLogString(sb);
   }
 
 }

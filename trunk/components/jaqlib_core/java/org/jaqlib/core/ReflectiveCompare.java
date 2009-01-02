@@ -57,4 +57,16 @@ public abstract class ReflectiveCompare<T, ResultType> extends
 
   protected abstract boolean doEvaluate(ResultType actual);
 
+
+  @Override
+  public void appendLogString(StringBuilder sb)
+  {
+    if (invocation != null)
+    {
+      sb.append(invocation.toString());
+      sb.append(".");
+    }
+    super.appendLogString(sb);
+  }
+
 }

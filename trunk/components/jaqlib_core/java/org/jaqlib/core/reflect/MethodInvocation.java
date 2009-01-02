@@ -3,6 +3,8 @@ package org.jaqlib.core.reflect;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.jaqlib.util.ReflectionUtil;
+
 /**
  * @author Werner Fragner
  */
@@ -36,5 +38,22 @@ public class MethodInvocation
     }
   }
 
+
+  @Override
+  public String toString()
+  {
+    StringBuilder sb = new StringBuilder();
+    sb.append(method.getName());
+    sb.append("(");
+    if (methodArgs != null)
+    {
+      for (Object methodArg : methodArgs)
+      {
+        sb.append(ReflectionUtil.getPlainClassName(methodArg));
+      }
+    }
+    sb.append(")");
+    return sb.toString();
+  }
 
 }

@@ -52,4 +52,20 @@ public class SyntaxTree<T> implements ElementPredicate<T>
     return connector;
   }
 
+
+  public String getLogString()
+  {
+    if (root != null)
+    {
+      StringBuilder sb = new StringBuilder();
+      sb.append(" WHERE");
+      root.appendLogString(sb);
+      return sb.toString();
+    }
+    else
+    {
+      return "";
+    }
+  }
+
 }

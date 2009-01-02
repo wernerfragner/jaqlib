@@ -1,6 +1,7 @@
 package org.jaqlib.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,6 +10,16 @@ import java.util.Set;
 
 public class CollectionUtil
 {
+
+  public static String toString(Object[] objects, String separator)
+  {
+    if (objects == null)
+    {
+      return "";
+    }
+    return toString(Arrays.asList(objects), separator);
+  }
+
 
   public static String toString(Iterable<?> iterable, String separator)
   {

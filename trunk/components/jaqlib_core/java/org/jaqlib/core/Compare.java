@@ -5,7 +5,7 @@ package org.jaqlib.core;
  * 
  * @param <T>
  */
-public interface Compare<T, ResultType>
+public interface Compare<T, ResultType> extends LoggableQueryItem
 {
 
   boolean evaluate(T element);

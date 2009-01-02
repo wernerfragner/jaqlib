@@ -8,6 +8,7 @@ import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.DbUtil;
+import org.jaqlib.util.LogUtil;
 
 /**
  * @author Werner Fragner
@@ -16,7 +17,7 @@ public class DbResultSet
 {
 
   public static final Object NO_RESULT = new Object();
-  private final Logger LOG = Logger.getLogger(getClass().getName());
+  private final Logger log = LogUtil.getLogger(this);
 
   private final SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
 
@@ -63,7 +64,7 @@ public class DbResultSet
     }
     else
     {
-      LOG.info("SELECT statement does not contain colum '" + columnName
+      log.info("SELECT statement does not contain colum '" + columnName
           + "'. Column is ignored.");
       return NO_RESULT;
     }

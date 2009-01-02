@@ -95,18 +95,47 @@ public class ReflectionUtil
   }
 
 
+  /**
+   * @param clz
+   * @param fieldName
+   * @return the given field type of the given class. The entire inheritance
+   *         tree of the given class is searched for the given field.
+   * 
+   * @throws RuntimeException if the given field was not found.
+   */
   public static Class<?> getFieldType(Class<?> clz, String fieldName)
+  {
+    return getField(clz, fieldName).getType();
+  }
+
+
+  /**
+   * @param clz
+   * @param fieldName
+   * @return the given field of the given class. The entire inheritance tree of
+   *         the given class is searched for the given field.
+   * 
+   * @throws RuntimeException if the given field was not found.
+   */
+  public static Field getField(Class<?> clz, String fieldName)
   {
     Assert.notNull(clz);
     Assert.notNull(fieldName);
 
     try
     {
-      return clz.getDeclaredField(fieldName).getType();
+      return clz.getDeclaredField(fieldName);
     }
     catch (NoSuchFieldException e)
     {
-      throw ExceptionUtil.toRuntimeException(e);
+      if (clz.getSuperclass() == null)
+      {
+        throw ExceptionUtil.toRuntimeException(e);
+      }
+      else
+      {
+        return getField(clz.getSuperclass(), fieldName);
+      }
     }
   }
 
@@ -119,13 +148,9 @@ public class ReflectionUtil
 
     try
     {
-      Field field = target.getClass().getDeclaredField(fieldName);
+      Field field = getField(target.getClass(), fieldName);
       field.setAccessible(true);
       field.set(target, fieldValue);
-    }
-    catch (NoSuchFieldException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
     }
     catch (IllegalAccessException e)
     {
@@ -147,6 +172,28 @@ public class ReflectionUtil
     catch (IllegalAccessException e)
     {
       throw ExceptionUtil.toRuntimeException(e);
+    }
+  }
+
+
+  /**
+   * @param cls
+   * @param methodName
+   * @return true if the given class declares the given method. This method does
+   *         not search the inheritance tree for the given method. So if a super
+   *         class of the given class declares the given method then false is
+   *         returned.
+   */
+  public static boolean hasDeclaredMethod(Class<?> cls, String methodName)
+  {
+    try
+    {
+      cls.getDeclaredMethod(methodName, new Class[0]);
+      return true;
+    }
+    catch (NoSuchMethodException e)
+    {
+      return false;
     }
   }
 

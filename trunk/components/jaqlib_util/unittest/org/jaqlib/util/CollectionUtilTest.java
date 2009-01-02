@@ -24,7 +24,7 @@ public class CollectionUtilTest extends TestCase
 
   public void testToString_Null()
   {
-    assertEquals("", CollectionUtil.toString(null, ""));
+    assertEquals("", CollectionUtil.toString((Iterable<?>) null, ""));
     assertEquals(STR + STR + STR, CollectionUtil.toString(list, null));
   }
 

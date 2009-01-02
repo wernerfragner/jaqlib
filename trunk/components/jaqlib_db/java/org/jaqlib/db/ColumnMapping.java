@@ -125,9 +125,33 @@ public class ColumnMapping<T> extends AbstractMapping<T>
     }
     else
     {
-      throw new IllegalStateException(
-          "Mapping must have a column index or a colum name.");
+      throw handleInvalidMapping();
     }
+  }
+
+
+  @Override
+  public String getLogString()
+  {
+    if (hasColumnName())
+    {
+      return getColumnName();
+    }
+    else if (hasColumnIndex())
+    {
+      return String.valueOf(getColumnIndex());
+    }
+    else
+    {
+      throw handleInvalidMapping();
+    }
+  }
+
+
+  private IllegalStateException handleInvalidMapping()
+  {
+    return new IllegalStateException(
+        "Mapping must have a column index or a colum name.");
   }
 
 }

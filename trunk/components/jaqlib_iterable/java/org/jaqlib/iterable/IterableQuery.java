@@ -69,4 +69,10 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
   }
 
 
+  @Override
+  protected String getResultDefinitionString()
+  {
+    return "";
+  }
+
 }

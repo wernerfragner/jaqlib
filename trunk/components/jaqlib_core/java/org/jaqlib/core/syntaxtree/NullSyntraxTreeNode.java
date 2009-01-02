@@ -16,4 +16,10 @@ public class NullSyntraxTreeNode<T> implements SyntaxTreeNode<T>
     return true;
   }
 
+
+  public void appendLogString(StringBuilder sb)
+  {
+    // nothing to append
+  }
+
 }
