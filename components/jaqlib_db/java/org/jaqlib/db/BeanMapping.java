@@ -24,7 +24,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
   // state
 
-  private final Class<T> beanClass;
+  private final Class<? extends T> beanClass;
   private List<AbstractMapping<?>> mappings;
 
   // infrastructure
@@ -38,7 +38,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   /**
    * @param beanClass a not null class of the bean this mapping belongs to.
    */
-  public BeanMapping(Class<T> beanClass)
+  public BeanMapping(Class<? extends T> beanClass)
   {
     this.beanClass = Assert.notNull(beanClass);
   }

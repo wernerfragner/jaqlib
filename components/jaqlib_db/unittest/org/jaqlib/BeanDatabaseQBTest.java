@@ -25,7 +25,7 @@ public class BeanDatabaseQBTest extends TestCase
   private static final String MAIER = DatabaseSetup.MAIER_ACCOUNT.getLastName();
 
   private DatabaseSetup dbSetup;
-  private WhereClause<AccountImpl, DbSelectDataSource> where;
+  private WhereClause<Account, DbSelectDataSource> where;
 
 
   @Override
@@ -40,7 +40,8 @@ public class BeanDatabaseQBTest extends TestCase
     String sql = "SELECT lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
     Database db = new Database(getDataSource());
     DbSelectDataSource dataSource = db.getSelectDataSource(sql);
-    BeanMapping<AccountImpl> mapping = db.getBeanMapping(AccountImpl.class);
+    BeanMapping<Account> mapping = db
+        .<Account> getBeanMapping(AccountImpl.class);
     mapping.registerJavaTypeHandler(CreditRating.class,
         new CreditRatingTypeHandler());
 
@@ -64,58 +65,54 @@ public class BeanDatabaseQBTest extends TestCase
 
 
   private void assertHashtableResult(
-      WhereClause<AccountImpl, DbSelectDataSource> where)
+      WhereClause<Account, DbSelectDataSource> where)
   {
     Account account = DatabaseQB.getMethodCallRecorder(Account.class);
-    Hashtable<String, AccountImpl> accounts = where.asHashtable(account
+    Hashtable<String, Account> accounts = where.asHashtable(account
         .getLastName());
     assertMapResult(accounts);
   }
 
 
-  private void assertMapResult(
-      WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertMapResult(WhereClause<Account, DbSelectDataSource> where)
   {
     Account account = DatabaseQB.getMethodCallRecorder(Account.class);
-    Map<String, AccountImpl> accounts = where.asMap(account.getLastName());
+    Map<String, Account> accounts = where.asMap(account.getLastName());
     assertMapResult(accounts);
   }
 
 
-  private void assertMapResult(Map<String, AccountImpl> accounts)
+  private void assertMapResult(Map<String, Account> accounts)
   {
     assertEquals(DatabaseSetup.MAIER_ACCOUNT, accounts.get(MAIER));
     assertEquals(DatabaseSetup.HUBER_ACCOUNT, accounts.get(HUBER));
   }
 
 
-  private void assertSetResult(
-      WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertSetResult(WhereClause<Account, DbSelectDataSource> where)
   {
-    Set<AccountImpl> accounts = where.asSet();
+    Set<Account> accounts = where.asSet();
     assertEquals(2, accounts.size());
-    List<AccountImpl> accountList = new ArrayList<AccountImpl>(accounts);
+    List<Account> accountList = new ArrayList<Account>(accounts);
     assertListResult(accountList);
   }
 
 
-  private void assertVectorResult(
-      WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertVectorResult(WhereClause<Account, DbSelectDataSource> where)
   {
-    Vector<AccountImpl> accounts = where.asVector();
+    Vector<Account> accounts = where.asVector();
     assertListResult(accounts);
   }
 
 
-  private void assertListResult(
-      WhereClause<AccountImpl, DbSelectDataSource> where)
+  private void assertListResult(WhereClause<Account, DbSelectDataSource> where)
   {
-    List<AccountImpl> accounts = where.asList();
+    List<Account> accounts = where.asList();
     assertListResult(accounts);
   }
 
 
-  private void assertListResult(List<AccountImpl> accounts)
+  private void assertListResult(List<Account> accounts)
   {
     assertEquals(2, accounts.size());
     if (HUBER.equals(accounts.get(0).getLastName()))
@@ -156,12 +153,12 @@ public class BeanDatabaseQBTest extends TestCase
   }
 
 
-  private WhereCondition<AccountImpl> createWhereCondition(final double balance)
+  private WhereCondition<Account> createWhereCondition(final double balance)
   {
-    return new WhereCondition<AccountImpl>()
+    return new WhereCondition<Account>()
     {
 
-      public boolean evaluate(AccountImpl element)
+      public boolean evaluate(Account element)
       {
         return element.getBalance() > balance;
       }
@@ -182,7 +179,7 @@ public class BeanDatabaseQBTest extends TestCase
 
   public void testSelect_CustomCondition_OneMatch()
   {
-    WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
+    WhereCondition<Account> condition = createWhereCondition(3500.0);
     Account account = where.where(condition).uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);
@@ -191,7 +188,7 @@ public class BeanDatabaseQBTest extends TestCase
 
   public void testSelect_CustomCondition_NoMatch()
   {
-    WhereCondition<AccountImpl> condition = createWhereCondition(100000.0);
+    WhereCondition<Account> condition = createWhereCondition(100000.0);
     Account account = where.where(condition).uniqueResult();
     assertNull(account);
   }
@@ -219,7 +216,7 @@ public class BeanDatabaseQBTest extends TestCase
   public void testSelect_MixedConditions()
   {
     Account dummy = DatabaseQB.getMethodCallRecorder(Account.class);
-    WhereCondition<AccountImpl> condition = createWhereCondition(3500.0);
+    WhereCondition<Account> condition = createWhereCondition(3500.0);
 
     Account account = where.where(condition).andMethodCallResult(
         dummy.getCreditRating()).isEqual(CreditRating.GOOD).uniqueResult();
