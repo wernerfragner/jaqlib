@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.db.DbUtil;
+import org.jaqlib.util.DbUtil;
 
 /**
  * <p>

@@ -12,7 +12,7 @@ import org.easymock.EasyMock;
 import org.jaqlib.db.DbResultSet;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.Defaults;
-import org.jaqlib.util.db.DbUtil;
+import org.jaqlib.util.DbUtil;
 import org.jaqlib.util.db.DriverManagerDataSource;
 import org.jaqlib.util.db.SingleConnectionDataSource;
 

@@ -1,4 +1,4 @@
-package org.jaqlib.util.db;
+package org.jaqlib.util;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
