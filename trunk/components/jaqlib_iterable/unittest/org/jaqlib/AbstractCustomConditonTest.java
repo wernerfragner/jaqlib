@@ -2,7 +2,7 @@ package org.jaqlib;
 
 import java.util.List;
 
-import org.jaqlib.query.WhereCondition;
+import org.jaqlib.core.WhereCondition;
 
 public abstract class AbstractCustomConditonTest<AccountType extends Account>
     extends AbstractJaqLibTest<AccountType>

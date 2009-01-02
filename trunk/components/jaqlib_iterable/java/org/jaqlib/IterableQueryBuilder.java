@@ -15,12 +15,12 @@
  */
 package org.jaqlib;
 
+import org.jaqlib.core.AbstractQueryBuilder;
+import org.jaqlib.core.FromClause;
+import org.jaqlib.core.ReflectiveWhereCondition;
+import org.jaqlib.core.WhereClause;
+import org.jaqlib.core.WhereCondition;
 import org.jaqlib.iterable.IterableQuery;
-import org.jaqlib.query.AbstractQueryBuilder;
-import org.jaqlib.query.FromClause;
-import org.jaqlib.query.ReflectiveWhereCondition;
-import org.jaqlib.query.WhereClause;
-import org.jaqlib.query.WhereCondition;
 
 /**
  * <p>
@@ -43,7 +43,7 @@ import org.jaqlib.query.WhereCondition;
  * This class is thread-safe.
  * <p>
  * <b>Usage examples:</b><br>
- * <i>Example with method call recording:</i>
+ * <i>Example using the method call recording mechanism:</i>
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
@@ -54,7 +54,7 @@ import org.jaqlib.query.WhereCondition;
  *     account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
- * <i>Example with user-defined WHERE conditions:</i>
+ * <i>Example with custom WHERE conditions:</i>
  * 
  * <pre>
  * // create condition for negative balances
@@ -117,8 +117,8 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
    * should be used must be specified in the returned {@link FromClause}. The
    * {@link FromClause} hereby returns a {@link WhereClause} that can be used to
    * specify an arbitrary WHERE condition. This WHERE condition supports AND and
-   * OR connectors, the evaluation of user-defined {@link WhereCondition}s and
-   * user-defined {@link ReflectiveWhereCondition}s.
+   * OR connectors, the evaluation of custom {@link WhereCondition}s and custom
+   * {@link ReflectiveWhereCondition}s.
    * 
    * @param <T> the collection element type.
    * @param resultElementClass the class of the result elements. This class is

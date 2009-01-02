@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.query.ElementPredicate;
-import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.core.ElementPredicate;
+import org.jaqlib.core.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner
@@ -44,7 +44,7 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  public void addResults(Collection<T> result)
+  public void addResults(Collection<T> results)
   {
     try
     {
@@ -56,7 +56,7 @@ public abstract class AbstractFetchStrategy<T>
         final T element = extractElement(rs);
         if (shouldAddToResult(element))
         {
-          result.add(element);
+          results.add(element);
           stop = recordProcessed(element, true);
         }
         else
@@ -93,7 +93,7 @@ public abstract class AbstractFetchStrategy<T>
 
   private void handleSqlException(SQLException sqle)
   {
-    QueryDataSourceException e = new QueryDataSourceException(sqle);
+    DataSourceQueryException e = new DataSourceQueryException(sqle);
     e.setStackTrace(sqle.getStackTrace());
     throw e;
   }
@@ -111,7 +111,7 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  public <KeyType> void addResults(Map<KeyType, T> resultMap,
+  public <KeyType> void addResults(Map<KeyType, T> results,
       MethodInvocation invocation)
   {
     try
@@ -126,7 +126,7 @@ public abstract class AbstractFetchStrategy<T>
         {
           @SuppressWarnings("unchecked")
           final KeyType elementKey = (KeyType) getKey(element, invocation);
-          resultMap.put(elementKey, element);
+          results.put(elementKey, element);
 
           stop = recordProcessed(element, true);
         }

@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jaqlib.query.InvalidQueryResultException;
-import org.jaqlib.query.WhereCondition;
+import org.jaqlib.core.InvalidQueryResultException;
+import org.jaqlib.core.WhereCondition;
 
 /**
  * @author Werner Fragner
@@ -405,8 +405,8 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
 
 
   /**
-   * A user-defined condition and a reflective method call condition are
-   * combined together.
+   * A custom condition and a reflective method call condition are combined
+   * together.
    */
   public void testSelect_MixedConditions()
   {
@@ -424,8 +424,8 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
 
 
   /**
-   * A user-defined condition and a reflective method call condition are
-   * combined together.
+   * A custom condition and a reflective method call condition are combined
+   * together.
    */
   public void testSelect_MultipleMethodCallConditions()
   {
@@ -444,7 +444,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
 
 
   /**
-   * Two user-defined where conditions are given.
+   * Two custom WHERE conditions are given.
    */
   public void testSelect_TwoAndConditions()
   {

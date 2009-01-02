@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.jaqlib.query.ElementPredicate;
-import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.core.ElementPredicate;
+import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
 

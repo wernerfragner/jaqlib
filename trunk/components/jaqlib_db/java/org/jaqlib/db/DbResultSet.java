@@ -16,8 +16,7 @@ public class DbResultSet
 {
 
   public static final Object NO_RESULT = new Object();
-  private static final Logger LOG = Logger.getLogger(DbResultSet.class
-      .getName());
+  private final Logger LOG = Logger.getLogger(getClass().getName());
 
   private final SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
 

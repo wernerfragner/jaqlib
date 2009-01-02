@@ -15,12 +15,12 @@
  */
 package org.jaqlib;
 
+import org.jaqlib.core.FromClause;
+import org.jaqlib.core.WhereClause;
+import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.query.FromClause;
-import org.jaqlib.query.WhereClause;
-import org.jaqlib.query.WhereCondition;
 
 
 /**
@@ -87,8 +87,8 @@ public class DatabaseQB
    * {@link FromClause}. The {@link FromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
-   * evaluation of user-defined {@link WhereCondition}s and user-defined
-   * conditions using a method call recording mechanism (see examples and
+   * evaluation of custom {@link WhereCondition}s and custom conditions using a
+   * method call recording mechanism (see examples and
    * {@link #getMethodCallRecorder(Class)} for further details).
    * </p>
    * <p>
@@ -116,8 +116,8 @@ public class DatabaseQB
    * {@link FromClause}. The {@link FromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
-   * evaluation of user-defined {@link WhereCondition}s and user-defined
-   * conditions using a method call recording mechanism (see examples and
+   * evaluation of custom {@link WhereCondition}s and custom conditions using a
+   * method call recording mechanism (see examples and
    * {@link #getMethodCallRecorder(Class)} for further details).
    * </p>
    * <p>

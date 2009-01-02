@@ -3,10 +3,10 @@ package org.jaqlib.iterable;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.query.AbstractQuery;
-import org.jaqlib.query.FromClause;
-import org.jaqlib.reflect.MethodCallRecorder;
-import org.jaqlib.reflect.MethodInvocation;
+import org.jaqlib.core.AbstractQuery;
+import org.jaqlib.core.FromClause;
+import org.jaqlib.core.reflect.MethodCallRecorder;
+import org.jaqlib.core.reflect.MethodInvocation;
 
 /**
  * @author Werner Fragner

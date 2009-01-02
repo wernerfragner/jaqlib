@@ -23,6 +23,8 @@ public class JaqlibDbTests
     suite.addTestSuite(DefaultBeanFactoryTest.class);
     suite.addTestSuite(DefaultJavaTypeHandlerRegistryTest.class);
     suite.addTestSuite(DefaultSqlTypeHandlerRegistryTest.class);
+    suite.addTestSuite(DatabaseQueryCacheTest.class);
+    suite.addTestSuite(CachingFetchStrategyTest.class);
     // $JUnit-END$
     return suite;
   }
