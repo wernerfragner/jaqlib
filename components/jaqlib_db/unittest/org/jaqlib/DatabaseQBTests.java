@@ -13,8 +13,10 @@ public class DatabaseQBTests
 
   public static Test suite()
   {
-    // disable root logger
-    Logger.getLogger("").setLevel(Level.OFF);
+    // register unittest handler in order that log messages are built (-->
+    // detect possible problems with building log messages)
+    Logger.getLogger("org.jaqlib").addHandler(new UnittestHandler());
+    Logger.getLogger("org.jaqlib").setLevel(Level.ALL);
 
     TestSuite suite = new TestSuite("Test for org.jaqlib");
     // $JUnit-BEGIN$

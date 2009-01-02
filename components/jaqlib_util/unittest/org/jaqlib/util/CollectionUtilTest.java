@@ -22,7 +22,16 @@ public class CollectionUtilTest extends TestCase
   }
 
 
-  public void testToString_Null()
+  public void testToString_ObjectArray_Null()
+  {
+    Object[] arr = new Object[] { new Dummy(), new Dummy(), new Dummy() };
+
+    assertEquals("", CollectionUtil.toString((Object[]) null, ""));
+    assertEquals(STR + STR + STR, CollectionUtil.toString(arr, null));
+  }
+
+
+  public void testToString_Iterable_Null()
   {
     assertEquals("", CollectionUtil.toString((Iterable<?>) null, ""));
     assertEquals(STR + STR + STR, CollectionUtil.toString(list, null));

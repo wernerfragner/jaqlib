@@ -108,6 +108,12 @@ public class ReflectionUtilTest extends TestCase
   }
 
 
+  public void testGetPlainClassNameObject()
+  {
+    assertEquals("ReflectionUtilTest", ReflectionUtil.getPlainClassName(this));
+  }
+
+
   public void testGetPlainClassNameClass_Null()
   {
     try
@@ -118,6 +124,13 @@ public class ReflectionUtilTest extends TestCase
     catch (IllegalArgumentException e)
     {
     }
+  }
+
+
+  public void testGetPlainClassNameClass()
+  {
+    assertEquals("ReflectionUtilTest", ReflectionUtil
+        .getPlainClassName(getClass()));
   }
 
 
@@ -136,7 +149,7 @@ public class ReflectionUtilTest extends TestCase
 
   public void testGetPlainClassNameString()
   {
-    assertEquals("ReflectionUtilTest", ReflectionUtil.getPlainClassName(this));
+    assertEquals("SomeClass", ReflectionUtil.getPlainClassName("SomeClass"));
   }
 
 
