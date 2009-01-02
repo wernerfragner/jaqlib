@@ -1,0 +1,67 @@
+JaQLib supports all queries against objects that implement the <tt>Iterable</tt> interface. Here are some basic examples:
+
+<b>Example using the method call recording mechanism:</b>
+
+<pre>
+// create a 'dummy' object for recording a method call for the WHERE clause
+Account account = IterableQB.getMethodCallRecorder(Account.class);
+
+// select all accounts with a balance greater than 5000
+List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
+    account.getBalance()).isGreaterThan(5000).asList();
+</pre>
+
+<b>Example with custom WHERE conditions:</b>
+
+<pre>
+// create condition for negative balances
+WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;() {
+
+  public boolean evaluate(Account account) {
+    return (account.getBalance() &lt; 0);
+  }
+
+};
+
+// create condition for accounts with poor credit rating
+WhereCondition&lt;Account&gt; ratingCondition = new WhereCondition&lt;Account&gt;() {
+
+  public boolean evaluate(Account account) {
+    return (account.getCreditRating() == CreditRating.POOR);
+  }
+}
+
+// execute query with these conditions 
+List&lt;Account&gt; highRiskAccounts = IterableQB.select(Account.class).from(accounts)
+    .where(deptCondition).and(ratingCondition).asList();
+</pre>
+
+<b>Example for filtering out null elements:</b>
+
+<pre>
+List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
+    .where().element().isNotNull().asList();
+</pre>
+
+<b>Example for using <tt>Comparable</tt> elements:</b>
+
+<pre>
+// Account implements the Comparable interface; the balance field is used for comparing two accounts
+AccountImpl spec = new AccountImpl();
+account.setBalance(5000);
+
+List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where()
+    .element().isSmallerThan(spec).asList();
+</pre>
+
+<b>Example using a Map as result:</b>
+
+<pre>
+Account account = IterableQB.getMethodCallRecorder(Account.class);
+Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
+    .asMap(account.getId());
+</pre>
+
+
+----
+[[Main_Page]]

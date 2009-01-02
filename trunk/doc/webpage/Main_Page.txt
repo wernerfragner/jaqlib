@@ -1,0 +1,32 @@
+==Introduction==
+JaqLib (Java Query Library) is a compact Java library that supports programmers in querying all sorts of collections and databases in a compact and intuitive manner.
+
+<p>
+WHERE conditions can be specified by user defined implementations of the <tt>WhereCondition</tt> interface, by using the <tt>where().element()</tt> expression and by using a <b>method call recording mechanism</b> (see also the first
+example below). First the programmer must call the desired method on the
+returned proxy object. This method call is recorded by JaQLib. When
+evaluating the WHERE condition this method call is replayed on every element.
+The result of this method call is then evaluated against the specified
+condition.
+</p>
+
+<p>
+But examples are always better than some abstract descriptions. So lets start with some basic examples:
+</p> 
+
+* [[Iterable Queries]]
+* [[Database Queries]]
+
+
+==Usage Scenarios==
+* Selecting arbitrary elements from collections, maps, ... in everyday programming tasks.
+* Using the database query support for unit testing. E.g., when you want to read back previously inserted/updated/deleted data from database in order to check if the unittest worked correctly.
+* Using the database query support for simple applications that need a quick an easy way to select data from database (without the coding overhead of JDBC or OR-Mappers like [http://www.hibernate.org Hibernate], [http://www.oracle.com/technology/products/ias/toplink/index.html Oracle TopLink], [http://ibatis.apache.org iBatis], ...).
+
+
+==Links==
+* [https://sourceforge.net/projects/jaqlib/ JaQLib at SourceForge]
+* [https://sourceforge.net/news/?group_id=219830 JaQLib News]
+* [https://sourceforge.net/forum/?group_id=219830 JaQLib Forums]
+* [http://apps.sourceforge.net/mantisbt/jaqlib/main_page.php JaQLib BugTracker]
+* [http://jaqlib.sourceforge.net/javadoc/ JaQLib Javadoc]
