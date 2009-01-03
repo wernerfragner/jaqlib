@@ -18,6 +18,7 @@ package org.jaqlib;
 import org.jaqlib.core.FromClause;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
+import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
@@ -128,7 +129,10 @@ public class DatabaseQB
    * 
    * @param <T> the result bean type.
    * @param beanClass the desired result bean. This bean must provide a default
-   *          constructor (otherwise a {@link RuntimeException} is thrown).
+   *          constructor. If the bean does not provide one a custom
+   *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
+   *          This {@link BeanMapping} can be obtained from {@link Database} and
+   *          can be used with {@link #select(BeanMapping)}.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
@@ -142,7 +146,7 @@ public class DatabaseQB
    * This method basically provides the same functionality as
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between SELECT statement results to Java bean instance fields. This
-   * mapping can defined with a {@link BeanMapping} instance. For build these
+   * mapping can defined with a {@link BeanMapping} instance. For building these
    * instances see {@link Database}.
    * 
    * @param <T> the result bean type.

@@ -139,7 +139,7 @@ public class Database
    * setting the property <b>strictColumnCheck</b> to true. In that case a
    * {@link DataSourceQueryException} is thrown instead of issuing the INFO log
    * message. If no INFO log message should be issued then the JDK logger for
-   * <tt>org.jaqlib.dbDbResultSet</tt> must be disabled. How to do that is
+   * <tt>org.jaqlib.db.DbResultSet</tt> must be disabled. How to do that is
    * described at <a href=
    * "http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html">Java
    * Logging</a>.

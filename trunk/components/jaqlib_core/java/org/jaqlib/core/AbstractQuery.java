@@ -202,7 +202,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
     // check if only one result has been found
     if (setResult.size() > 1)
     {
-      throw new InvalidQueryResultException(
+      throw new QueryResultException(
           "There exist multiple results but only one is allowed. Results: "
               + getCommaSeparatedString(setResult));
     }

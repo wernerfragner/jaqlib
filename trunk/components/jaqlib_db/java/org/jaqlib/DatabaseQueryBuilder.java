@@ -21,6 +21,7 @@ import org.jaqlib.core.AbstractQueryBuilder;
 import org.jaqlib.core.FromClause;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
+import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DatabaseQuery;
@@ -58,8 +59,8 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  *     sql);
  * </pre>
  * 
- * or (if multiple SQL SELECT statements should be executed against the same
- * JDBC {@link DataSource}).
+ * or if multiple SQL SELECT statements should be executed against the same JDBC
+ * {@link DataSource}:
  * 
  * <pre>
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
@@ -131,13 +132,19 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * </p>
  * <p>
- * 
+ * <i>Example for custom java type handler:</i>
+ * <p>
  * Database column data types can be converted to custom Java types with
  * so-called {@link JavaTypeHandler}s. These handlers can be registered with
  * {@link BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)} .
  * </p>
  * <p>
- * <i>Example for custom java type handler:</i>
+ * The <tt>AccountImpl</tt> class has a <tt>creditRating</tt> field with the
+ * custom enumeration type <tt>CreditRating</tt>. At database this field is
+ * stored as an Integer value. By using a {@link JavaTypeHandler} this Integer
+ * value is converted into the according <tt>CreditRating</tt> enumeration
+ * value.
+ * </p>
  * 
  * <pre>
  * // get DbSelectDataSource and BeanMapping
@@ -259,7 +266,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * 
    * @param <T> the result bean type.
    * @param beanClass the desired result bean. This bean must provide a default
-   *          constructor (otherwise a {@link RuntimeException} is thrown).
+   *          constructor. If the bean does not provide one a custom
+   *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
+   *          This {@link BeanMapping} can be obtained from {@link Database} and
+   *          can be used with {@link #select(BeanMapping)}.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
@@ -275,7 +285,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * This method basically provides the same functionality as
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between SELECT statement results to Java bean instance fields. This
-   * mapping can defined with a {@link BeanMapping} instance. For build these
+   * mapping can defined with a {@link BeanMapping} instance. For building these
    * instances see {@link Database}.
    * 
    * @param <T> the result bean type.
