@@ -28,10 +28,6 @@
 	<property name="instrumented.dir" value="${build.temp}/bin_instrumented" />
 	<property name="vendor.base" value="${build.base}/vendor" />
 	
-	<property name="jaqlib_main.base" value="${build.source}/jaqlib_main" />
-	<property name="jaqlib_main.source" value="${jaqlib_main.base}/java" />
-	<property name="jaqlib_main.unittest" value="${jaqlib_main.base}/unittest" />	
-	
 	<property name="jaqlib_core.base" value="${build.source}/jaqlib_core" />
 	<property name="jaqlib_core.source" value="${jaqlib_core.base}/java" />
 	<property name="jaqlib_core.unittest" value="${jaqlib_core.base}/unittest" />
@@ -165,9 +161,6 @@
 	  <antcall target="compile_component" >
 	    <param name="component.name" value="jaqlib_db" />
 	  </antcall>		
-		<antcall target="compile_component" >
-			<param name="component.name" value="jaqlib_main" />
-		</antcall>
 	</target>
 	
 		
@@ -179,7 +172,6 @@
 			<sourcepath path="${jaqlib_core.source}" />
 			<sourcepath path="${jaqlib_iterable.source}" />
 			<sourcepath path="${jaqlib_db.source}" />
-			<sourcepath path="${jaqlib_main.source}" />
 		</javadoc>
 	</target>
 	
@@ -197,9 +189,6 @@
 	  <antcall target="compile_unittestcomponent" >
 	    <param name="component.name" value="jaqlib_db" />
 	  </antcall>		
-		<antcall target="compile_unittestcomponent" >
-			<param name="component.name" value="jaqlib_main" />
-		</antcall>
 	</target>
 
 		
@@ -288,14 +277,12 @@
 			<fileset dir="${jaqlib_core.source}" />
 			<fileset dir="${jaqlib_iterable.source}" />
 			<fileset dir="${jaqlib_db.source}" />
-			<fileset dir="${jaqlib_main.source}" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-unittest.zip" >
 			<fileset dir="${jaqlib_util.unittest}" />
 			<fileset dir="${jaqlib_core.unittest}" />
 			<fileset dir="${jaqlib_iterable.unittest}" />
 			<fileset dir="${jaqlib_db.unittest}" />
-			<fileset dir="${jaqlib_main.unittest}" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-doc.zip" basedir="${build.temp}/javadoc/jaqlib" />
 	</target>
