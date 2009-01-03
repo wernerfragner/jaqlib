@@ -102,7 +102,7 @@ public class IterableQB
    * 
    * @return the FROM clause to specify the source collection of the query.
    */
-  public static FromClause<Object, Iterable<Object>> select()
+  public static FromClause<?, Iterable<?>> select()
   {
     return QUERYBUILDER.select();
   }

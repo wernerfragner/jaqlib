@@ -46,7 +46,7 @@ import org.jaqlib.iterable.IterableQuery;
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
- * Account account = IterableQB.getMethodCallRecorder(Account.class);
+ * Account account = IterableQB.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
  * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
@@ -99,7 +99,7 @@ import org.jaqlib.iterable.IterableQuery;
  * <i>Example using a Map as result:</i>
  * 
  * <pre>
- * Account account = IterableQB.getMethodCallRecorder(Account.class);
+ * Account account = IterableQB.getRecorder(Account.class);
  * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
  *     .asMap(account.getId());
  * </pre>
@@ -172,9 +172,13 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
    * 
    * @return the FROM clause to specify the source collection of the query.
    */
-  public FromClause<Object, Iterable<Object>> select()
+  @SuppressWarnings("unchecked")
+  public FromClause<?, Iterable<?>> select()
   {
-    return createQuery().createFromClause(Object.class);
+    // assign return value to raw type of FromClause; otherwise returning
+    // FromClause<?, Iterable<?>> would not be possible
+    FromClause clause = createQuery().createFromClause(Object.class);
+    return clause;
   }
 
 

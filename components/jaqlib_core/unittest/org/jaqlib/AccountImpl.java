@@ -14,6 +14,7 @@ public class AccountImpl implements Account
   private Double balance = 0.0;
   private CreditRating creditRating = CreditRating.POOR;
 
+  private boolean active = true;
   private boolean changed = false;
 
 
@@ -114,6 +115,18 @@ public class AccountImpl implements Account
   public void sendInfoEmail()
   {
     // send email to account holder
+  }
+
+
+  public void setActive(boolean active)
+  {
+    this.active = active;
+  }
+
+
+  public boolean isActive()
+  {
+    return active;
   }
 
 }

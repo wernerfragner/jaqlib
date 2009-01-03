@@ -71,7 +71,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
- * Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+ * Account account = DatabaseQB.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
  * List&lt;AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(accounts)
@@ -124,7 +124,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * <i>Example using a Map as result:</i>
  * 
  * <pre>
- * Account account = QB.getMethodCallRecorder(Account.class);
+ * Account account = DatabaseQB.getRecorder(Account.class);
  * Map&lt;Long, AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).asMap(account.getId());
  * </pre>

@@ -23,4 +23,10 @@ public interface Account extends Comparable<Account>
 
   void sendInfoEmail();
 
+
+  void setActive(boolean active);
+
+
+  boolean isActive();
+
 }

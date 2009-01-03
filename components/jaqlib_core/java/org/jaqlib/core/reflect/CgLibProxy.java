@@ -2,12 +2,12 @@ package org.jaqlib.core.reflect;
 
 import java.lang.reflect.InvocationHandler;
 
-import org.jaqlib.util.Assert;
-import org.jaqlib.util.ReflectionUtil;
-
 import net.sf.cglib.proxy.Callback;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.transform.impl.UndeclaredThrowableStrategy;
+
+import org.jaqlib.util.Assert;
+import org.jaqlib.util.ReflectionUtil;
 
 /**
  * @author Werner Fragner
@@ -40,10 +40,10 @@ public class CgLibProxy<T>
     enhancer.setInterceptDuringConstruction(false);
 
     Callback[] callbacks = new Callback[] { new CgLibInvocationHandlerAdapter(
-        invocationHandler)};
+        invocationHandler) };
     enhancer.setCallbacks(callbacks);
 
-    Class<?> types[] = new Class[] { net.sf.cglib.proxy.InvocationHandler.class};
+    Class<?> types[] = new Class[] { net.sf.cglib.proxy.InvocationHandler.class };
     enhancer.setCallbackTypes(types);
 
     return (T) enhancer.create();
