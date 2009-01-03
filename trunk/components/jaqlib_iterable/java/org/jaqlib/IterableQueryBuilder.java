@@ -49,8 +49,8 @@ import org.jaqlib.iterable.IterableQuery;
  * Account account = IterableQB.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
- *     account.getBalance()).isGreaterThan(5000).asList();
+ * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts)
+ *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
  * <i>Example with custom WHERE conditions:</i>
