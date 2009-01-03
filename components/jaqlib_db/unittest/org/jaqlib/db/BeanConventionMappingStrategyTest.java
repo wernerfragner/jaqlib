@@ -42,12 +42,13 @@ public class BeanConventionMappingStrategyTest extends TestCase
     mapping.setMappingStrategy(strategy);
 
     List<String> results = getResults(mapping);
-    assertEquals(5, results.size());
+    assertEquals(6, results.size());
     assertTrue(results.contains("id"));
     assertTrue(results.contains("lastName"));
     assertTrue(results.contains("firstName"));
     assertTrue(results.contains("balance"));
     assertTrue(results.contains("creditRating"));
+    assertTrue(results.contains("active"));
   }
 
 
