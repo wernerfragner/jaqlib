@@ -75,7 +75,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * // select all accounts with a balance greater than 5000
  * List&lt;AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(accounts)
- *     .where(account.getBalance()).isGreaterThan(5000).asList();
+ *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
  * <i>Example with custom WHERE conditions:</i>
