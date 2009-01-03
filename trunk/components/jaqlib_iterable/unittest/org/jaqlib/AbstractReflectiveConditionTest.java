@@ -15,7 +15,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface.getLastName()).isEqual("maier").asList();
+        .whereCall(testInterface.getLastName()).isEqual("maier").asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));
@@ -30,7 +30,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface).isGreaterThan(element).asList();
+        .whereCall(testInterface).isGreaterThan(element).asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));
@@ -45,7 +45,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface).isGreaterThanOrEqualTo(element).asList();
+        .whereCall(testInterface).isGreaterThanOrEqualTo(element).asList();
     assertNotNull(results);
     assertEquals(2, results.size());
     assertSame(elements.get(1), results.get(0));
@@ -61,7 +61,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface).isSmallerThan(element).asList();
+        .whereCall(testInterface).isSmallerThan(element).asList();
     assertNotNull(results);
     assertEquals(2, results.size());
     assertSame(elements.get(0), results.get(0));
@@ -77,7 +77,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface).isSmallerThanOrEqualTo(element).asList();
+        .whereCall(testInterface).isSmallerThanOrEqualTo(element).asList();
     assertNotNull(results);
     assertEquals(3, results.size());
     assertSame(elements.get(0), results.get(0));
@@ -95,7 +95,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface.getLastName()).isNull().asList();
+        .whereCall(testInterface.getLastName()).isNull().asList();
     assertNotNull(results);
     assertEquals(2, results.size());
     assertSame(elements.get(2), results.get(0));
@@ -112,7 +112,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface).isNull().asList();
+        .whereCall(testInterface).isNull().asList();
     assertNotNull(results);
     assertEquals(2, results.size());
     assertSame(elements.get(3), results.get(0));
@@ -129,7 +129,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface.getLastName()).isNotNull().asList();
+        .whereCall(testInterface.getLastName()).isNotNull().asList();
     assertNotNull(results);
     assertEquals(2, results.size());
     assertSame(elements.get(0), results.get(0));
@@ -146,7 +146,7 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
 
     AccountType testInterface = IterableQB.getRecorder(getAccountClass());
     List<AccountType> results = IterableQB.select(getAccountClass()).from(elements)
-        .where(testInterface).isNotNull().asList();
+        .whereCall(testInterface).isNotNull().asList();
     assertNotNull(results);
     assertEquals(4, results.size());
     assertSame(elements.get(0), results.get(0));

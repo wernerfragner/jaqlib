@@ -197,7 +197,7 @@ public class BeanDatabaseQBTest extends TestCase
   public void testSelect_MethodCallCondition_OneMatch()
   {
     Account dummy = DatabaseQB.getRecorder(Account.class);
-    Account account = where.where(dummy.getBalance()).isGreaterThan(3500.0)
+    Account account = where.whereCall(dummy.getBalance()).isGreaterThan(3500.0)
         .uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);
@@ -207,7 +207,7 @@ public class BeanDatabaseQBTest extends TestCase
   public void testSelect_MethodCallCondition_NoMatch()
   {
     Account dummy = DatabaseQB.getRecorder(Account.class);
-    Account account = where.where(dummy.getBalance()).isGreaterThan(100000.0)
+    Account account = where.whereCall(dummy.getBalance()).isGreaterThan(100000.0)
         .uniqueResult();
     assertNull(account);
   }

@@ -41,7 +41,9 @@ public class RecordingInvocationHandler implements MethodCallRecorder,
     }
 
     methodInvocations.add(new MethodInvocation(method, methodArgs));
-    return null;
+
+    // return default instance (needed for CGLib when unboxing types)
+    return StandardValueObjectFactory.newInstance(method.getReturnType());
   }
 
 

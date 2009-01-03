@@ -42,7 +42,8 @@ public class WhereClause<T, DataSourceType> extends
    *          only needed for type safety. The object itself is not used.
    * @return an object to specify the condition.
    */
-  public <R> ComparableWhereCondition<T, DataSourceType, R> where(R evalResult)
+  public <R> ComparableWhereCondition<T, DataSourceType, R> whereCall(
+      R evalResult)
   {
     return getQuery().addReflectiveWhereCondition();
   }
@@ -58,7 +59,7 @@ public class WhereClause<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public <R> QueryResult<T, DataSourceType> whereIsTrue(boolean evalResult)
+  public <R> QueryResult<T, DataSourceType> whereCallIsTrue(Boolean evalResult)
   {
     return getQuery().addReflectiveWhereCondition().isEqual(true);
   }
@@ -74,7 +75,7 @@ public class WhereClause<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public <R> QueryResult<T, DataSourceType> whereIsFalse(boolean evalResult)
+  public <R> QueryResult<T, DataSourceType> whereCallIsFalse(Boolean evalResult)
   {
     return getQuery().addReflectiveWhereCondition().isEqual(false);
   }

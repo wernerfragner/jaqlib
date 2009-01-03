@@ -67,7 +67,7 @@ public class QueryResult<T, DataSourceType> extends
    * <b>Example:</b>
    * 
    * <pre>
-   * Account account = IterableQB.getMethodCallRecorder(Account.class);
+   * Account account = IterableQB.getRecorder(Account.class);
    * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
    *     .asMap(account.getId());
    * </pre>
@@ -252,7 +252,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public <R> QueryResult<T, DataSourceType> orCallIsTrue(boolean evalResult)
+  public <R> QueryResult<T, DataSourceType> orCallIsTrue(Boolean evalResult)
   {
     return getQuery().addReflectiveWhereCondition().isEqual(true);
   }
@@ -268,7 +268,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public <R> QueryResult<T, DataSourceType> orCallIsFalse(boolean evalResult)
+  public <R> QueryResult<T, DataSourceType> orCallIsFalse(Boolean evalResult)
   {
     return getQuery().addReflectiveWhereCondition().isEqual(false);
   }
@@ -284,7 +284,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public <R> QueryResult<T, DataSourceType> andCallIsTrue(boolean evalResult)
+  public <R> QueryResult<T, DataSourceType> andCallIsTrue(Boolean evalResult)
   {
     return getQuery().addReflectiveWhereCondition().isEqual(true);
   }
@@ -300,7 +300,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public <R> QueryResult<T, DataSourceType> andCallIsFalse(boolean evalResult)
+  public <R> QueryResult<T, DataSourceType> andCallIsFalse(Boolean evalResult)
   {
     return getQuery().addReflectiveWhereCondition().isEqual(false);
   }
