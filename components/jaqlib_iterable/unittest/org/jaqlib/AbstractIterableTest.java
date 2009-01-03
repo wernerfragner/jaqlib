@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jaqlib.core.InvalidQueryResultException;
+import org.jaqlib.core.QueryResultException;
 import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereCondition;
 
@@ -356,9 +356,9 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
     {
       IterableQB.select(getAccountClass()).from(elements).whereCall(
           account.getBalance()).isEqual(10.0).uniqueResult();
-      fail("Did not throw InvalidQueryResultException");
+      fail("Did not throw QueryResultException");
     }
-    catch (InvalidQueryResultException e)
+    catch (QueryResultException e)
     {
     }
   }

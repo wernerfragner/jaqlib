@@ -100,10 +100,10 @@ public class QueryResult<T, DataSourceType> extends
 
   /**
    * @return the unique result of the query. If more than one element matches
-   *         the query then an {@link InvalidQueryResultException} is thrown.
+   *         the query then an {@link QueryResultException} is thrown.
    *         Returns null if no match has been found.
    * 
-   * @throws InvalidQueryResultException if the query matches more than one
+   * @throws QueryResultException if the query matches more than one
    *           element.
    */
   public T uniqueResult()
@@ -134,6 +134,11 @@ public class QueryResult<T, DataSourceType> extends
 
   /**
    * Executes the given task for each element in the data source.
+   * <p>
+   * <b>The task is executed when the result of the query is requested (using
+   * {@link #asList()}, {@link #uniqueResult()}, ...). If no result is needed
+   * then {@link #execute(Task)} should be used.</b>
+   * </p>
    * 
    * @param task the not null task to be executed.
    * @return an object to retrieve the result of the query or to add more WHERE

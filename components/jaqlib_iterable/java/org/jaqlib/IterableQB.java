@@ -16,7 +16,6 @@
 package org.jaqlib;
 
 import org.jaqlib.core.FromClause;
-import org.jaqlib.core.ReflectiveWhereCondition;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 
@@ -82,7 +81,8 @@ public class IterableQB
    * {@link FromClause} hereby returns a {@link WhereClause} that can be used to
    * specify an arbitrary WHERE condition. This WHERE condition supports AND and
    * OR connectors, the evaluation of custom {@link WhereCondition}s and custom
-   * {@link ReflectiveWhereCondition}s.
+   * conditions using a method call recording mechanism (see examples and
+   * {@link #getRecorder(Class)} for further details).
    * 
    * @param <T> the collection element type.
    * @param resultElementClass the class of the result elements. This class is
