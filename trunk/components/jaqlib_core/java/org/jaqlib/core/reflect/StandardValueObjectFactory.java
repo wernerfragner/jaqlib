@@ -1,8 +1,5 @@
 package org.jaqlib.core.reflect;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Werner Fragner
@@ -34,7 +31,7 @@ public class StandardValueObjectFactory
     }
     else if (clazz == Double.class || clazz == Double.TYPE)
     {
-      return Double.valueOf(0.0);
+      return Double.valueOf(0.0d);
     }
     else if (clazz == Float.class || clazz == Float.TYPE)
     {
@@ -42,27 +39,11 @@ public class StandardValueObjectFactory
     }
     else if (clazz == Byte.class || clazz == Byte.TYPE)
     {
-      return Byte.valueOf("");
-    }
-    else if (clazz == String.class)
-    {
-      return String.valueOf("");
+      return Byte.valueOf((byte) 0);
     }
     else if (clazz == Character.class || clazz == Character.TYPE)
     {
-      return Character.valueOf(' ');
-    }
-    else if (clazz == AtomicInteger.class)
-    {
-      return new AtomicInteger(0);
-    }
-    else if (clazz == AtomicInteger.class)
-    {
-      return new AtomicLong(0);
-    }
-    else if (clazz == AtomicBoolean.class)
-    {
-      return new AtomicBoolean(false);
+      return Character.valueOf('\u0000');
     }
     else
     {
