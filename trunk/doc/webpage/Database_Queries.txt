@@ -38,18 +38,18 @@ Database db = new Database(getJdbcDataSource());
 DbSelectDataSource accounts = db.getSelectDataSource(sql);
 </pre>
 
-<b>Example using the method call recording mechanism:</b>
+===Method call recording mechanism===
 
 <pre>
 // create a 'dummy' object for recording a method call for the WHERE clause
-Account account = DatabaseQB.getMethodCallRecorder(Account.class);
+Account account = DatabaseQB.getRecorder(Account.class);
 
 // select all accounts with a balance greater than 5000
 List&lt;AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(accounts)
-    .where(account.getBalance()).isGreaterThan(5000).asList();
+    .whereCall(account.getBalance()).isGreaterThan(5000).asList();
 </pre>
 
-<b>Example with custom WHERE conditions:</b>
+===Custom WHERE conditions===
 
 <pre>
 // create condition for negative balances
@@ -74,14 +74,14 @@ List&lt;AccountImpl&gt; highRiskAccounts = DatabaseQB.select(AccountImpl.class).
     .where(deptCondition).and(ratingCondition).asList();
 </pre>
 
-<b>Example for filtering out null elements:</b>
+===Filtering out null elements===
 
 <pre>
 List&lt;AccountImpl&gt; notNullAccounts = DatabaseQB.select(AccountImpl.class).from(
     accounts).where().element().isNotNull().asList();
 </pre>
 
-<b>Example for using <tt>Comparable</tt> elements:</b>
+===Filtering <tt>Comparable</tt> elements===
 
 <pre>
 // Account implements the Comparable interface; the balance field is used for comparing two accounts
@@ -92,16 +92,16 @@ List&lt;AccountImpl&gt; result = DatabaseQB.select(AccountImpl.class).from(accou
     .where().element().isSmallerThan(spec).asList();
 </pre>
 
-<b>Example using a Map as result:</b>
+===Map results===
 
 <pre>
-Account account = QB.getMethodCallRecorder(Account.class);
+Account account = QB.getRecorder(Account.class);
 Map&lt;Long, AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(
     accounts).asMap(account.getId());
 </pre>
 
 
-<b>Examples with executing a task on each element:</b>
+===Executing a task on each element===
 
 <pre>
 // create task that should be executed for each element
@@ -137,13 +137,14 @@ List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).whe
     deptCond).executeWithResult(task).asList();
 </pre>
 
+===Custom Java type handlers===
 <p>
-Database column data types can be converted to custom Java types with
-so-called <tt>JavaTypeHandler</tt>s. These handlers can be registered with
-<tt>BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)</tt> .
+Database column data types can be converted to custom Java types with so-called <tt>JavaTypeHandler</tt>s. These handlers can be registered with <tt>BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)</tt> .
 </p>
-
-<b>Example for custom Java type handler:</b>
+<p>
+The <tt>AccountImpl</tt> class has a <tt>creditRating</tt> field with the custom enumeration type <tt>CreditRating</tt>. At database this field is stored as an Integer value. By using a <tt>JavaTypeHandler</tt> this Integer
+value is converted into the according <tt>CreditRating</tt> enumeration value.
+</p>
 
 <pre>
 // get DbSelectDataSource and BeanMapping

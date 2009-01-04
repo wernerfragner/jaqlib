@@ -1,34 +1,32 @@
 Java Query Library (JaqLib)
 ---------------------------
-Copyright 2008 Werner Fragner
+Copyright 2009 Werner Fragner
 
 
-jaqlib-1.0beta1
+Dependencies:
+-------------
+
+JaQLib optionally requires CgLib to proxy classes for the method call recording mechanism. 
+JaQLib was tested with CgLib 2.1_3 (http://downloads.sourceforge.net/cglib/cglib-nodep-2.1_3.jar).
+
+For executing the JaQLib unittests EasyMock (http://www.easymock.org) and 
+Apache Derby (http://db.apache.org/derby/) must be on the unittest classpath.
+
+
+jaqlib-1.0
 ----------
-database query support:
-- bean factory
-- mapping strategy
-- strict column check
-- java type handler
-- SQL type handler
-- column select
-- bean select
-- Defaults
+Database query support:
+- Selecting sinlge database table columns
+- Selecting database tables into Java beans
+- Customizable mapping strategies for mapping SQL SELECT statement results to Java beans
+- Customizable creation of Java bean for the SQL SELECT statement results
+- Support for custom Java type handlers: converting database data types to Java types
+- Support for custom SQL type handlers: customize the extraction of database data via JDBC ResultSet
+- Defining application defaults for JaQLib using org.jaqlib.db.Defaults
 
-iterable query support:
-- conditions on single elements
-- conditions on comparable elements
-- conditions with method call recording mechanism
-- custom conditions
+Iterable query support:
+- Conditions on single elements
+- Conditions on comparable elements
+- Conditions with method call recording mechanism
+- Custom conditions
 
-
-jaqlib-0.9
-----------
-
-JaqLib supports quering collections that implement the 'java.lang.Iterable' interface out of the box.
-Other sources that should be queried can be integrated into the library by implementing an own
-'org.jaqlib.query.QueryBuilder'.
-Where conditions can be defined by using a method call recording mechanism. This mechanism uses dynamic
-proxies for recording method calls. Because dynamic proxies can only be applied to interfaces the
-open source library CgLib can be optionally used to proxy classes. This release was tested with
-CgLib 2.1_3 (http://downloads.sourceforge.net/cglib/cglib-nodep-2.1_3.jar).
