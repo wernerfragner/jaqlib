@@ -1,17 +1,17 @@
 JaQLib supports all queries against objects that implement the <tt>Iterable</tt> interface. Here are some basic examples:
 
-<b>Example using the method call recording mechanism:</b>
+===Method call recording mechanism===
 
 <pre>
 // create a 'dummy' object for recording a method call for the WHERE clause
-Account account = IterableQB.getMethodCallRecorder(Account.class);
+Account account = IterableQB.getRecorder(Account.class);
 
 // select all accounts with a balance greater than 5000
-List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
+List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).whereCall(
     account.getBalance()).isGreaterThan(5000).asList();
 </pre>
 
-<b>Example with custom WHERE conditions:</b>
+===Custom WHERE conditions===
 
 <pre>
 // create condition for negative balances
@@ -36,14 +36,14 @@ List&lt;Account&gt; highRiskAccounts = IterableQB.select(Account.class).from(acc
     .where(deptCondition).and(ratingCondition).asList();
 </pre>
 
-<b>Example for filtering out null elements:</b>
+===Filtering out null elements===
 
 <pre>
 List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
     .where().element().isNotNull().asList();
 </pre>
 
-<b>Example for using <tt>Comparable</tt> elements:</b>
+===Filtering <tt>Comparable</tt> elements===
 
 <pre>
 // Account implements the Comparable interface; the balance field is used for comparing two accounts
@@ -54,15 +54,15 @@ List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).whe
     .element().isSmallerThan(spec).asList();
 </pre>
 
-<b>Example using a Map as result:</b>
+===Map results===
 
 <pre>
-Account account = IterableQB.getMethodCallRecorder(Account.class);
+Account account = IterableQB.getRecorder(Account.class);
 Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
     .asMap(account.getId());
 </pre>
 
-<b>Examples with executing a task on each element:</b>
+===Executing a task on each element===
 
 <pre>
 // create task that should be executed for each element
