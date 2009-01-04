@@ -46,9 +46,9 @@ public class IterableQB
   }
 
   /**
-   * Singleton instance.
+   * Holds singleton instances per thread.
    */
-  private static final IterableQueryBuilder QUERYBUILDER = new IterableQueryBuilder();
+  private static final ThreadLocal<IterableQueryBuilder> QUERYBUILDER = new ThreadLocal<IterableQueryBuilder>();
 
 
   /**
@@ -59,7 +59,7 @@ public class IterableQB
    */
   public static void setClassLoader(ClassLoader classLoader)
   {
-    QUERYBUILDER.setClassLoader(classLoader);
+    getQueryBuilder().setClassLoader(classLoader);
   }
 
 
@@ -71,7 +71,7 @@ public class IterableQB
    */
   public static <T> T getRecorder(Class<T> resultElementClass)
   {
-    return QUERYBUILDER.getRecorder(resultElementClass);
+    return getQueryBuilder().getRecorder(resultElementClass);
   }
 
 
@@ -92,7 +92,7 @@ public class IterableQB
   public static <T> FromClause<T, Iterable<T>> select(
       Class<T> resultElementClass)
   {
-    return QUERYBUILDER.select(resultElementClass);
+    return getQueryBuilder().select(resultElementClass);
   }
 
 
@@ -104,8 +104,19 @@ public class IterableQB
    */
   public static FromClause<?, Iterable<?>> select()
   {
-    return QUERYBUILDER.select();
+    return getQueryBuilder().select();
   }
 
+
+  private static IterableQueryBuilder getQueryBuilder()
+  {
+    IterableQueryBuilder queryBuilder = QUERYBUILDER.get();
+    if (queryBuilder == null)
+    {
+      queryBuilder = new IterableQueryBuilder();
+      QUERYBUILDER.set(queryBuilder);
+    }
+    return queryBuilder;
+  }
 
 }

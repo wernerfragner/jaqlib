@@ -51,9 +51,9 @@ public class DatabaseQB
   }
 
   /**
-   * Singleton instance.
+   * Holds singleton instances per thread.
    */
-  private static final DatabaseQueryBuilder QUERYBUILDER = new DatabaseQueryBuilder();
+  private static final ThreadLocal<DatabaseQueryBuilder> QUERYBUILDER = new ThreadLocal<DatabaseQueryBuilder>();
 
 
   /**
@@ -64,7 +64,7 @@ public class DatabaseQB
    */
   public static void setClassLoader(ClassLoader classLoader)
   {
-    QUERYBUILDER.setClassLoader(classLoader);
+    getQueryBuilder().setClassLoader(classLoader);
   }
 
 
@@ -77,7 +77,7 @@ public class DatabaseQB
    */
   public static <T> T getRecorder(Class<T> beanClass)
   {
-    return QUERYBUILDER.getRecorder(beanClass);
+    return getQueryBuilder().getRecorder(beanClass);
   }
 
 
@@ -106,7 +106,7 @@ public class DatabaseQB
   public static <T> FromClause<T, DbSelectDataSource> select(
       ColumnMapping<T> column)
   {
-    return QUERYBUILDER.select(column);
+    return getQueryBuilder().select(column);
   }
 
 
@@ -138,7 +138,7 @@ public class DatabaseQB
    */
   public static <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
   {
-    return QUERYBUILDER.select(beanClass);
+    return getQueryBuilder().select(beanClass);
   }
 
 
@@ -158,7 +158,19 @@ public class DatabaseQB
   public static <T> FromClause<T, DbSelectDataSource> select(
       BeanMapping<T> resultDefinition)
   {
-    return QUERYBUILDER.select(resultDefinition);
+    return getQueryBuilder().select(resultDefinition);
+  }
+
+
+  private static DatabaseQueryBuilder getQueryBuilder()
+  {
+    DatabaseQueryBuilder queryBuilder = QUERYBUILDER.get();
+    if (queryBuilder == null)
+    {
+      queryBuilder = new DatabaseQueryBuilder();
+      QUERYBUILDER.set(queryBuilder);
+    }
+    return queryBuilder;
   }
 
 }
