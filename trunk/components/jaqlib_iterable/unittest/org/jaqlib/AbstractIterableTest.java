@@ -532,6 +532,66 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   }
 
 
+  public void testSelect_Concurrent() throws InterruptedException
+  {
+    ConcurrentRunnable r1 = new ConcurrentRunnable();
+    ConcurrentRunnable r2 = new ConcurrentRunnable();
+
+    Thread t1 = new Thread(r1);
+    t1.setDaemon(true);
+    t1.start();
+
+    Thread t2 = new Thread(r2);
+    t2.setDaemon(true);
+    t2.start();
+
+    t1.join();
+    t2.join();
+
+    assertNull(r1.getFailureMessage(), r1.getThrowable());
+  }
+
+
+  private class ConcurrentRunnable implements Runnable
+  {
+
+    private Throwable t;
+
+
+    public void run()
+    {
+      try
+      {
+        List<AccountType> elements = createTestAccounts();
+        AccountType dummy = IterableQB.getRecorder(getAccountClass());
+
+        IterableQB.select(getAccountClass()).from(elements).whereCallIsTrue(
+            dummy.isActive()).asList();
+      }
+      catch (Throwable t)
+      {
+        this.t = t;
+      }
+    }
+
+
+    public String getFailureMessage()
+    {
+      if (t != null)
+      {
+        return "Runnable threw exception: " + t;
+      }
+      return "Test successfull";
+    }
+
+
+    public Throwable getThrowable()
+    {
+      return t;
+    }
+  }
+
+
   private static class MockTask<AccountType> implements Task<AccountType>
   {
 

@@ -31,17 +31,14 @@ public abstract class AbstractQueryBuilder
 
 
   /**
-   * Initializes this class with the a default class loader.
-   */
-  public AbstractQueryBuilder()
-  {
-    classLoader.set(getClass().getClassLoader());
-  }
-
-
-  /**
    * Sets a user-defined classloader that is used when creating proxy classes
    * using the {@link #getRecorder(Class)} method.
+   * <p>
+   * NOTE: This method sets the classloader for the <b>current</b> thread. If
+   * this class is used by multiple threads then the classloader must be set for
+   * each thread that uses this class. Otherwise the classloader of this class
+   * is used.
+   * </p>
    * 
    * @param classLoader a not null class loader.
    */
@@ -49,6 +46,20 @@ public abstract class AbstractQueryBuilder
   {
     Assert.notNull(classLoader);
     this.classLoader.set(classLoader);
+  }
+
+
+  private ClassLoader getClassLoader()
+  {
+    ClassLoader classLoader = this.classLoader.get();
+    if (classLoader == null)
+    {
+      return getClass().getClassLoader();
+    }
+    else
+    {
+      return classLoader;
+    }
   }
 
 
@@ -70,9 +81,10 @@ public abstract class AbstractQueryBuilder
    */
   public <T> T getRecorder(Class<T> resultElementClass)
   {
-    RecordingProxy<T> proxy = new RecordingProxy<T>(classLoader.get());
+    RecordingProxy<T> proxy = new RecordingProxy<T>(getClassLoader());
     methodCallRecorder.set(proxy.getMethodCallRecorder());
     return proxy.getProxy(resultElementClass);
   }
+
 
 }
