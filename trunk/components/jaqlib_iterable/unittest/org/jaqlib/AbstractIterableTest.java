@@ -451,6 +451,23 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
   }
 
 
+  public void testSelect_MultipleBooleanMethodCallConditions()
+  {
+    List<AccountType> elements = createTestAccounts();
+    elements.get(0).setActive(false);
+
+    Account dummy = IterableQB.getRecorder(Account.class);
+
+    assertEquals(6, elements.size());
+
+    List<AccountType> results = IterableQB.select(getAccountClass()).from(
+        elements).whereCallIsTrue(dummy.isActive()).andCallIsTrue(
+        dummy.isActive()).asList();
+
+    assertEquals(3, results.size());
+  }
+
+
   /**
    * Two custom WHERE conditions are given.
    */
