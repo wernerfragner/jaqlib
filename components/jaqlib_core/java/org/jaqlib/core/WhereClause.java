@@ -29,7 +29,7 @@ public class WhereClause<T, DataSourceType> extends
    */
   public <R> SingleElementWhereCondition<T, DataSourceType, R> where()
   {
-    return getQuery().addSimpleWhereCondition();
+    return getQuery().addSimpleAndWhereCondition();
   }
 
 
@@ -45,7 +45,7 @@ public class WhereClause<T, DataSourceType> extends
   public <R> ComparableWhereCondition<T, DataSourceType, R> whereCall(
       R evalResult)
   {
-    return getQuery().addReflectiveWhereCondition();
+    return getQuery().addReflectiveAndWhereCondition();
   }
 
 
@@ -61,7 +61,7 @@ public class WhereClause<T, DataSourceType> extends
    */
   public <R> QueryResult<T, DataSourceType> whereCallIsTrue(Boolean evalResult)
   {
-    return getQuery().addReflectiveWhereCondition().isEqual(true);
+    return getQuery().addReflectiveAndWhereCondition().isEqual(true);
   }
 
 
@@ -77,7 +77,7 @@ public class WhereClause<T, DataSourceType> extends
    */
   public <R> QueryResult<T, DataSourceType> whereCallIsFalse(Boolean evalResult)
   {
-    return getQuery().addReflectiveWhereCondition().isEqual(false);
+    return getQuery().addReflectiveAndWhereCondition().isEqual(false);
   }
 
 
@@ -90,7 +90,7 @@ public class WhereClause<T, DataSourceType> extends
    */
   public QueryResult<T, DataSourceType> where(WhereCondition<T> condition)
   {
-    return getQuery().addWhereCondition(condition);
+    return getQuery().addAndWhereCondition(condition);
   }
 
 }

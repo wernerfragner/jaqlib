@@ -32,13 +32,13 @@ public class SyntaxTree<T> implements ElementPredicate<T>
   }
 
 
-  public boolean hasRoot()
+  private boolean hasRoot()
   {
     return root != null;
   }
 
 
-  public void setRoot(SyntaxTreeNode<T> root)
+  private void setRoot(SyntaxTreeNode<T> root)
   {
     Assert.state(this.root == null, "Root condition can be set only once.");
 
@@ -48,7 +48,7 @@ public class SyntaxTree<T> implements ElementPredicate<T>
   }
 
 
-  public Connector<T> addConnector(Connector<T> connector)
+  private Connector<T> addConnector(Connector<T> connector)
   {
     SyntaxTreeNode<T> right = current.getRight();
     current.setRight(connector);
@@ -56,6 +56,31 @@ public class SyntaxTree<T> implements ElementPredicate<T>
 
     current = connector;
     return connector;
+  }
+
+
+  private void addConnector(Connector<T> connector, Condition<T> condition)
+  {
+    if (hasRoot())
+    {
+      addConnector(connector).setRight(condition);
+    }
+    else
+    {
+      setRoot(condition);
+    }
+  }
+
+
+  public void and(Condition<T> condition)
+  {
+    addConnector(new And<T>(), condition);
+  }
+
+
+  public void or(Condition<T> condition)
+  {
+    addConnector(new Or<T>(), condition);
   }
 
 

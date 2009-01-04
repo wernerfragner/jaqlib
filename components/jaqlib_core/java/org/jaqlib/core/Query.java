@@ -17,16 +17,10 @@ public interface Query<T, DataSourceType> extends
   QueryResult<T, DataSourceType> createQueryResult();
 
 
-  <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleWhereCondition();
-
-
   <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleAndWhereCondition();
 
 
   <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleOrWhereCondition();
-
-
-  QueryResult<T, DataSourceType> addWhereCondition(WhereCondition<T> condition);
 
 
   QueryResult<T, DataSourceType> addAndWhereCondition(
@@ -34,9 +28,6 @@ public interface Query<T, DataSourceType> extends
 
 
   QueryResult<T, DataSourceType> addOrWhereCondition(WhereCondition<T> condition);
-
-
-  <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveWhereCondition();
 
 
   <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveAndWhereCondition();

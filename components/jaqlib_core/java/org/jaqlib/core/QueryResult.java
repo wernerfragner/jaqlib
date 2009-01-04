@@ -100,11 +100,10 @@ public class QueryResult<T, DataSourceType> extends
 
   /**
    * @return the unique result of the query. If more than one element matches
-   *         the query then an {@link QueryResultException} is thrown.
-   *         Returns null if no match has been found.
+   *         the query then an {@link QueryResultException} is thrown. Returns
+   *         null if no match has been found.
    * 
-   * @throws QueryResultException if the query matches more than one
-   *           element.
+   * @throws QueryResultException if the query matches more than one element.
    */
   public T uniqueResult()
   {
@@ -259,7 +258,7 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> QueryResult<T, DataSourceType> orCallIsTrue(Boolean evalResult)
   {
-    return getQuery().addReflectiveWhereCondition().isEqual(true);
+    return getQuery().addReflectiveOrWhereCondition().isEqual(true);
   }
 
 
@@ -275,7 +274,7 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> QueryResult<T, DataSourceType> orCallIsFalse(Boolean evalResult)
   {
-    return getQuery().addReflectiveWhereCondition().isEqual(false);
+    return getQuery().addReflectiveOrWhereCondition().isEqual(false);
   }
 
 
@@ -291,7 +290,7 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> QueryResult<T, DataSourceType> andCallIsTrue(Boolean evalResult)
   {
-    return getQuery().addReflectiveWhereCondition().isEqual(true);
+    return getQuery().addReflectiveAndWhereCondition().isEqual(true);
   }
 
 
@@ -307,7 +306,7 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> QueryResult<T, DataSourceType> andCallIsFalse(Boolean evalResult)
   {
-    return getQuery().addReflectiveWhereCondition().isEqual(false);
+    return getQuery().addReflectiveAndWhereCondition().isEqual(false);
   }
 
 }
