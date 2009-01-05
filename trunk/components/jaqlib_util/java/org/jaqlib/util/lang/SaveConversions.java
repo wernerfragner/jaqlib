@@ -1,6 +1,8 @@
-package org.jaqlib.util;
+package org.jaqlib.util.lang;
 
 import java.util.Map;
+
+import org.jaqlib.util.CollectionUtil;
 
 /**
  * Performs save conversions (without loss of data) of primitive data types.
