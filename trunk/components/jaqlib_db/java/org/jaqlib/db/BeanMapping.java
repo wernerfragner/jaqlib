@@ -137,23 +137,23 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  private Object applyBeanFieldTypeHandler(String fieldName, Object value)
+  public Object applyJavaTypeHandler(String fieldName, Object value)
   {
     Class<?> fieldType = ReflectionUtil.getFieldType(beanClass, fieldName);
     return applyJavaTypeHandler(fieldType, value);
   }
 
 
-  private void setValue(T bean, String fieldName, Object value)
+  private Object applyJavaTypeHandler(Class<?> fieldType, Object value)
   {
-    value = applyBeanFieldTypeHandler(fieldName, value);
-    ReflectionUtil.setFieldValue(bean, fieldName, value);
+    return getJavaTypeHandler(fieldType).convert(value);
   }
 
 
-  public Object applyJavaTypeHandler(Class<?> fieldType, Object value)
+  private void setValue(T bean, String fieldName, Object value)
   {
-    return getJavaTypeHandler(fieldType).getObject(value);
+    value = applyJavaTypeHandler(fieldName, value);
+    ReflectionUtil.setFieldValue(bean, fieldName, value);
   }
 
 
@@ -163,10 +163,60 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
+  public AbstractMapping<?> removeChildMapping(String fieldName)
+  {
+    AbstractMapping<?> mapping = getChildMapping(fieldName);
+    if (mapping != null)
+    {
+      getMappings().remove(mapping);
+    }
+    return mapping;
+  }
+
+
+  public ColumnMapping<?> getChildColumn(String fieldName)
+  {
+    return (ColumnMapping<?>) getChildMapping(fieldName);
+  }
+
+
+  public AbstractMapping<?> getChildMapping(String fieldName)
+  {
+    for (AbstractMapping<?> mapping : getMappings())
+    {
+      if (fieldName.equals(mapping.getFieldName()))
+      {
+        return mapping;
+      }
+    }
+    return null;
+  }
+
+
   @Override
   public String getLogString()
   {
     return ReflectionUtil.getPlainClassName(beanClass);
+  }
+
+
+  @Override
+  public void appendColumn(StringBuilder columns, StringBuilder values)
+  {
+    boolean first = true;
+    for (AbstractMapping<?> mapping : getMappings())
+    {
+      if (!first)
+      {
+        columns.append(", ");
+        values.append(", ");
+      }
+      else
+      {
+        first = false;
+      }
+      mapping.appendColumn(columns, values);
+    }
   }
 
 }

@@ -19,7 +19,7 @@ import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
 
 
-public class ColumnDatabaseQBTest extends TestCase
+public class ColumnDatabaseQBSelectTest extends TestCase
 {
 
   private DatabaseSetup dbSetup;

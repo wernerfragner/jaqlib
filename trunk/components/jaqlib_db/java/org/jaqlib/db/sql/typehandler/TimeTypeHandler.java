@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public class TimeTypeHandler implements SqlTypeHandler
+public class TimeTypeHandler extends AbstractSqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

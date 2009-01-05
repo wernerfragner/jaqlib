@@ -7,7 +7,7 @@ import java.sql.SQLException;
 /**
  * @author Werner Fragner
  */
-public class IntegerTypeHandler implements SqlTypeHandler
+public class IntegerTypeHandler extends AbstractSqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

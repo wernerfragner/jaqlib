@@ -4,11 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-
 /**
  * @author Werner Fragner
  */
-public class ShortTypeHandler implements SqlTypeHandler
+public class ShortTypeHandler extends AbstractSqlTypeHandler
 {
 
   public Object getObject(ResultSet resultSet, String columnLabel)

@@ -1,7 +1,6 @@
 package org.jaqlib.db.java.typehandler;
 
 import org.jaqlib.CreditRating;
-import org.jaqlib.db.java.typehandler.AbstractJavaTypeHandler;
 
 /**
  * @author Werner Fragner
@@ -9,11 +8,16 @@ import org.jaqlib.db.java.typehandler.AbstractJavaTypeHandler;
 public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 {
 
-  public Object getObject(Object value)
+  public Object convert(Object value)
   {
     if (value instanceof Integer)
     {
       return CreditRating.rating((Integer) value);
+    }
+    else if (value instanceof CreditRating)
+    {
+      CreditRating rating = (CreditRating) value;
+      return rating.intValue();
     }
     else
     {

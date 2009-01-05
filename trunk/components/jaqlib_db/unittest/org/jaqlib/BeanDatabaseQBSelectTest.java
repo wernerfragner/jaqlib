@@ -7,10 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.sql.DataSource;
-
-import junit.framework.TestCase;
-
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanMapping;
@@ -18,13 +14,12 @@ import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 
 
-public class BeanDatabaseQBTest extends TestCase
+public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 {
 
   private static final String HUBER = DatabaseSetup.HUBER_ACCOUNT.getLastName();
   private static final String MAIER = DatabaseSetup.MAIER_ACCOUNT.getLastName();
 
-  private DatabaseSetup dbSetup;
   private WhereClause<Account, DbSelectDataSource> where;
 
 
@@ -33,11 +28,7 @@ public class BeanDatabaseQBTest extends TestCase
   {
     super.setUp();
 
-    dbSetup = new DatabaseSetup();
-    dbSetup.createTestTables();
-    dbSetup.insertTestRecords();
-
-    String sql = "SELECT lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
+    String sql = "SELECT id, lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT";
     Database db = new Database(getDataSource());
     DbSelectDataSource dataSource = db.getSelectDataSource(sql);
     BeanMapping<Account> mapping = db
@@ -46,21 +37,6 @@ public class BeanDatabaseQBTest extends TestCase
         new CreditRatingTypeHandler());
 
     where = DatabaseQB.select(mapping).from(dataSource);
-  }
-
-
-  @Override
-  public void tearDown() throws Exception
-  {
-    super.tearDown();
-
-    dbSetup.clear();
-  }
-
-
-  private DataSource getDataSource()
-  {
-    return dbSetup.getDataSource();
   }
 
 
@@ -207,8 +183,8 @@ public class BeanDatabaseQBTest extends TestCase
   public void testSelect_MethodCallCondition_NoMatch()
   {
     Account dummy = DatabaseQB.getRecorder(Account.class);
-    Account account = where.whereCall(dummy.getBalance()).isGreaterThan(100000.0)
-        .uniqueResult();
+    Account account = where.whereCall(dummy.getBalance()).isGreaterThan(
+        100000.0).uniqueResult();
     assertNull(account);
   }
 

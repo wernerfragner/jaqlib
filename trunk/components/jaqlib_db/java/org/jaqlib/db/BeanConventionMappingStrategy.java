@@ -41,9 +41,9 @@ public class BeanConventionMappingStrategy implements MappingStrategy
   }
 
 
-  private <T> ColumnMapping<T> getPrimitiveResult(String columnName)
+  private ColumnMapping<?> getPrimitiveResult(String columnName)
   {
-    return new ColumnMapping<T>(columnName);
+    return new ColumnMapping<Object>(columnName);
   }
 
 

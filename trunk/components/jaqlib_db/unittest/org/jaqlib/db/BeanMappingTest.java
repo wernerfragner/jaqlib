@@ -22,8 +22,7 @@ public class BeanMappingTest extends TestCase
     super.setUp();
 
     mapping = new BeanMapping<AccountImpl>(AccountImpl.class);
-    mapping
-        .setMappingStrategy(new BeanConventionMappingStrategy());
+    mapping.setMappingStrategy(new BeanConventionMappingStrategy());
   }
 
 
@@ -109,7 +108,7 @@ public class BeanMappingTest extends TestCase
   {
     mapping.registerJavaTypeHandler(CreditRating.class,
         new CreditRatingTypeHandler());
-    Object result = mapping.applyJavaTypeHandler(CreditRating.class,
+    Object result = mapping.applyJavaTypeHandler("creditRating",
         CreditRating.GOOD.intValue());
     assertEquals(CreditRating.GOOD, result);
   }
@@ -117,7 +116,7 @@ public class BeanMappingTest extends TestCase
 
   public void testApplyJavaTypeHandler_NoJavaTypeHandler()
   {
-    assertEquals("abc", mapping.applyJavaTypeHandler(String.class, "abc"));
+    assertEquals("abc", mapping.applyJavaTypeHandler("lastName", "abc"));
   }
 
 }

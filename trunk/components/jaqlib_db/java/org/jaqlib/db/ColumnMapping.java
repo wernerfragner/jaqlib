@@ -16,6 +16,7 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
   private static final int NO_INDEX = Integer.MIN_VALUE;
 
+  private String columnLabel;
   private String columnName;
   private int columnIndex = NO_INDEX;
   private int columnDataType = Types.OTHER;
@@ -31,12 +32,12 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
 
   /**
-   * @param columnName the database column name.
+   * @param columnLabel the database column name.
    */
-  public ColumnMapping(String columnName)
+  public ColumnMapping(String columnLabel)
   {
-    setFieldName(columnName);
-    setColumnName(columnName);
+    setFieldName(columnLabel);
+    setColumnLabel(columnLabel);
   }
 
 
@@ -50,11 +51,11 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
 
   /**
-   * @param columnName the database column name.
+   * @param columnLabel the database column label.
    */
-  public void setColumnName(String columnName)
+  public void setColumnLabel(String columnLabel)
   {
-    this.columnName = columnName;
+    this.columnLabel = columnLabel;
   }
 
 
@@ -81,11 +82,11 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
 
   /**
-   * @return the database column name.
+   * @return the database column label.
    */
-  public String getColumnName()
+  public String getColumnLabel()
   {
-    return columnName;
+    return columnLabel;
   }
 
 
@@ -95,6 +96,30 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   public int getColumnIndex()
   {
     return columnIndex;
+  }
+
+
+  /**
+   * @return the database column name.
+   */
+  public String getColumnName()
+  {
+    return columnName;
+  }
+
+
+  /**
+   * @param the database column name.
+   */
+  public void setColumnName(String columnName)
+  {
+    this.columnName = columnName;
+  }
+
+
+  private boolean hasColumnLabel()
+  {
+    return columnLabel != null;
   }
 
 
@@ -119,9 +144,9 @@ public class ColumnMapping<T> extends AbstractMapping<T>
     {
       return (T) rs.getObject(columnDataType, columnIndex);
     }
-    else if (hasColumnName())
+    else if (hasColumnLabel())
     {
-      return (T) rs.getObject(columnDataType, columnName);
+      return (T) rs.getObject(columnDataType, columnLabel);
     }
     else
     {
@@ -133,9 +158,9 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   @Override
   public String getLogString()
   {
-    if (hasColumnName())
+    if (hasColumnLabel())
     {
-      return getColumnName();
+      return getColumnLabel();
     }
     else if (hasColumnIndex())
     {
@@ -152,6 +177,25 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   {
     return new IllegalStateException(
         "Mapping must have a column index or a colum name.");
+  }
+
+
+  @Override
+  public void appendColumn(StringBuilder columns, StringBuilder values)
+  {
+    if (hasColumnName())
+    {
+      columns.append(getColumnName());
+    }
+    else if (hasColumnLabel())
+    {
+      columns.append(getColumnLabel());
+    }
+    else
+    {
+      handleInvalidMapping();
+    }
+    values.append("?");
   }
 
 }

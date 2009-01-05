@@ -58,7 +58,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
     for (AbstractMapping<?> dbSelectResult : result)
     {
       assertEquals(ColumnMapping.class, dbSelectResult.getClass());
-      results.add(((ColumnMapping<?>) dbSelectResult).getColumnName());
+      results.add(((ColumnMapping<?>) dbSelectResult).getColumnLabel());
     }
     return results;
   }

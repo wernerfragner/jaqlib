@@ -37,7 +37,7 @@ public class ColumnMappingTest extends TestCase
     final String lastName = DatabaseSetup.HUBER_ACCOUNT.getLastName();
     DbResultSet rs = DatabaseSetup.getMockDbResultSet();
 
-    mapping.setColumnName("lastName");
+    mapping.setColumnLabel("lastName");
     Object value = mapping.getValue(rs);
     assertEquals(lastName, value);
   }

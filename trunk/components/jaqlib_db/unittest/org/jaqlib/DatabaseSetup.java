@@ -9,9 +9,13 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
+import org.jaqlib.db.BeanMapping;
+import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbResultSet;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.Defaults;
+import org.jaqlib.db.ManualMappingStrategy;
+import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 import org.jaqlib.util.DbUtil;
 import org.jaqlib.util.db.DriverManagerDataSource;
 import org.jaqlib.util.db.SingleConnectionDataSource;
@@ -111,17 +115,24 @@ public class DatabaseSetup
 
   public void insertTestRecords() throws SQLException
   {
+    DbInsertDataSource ds = Database.getInsertDataSource(getDataSource(),
+        "APP.ACCOUNT");
+
+    ManualMappingStrategy strategy = new ManualMappingStrategy();
+    strategy.addColumnMapping("lName", "lastName");
+    strategy.addColumnMapping("fName", "firstName");
+    strategy.addColumnMapping("balance");
+    strategy.addColumnMapping("creditRating");
+
+    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
+        AccountImpl.class);
+    mapping.setMappingStrategy(strategy);
+    mapping.registerJavaTypeHandler(CreditRating.class,
+        new CreditRatingTypeHandler());
+
     for (AccountImpl account : ACCOUNTS)
     {
-      executeStatement("INSERT INTO APP.ACCOUNT (lname, fname, creditrating, balance) VALUES ('"
-          + account.getLastName()
-          + "', '"
-          + account.getFirstName()
-          + "', "
-          + account.getCreditRating().intValue()
-          + ", "
-          + account.getBalance()
-          + ")");
+      DatabaseQB.insert(account, mapping).into(ds);
     }
   }
 

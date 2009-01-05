@@ -22,6 +22,7 @@ import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.IntoClause;
 
 
 /**
@@ -171,6 +172,18 @@ public class DatabaseQB
       QUERYBUILDER.set(queryBuilder);
     }
     return queryBuilder;
+  }
+
+
+  public static <T> IntoClause<T> insert(T element)
+  {
+    return getQueryBuilder().insert(element);
+  }
+
+
+  public static <T> IntoClause<T> insert(T element, BeanMapping<T> beanMapping)
+  {
+    return getQueryBuilder().insert(element, beanMapping);
   }
 
 }
