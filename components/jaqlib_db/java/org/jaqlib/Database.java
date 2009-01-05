@@ -6,6 +6,7 @@ import org.jaqlib.db.BeanConventionMappingStrategy;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DataSourceQueryException;
+import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.Defaults;
 import org.jaqlib.db.MappingStrategy;
@@ -181,6 +182,19 @@ public class Database
 
 
   /**
+   * @param tableName the not null name of the table where to insert the record.
+   * @return an object representing the source for a (or multiple) database
+   *         insert.
+   */
+  private DbInsertDataSource getInsertDataSource(String tableName)
+  {
+    DbInsertDataSource ds = new DbInsertDataSource(dataSource, tableName);
+    ds.setSqlTypeHandlerRegistry(sqlTypeHandlerRegistry);
+    return ds;
+  }
+
+
+  /**
    * @param dataSource a not null {@link DataSource} for obtaining a JDBC
    *          connection.
    * @param sql a not null SELECT statement.
@@ -190,6 +204,20 @@ public class Database
       String sql)
   {
     return new Database(dataSource).getSelectDataSource(sql);
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to insert the record.
+   * @return an object representing the source for a (or multiple) database
+   *         insert.
+   */
+  public static DbInsertDataSource getInsertDataSource(DataSource dataSource,
+      String tableName)
+  {
+    return new Database(dataSource).getInsertDataSource(tableName);
   }
 
 
@@ -225,5 +253,6 @@ public class Database
     result.setMappingStrategy(mappingStrategy);
     return result;
   }
+
 
 }

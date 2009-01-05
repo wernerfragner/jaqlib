@@ -146,16 +146,38 @@ public class ReflectionUtil
     Assert.notNull(target);
     Assert.notNull(fieldName);
 
+    Field field = getField(target.getClass(), fieldName);
+    field.setAccessible(true);
+
     try
     {
-      Field field = getField(target.getClass(), fieldName);
-      field.setAccessible(true);
       field.set(target, fieldValue);
+    }
+    catch (IllegalArgumentException e)
+    {
+      final Object convertedFieldValue = saveConvert(fieldValue, field.getType());
+
+      if (convertedFieldValue == fieldValue)
+      {
+        // no conversion performed
+        throw ExceptionUtil.toRuntimeException(e);
+      }
+      else
+      {
+        // conversion performed, try to set field again with converted value
+        setFieldValue(target, fieldName, convertedFieldValue);
+      }
     }
     catch (IllegalAccessException e)
     {
       throw ExceptionUtil.toRuntimeException(e);
     }
+  }
+
+
+  private static Object saveConvert(Object value, Class<?> targetType)
+  {
+    return SaveConversions.convert(value, targetType);
   }
 
 
@@ -194,6 +216,21 @@ public class ReflectionUtil
     catch (NoSuchMethodException e)
     {
       return false;
+    }
+  }
+
+
+  public static Object getFieldValue(Object element, String fieldName)
+  {
+    try
+    {
+      Field field = getField(element.getClass(), fieldName);
+      field.setAccessible(true);
+      return field.get(element);
+    }
+    catch (IllegalAccessException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
     }
   }
 

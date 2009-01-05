@@ -26,7 +26,9 @@ import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DatabaseQuery;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.IntoClause;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
+import org.jaqlib.util.Assert;
 
 /**
  * <p>
@@ -297,6 +299,23 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
   public <T> FromClause<T, DbSelectDataSource> select(BeanMapping<T> bean)
   {
     return this.<T> createQuery().createFromClause(bean);
+  }
+
+
+  public <T> IntoClause<T> insert(T element)
+  {
+    Assert.notNull(element);
+
+    @SuppressWarnings("unchecked")
+    Class<T> beanClass = (Class<T>) element.getClass();
+
+    return insert(element, Database.getDefaultBeanMapping(beanClass));
+  }
+
+
+  public <T> IntoClause<T> insert(T element, BeanMapping<T> beanMapping)
+  {
+    return new IntoClause<T>(element, beanMapping);
   }
 
 

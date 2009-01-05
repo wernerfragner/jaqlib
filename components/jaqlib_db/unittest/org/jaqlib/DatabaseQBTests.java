@@ -20,8 +20,8 @@ public class DatabaseQBTests
 
     TestSuite suite = new TestSuite("Test for org.jaqlib");
     // $JUnit-BEGIN$
-    suite.addTestSuite(ColumnDatabaseQBTest.class);
-    suite.addTestSuite(BeanDatabaseQBTest.class);
+    suite.addTestSuite(ColumnDatabaseQBSelectTest.class);
+    suite.addTestSuite(BeanDatabaseQBSelectTest.class);
 
     suite.addTest(JaqlibDbTests.suite());
 

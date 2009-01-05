@@ -55,16 +55,16 @@ public class DbResultSet
   }
 
 
-  public Object getObject(int sqlDataType, String columnName)
+  public Object getObject(int sqlDataType, String columnLabel)
       throws SQLException
   {
-    if (strictColumnCheck || hasColumn(columnName))
+    if (strictColumnCheck || hasColumn(columnLabel))
     {
-      return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnName);
+      return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnLabel);
     }
     else
     {
-      log.info("SELECT statement does not contain colum '" + columnName
+      log.info("SELECT statement does not contain colum '" + columnLabel
           + "'. Column is ignored.");
       return NO_RESULT;
     }

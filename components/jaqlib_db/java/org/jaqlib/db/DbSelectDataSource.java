@@ -1,18 +1,13 @@
 package org.jaqlib.db;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
-import org.jaqlib.util.DbUtil;
-import org.jaqlib.util.LogUtil;
 
 /**
  * <p>
@@ -28,51 +23,25 @@ import org.jaqlib.util.LogUtil;
  * 
  * @author Werner Fragner
  */
-public class DbSelectDataSource
+public class DbSelectDataSource extends AbstractDbDataSource
 {
 
-  private final Logger log = LogUtil.getLogger(this);
-
   private final String sql;
-  private final DataSource dataSource;
 
   private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = Defaults
-      .getSqlTypeHandlerRegistry();
-
-  private Connection connection;
-  private Statement statement;
   private DbResultSet resultSet;
 
 
   public DbSelectDataSource(DataSource dataSource, String sql)
   {
-    this.dataSource = Assert.notNull(dataSource);
+    super(dataSource);
     this.sql = Assert.notNull(sql);
   }
 
 
-  /**
-   * Registers the given custom SQL type handler with the given SQL data type.
-   * 
-   * @param sqlDataType a SQL data type as defined at {@link java.sql.Types}.
-   * @param typeHandler a not null type handler.
-   */
-  public void registerSqlTypeHandler(int sqlDataType, SqlTypeHandler typeHandler)
+  public String getSql()
   {
-    sqlTypeHandlerRegistry.registerTypeHandler(sqlDataType, typeHandler);
-  }
-
-
-  /**
-   * Changes the SQL type handler registry to a custom implementation. By
-   * default the standard SQL types are supported.
-   * 
-   * @param registry a custom SQL type handler registry.
-   */
-  public void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
-  {
-    this.sqlTypeHandlerRegistry = Assert.notNull(registry);
+    return sql;
   }
 
 
@@ -96,63 +65,24 @@ public class DbSelectDataSource
   }
 
 
-  public String getSql()
+  @Override
+  public void close()
   {
-    return sql;
+    close(resultSet);
+    resultSet = null;
+
+    super.close();
   }
 
 
   public DbResultSet execute() throws SQLException
   {
-    log.fine("Executing SQL statement: " + sql);
+    log.fine("Executing SQL statement: " + getSql());
 
-    final ResultSet rs = getStatement().executeQuery(sql);
-    resultSet = new DbResultSet(rs, sqlTypeHandlerRegistry, strictColumnCheck);
+    final ResultSet rs = getStatement().executeQuery(getSql());
+    resultSet = new DbResultSet(rs, getSqlTypeHandlerRegistry(),
+        strictColumnCheck);
     return resultSet;
-  }
-
-
-  public void close()
-  {
-    close(resultSet);
-    resultSet = null;
-    DbUtil.close(statement);
-    statement = null;
-    DbUtil.close(connection);
-    connection = null;
-  }
-
-
-  private Statement getStatement() throws SQLException
-  {
-    if (statement == null)
-    {
-      log.fine("Creating SQL statement");
-
-      statement = getConnection().createStatement();
-    }
-    return statement;
-  }
-
-
-  private Connection getConnection() throws SQLException
-  {
-    if (connection == null)
-    {
-      log.fine("Getting JDBC connection");
-
-      connection = dataSource.getConnection();
-    }
-    return connection;
-  }
-
-
-  private void close(DbResultSet rs)
-  {
-    if (rs != null)
-    {
-      rs.close();
-    }
   }
 
 
@@ -161,6 +91,5 @@ public class DbSelectDataSource
   {
     return "[SQL: " + sql + "]";
   }
-
 
 }
