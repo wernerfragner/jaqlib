@@ -1,4 +1,4 @@
-package org.jaqlib.util;
+package org.jaqlib.util.lang;
 
 public class LongSaveConversion implements SaveConversion
 {

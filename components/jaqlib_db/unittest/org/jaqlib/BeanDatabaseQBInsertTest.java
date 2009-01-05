@@ -5,7 +5,6 @@ import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.Defaults;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
-import org.jaqlib.util.LogUtil;
 
 
 public class BeanDatabaseQBInsertTest extends AbstractDatabaseQBTest
@@ -18,8 +17,6 @@ public class BeanDatabaseQBInsertTest extends AbstractDatabaseQBTest
   @Override
   public void setUp() throws Exception
   {
-    LogUtil.enableConsoleLogging();
-
     super.setUp();
 
     dbInsertDataSource = Database.getInsertDataSource(getDataSource(), sql);
