@@ -77,7 +77,7 @@ public class DbSelectDataSource extends AbstractDbDataSource
 
   public DbResultSet execute() throws SQLException
   {
-    log.fine("Executing SQL statement: " + getSql());
+    log.fine("Executing SQL SELECT statement: " + getSql());
 
     final ResultSet rs = getStatement().executeQuery(getSql());
     resultSet = new DbResultSet(rs, getSqlTypeHandlerRegistry(),

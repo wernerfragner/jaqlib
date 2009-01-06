@@ -7,21 +7,21 @@ import org.jaqlib.util.Assert;
  * 
  * @param <T>
  */
-public class IntoClause<T>
+public class InClause<T>
 {
 
   private final T bean;
 
 
-  public IntoClause(T bean)
+  public InClause(T bean)
   {
     this.bean = Assert.notNull(bean);
   }
 
 
-  public Using<T> into(DbInsertDataSource dataSource)
+  public Using<T> in(DbUpdateDataSource ds)
   {
-    return new Using<T>(bean, dataSource);
+    return new Using<T>(bean, ds);
   }
 
 }

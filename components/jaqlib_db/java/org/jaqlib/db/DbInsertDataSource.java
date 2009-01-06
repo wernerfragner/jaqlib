@@ -1,26 +1,22 @@
 package org.jaqlib.db;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import javax.sql.DataSource;
 
-import org.jaqlib.util.Assert;
-
-public class DbInsertDataSource extends AbstractDbDataSource
+/**
+ * @author Werner Fragner
+ */
+public class DbInsertDataSource extends AbstractDbDmlDataSource
 {
-
-  private final String tableName;
 
 
   public DbInsertDataSource(DataSource dataSource, String tableName)
   {
-    super(dataSource);
-    this.tableName = Assert.notNull(tableName);
+    super(dataSource, tableName);
   }
 
 
-  public <T> void execute(T bean, BeanMapping<T> beanMapping)
+  @Override
+  protected <T> String buildSql(BeanMapping<T> beanMapping)
   {
     final StringBuilder columns = new StringBuilder();
     final StringBuilder values = new StringBuilder();
@@ -49,37 +45,7 @@ public class DbInsertDataSource extends AbstractDbDataSource
     insertSql.append(") VALUES (");
     insertSql.append(values);
     insertSql.append(")");
-
-    try
-    {
-      PreparedStatement stmt = getPreparedStatement(insertSql.toString());
-
-      int i = 1;
-      for (AbstractMapping<?> mapping : beanMapping)
-      {
-        mapping.setValue(i, stmt, bean, beanMapping);
-        i++;
-      }
-
-      stmt.execute();
-      commit();
-    }
-    catch (SQLException e)
-    {
-      handleSqlException(e);
-    }
-    finally
-    {
-      close();
-    }
-  }
-
-
-  private void handleSqlException(SQLException sqle)
-  {
-    DataSourceQueryException e = new DataSourceQueryException(sqle);
-    e.setStackTrace(sqle.getStackTrace());
-    throw e;
+    return insertSql.toString();
   }
 
 }

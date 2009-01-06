@@ -16,6 +16,9 @@ import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.DbUtil;
 import org.jaqlib.util.LogUtil;
 
+/**
+ * @author Werner Fragner
+ */
 public abstract class AbstractDbDataSource
 {
 
@@ -115,8 +118,6 @@ public abstract class AbstractDbDataSource
     PreparedStatement stmt = prepStatements.get(sql);
     if (stmt == null)
     {
-      log.fine("Creating prepared SQL statement: " + sql);
-
       stmt = getConnection().prepareStatement(sql);
       prepStatements.put(sql, stmt);
     }
@@ -144,5 +145,28 @@ public abstract class AbstractDbDataSource
     }
   }
 
+
+  protected void handleSqlException(SQLException sqle)
+  {
+    DataSourceQueryException e = new DataSourceQueryException(sqle);
+    e.setStackTrace(sqle.getStackTrace());
+    throw e;
+  }
+
+
+  protected void appendWhereClause(StringBuilder sql, String whereClause)
+  {
+    if (shouldAppendWhereClause(whereClause))
+    {
+      sql.append(" WHERE ");
+      sql.append(whereClause);
+    }
+  }
+
+
+  private boolean shouldAppendWhereClause(String whereClause)
+  {
+    return (whereClause != null && whereClause.trim().length() > 0);
+  }
 
 }

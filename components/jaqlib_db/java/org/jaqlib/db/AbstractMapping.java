@@ -51,6 +51,9 @@ public abstract class AbstractMapping<T>
   public abstract void appendColumn(StringBuilder columns, StringBuilder values);
 
 
+  public abstract void appendColumn(StringBuilder updateSql);
+
+
   protected Object getFieldValue(Object bean)
   {
     return ReflectionUtil.getFieldValue(bean, getFieldName());

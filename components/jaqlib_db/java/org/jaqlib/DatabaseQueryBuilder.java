@@ -26,9 +26,11 @@ import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DatabaseQuery;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DeleteFromClause;
+import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
+import org.jaqlib.db.Using;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.util.Assert;
 
 /**
  * <p>
@@ -302,26 +304,53 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
   }
 
 
-  public <T> IntoClause<T> insert(T element)
-  {
-    Assert.notNull(element);
-
-    @SuppressWarnings("unchecked")
-    Class<T> beanClass = (Class<T>) element.getClass();
-
-    return insert(element, Database.getDefaultBeanMapping(beanClass));
-  }
-
-
-  public <T> IntoClause<T> insert(T element, BeanMapping<T> beanMapping)
-  {
-    return new IntoClause<T>(element, beanMapping);
-  }
-
-
   private <T> DatabaseQuery<T> createQuery()
   {
     return new DatabaseQuery<T>(getMethodCallRecorder());
+  }
+
+
+  /**
+   * Inserts the given bean into the table that must be specified in the
+   * returned {@link IntoClause}. The mapping between the given bean field
+   * values to the according table columns must be specified in the
+   * {@link Using} object that is returned by
+   * {@link IntoClause#into(org.jaqlib.db.DbInsertDataSource)}.
+   * 
+   * @param <T> the type of the bean.
+   * @param bean a not null bean to insert.
+   * @return the INTO clause to specify the table where to insert the bean.
+   */
+  public <T> IntoClause<T> insert(T bean)
+  {
+    return new IntoClause<T>(bean);
+  }
+
+
+  /**
+   * Updates the given bean in the table that must be specified in the returned
+   * {@link InClause}. The mapping between the given bean field values to the
+   * according table columns must be specified in the {@link Using} object that
+   * is returned by {@link InClause#in(org.jaqlib.db.DbUpdateDataSource)}.
+   * 
+   * @param <T> the type of the bean.
+   * @param bean a not null bean to update.
+   * @return the IN clause to specify the table where to update the bean.
+   */
+  public <T> InClause<T> update(T bean)
+  {
+    return new InClause<T>(bean);
+  }
+
+
+  /**
+   * Deletes a table that is specified in the returned {@link DeleteFromClause}.
+   * 
+   * @return the FROM clause to specify the table where to delete records.
+   */
+  public DeleteFromClause delete()
+  {
+    return new DeleteFromClause();
   }
 
 
