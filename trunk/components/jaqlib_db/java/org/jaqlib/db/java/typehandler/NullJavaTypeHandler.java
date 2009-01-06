@@ -21,4 +21,10 @@ public class NullJavaTypeHandler implements JavaTypeHandler
     stmt.setObject(index, value);
   }
 
+
+  public Class<?>[] getSupportedTypes()
+  {
+    return new Class[] { Object.class };
+  }
+
 }

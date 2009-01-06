@@ -15,11 +15,10 @@ public interface JavaTypeHandlerRegistry
 
 
   /**
-   * Registers a custom java type handler with a given java type.
+   * Registers a custom java type handler.
    * 
-   * @param fieldType a not null java type.
    * @param typeHandler a not null custom java type handler.
    */
-  void registerTypeHandler(Class<?> fieldType, JavaTypeHandler typeHandler);
+  void registerTypeHandler(JavaTypeHandler typeHandler);
 
 }

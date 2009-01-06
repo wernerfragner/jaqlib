@@ -120,8 +120,7 @@ public class DefaultsTest extends TestCase
       }
 
 
-      public void registerTypeHandler(Class<?> fieldType,
-          JavaTypeHandler typeHandler)
+      public void registerTypeHandler(JavaTypeHandler typeHandler)
       {
       }
     };

@@ -9,8 +9,7 @@ import org.jaqlib.util.Assert;
 /**
  * @author Werner Fragner
  */
-public class DefaultJavaTypeHandlerRegistry implements
-    JavaTypeHandlerRegistry
+public class DefaultJavaTypeHandlerRegistry implements JavaTypeHandlerRegistry
 {
 
   private final Map<Class<?>, JavaTypeHandler> handlers = newDefaultMap();
@@ -39,13 +38,14 @@ public class DefaultJavaTypeHandlerRegistry implements
   /**
    * {@inheritDoc}
    */
-  public void registerTypeHandler(Class<?> fieldType,
-      JavaTypeHandler typeHandler)
+  public void registerTypeHandler(JavaTypeHandler typeHandler)
   {
-    Assert.notNull(fieldType);
     Assert.notNull(typeHandler);
 
-    handlers.put(fieldType, typeHandler);
+    for (Class<?> fieldType : typeHandler.getSupportedTypes())
+    {
+      handlers.put(fieldType, typeHandler);
+    }
   }
 
 }

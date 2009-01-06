@@ -100,15 +100,13 @@ public class Database
 
 
   /**
-   * Registers a custom java type handler with a given java type.
+   * Registers a custom java type handler.
    * 
-   * @param fieldType a not null java type.
    * @param typeHandler a not null custom java type handler.
    */
-  public void registerJavaTypeHandler(Class<?> fieldType,
-      JavaTypeHandler typeHandler)
+  public void registerJavaTypeHandler(JavaTypeHandler typeHandler)
   {
-    javaTypeHandlerRegistry.registerTypeHandler(fieldType, typeHandler);
+    javaTypeHandlerRegistry.registerTypeHandler(typeHandler);
   }
 
 

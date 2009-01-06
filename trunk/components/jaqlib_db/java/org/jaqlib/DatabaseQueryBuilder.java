@@ -139,8 +139,8 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * <i>Custom Java type handler:</i>
  * <p>
  * Database column data types can be converted to custom Java types with
- * so-called {@link JavaTypeHandler}s. These handlers can be registered with
- * {@link BeanMapping#registerJavaTypeHandler(Class, JavaTypeHandler)} .
+ * so-called {@link JavaTypeHandler}s. These handlers can be registered using
+ * {@link BeanMapping#registerJavaTypeHandler(JavaTypeHandler)} .
  * </p>
  * <p>
  * The <tt>AccountImpl</tt> class has a <tt>creditRating</tt> field with the
@@ -158,8 +158,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * BeanMapping&lt;AccountImpl&gt; mapping = db.getBeanMapping(AccountImpl.class);
  * 
  * // register custom type handler for CreditRating bean fields
- * mapping.registerJavaTypeHandler(CreditRating.class,
- *     new CreditRatingTypeHandler());
+ * mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
  * 
  * // perform query 
  * DatabaseQB.select(mapping).from(dataSource) ...

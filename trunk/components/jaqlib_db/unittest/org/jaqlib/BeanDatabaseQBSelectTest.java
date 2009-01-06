@@ -33,8 +33,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     DbSelectDataSource dataSource = db.getSelectDataSource(sql);
     BeanMapping<Account> mapping = db
         .<Account> getBeanMapping(AccountImpl.class);
-    mapping.registerJavaTypeHandler(CreditRating.class,
-        new CreditRatingTypeHandler());
+    mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
 
     where = DatabaseQB.select(mapping).from(dataSource);
   }
