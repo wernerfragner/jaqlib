@@ -1,6 +1,5 @@
 package org.jaqlib.db.java.typehandler;
 
-
 /**
  * <p>
  * Converts a given database value to a Java type value and vice versa.
@@ -10,6 +9,13 @@ package org.jaqlib.db.java.typehandler;
  * <pre>
  * public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
  * {
+ * 
+ *   public Class&lt;?&gt;[] getSupportedType()
+ *   {
+ *     return new Class[] { CreditRating.class };
+ *   }
+ * 
+ * 
  *   public Object convert(Object value)
  *   {
  *     if (value instanceof Integer)
@@ -39,6 +45,13 @@ package org.jaqlib.db.java.typehandler;
  */
 public interface JavaTypeHandler
 {
+
+  /**
+   * @return the Java types that can be converted into and from database types.
+   *         This method must return at least one supported type.
+   */
+  Class<?>[] getSupportedTypes();
+
 
   /**
    * @param value a null object that may be null.

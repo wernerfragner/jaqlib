@@ -156,8 +156,7 @@ public class DatabaseSetup
     BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
         AccountImpl.class);
     mapping.setMappingStrategy(strategy);
-    mapping.registerJavaTypeHandler(CreditRating.class,
-        new CreditRatingTypeHandler());
+    mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
     return mapping;
   }
 

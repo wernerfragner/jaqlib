@@ -3,7 +3,7 @@ package org.jaqlib.db.java.typehandler;
 import junit.framework.TestCase;
 
 import org.jaqlib.Account;
-import org.jaqlib.AccountImpl;
+import org.jaqlib.CreditRating;
 
 public class DefaultJavaTypeHandlerRegistryTest extends TestCase
 {
@@ -48,15 +48,7 @@ public class DefaultJavaTypeHandlerRegistryTest extends TestCase
   {
     try
     {
-      registry.registerTypeHandler(null, new CreditRatingTypeHandler());
-      fail("Did not throw IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e)
-    {
-    }
-    try
-    {
-      registry.registerTypeHandler(AccountImpl.class, null);
+      registry.registerTypeHandler(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -68,9 +60,9 @@ public class DefaultJavaTypeHandlerRegistryTest extends TestCase
   public void testRegisterTypeHandler()
   {
     CreditRatingTypeHandler th = new CreditRatingTypeHandler();
-    registry.registerTypeHandler(Integer.class, th);
+    registry.registerTypeHandler(th);
 
-    assertSame(th, registry.getTypeHandler(Integer.class));
+    assertSame(th, registry.getTypeHandler(CreditRating.class));
   }
 
 }

@@ -1,8 +1,10 @@
 package org.jaqlib.db;
 
 import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
+import org.jaqlib.db.java.typehandler.JavaTypeHandler;
 import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
+import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
 
@@ -122,6 +124,15 @@ public class Defaults
 
 
   /**
+   * See {@link JavaTypeHandlerRegistry#registerTypeHandler(JavaTypeHandler)} .
+   */
+  public static void registerJavaTypeHandler(JavaTypeHandler typeHandler)
+  {
+    getJavaTypeHandlerRegistry().registerTypeHandler(typeHandler);
+  }
+
+
+  /**
    * @return the default SQL type handler registry.
    */
   public static SqlTypeHandlerRegistry getSqlTypeHandlerRegistry()
@@ -140,6 +151,17 @@ public class Defaults
   public static void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
   {
     Defaults.sqlTypeHandlerRegistry = Assert.notNull(registry);
+  }
+
+
+  /**
+   * See {@link SqlTypeHandlerRegistry#registerTypeHandler(int, SqlTypeHandler)}
+   * .
+   */
+  public static void registerSqlTypeHandler(int sqlDataType,
+      SqlTypeHandler typeHandler)
+  {
+    getSqlTypeHandlerRegistry().registerTypeHandler(sqlDataType, typeHandler);
   }
 
 

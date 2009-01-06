@@ -74,15 +74,7 @@ public class BeanMappingTest extends TestCase
   {
     try
     {
-      mapping.registerJavaTypeHandler(null, new CreditRatingTypeHandler());
-      fail("Did not throw IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e)
-    {
-    }
-    try
-    {
-      mapping.registerJavaTypeHandler(String.class, null);
+      mapping.registerJavaTypeHandler(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -106,8 +98,7 @@ public class BeanMappingTest extends TestCase
 
   public void testApplyJavaTypeHandler_JavaTypeHandlerRegistered()
   {
-    mapping.registerJavaTypeHandler(CreditRating.class,
-        new CreditRatingTypeHandler());
+    mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
     Object result = mapping.applyJavaTypeHandler("creditRating",
         CreditRating.GOOD.intValue());
     assertEquals(CreditRating.GOOD, result);

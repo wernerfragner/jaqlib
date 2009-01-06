@@ -8,6 +8,12 @@ import org.jaqlib.CreditRating;
 public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 {
 
+  public Class<?>[] getSupportedTypes()
+  {
+    return new Class[] { CreditRating.class };
+  }
+
+
   public Object convert(Object value)
   {
     if (value instanceof Integer)

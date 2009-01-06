@@ -28,10 +28,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
   {
     super.setUp();
 
-    Defaults.getJavaTypeHandlerRegistry().registerTypeHandler(
-        CreditRating.class, new CreditRatingTypeHandler());
-    Defaults.getJavaTypeHandlerRegistry().registerTypeHandler(Boolean.TYPE,
-        new BooleanTypeHandler());
+    Defaults.registerJavaTypeHandler(new CreditRatingTypeHandler());
+    Defaults.registerJavaTypeHandler(new BooleanTypeHandler());
 
     account = createAccount();
 
