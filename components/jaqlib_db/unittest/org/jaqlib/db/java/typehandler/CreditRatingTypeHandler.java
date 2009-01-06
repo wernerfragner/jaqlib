@@ -1,5 +1,7 @@
 package org.jaqlib.db.java.typehandler;
 
+import java.util.List;
+
 import org.jaqlib.CreditRating;
 
 /**
@@ -8,9 +10,10 @@ import org.jaqlib.CreditRating;
 public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 {
 
-  public Class<?>[] getSupportedTypes()
+  @Override
+  public void addSupportedTypes(List<Class<?>> types)
   {
-    return new Class[] { CreditRating.class };
+    types.add(CreditRating.class);
   }
 
 

@@ -1,14 +1,18 @@
 package org.jaqlib.db.java.typehandler;
 
+import java.util.List;
+
 /**
  * @author Werner Fragner
  */
 public class BooleanTypeHandler extends AbstractJavaTypeHandler
 {
 
-  public Class<?>[] getSupportedTypes()
+  @Override
+  public void addSupportedTypes(List<Class<?>> types)
   {
-    return new Class[] { Boolean.class, Boolean.TYPE };
+    types.add(Boolean.class);
+    types.add(Boolean.TYPE);
   }
 
 
@@ -29,6 +33,5 @@ public class BooleanTypeHandler extends AbstractJavaTypeHandler
       throw handleIllegalInputValue(value, Boolean.class);
     }
   }
-
 
 }
