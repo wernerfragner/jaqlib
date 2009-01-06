@@ -74,7 +74,7 @@ List&lt;AccountImpl&gt; highRiskAccounts = DatabaseQB.select(AccountImpl.class).
     .where(deptCondition).and(ratingCondition).asList();
 </pre>
 
-===Filtering out null elements===
+===Filtering null elements===
 
 <pre>
 List&lt;AccountImpl&gt; notNullAccounts = DatabaseQB.select(AccountImpl.class).from(
@@ -173,6 +173,92 @@ public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 }
 </pre>
 
+===Inserting a Java bean into a database table===
+
+<pre>
+AccountImpl account = new AccountImpl();
+// fill account with values ...
+
+String tableName = &quot;ACCOUNT&quot;;
+DbInsertDataSource ds = Database
+    .getInsertDataSource(getDataSource(), tableName);
+int updateCount = DatabaseQB.insert(account).into(ds).usingDefaultMapping();
+</pre>
+
+===Inserting a Java bean into a database table using a custom bean mapping===
+
+<pre>
+AccountImpl account = new AccountImpl();
+// fill account with values ...
+
+// create custom bean mapping
+BeanMapping&lt;AccountImpl&gt; beanMapping = Database
+    .getDefaultBeanMapping(AccountImpl.class);
+beanMapping.removeChildColumn(&quot;id&quot;);
+beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
+
+// insert account using the custom bean mapping
+String tableName = &quot;ACCOUNT&quot;;
+DbInsertDataSource ds = Database
+    .getInsertDataSource(getDataSource(), tableName);
+int updateCount = DatabaseQB.insert(account).into(ds).using(beanMapping);
+</pre>
+
+===Updating a Java bean in a database table===
+
+<pre>
+// get account that already exists at database 
+AccountImpl account = getAccount();
+
+String whereClause = &quot;id = &quot; + account.getId();
+String tableName = &quot;ACCOUNT&quot;;
+DbUpdateDataSource ds = Database.getUpdateDataSource(getDataSource(),
+    tableName, whereClause);
+int updateCount = DatabaseQB.update(account).in(ds).usingDefaultMapping();
+</pre>
+
+===Updating a Java bean in a database table using a custom bean mapping===
+
+<pre>
+// get account that already exists at database 
+AccountImpl account = getAccount();
+
+// create custom bean mapping
+BeanMapping&lt;AccountImpl&gt; beanMapping = Database
+    .getDefaultBeanMapping(AccountImpl.class);
+beanMapping.removeChildColumn(&quot;id&quot;);
+beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
+
+String whereClause = &quot;id = &quot; + account.getId();
+String tableName = &quot;ACCOUNT&quot;;
+DbUpdateDataSource ds = Database.getUpdateDataSource(getDataSource(),
+    tableName, whereClause);
+int updateCount = DatabaseQB.update(account).in(ds).using(beanMapping);
+</pre>
+
+===Delete specific records from a database table===
+
+<pre>
+// get account that already exists at database 
+AccountImpl account = getAccount();
+
+// delete account at database
+String whereClause = &quot;id = &quot; + account.getId();
+String tableName = &quot;ACCOUNT&quot;;
+DbDeleteDataSource ds = Database.getDeleteDataSource(getDataSource(),
+    tableName, whereClause);
+int updateCount = DatabaseQB.delete().from(ds);
+</pre>
+
+===Delete all records from a database table===
+
+<pre>
+// delete all records from the ACCOUNT table 
+String tableName = &quot;ACCOUNT&quot;;
+DbDeleteDataSource ds = Database
+    .getDeleteDataSource(getDataSource(), tableName);
+int updateCount = DatabaseQB.delete().from(ds);
+</pre>
 
 ----
 [[Main_Page]]
