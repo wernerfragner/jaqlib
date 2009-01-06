@@ -22,6 +22,7 @@ public class DatabaseQBTests
     // $JUnit-BEGIN$
     suite.addTestSuite(ColumnDatabaseQBSelectTest.class);
     suite.addTestSuite(BeanDatabaseQBSelectTest.class);
+    suite.addTestSuite(BeanDatabaseQBDmlTest.class);
 
     suite.addTest(JaqlibDbTests.suite());
 

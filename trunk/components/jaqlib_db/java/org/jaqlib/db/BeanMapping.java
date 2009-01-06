@@ -219,4 +219,23 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
     }
   }
 
+
+  @Override
+  public void appendColumn(StringBuilder updateSql)
+  {
+    boolean first = true;
+    for (AbstractMapping<?> mapping : getMappings())
+    {
+      if (!first)
+      {
+        updateSql.append(", ");
+      }
+      else
+      {
+        first = false;
+      }
+      mapping.appendColumn(updateSql);
+    }
+  }
+
 }

@@ -183,19 +183,35 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   @Override
   public void appendColumn(StringBuilder columns, StringBuilder values)
   {
+    columns.append(getColumnForSql());
+    values.append("?");
+  }
+
+
+  private String getColumnForSql()
+  {
+    String column = null;
     if (hasColumnName())
     {
-      columns.append(getColumnName());
+      column = getColumnName();
     }
     else if (hasColumnLabel())
     {
-      columns.append(getColumnLabel());
+      column = getColumnLabel();
     }
     else
     {
       handleInvalidMapping();
     }
-    values.append("?");
+    return column;
+  }
+
+
+  @Override
+  public void appendColumn(StringBuilder updateSql)
+  {
+    updateSql.append(getColumnForSql());
+    updateSql.append(" = ?");
   }
 
 }

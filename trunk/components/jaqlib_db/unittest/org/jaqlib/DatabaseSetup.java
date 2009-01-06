@@ -25,7 +25,15 @@ public class DatabaseSetup
 
   private SingleConnectionDataSource dataSource;
 
+
+  public static final String ACCOUNT_TABLE = "APP.ACCOUNT";
+  public static final String EXACT_ACCOUNT_TABLE = "APP.EXACT_ACCOUNT";
   public static final String SELECT_SQL = "SELET column FROM table";
+
+  public static final String ACCOUNT_SELECT = "SELECT id, lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM "
+      + ACCOUNT_TABLE;
+  public static final String EXACT_ACCOUNT_SELECT = "SELECT id, lastname, firstname, creditrating AS creditrating, balance, active FROM "
+      + EXACT_ACCOUNT_TABLE;
 
   public static final AccountImpl HUBER_ACCOUNT;
   public static final AccountImpl MAIER_ACCOUNT;
@@ -91,7 +99,8 @@ public class DatabaseSetup
   {
     try
     {
-      executeStatement("DROP table APP.ACCOUNT");
+      executeStatement("DROP table " + ACCOUNT_TABLE);
+      executeStatement("DROP table " + EXACT_ACCOUNT_TABLE);
     }
     catch (SQLException sqle)
     {
@@ -103,21 +112,41 @@ public class DatabaseSetup
   {
     dropTestTables();
 
-    String createAccount = "CREATE table APP.ACCOUNT ("
+    String createAccount = "CREATE table " + ACCOUNT_TABLE + " ("
         + "ID          INTEGER NOT NULL "
         + "PRIMARY KEY GENERATED ALWAYS AS IDENTITY "
         + "(START WITH 1, INCREMENT BY 1)," + "LNAME    VARCHAR(30), "
         + "FNAME   VARCHAR(30)," + "CREDITRATING INTEGER, BALANCE DOUBLE)";
 
+    String createExactAccount = "CREATE table " + EXACT_ACCOUNT_TABLE + " ("
+        + "ID INTEGER, LASTNAME VARCHAR(30), FIRSTNAME VARCHAR(30),"
+        + "CREDITRATING INTEGER, BALANCE DOUBLE, ACTIVE INTEGER)";
+
     executeStatement(createAccount);
+    executeStatement(createExactAccount);
   }
 
 
   public void insertTestRecords() throws SQLException
   {
-    DbInsertDataSource ds = Database.getInsertDataSource(getDataSource(),
-        "APP.ACCOUNT");
+    DbInsertDataSource ds = createAccountInsertDataSource(ACCOUNT_TABLE);
+    BeanMapping<AccountImpl> mapping = createAccountMapping();
 
+    for (AccountImpl account : ACCOUNTS)
+    {
+      insertAccount(ds, mapping, account);
+    }
+  }
+
+
+  private DbInsertDataSource createAccountInsertDataSource(String table)
+  {
+    return Database.getInsertDataSource(getDataSource(), table);
+  }
+
+
+  private BeanMapping<AccountImpl> createAccountMapping()
+  {
     ManualMappingStrategy strategy = new ManualMappingStrategy();
     strategy.addColumnMapping("lName", "lastName");
     strategy.addColumnMapping("fName", "firstName");
@@ -129,11 +158,41 @@ public class DatabaseSetup
     mapping.setMappingStrategy(strategy);
     mapping.registerJavaTypeHandler(CreditRating.class,
         new CreditRatingTypeHandler());
+    return mapping;
+  }
 
-    for (AccountImpl account : ACCOUNTS)
-    {
-      DatabaseQB.insert(account, mapping).into(ds);
-    }
+
+  private void insertAccount(DbInsertDataSource ds,
+      BeanMapping<AccountImpl> mapping, AccountImpl account)
+  {
+    DatabaseQB.insert(account).into(ds).using(mapping);
+  }
+
+
+  public void insertAccount(AccountImpl account)
+  {
+    DbInsertDataSource ds = createAccountInsertDataSource(ACCOUNT_TABLE);
+    BeanMapping<AccountImpl> mapping = createAccountMapping();
+
+    insertAccount(ds, mapping, account);
+  }
+
+
+  public void insertExactAccount(AccountImpl account)
+  {
+    DbInsertDataSource ds = createAccountInsertDataSource(EXACT_ACCOUNT_TABLE);
+    BeanMapping<AccountImpl> mapping = Database.getDefaultBeanMapping(account
+        .getClass());
+
+    insertAccount(ds, mapping, account);
+  }
+
+
+  public Integer getNrRecords(String table)
+  {
+    DbSelectDataSource ds = Database.getSelectDataSource(getDataSource(),
+        "select count(*) as nrRecords from " + table);
+    return (Integer) DatabaseQB.select("nrRecords").from(ds).uniqueResult();
   }
 
 
@@ -222,5 +281,6 @@ public class DatabaseSetup
   {
     return new DbSelectDataSource(getNiceMockDataSource(), SELECT_SQL);
   }
+
 
 }

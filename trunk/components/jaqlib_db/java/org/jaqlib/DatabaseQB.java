@@ -22,7 +22,10 @@ import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DeleteFromClause;
+import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
+import org.jaqlib.db.Using;
 
 
 /**
@@ -113,6 +116,24 @@ public class DatabaseQB
 
   /**
    * <p>
+   * Convenience method for selecting a specific column from a table without
+   * type safety (that means that this method returns an <tt>Object</tt>).
+   * </p>
+   * For further details see {@link #select(ColumnMapping)}.
+   * 
+   * @param columnName the name of the column to select. This name can also be
+   *          an alias defined in the SELECT clause of the statement.
+   * @return the FROM clause to specify the database SELECT statement for the
+   *         query.
+   */
+  public static FromClause<Object, DbSelectDataSource> select(String columnName)
+  {
+    return select(new ColumnMapping<Object>(columnName));
+  }
+
+
+  /**
+   * <p>
    * Uses a given database SELECT statement to fill a user-defined Java bean.
    * The SELECT statement that should be used must be specified in the returned
    * {@link FromClause}. The {@link FromClause} hereby returns a
@@ -151,15 +172,15 @@ public class DatabaseQB
    * instances see {@link Database}.
    * 
    * @param <T> the result bean type.
-   * @param resultDefinition a bean definition that holds information how to map
-   *          the result of the SELECT statement to a Java bean.
+   * @param beanMapping a bean definition that holds information how to map the
+   *          result of the SELECT statement to a Java bean.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
   public static <T> FromClause<T, DbSelectDataSource> select(
-      BeanMapping<T> resultDefinition)
+      BeanMapping<T> beanMapping)
   {
-    return getQueryBuilder().select(resultDefinition);
+    return getQueryBuilder().select(beanMapping);
   }
 
 
@@ -175,15 +196,47 @@ public class DatabaseQB
   }
 
 
-  public static <T> IntoClause<T> insert(T element)
+  /**
+   * Inserts the given bean into the table that must be specified in the
+   * returned {@link IntoClause}. The mapping between the given bean field
+   * values to the according table columns must be specified in the
+   * {@link Using} object that is returned by
+   * {@link IntoClause#into(org.jaqlib.db.DbInsertDataSource)}.
+   * 
+   * @param <T> the type of the bean.
+   * @param bean a not null bean to insert.
+   * @return the INTO clause to specify the table where to insert the bean.
+   */
+  public static <T> IntoClause<T> insert(T bean)
   {
-    return getQueryBuilder().insert(element);
+    return getQueryBuilder().insert(bean);
   }
 
 
-  public static <T> IntoClause<T> insert(T element, BeanMapping<T> beanMapping)
+  /**
+   * Updates the given bean in the table that must be specified in the returned
+   * {@link InClause}. The mapping between the given bean field values to the
+   * according table columns must be specified in the {@link Using} object that
+   * is returned by {@link InClause#in(org.jaqlib.db.DbUpdateDataSource)}.
+   * 
+   * @param <T> the type of the bean.
+   * @param bean a not null bean to update.
+   * @return the IN clause to specify the table where to update the bean.
+   */
+  public static <T> InClause<T> update(T bean)
   {
-    return getQueryBuilder().insert(element, beanMapping);
+    return getQueryBuilder().update(bean);
+  }
+
+
+  /**
+   * Deletes a table that is specified in the returned {@link DeleteFromClause}.
+   * 
+   * @return the FROM clause to specify the table where to delete records.
+   */
+  public static DeleteFromClause delete()
+  {
+    return getQueryBuilder().delete();
   }
 
 }

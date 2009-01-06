@@ -6,8 +6,10 @@ import org.jaqlib.db.BeanConventionMappingStrategy;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DataSourceQueryException;
+import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DbUpdateDataSource;
 import org.jaqlib.db.Defaults;
 import org.jaqlib.db.MappingStrategy;
 import org.jaqlib.db.java.typehandler.JavaTypeHandler;
@@ -186,11 +188,62 @@ public class Database
    * @return an object representing the source for a (or multiple) database
    *         insert.
    */
-  private DbInsertDataSource getInsertDataSource(String tableName)
+  public DbInsertDataSource getInsertDataSource(String tableName)
   {
     DbInsertDataSource ds = new DbInsertDataSource(dataSource, tableName);
     ds.setSqlTypeHandlerRegistry(sqlTypeHandlerRegistry);
     return ds;
+  }
+
+
+  /**
+   * @param tableName the not null name of the table where to insert the record.
+   * @param whereClause the where clause of the UPDATE statement without the
+   *          WHERE keyword.
+   * @return an object representing the source for a (or multiple) database
+   *         insert.
+   */
+  public DbUpdateDataSource getUpdateDataSource(String tableName,
+      String whereClause)
+  {
+    DbUpdateDataSource ds = new DbUpdateDataSource(dataSource, tableName,
+        whereClause);
+    ds.setSqlTypeHandlerRegistry(sqlTypeHandlerRegistry);
+    return ds;
+  }
+
+
+  /**
+   * Gets a datasource for deleting a set of records of a table. Which records
+   * should be deleted can be specified with a given where clause (without the
+   * WHERE keyword).
+   * 
+   * @param tableName the not null name of the table where to delete the
+   *          records.
+   * @param whereClause the where clause of the DELETE statement without the
+   *          WHERE keyword.
+   * @return an object representing the source for a database table delete.
+   */
+  public DbDeleteDataSource getDeleteDataSource(String tableName,
+      String whereClause)
+  {
+    DbDeleteDataSource ds = new DbDeleteDataSource(dataSource, tableName,
+        whereClause);
+    ds.setSqlTypeHandlerRegistry(sqlTypeHandlerRegistry);
+    return ds;
+  }
+
+
+  /**
+   * Gets a datasource for deleting all records of a table.
+   * 
+   * @param tableName the not null name of the table where to delete the
+   *          records.
+   * @return an object representing the source for a database table delete.
+   */
+  public DbDeleteDataSource getDeleteDataSource(String tableName)
+  {
+    return getDeleteDataSource(tableName, null);
   }
 
 
@@ -218,6 +271,58 @@ public class Database
       String tableName)
   {
     return new Database(dataSource).getInsertDataSource(tableName);
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to update the record.
+   * @param whereClause the where clause of the UPDATE statement without the
+   *          WHERE keyword.
+   * @return an object representing the source for a (or multiple) database
+   *         update.
+   */
+  public static DbUpdateDataSource getUpdateDataSource(DataSource dataSource,
+      String tableName, String whereClause)
+  {
+    return new Database(dataSource).getUpdateDataSource(tableName, whereClause);
+  }
+
+
+  /**
+   * Gets a datasource for deleting a set of records of a table. Which records
+   * should be deleted can be specified with a given where clause (without the
+   * WHERE keyword).
+   * 
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to delete the
+   *          records.
+   * @param whereClause the where clause of the DELETE statement without the
+   *          WHERE keyword.
+   * @return an object representing the source for a database table delete.
+   */
+  public static DbDeleteDataSource getDeleteDataSource(DataSource dataSource,
+      String tableName, String whereClause)
+  {
+    return new Database(dataSource).getDeleteDataSource(tableName, whereClause);
+  }
+
+
+  /**
+   * Gets a datasource for deleting all records of a table.
+   * 
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to delete the
+   *          records.
+   * @return an object representing the source for a database table delete.
+   */
+  public static DbDeleteDataSource getDeleteDataSource(DataSource dataSource,
+      String tableName)
+  {
+    return new Database(dataSource).getDeleteDataSource(tableName);
   }
 
 
@@ -253,6 +358,5 @@ public class Database
     result.setMappingStrategy(mappingStrategy);
     return result;
   }
-
 
 }
