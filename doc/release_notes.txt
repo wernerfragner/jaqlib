@@ -23,6 +23,8 @@ Database query support:
 - Support for custom Java type handlers: converting database data types to Java types
 - Support for custom SQL type handlers: customize the extraction of database data via JDBC ResultSet
 - Defining application defaults for JaQLib using org.jaqlib.db.Defaults
+- [0000008] Automatic save data type conversion (e.g., database Integer value to Java bean Long value)
+- [0000001] Support for simple INSERT, UPDATE and DELETE statements
 
 Iterable query support:
 - Conditions on single elements

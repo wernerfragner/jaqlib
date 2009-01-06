@@ -36,7 +36,7 @@ List&lt;Account&gt; highRiskAccounts = IterableQB.select(Account.class).from(acc
     .where(deptCondition).and(ratingCondition).asList();
 </pre>
 
-===Filtering out null elements===
+===Filtering null elements===
 
 <pre>
 List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
