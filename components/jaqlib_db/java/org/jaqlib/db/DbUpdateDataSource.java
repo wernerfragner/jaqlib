@@ -29,7 +29,7 @@ public class DbUpdateDataSource extends AbstractDbDmlDataSource
 
     boolean first = true;
 
-    for (AbstractMapping<?> mapping : beanMapping)
+    for (ColumnMapping<?> mapping : beanMapping)
     {
       if (!first)
       {

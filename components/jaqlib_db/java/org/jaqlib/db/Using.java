@@ -22,15 +22,15 @@ public class Using<T>
   }
 
 
-  public void using(BeanMapping<T> beanMapping)
+  public int using(BeanMapping<T> beanMapping)
   {
-    dataSource.execute(bean, beanMapping);
+    return dataSource.execute(bean, beanMapping);
   }
 
 
-  public void usingDefault()
+  public int usingDefaultMapping()
   {
-    using(getDefaultBeanMapping());
+    return using(getDefaultBeanMapping());
   }
 
 

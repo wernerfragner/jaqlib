@@ -41,7 +41,7 @@ import org.jaqlib.iterable.IterableQuery;
  * This class is thread-safe.
  * <p>
  * <b>Usage examples:</b><br>
- * <i>Example using the method call recording mechanism:</i>
+ * <i>Method call recording mechanism:</i>
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
@@ -52,7 +52,7 @@ import org.jaqlib.iterable.IterableQuery;
  *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
- * <i>Example with custom WHERE conditions:</i>
+ * <i>Custom WHERE conditions:</i>
  * 
  * <pre>
  * // create condition for negative balances
@@ -77,14 +77,14 @@ import org.jaqlib.iterable.IterableQuery;
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
- * <i>Example for filtering out null elements:</i>
+ * <i>Filtering null elements:</i>
  * 
  * <pre>
  * List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
  *     .where().element().isNotNull().asList();
  * </pre>
  * 
- * <i>Example for using {@link Comparable} elements:</i>
+ * <i>Filtering {@link Comparable} elements:</i>
  * 
  * <pre>
  * // Account implements the Comparable interface; the balance field is used for comparing two accounts
@@ -95,7 +95,7 @@ import org.jaqlib.iterable.IterableQuery;
  *     .element().isSmallerThan(spec).asList();
  * </pre>
  * 
- * <i>Example using a Map as result:</i>
+ * <i>Map as result:</i>
  * 
  * <pre>
  * Account account = IterableQB.getRecorder(Account.class);
@@ -103,7 +103,7 @@ import org.jaqlib.iterable.IterableQuery;
  *     .asMap(account.getId());
  * </pre>
  * 
- * <i>Examples with executing a task on each element:</i>
+ * <i>Executing a task on each element:</i>
  * 
  * <pre>
  * // create task that should be executed for each element

@@ -72,7 +72,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * DbSelectDataSource accounts = db.getSelectDataSource(sql);
  * </pre>
  * 
- * <i>Example using the method call recording mechanism:</i>
+ * <i>Method call recording mechanism:</i>
  * 
  * <pre>
  * // create a 'dummy' object for recording a method call for the WHERE clause
@@ -83,7 +83,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
- * <i>Example with custom WHERE conditions:</i>
+ * <i>Custom WHERE conditions:</i>
  * 
  * <pre>
  * // create condition for negative balances
@@ -108,14 +108,14 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
- * <i>Example for filtering out null elements:</i>
+ * <i>Filtering null elements:</i>
  * 
  * <pre>
  * List&lt;AccountImpl&gt; notNullAccounts = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).where().element().isNotNull().asList();
  * </pre>
  * 
- * <i>Example for using {@link Comparable} elements:</i>
+ * <i>Filtering {@link Comparable} elements:</i>
  * 
  * <pre>
  * // Account implements the Comparable interface; the balance field is used for comparing two accounts
@@ -126,7 +126,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  *     .where().element().isSmallerThan(spec).asList();
  * </pre>
  * 
- * <i>Example using a Map as result:</i>
+ * <i>Map as result:</i>
  * 
  * <pre>
  * Account account = DatabaseQB.getRecorder(Account.class);
@@ -136,7 +136,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * </p>
  * <p>
- * <i>Example for custom java type handler:</i>
+ * <i>Custom Java type handler:</i>
  * <p>
  * Database column data types can be converted to custom Java types with
  * so-called {@link JavaTypeHandler}s. These handlers can be registered with
@@ -178,7 +178,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * </pre>
  * 
- * <i>Examples with executing a task on each element:</i>
+ * <i>Executing a task on each element:</i>
  * 
  * <pre>
  * // create task that should be executed for each element
@@ -212,6 +212,94 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * // or ...
  * List&lt;Account&gt; result = DatabaseQB.select(Account.class).from(accounts).where(
  *     deptCond).executeWithResult(task).asList();
+ * </pre>
+ * 
+ * <i>Inserting a Java bean into a database table:</i>
+ * 
+ * <pre>
+ * AccountImpl account = new AccountImpl();
+ * // fill account with values ...
+ * 
+ * String tableName = &quot;ACCOUNT&quot;;
+ * DbInsertDataSource ds = Database
+ *     .getInsertDataSource(getDataSource(), tableName);
+ * int updateCount = DatabaseQB.insert(account).into(ds).usingDefaultMapping();
+ * </pre>
+ * 
+ * <i>Inserting a Java bean into a database table using a custom bean
+ * mapping:</i>
+ * 
+ * <pre>
+ * AccountImpl account = new AccountImpl();
+ * // fill account with values ...
+ * 
+ * // create custom bean mapping
+ * BeanMapping&lt;AccountImpl&gt; beanMapping = Database
+ *     .getDefaultBeanMapping(AccountImpl.class);
+ * beanMapping.removeChildColumn(&quot;id&quot;);
+ * beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
+ * 
+ * // insert account using the custom bean mapping
+ * String tableName = &quot;ACCOUNT&quot;;
+ * DbInsertDataSource ds = Database
+ *     .getInsertDataSource(getDataSource(), tableName);
+ * int updateCount = DatabaseQB.insert(account).into(ds).using(beanMapping);
+ * </pre>
+ * 
+ * <i>Updating a Java bean in a database table:</i>
+ * 
+ * <pre>
+ * // get account that already exists at database 
+ * AccountImpl account = getAccount();
+ * 
+ * String whereClause = &quot;id = &quot; + account.getId();
+ * String tableName = &quot;ACCOUNT&quot;;
+ * DbUpdateDataSource ds = Database.getUpdateDataSource(getDataSource(),
+ *     tableName, whereClause);
+ * int updateCount = DatabaseQB.update(account).in(ds).usingDefaultMapping();
+ * </pre>
+ * 
+ * <i>Updating a Java bean in a database table using a custom bean mapping:</i>
+ * 
+ * <pre>
+ * // get account that already exists at database 
+ * AccountImpl account = getAccount();
+ * 
+ * // create custom bean mapping
+ * BeanMapping&lt;AccountImpl&gt; beanMapping = Database
+ *     .getDefaultBeanMapping(AccountImpl.class);
+ * beanMapping.removeChildColumn(&quot;id&quot;);
+ * beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
+ * 
+ * String whereClause = &quot;id = &quot; + account.getId();
+ * String tableName = &quot;ACCOUNT&quot;;
+ * DbUpdateDataSource ds = Database.getUpdateDataSource(getDataSource(),
+ *     tableName, whereClause);
+ * int updateCount = DatabaseQB.update(account).in(ds).using(beanMapping);
+ * </pre>
+ * 
+ * <i>Delete specific records from a database table:</i>
+ * 
+ * <pre>
+ * // get account that already exists at database 
+ * AccountImpl account = getAccount();
+ * 
+ * // delete account at database
+ * String whereClause = &quot;id = &quot; + account.getId();
+ * String tableName = &quot;ACCOUNT&quot;;
+ * DbDeleteDataSource ds = Database.getDeleteDataSource(getDataSource(),
+ *     tableName, whereClause);
+ * int updateCount = DatabaseQB.delete().from(ds);
+ * </pre>
+ * 
+ * <i>Delete all records from a database table:</i>
+ * 
+ * <pre>
+ * // delete all records from the ACCOUNT table 
+ * String tableName = &quot;ACCOUNT&quot;;
+ * DbDeleteDataSource ds = Database
+ *     .getDeleteDataSource(getDataSource(), tableName);
+ * int updateCount = DatabaseQB.delete().from(ds);
  * </pre>
  * 
  * </p>
