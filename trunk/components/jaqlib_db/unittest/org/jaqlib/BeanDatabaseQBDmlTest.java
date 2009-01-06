@@ -36,8 +36,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     account = createAccount();
 
     mapping = Database.getDefaultBeanMapping(AccountImpl.class);
-    mapping.removeChildMapping("id");
-    mapping.removeChildMapping("active");
+    mapping.removeChildColumn("id");
+    mapping.removeChildColumn("active");
     mapping.getChildColumn("lastName").setColumnName("lname");
     mapping.getChildColumn("firstName").setColumnName("fname");
   }
@@ -113,7 +113,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
   public void testInsert_CustomMapping()
   {
     DbInsertDataSource ds = getInsertDataSource(TABLE);
-    DatabaseQB.insert(account).into(ds).using(mapping);
+    int cnt = DatabaseQB.insert(account).into(ds).using(mapping);
+    assertEquals(1, cnt);
 
     AccountImpl dbAccount = selectAccount(SELECT);
     assertEqualAccount(account, dbAccount);
@@ -122,8 +123,9 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   public void testInsert_DefaultMapping()
   {
-    DatabaseQB.insert(account).into(getInsertDataSource(EXACT_TABLE))
-        .usingDefault();
+    int cnt = DatabaseQB.insert(account).into(getInsertDataSource(EXACT_TABLE))
+        .usingDefaultMapping();
+    assertEquals(1, cnt);
 
     AccountImpl dbAccount = selectAccount(EXACT_SELECT);
     assertEqualAccount(account, dbAccount);
@@ -141,7 +143,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
     DbUpdateDataSource ds = getUpdateDataSource(insertedAccount.getId(), TABLE);
     account.setBalance(3000d);
-    DatabaseQB.update(account).in(ds).using(mapping);
+    int cnt = DatabaseQB.update(account).in(ds).using(mapping);
+    assertEquals(1, cnt);
 
     // check if account has been updated at database
 
@@ -162,7 +165,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     DbUpdateDataSource ds = getUpdateDataSource(insertedAccount.getId(),
         EXACT_TABLE);
     account.setBalance(3000d);
-    DatabaseQB.update(account).in(ds).usingDefault();
+    int cnt = DatabaseQB.update(account).in(ds).usingDefaultMapping();
+    assertEquals(1, cnt);
 
     // check if account has been updated at database
 
@@ -176,7 +180,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     assertEquals(2, getNrRecords(TABLE));
 
     DbDeleteDataSource ds = getDeleteDataSource(TABLE);
-    DatabaseQB.delete().from(ds);
+    int cnt = DatabaseQB.delete().from(ds);
+    assertEquals(2, cnt);
 
     assertEquals(0, getNrRecords(TABLE));
   }

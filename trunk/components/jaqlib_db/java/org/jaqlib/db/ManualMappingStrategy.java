@@ -15,7 +15,7 @@ import org.jaqlib.util.CollectionUtil;
 public class ManualMappingStrategy implements MappingStrategy
 {
 
-  private final List<AbstractMapping<?>> mappings = CollectionUtil
+  private final List<ColumnMapping<?>> mappings = CollectionUtil
       .newDefaultList();
 
 
@@ -48,14 +48,14 @@ public class ManualMappingStrategy implements MappingStrategy
   }
 
 
-  private void addMapping(AbstractMapping<?> mapping)
+  public void addMapping(ColumnMapping<?> mapping)
   {
     Assert.notNull(mapping);
     mappings.add(mapping);
   }
 
 
-  public List<AbstractMapping<?>> getMappings(Class<?> beanClass)
+  public List<ColumnMapping<?>> getMappings(Class<?> beanClass)
   {
     return mappings;
   }

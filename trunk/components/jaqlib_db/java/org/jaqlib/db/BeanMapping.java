@@ -19,13 +19,13 @@ import org.jaqlib.util.ReflectionUtil;
  * @param <T> the Java bean type of the mapping.
  */
 public class BeanMapping<T> extends AbstractMapping<T> implements
-    Iterable<AbstractMapping<?>>
+    Iterable<ColumnMapping<?>>
 {
 
   // state
 
   private final Class<? extends T> beanClass;
-  private List<AbstractMapping<?>> mappings;
+  private List<ColumnMapping<?>> mappings;
 
   // infrastructure
 
@@ -95,13 +95,13 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   /**
    * {@inheritDoc}
    */
-  public Iterator<AbstractMapping<?>> iterator()
+  public Iterator<ColumnMapping<?>> iterator()
   {
     return getMappings().iterator();
   }
 
 
-  private List<AbstractMapping<?>> getMappings()
+  private List<ColumnMapping<?>> getMappings()
   {
     if (mappings == null)
     {
@@ -125,7 +125,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public T getValue(DbResultSet rs) throws SQLException
   {
     T bean = newBeanInstance();
-    for (AbstractMapping<?> mapping : this)
+    for (ColumnMapping<?> mapping : this)
     {
       Object value = mapping.getValue(rs);
       if (value != DbResultSet.NO_RESULT)
@@ -163,9 +163,9 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  public AbstractMapping<?> removeChildMapping(String fieldName)
+  public ColumnMapping<?> removeChildColumn(String fieldName)
   {
-    AbstractMapping<?> mapping = getChildMapping(fieldName);
+    ColumnMapping<?> mapping = getChildColumn(fieldName);
     if (mapping != null)
     {
       getMappings().remove(mapping);
@@ -176,13 +176,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
   public ColumnMapping<?> getChildColumn(String fieldName)
   {
-    return (ColumnMapping<?>) getChildMapping(fieldName);
-  }
-
-
-  public AbstractMapping<?> getChildMapping(String fieldName)
-  {
-    for (AbstractMapping<?> mapping : getMappings())
+    for (ColumnMapping<?> mapping : getMappings())
     {
       if (fieldName.equals(mapping.getFieldName()))
       {
@@ -197,45 +191,6 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public String getLogString()
   {
     return ReflectionUtil.getPlainClassName(beanClass);
-  }
-
-
-  @Override
-  public void appendColumn(StringBuilder columns, StringBuilder values)
-  {
-    boolean first = true;
-    for (AbstractMapping<?> mapping : getMappings())
-    {
-      if (!first)
-      {
-        columns.append(", ");
-        values.append(", ");
-      }
-      else
-      {
-        first = false;
-      }
-      mapping.appendColumn(columns, values);
-    }
-  }
-
-
-  @Override
-  public void appendColumn(StringBuilder updateSql)
-  {
-    boolean first = true;
-    for (AbstractMapping<?> mapping : getMappings())
-    {
-      if (!first)
-      {
-        updateSql.append(", ");
-      }
-      else
-      {
-        first = false;
-      }
-      mapping.appendColumn(updateSql);
-    }
   }
 
 }

@@ -24,11 +24,11 @@ public class BeanConventionMappingStrategy implements MappingStrategy
   /**
    * {@inheritDoc}
    */
-  public List<AbstractMapping<?>> getMappings(Class<?> beanClass)
+  public List<ColumnMapping<?>> getMappings(Class<?> beanClass)
   {
     Assert.notNull(beanClass);
 
-    List<AbstractMapping<?>> mappings = CollectionUtil.newDefaultList();
+    List<ColumnMapping<?>> mappings = CollectionUtil.newDefaultList();
     BeanInfo beanInfo = getBeanInfo(beanClass);
     for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
     {

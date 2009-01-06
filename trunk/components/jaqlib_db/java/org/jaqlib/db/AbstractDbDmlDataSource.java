@@ -23,7 +23,7 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
   }
 
 
-  public <T> void execute(T bean, BeanMapping<T> beanMapping)
+  public <T> int execute(T bean, BeanMapping<T> beanMapping)
   {
     final String sql = buildSql(beanMapping);
 
@@ -34,7 +34,7 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
       PreparedStatement stmt = getPreparedStatement(sql);
 
       int i = 1;
-      for (AbstractMapping<?> mapping : beanMapping)
+      for (ColumnMapping<?> mapping : beanMapping)
       {
         mapping.setValue(i, stmt, bean, beanMapping);
         i++;
@@ -42,10 +42,11 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
 
       stmt.execute();
       commit();
+      return stmt.getUpdateCount();
     }
     catch (SQLException e)
     {
-      handleSqlException(e);
+      throw handleSqlException(e);
     }
     finally
     {

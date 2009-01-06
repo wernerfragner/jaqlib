@@ -55,10 +55,9 @@ public class BeanConventionMappingStrategyTest extends TestCase
   private List<String> getResults(BeanMapping<AccountImpl> result)
   {
     List<String> results = new ArrayList<String>();
-    for (AbstractMapping<?> dbSelectResult : result)
+    for (ColumnMapping<?> dbSelectResult : result)
     {
-      assertEquals(ColumnMapping.class, dbSelectResult.getClass());
-      results.add(((ColumnMapping<?>) dbSelectResult).getColumnLabel());
+      results.add(dbSelectResult.getColumnLabel());
     }
     return results;
   }

@@ -6,9 +6,9 @@ package org.jaqlib.db;
 public class DeleteFromClause
 {
 
-  public void from(DbDeleteDataSource ds)
+  public int from(DbDeleteDataSource ds)
   {
-    ds.execute();
+    return ds.execute();
   }
 
 }

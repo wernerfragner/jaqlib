@@ -146,11 +146,11 @@ public abstract class AbstractDbDataSource
   }
 
 
-  protected void handleSqlException(SQLException sqle)
+  protected DataSourceQueryException handleSqlException(SQLException sqle)
   {
     DataSourceQueryException e = new DataSourceQueryException(sqle);
     e.setStackTrace(sqle.getStackTrace());
-    throw e;
+    return e;
   }
 
 

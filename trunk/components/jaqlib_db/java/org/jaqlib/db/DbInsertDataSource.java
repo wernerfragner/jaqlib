@@ -22,7 +22,7 @@ public class DbInsertDataSource extends AbstractDbDmlDataSource
     final StringBuilder values = new StringBuilder();
 
     boolean first = true;
-    for (AbstractMapping<?> mapping : beanMapping)
+    for (ColumnMapping<?> mapping : beanMapping)
     {
       if (!first)
       {

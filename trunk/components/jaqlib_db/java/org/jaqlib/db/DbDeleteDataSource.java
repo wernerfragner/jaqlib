@@ -36,7 +36,7 @@ public class DbDeleteDataSource extends AbstractDbDataSource
   }
 
 
-  public void execute()
+  public int execute()
   {
     final String sql = buildSql();
 
@@ -47,10 +47,11 @@ public class DbDeleteDataSource extends AbstractDbDataSource
       final Statement stmt = getStatement();
       stmt.execute(sql);
       commit();
+      return stmt.getUpdateCount();
     }
     catch (SQLException e)
     {
-      handleSqlException(e);
+      throw handleSqlException(e);
     }
     finally
     {

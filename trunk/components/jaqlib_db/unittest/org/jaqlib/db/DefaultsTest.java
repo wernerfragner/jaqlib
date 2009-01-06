@@ -79,7 +79,7 @@ public class DefaultsTest extends TestCase
     MappingStrategy strategy = new MappingStrategy()
     {
 
-      public List<AbstractMapping<?>> getMappings(Class<?> beanClass)
+      public List<ColumnMapping<?>> getMappings(Class<?> beanClass)
       {
         return null;
       }

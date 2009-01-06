@@ -1,5 +1,6 @@
 package org.jaqlib.db;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -155,6 +156,15 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   }
 
 
+  public <BeanType> void setValue(int index, PreparedStatement stmt,
+      BeanType bean, BeanMapping<BeanType> beanMapping) throws SQLException
+  {
+    Object value = getFieldValue(bean);
+    value = beanMapping.applyJavaTypeHandler(getFieldName(), value);
+    stmt.setObject(index, value);
+  }
+
+
   @Override
   public String getLogString()
   {
@@ -180,11 +190,17 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   }
 
 
-  @Override
   public void appendColumn(StringBuilder columns, StringBuilder values)
   {
     columns.append(getColumnForSql());
     values.append("?");
+  }
+
+
+  public void appendColumn(StringBuilder updateSql)
+  {
+    updateSql.append(getColumnForSql());
+    updateSql.append(" = ?");
   }
 
 
@@ -206,12 +222,5 @@ public class ColumnMapping<T> extends AbstractMapping<T>
     return column;
   }
 
-
-  @Override
-  public void appendColumn(StringBuilder updateSql)
-  {
-    updateSql.append(getColumnForSql());
-    updateSql.append(" = ?");
-  }
 
 }
