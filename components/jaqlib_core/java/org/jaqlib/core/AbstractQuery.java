@@ -75,7 +75,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  public <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleAndWhereCondition()
+  public <R> SingleElementWhereCondition<T, DataSourceType, R> addElementAndWhereCondition()
   {
     SimpleWhereCondition<T, DataSourceType, R> condition = createSimpleWhereCondition();
     addAndWhereCondition(condition);
@@ -83,7 +83,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  public <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleOrWhereCondition()
+  public <R> SingleElementWhereCondition<T, DataSourceType, R> addElementOrWhereCondition()
   {
     SimpleWhereCondition<T, DataSourceType, R> condition = createSimpleWhereCondition();
     addOrWhereCondition(condition);

@@ -92,6 +92,19 @@ public class IterableQB
   }
 
 
+  /**
+   * Shortcut method that calls {@link #select()} and afterwards
+   * {@link FromClause#from(Iterable)}.
+   * 
+   * @param iterable a not null Iterable for the query.
+   * @return a where clause for defining the query conditions.
+   */
+  public static <T> WhereClause<T, Iterable<T>> selectFrom(Iterable<T> iterable)
+  {
+    return getQueryBuilder().selectFrom(iterable);
+  }
+
+
   private static IterableQueryBuilder getQueryBuilder()
   {
     IterableQueryBuilder queryBuilder = QUERYBUILDER.get();
