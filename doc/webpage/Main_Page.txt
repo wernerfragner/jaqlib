@@ -1,5 +1,7 @@
 ==Introduction==
-JaqLib (Java Query Library) is a compact Java library that supports programmers in querying all sorts of collections and databases in a compact and intuitive manner.
+<p>
+JaqLib (Java Query Library) is a compact Java library that supports programmers in querying all sorts of collections and databases in a compact and intuitive manner. It heavily makes use of Java Generics and follows the idea of [http://www.martinfowler.com/bliki/FluentInterface.html fluent interfaces].
+</p>
 
 <p>
 WHERE conditions can be specified by custom implementations of the <tt>WhereCondition</tt> interface, by using the <tt>where().element()</tt> expression and by using a <b>method call recording mechanism</b> (see also the first example below): first the programmer must call the desired method on the returned proxy object. This method call is recorded by JaQLib. When
@@ -24,9 +26,10 @@ But examples are always better than some abstract descriptions. So lets start wi
 * Using the database query support for simple applications that need a quick and easy way to select data from database (without the coding overhead of JDBC or OR-Mappers like [http://www.hibernate.org Hibernate], [http://www.oracle.com/technology/products/ias/toplink/index.html Oracle TopLink], [http://ibatis.apache.org iBatis], ...).
 * Using the database OR Mapping support for simple applications or prototypes.
 
+
 ==Roadmap==
 * Querying XML files.
-* Simple INSERT/UPDATE/DELETE database statements using the JaQLib fluent interface.
+* Integration of DataBinding frameworks like [https://jaxb.dev.java.net/guide/ JAXB], [http://www.castor.org/ Castor], [http://xmlbeans.apache.org/ XMLBeans], [http://jibx.sourceforge.net/ JiBX].
 * Execution of WHERE conditions at database.
 
 

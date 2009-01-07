@@ -1,13 +1,19 @@
-JaQLib supports all queries against objects that implement the <tt>Iterable</tt> interface. Here are some basic examples:
+<p>
+JaQLib supports queries against objects that implement the <tt>Iterable</tt> interface. Queries can be executed using IterableQB.select().from() or using the shortcut method IterableQB.selectFrom().
+</p>
+Here are some basic examples:
 
 ===Method call recording mechanism===
 
 <pre>
+// get accounts that should be queried
+List&lt;Account&gt; accounts = getAccounts();
+
 // create a 'dummy' object for recording a method call for the WHERE clause
 Account account = IterableQB.getRecorder(Account.class);
 
 // select all accounts with a balance greater than 5000
-List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).whereCall(
+List&lt;Account&gt; result = IterableQB.selectFrom(accounts).whereCall(
     account.getBalance()).isGreaterThan(5000).asList();
 </pre>
 
@@ -32,14 +38,14 @@ WhereCondition&lt;Account&gt; ratingCondition = new WhereCondition&lt;Account&gt
 }
 
 // execute query with these conditions 
-List&lt;Account&gt; highRiskAccounts = IterableQB.select(Account.class).from(accounts)
+List&lt;Account&gt; highRiskAccounts = IterableQB.select().from(accounts)
     .where(deptCondition).and(ratingCondition).asList();
 </pre>
 
 ===Filtering null elements===
 
 <pre>
-List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
+List&lt;Account&gt; notNullAccounts = IterableQB.selectFrom(accounts)
     .where().element().isNotNull().asList();
 </pre>
 
@@ -50,7 +56,7 @@ List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(acco
 AccountImpl spec = new AccountImpl();
 account.setBalance(5000);
 
-List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where()
+List&lt;Account&gt; result = IterableQB.selectFrom(accounts).where()
     .element().isSmallerThan(spec).asList();
 </pre>
 
@@ -58,8 +64,7 @@ List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).whe
 
 <pre>
 Account account = IterableQB.getRecorder(Account.class);
-Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
-    .asMap(account.getId());
+Map&lt;Long, Account&gt; results = IterableQB.selectFrom(accounts).asMap(account.getId());
 </pre>
 
 ===Executing a task on each element===
@@ -75,7 +80,7 @@ Task&lt;Account&gt; task = new Task&lt;Account&gt;()
   }
 
 };
-IterableQB.select(Account.class).from(accounts).execute(task);
+IterableQB.selectFrom(accounts).execute(task);
 </pre>
 
 <pre>
@@ -91,11 +96,11 @@ WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;(
 };
 
 // execute task only on elements that match the given condition 
-IterableQB.select(Account.class).from(accounts).where(deptCond).execute(task);
+IterableQB.selectFrom(accounts).where(deptCond).execute(task);
 
 // or ...
-List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
-    deptCond).executeWithResult(task).asList();
+List&lt;Account&gt; result = IterableQB.selectFrom(accounts).where(deptCond)
+    .executeWithResult(task).asList();
 </pre>
 
 
