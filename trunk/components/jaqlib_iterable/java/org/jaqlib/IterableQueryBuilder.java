@@ -24,7 +24,7 @@ import org.jaqlib.iterable.IterableQuery;
 /**
  * <p>
  * The main entry point of JaQLib for {@link Iterable} support. It provides
- * following a {@link #select()} method for building queries.
+ * {@link #select()} and {@link #selectFrom(Iterable)} for building queries.
  * </p>
  * <p>
  * The Method {@link #getRecorder(Class)} can be used to define a WHERE
@@ -47,7 +47,7 @@ import org.jaqlib.iterable.IterableQuery;
  * Account account = IterableQB.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = IterableQB.select().from(accounts).whereCall(
+ * List&lt;Account&gt; result = IterableQB.selectFrom(accounts).whereCall(
  *     account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
@@ -72,14 +72,14 @@ import org.jaqlib.iterable.IterableQuery;
  * }
  * 
  * // execute query with these conditions 
- * List&lt;Account&gt; highRiskAccounts = IterableQB.select().from(accounts)
+ * List&lt;Account&gt; highRiskAccounts = IterableQB.selectFrom(accounts)
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
  * <i>Filtering null elements:</i>
  * 
  * <pre>
- * List&lt;Account&gt; notNullAccounts = IterableQB.select().from(accounts).where()
+ * List&lt;Account&gt; notNullAccounts = IterableQB.selectFrom(accounts).where()
  *     .element().isNotNull().asList();
  * </pre>
  * 
@@ -90,7 +90,7 @@ import org.jaqlib.iterable.IterableQuery;
  * AccountImpl spec = new AccountImpl();
  * account.setBalance(5000);
  * 
- * List&lt;Account&gt; result = IterableQB.select().from(accounts).where().element()
+ * List&lt;Account&gt; result = IterableQB.selectFrom(accounts).where().element()
  *     .isSmallerThan(spec).asList();
  * </pre>
  * 
@@ -98,7 +98,7 @@ import org.jaqlib.iterable.IterableQuery;
  * 
  * <pre>
  * Account account = IterableQB.getRecorder(Account.class);
- * Map&lt;Long, Account&gt; results = IterableQB.select().from(accounts).asMap(
+ * Map&lt;Long, Account&gt; results = IterableQB.selectFrom(accounts).asMap(
  *     account.getId());
  * </pre>
  * 
@@ -115,7 +115,7 @@ import org.jaqlib.iterable.IterableQuery;
  *   }
  * 
  * };
- * IterableQB.select().from(accounts).execute(task);
+ * IterableQB.selectFrom(accounts).execute(task);
  * </pre>
  * 
  * <pre>
@@ -131,10 +131,10 @@ import org.jaqlib.iterable.IterableQuery;
  * };
  * 
  * // execute task only on elements that match the given condition 
- * IterableQB.select().from(accounts).where(deptCond).execute(task);
+ * IterableQB.selectFrom(accounts).where(deptCond).execute(task);
  * 
  * // or ...
- * List&lt;Account&gt; result = IterableQB.select().from(accounts).where(deptCond)
+ * List&lt;Account&gt; result = IterableQB.selectFrom(accounts).where(deptCond)
  *     .executeWithResult(task).asList();
  * </pre>
  * 
@@ -162,6 +162,24 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
   }
 
 
+  /**
+   * Shortcut method that calls {@link #select()} and afterwards
+   * {@link FromClause#from(Iterable)}.
+   * 
+   * @param iterable a not null Iterable for the query.
+   * @return a where clause for defining the query conditions.
+   */
+  public <T> WhereClause<T, Iterable<T>> selectFrom(Iterable<T> iterable)
+  {
+    return select().from(iterable);
+  }
+
+
+  /**
+   * @param <T> the element type of the {@link Iterable}.
+   * @return a query for using the functionality of JaQLib without the fluent
+   *         API.
+   */
   public <T> IterableQuery<T> createQuery()
   {
     return new IterableQuery<T>(getMethodCallRecorder());

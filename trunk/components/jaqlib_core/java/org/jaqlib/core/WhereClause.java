@@ -29,7 +29,7 @@ public class WhereClause<T, DataSourceType> extends
    */
   public <R> SingleElementWhereCondition<T, DataSourceType, R> where()
   {
-    return getQuery().addSimpleAndWhereCondition();
+    return getQuery().addElementAndWhereCondition();
   }
 
 

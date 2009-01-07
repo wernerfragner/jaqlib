@@ -390,6 +390,11 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
   }
 
 
+  /**
+   * @param <T> the element type of the data source.
+   * @return a query for using the functionality of JaQLib without the fluent
+   *         API.
+   */
   public <T> DatabaseQuery<T> createQuery(AbstractMapping<T> mapping)
   {
     return new DatabaseQuery<T>(getMethodCallRecorder(), mapping);

@@ -170,7 +170,7 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> SingleElementWhereCondition<T, DataSourceType, R> and()
   {
-    return getQuery().addSimpleAndWhereCondition();
+    return getQuery().addElementAndWhereCondition();
   }
 
 
@@ -184,7 +184,7 @@ public class QueryResult<T, DataSourceType> extends
    */
   public <R> SingleElementWhereCondition<T, DataSourceType, R> or()
   {
-    return getQuery().addSimpleOrWhereCondition();
+    return getQuery().addElementOrWhereCondition();
   }
 
 

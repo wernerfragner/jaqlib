@@ -4,8 +4,8 @@ package org.jaqlib.core;
 /**
  * @author Werner Fragner
  * 
- * @param <T>
- * @param <DataSourceType>
+ * @param <T> the element type.
+ * @param <DataSourceType> the data source type (e.g. Iterable, database, ...).
  */
 public interface Query<T, DataSourceType> extends
     ResultProvider<T, DataSourceType>
@@ -17,10 +17,10 @@ public interface Query<T, DataSourceType> extends
   QueryResult<T, DataSourceType> createQueryResult();
 
 
-  <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleAndWhereCondition();
+  <R> SingleElementWhereCondition<T, DataSourceType, R> addElementAndWhereCondition();
 
 
-  <R> SingleElementWhereCondition<T, DataSourceType, R> addSimpleOrWhereCondition();
+  <R> SingleElementWhereCondition<T, DataSourceType, R> addElementOrWhereCondition();
 
 
   QueryResult<T, DataSourceType> addAndWhereCondition(
