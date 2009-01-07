@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.jaqlib.core.AbstractQuery;
-import org.jaqlib.core.FromClause;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
@@ -17,21 +16,15 @@ import org.jaqlib.util.Assert;
 public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
-  private AbstractMapping<T> mapping;
+  private final AbstractMapping<T> mapping;
   private DatabaseQueryCache<T> cache;
 
 
-  public DatabaseQuery(MethodCallRecorder methodCallRecorder)
-  {
-    super(methodCallRecorder);
-  }
-
-
-  public FromClause<T, DbSelectDataSource> createFromClause(
+  public DatabaseQuery(MethodCallRecorder methodCallRecorder,
       AbstractMapping<T> mapping)
   {
+    super(methodCallRecorder);
     this.mapping = Assert.notNull(mapping);
-    return new FromClause<T, DbSelectDataSource>(this);
   }
 
 

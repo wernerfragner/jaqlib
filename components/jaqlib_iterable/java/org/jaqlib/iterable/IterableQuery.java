@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.jaqlib.core.AbstractQuery;
-import org.jaqlib.core.FromClause;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.MethodInvocation;
 
@@ -22,23 +21,10 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
   }
 
 
-  /**
-   * The resultElementClass is only needed for determining the result element
-   * type.
-   * 
-   * @param resultElementClass
-   * @return an object representing a from clause.
-   */
-  public FromClause<T, Iterable<T>> createFromClause(Class<T> resultElementClass)
-  {
-    return new FromClause<T, Iterable<T>>(this);
-  }
-
-
   @Override
   protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
   {
-    for (T element : getDataSource())
+    for (T element : getIterable())
     {
       if (tree.matches(element))
       {
@@ -57,7 +43,7 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
   protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
     final MethodInvocation invocation = getCurrentInvocation();
-    for (T element : getDataSource())
+    for (T element : getIterable())
     {
       if (element != null && tree.matches(element))
       {
@@ -66,6 +52,12 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
         resultMap.put(elementKey, element);
       }
     }
+  }
+
+
+  private Iterable<T> getIterable()
+  {
+    return getDataSource();
   }
 
 

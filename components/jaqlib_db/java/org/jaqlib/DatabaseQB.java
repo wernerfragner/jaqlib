@@ -15,14 +15,13 @@
  */
 package org.jaqlib;
 
-import org.jaqlib.core.FromClause;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
-import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DeleteFromClause;
+import org.jaqlib.db.FromClause;
 import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
 import org.jaqlib.db.Using;
@@ -103,14 +102,13 @@ public class DatabaseQB
    * </p>
    * 
    * @param <T> the result column type.
-   * @param column an object defining the desired column.
+   * @param columnMapping an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelectDataSource> select(
-      ColumnMapping<T> column)
+  public static <T> FromClause<T> select(ColumnMapping<T> columnMapping)
   {
-    return getQueryBuilder().select(column);
+    return getQueryBuilder().select(columnMapping);
   }
 
 
@@ -126,7 +124,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static FromClause<Object, DbSelectDataSource> select(String columnName)
+  public static FromClause<Object> select(String columnName)
   {
     return select(new ColumnMapping<Object>(columnName));
   }
@@ -158,7 +156,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelectDataSource> select(Class<T> beanClass)
+  public static <T> FromClause<T> select(Class<T> beanClass)
   {
     return getQueryBuilder().select(beanClass);
   }
@@ -177,8 +175,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T, DbSelectDataSource> select(
-      BeanMapping<T> beanMapping)
+  public static <T> FromClause<T> select(BeanMapping<T> beanMapping)
   {
     return getQueryBuilder().select(beanMapping);
   }

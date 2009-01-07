@@ -15,9 +15,9 @@
  */
 package org.jaqlib;
 
-import org.jaqlib.core.FromClause;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
+import org.jaqlib.iterable.FromClause;
 
 
 /**
@@ -84,25 +84,9 @@ public class IterableQB
    * conditions using a method call recording mechanism (see examples and
    * {@link #getRecorder(Class)} for further details).
    * 
-   * @param <T> the collection element type.
-   * @param resultElementClass the class of the result elements. This class is
-   *          only necessary for type safety.
    * @return the FROM clause to specify the source collection for the query.
    */
-  public static <T> FromClause<T, Iterable<T>> select(
-      Class<T> resultElementClass)
-  {
-    return getQueryBuilder().select(resultElementClass);
-  }
-
-
-  /**
-   * This method has basically the same functionality as {@link #select(Class)}.
-   * But this method is not type safe regarding the returned result.
-   * 
-   * @return the FROM clause to specify the source collection of the query.
-   */
-  public static FromClause<?, Iterable<?>> select()
+  public static FromClause select()
   {
     return getQueryBuilder().select();
   }

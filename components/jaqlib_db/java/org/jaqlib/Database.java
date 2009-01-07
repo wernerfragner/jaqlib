@@ -352,9 +352,9 @@ public class Database
   public static <T> BeanMapping<T> getBeanMapping(
       MappingStrategy mappingStrategy, Class<? extends T> beanClass)
   {
-    BeanMapping<T> result = new BeanMapping<T>(beanClass);
-    result.setMappingStrategy(mappingStrategy);
-    return result;
+    BeanMapping<T> mapping = new BeanMapping<T>(beanClass);
+    mapping.setMappingStrategy(mappingStrategy);
+    return mapping;
   }
 
 }

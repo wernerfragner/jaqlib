@@ -16,19 +16,15 @@
 package org.jaqlib;
 
 import org.jaqlib.core.AbstractQueryBuilder;
-import org.jaqlib.core.FromClause;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
+import org.jaqlib.iterable.FromClause;
 import org.jaqlib.iterable.IterableQuery;
 
 /**
  * <p>
  * The main entry point of JaQLib for {@link Iterable} support. It provides
- * following methods for building queries:
- * <ul>
- * <li>{@link #select(Class)}</li>
- * <li>{@link #select()}</li>
- * </ul>
+ * following a {@link #select()} method for building queries.
  * </p>
  * <p>
  * The Method {@link #getRecorder(Class)} can be used to define a WHERE
@@ -44,12 +40,15 @@ import org.jaqlib.iterable.IterableQuery;
  * <i>Method call recording mechanism:</i>
  * 
  * <pre>
+ * // get accounts that should be queried
+ * List&lt;Account&gt; accounts = getAccounts();
+ * 
  * // create a 'dummy' object for recording a method call for the WHERE clause
  * Account account = IterableQB.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts)
- *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
+ * List&lt;Account&gt; result = IterableQB.select().from(accounts).whereCall(
+ *     account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
  * <i>Custom WHERE conditions:</i>
@@ -73,15 +72,15 @@ import org.jaqlib.iterable.IterableQuery;
  * }
  * 
  * // execute query with these conditions 
- * List&lt;Account&gt; highRiskAccounts = IterableQB.select(Account.class).from(accounts)
+ * List&lt;Account&gt; highRiskAccounts = IterableQB.select().from(accounts)
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
  * <i>Filtering null elements:</i>
  * 
  * <pre>
- * List&lt;Account&gt; notNullAccounts = IterableQB.select(Account.class).from(accounts)
- *     .where().element().isNotNull().asList();
+ * List&lt;Account&gt; notNullAccounts = IterableQB.select().from(accounts).where()
+ *     .element().isNotNull().asList();
  * </pre>
  * 
  * <i>Filtering {@link Comparable} elements:</i>
@@ -91,16 +90,16 @@ import org.jaqlib.iterable.IterableQuery;
  * AccountImpl spec = new AccountImpl();
  * account.setBalance(5000);
  * 
- * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where()
- *     .element().isSmallerThan(spec).asList();
+ * List&lt;Account&gt; result = IterableQB.select().from(accounts).where().element()
+ *     .isSmallerThan(spec).asList();
  * </pre>
  * 
  * <i>Map as result:</i>
  * 
  * <pre>
  * Account account = IterableQB.getRecorder(Account.class);
- * Map&lt;Long, Account&gt; results = IterableQB.select(Account.class).from(accounts)
- *     .asMap(account.getId());
+ * Map&lt;Long, Account&gt; results = IterableQB.select().from(accounts).asMap(
+ *     account.getId());
  * </pre>
  * 
  * <i>Executing a task on each element:</i>
@@ -116,7 +115,7 @@ import org.jaqlib.iterable.IterableQuery;
  *   }
  * 
  * };
- * IterableQB.select(Account.class).from(accounts).execute(task);
+ * IterableQB.select().from(accounts).execute(task);
  * </pre>
  * 
  * <pre>
@@ -132,11 +131,11 @@ import org.jaqlib.iterable.IterableQuery;
  * };
  * 
  * // execute task only on elements that match the given condition 
- * IterableQB.select(Account.class).from(accounts).where(deptCond).execute(task);
+ * IterableQB.select().from(accounts).where(deptCond).execute(task);
  * 
  * // or ...
- * List&lt;Account&gt; result = IterableQB.select(Account.class).from(accounts).where(
- *     deptCond).executeWithResult(task).asList();
+ * List&lt;Account&gt; result = IterableQB.select().from(accounts).where(deptCond)
+ *     .executeWithResult(task).asList();
  * </pre>
  * 
  * </p>
@@ -155,34 +154,15 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
    * conditions using a method call recording mechanism (see examples and
    * {@link #getRecorder(Class)} for further details).
    * 
-   * @param <T> the collection element type.
-   * @param resultElementClass the class of the result elements. This class is
-   *          only necessary for type safety.
    * @return the FROM clause to specify the source collection for the query.
    */
-  public <T> FromClause<T, Iterable<T>> select(Class<T> resultElementClass)
+  public FromClause select()
   {
-    return this.<T> createQuery().createFromClause(resultElementClass);
+    return new FromClause(this);
   }
 
 
-  /**
-   * This method has basically the same functionality as {@link #select(Class)}.
-   * But this method is not type safe regarding the returned result.
-   * 
-   * @return the FROM clause to specify the source collection of the query.
-   */
-  @SuppressWarnings("unchecked")
-  public FromClause<?, Iterable<?>> select()
-  {
-    // assign return value to raw type of FromClause; otherwise returning
-    // FromClause<?, Iterable<?>> would not be possible
-    FromClause clause = createQuery().createFromClause(Object.class);
-    return clause;
-  }
-
-
-  private <T> IterableQuery<T> createQuery()
+  public <T> IterableQuery<T> createQuery()
   {
     return new IterableQuery<T>(getMethodCallRecorder());
   }
