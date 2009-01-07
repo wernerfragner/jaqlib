@@ -27,8 +27,8 @@ public abstract class AbstractCustomConditonTest<AccountType extends Account>
 
     };
 
-    List<AccountType> results = IterableQB.select(getAccountClass()).from(
-        elements).where(condition).asList();
+    List<AccountType> results = IterableQB.select().from(elements).where(
+        condition).asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));

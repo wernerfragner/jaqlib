@@ -37,9 +37,8 @@ public class IterableQBClassTest extends AbstractIterableTest<AccountImpl>
     List<AccountImpl> elements = createTestAccounts();
 
     AccountImpl testInterface = IterableQB.getRecorder(AccountImpl.class);
-    List<AccountImpl> results = IterableQB.select(AccountImpl.class).from(
-        elements).whereCall(testInterface.getLastName()).isEqual("maier")
-        .asList();
+    List<AccountImpl> results = IterableQB.select().from(elements).whereCall(
+        testInterface.getLastName()).isEqual("maier").asList();
     assertNotNull(results);
     assertEquals(1, results.size());
     assertSame(elements.get(1), results.get(0));
@@ -51,8 +50,8 @@ public class IterableQBClassTest extends AbstractIterableTest<AccountImpl>
     List<AccountImpl> elements = createTestAccounts();
 
     AccountImpl testInterface = IterableQB.getRecorder(AccountImpl.class);
-    List<AccountImpl> results = IterableQB.select(AccountImpl.class).from(
-        elements).whereCallIsTrue(testInterface.isActive()).asList();
+    List<AccountImpl> results = IterableQB.select().from(elements)
+        .whereCallIsTrue(testInterface.isActive()).asList();
     assertNotNull(results);
     assertEquals(4, results.size());
   }

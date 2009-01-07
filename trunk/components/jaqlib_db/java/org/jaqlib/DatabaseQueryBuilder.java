@@ -18,15 +18,15 @@ package org.jaqlib;
 import javax.sql.DataSource;
 
 import org.jaqlib.core.AbstractQueryBuilder;
-import org.jaqlib.core.FromClause;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
+import org.jaqlib.db.AbstractMapping;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DatabaseQuery;
-import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DeleteFromClause;
+import org.jaqlib.db.FromClause;
 import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
 import org.jaqlib.db.Using;
@@ -328,13 +328,13 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * </p>
    * 
    * @param <T> the result column type.
-   * @param column an object defining the desired column.
+   * @param columnMapping an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T, DbSelectDataSource> select(ColumnMapping<T> column)
+  public <T> FromClause<T> select(ColumnMapping<T> columnMapping)
   {
-    return this.<T> createQuery().createFromClause(column);
+    return new FromClause<T>(this, columnMapping);
   }
 
 
@@ -364,11 +364,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T, DbSelectDataSource> select(
-      Class<? extends T> beanClass)
+  public <T> FromClause<T> select(Class<? extends T> beanClass)
   {
-    BeanMapping<T> beanResult = Database.getDefaultBeanMapping(beanClass);
-    return select(beanResult);
+    BeanMapping<T> beanMapping = Database.getDefaultBeanMapping(beanClass);
+    return select(beanMapping);
   }
 
 
@@ -380,20 +379,20 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * instances see {@link Database}.
    * 
    * @param <T> the result bean type.
-   * @param bean a bean definition that holds information how to map the result
-   *          of the SELECT statement to a Java bean.
+   * @param beanMapping a bean definition that holds information how to map the
+   *          result of the SELECT statement to a Java bean.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T, DbSelectDataSource> select(BeanMapping<T> bean)
+  public <T> FromClause<T> select(BeanMapping<T> beanMapping)
   {
-    return this.<T> createQuery().createFromClause(bean);
+    return new FromClause<T>(this, beanMapping);
   }
 
 
-  private <T> DatabaseQuery<T> createQuery()
+  public <T> DatabaseQuery<T> createQuery(AbstractMapping<T> mapping)
   {
-    return new DatabaseQuery<T>(getMethodCallRecorder());
+    return new DatabaseQuery<T>(getMethodCallRecorder(), mapping);
   }
 
 

@@ -86,5 +86,4 @@ public abstract class AbstractQueryBuilder
     return proxy.getProxy(resultElementClass);
   }
 
-
 }

@@ -49,8 +49,8 @@ public class IterableQBInterfaceTest extends AbstractIterableTest<Account>
     List<Account> elements = createTestAccounts();
 
     Account testInterface = IterableQB.getRecorder(Account.class);
-    List<Account> results = IterableQB.select(Account.class).from(elements)
-        .whereCallIsTrue(testInterface.isActive()).asList();
+    List<Account> results = IterableQB.select().from(elements).whereCallIsTrue(
+        testInterface.isActive()).asList();
     assertNotNull(results);
     assertEquals(4, results.size());
   }
