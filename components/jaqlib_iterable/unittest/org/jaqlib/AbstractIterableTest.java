@@ -308,6 +308,13 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
         .and().element().isNotNull().asList();
     assertEquals(1, result.size());
     assertNotNull(result.get(0));
+
+    // test shortcut method
+
+    result = IterableQB.select().from(elements).where(cond).andElement()
+        .isNotNull().asList();
+    assertEquals(1, result.size());
+    assertNotNull(result.get(0));
   }
 
 

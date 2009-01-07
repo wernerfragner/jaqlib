@@ -93,8 +93,7 @@ public class IterableQB
 
 
   /**
-   * Shortcut method that calls {@link #select()} and afterwards
-   * {@link FromClause#from(Iterable)}.
+   * Shortcut method for <tt>select().from()</tt>.
    * 
    * @param iterable a not null Iterable for the query.
    * @return a where clause for defining the query conditions.
