@@ -129,6 +129,11 @@ public class ColumnDatabaseQBSelectTest extends TestCase
 
     String result = where.where().element().isEqual(huber).uniqueResult();
     assertEquals(huber, result);
+
+    // test shortcut method
+
+    result = where.whereElement().isEqual(huber).uniqueResult();
+    assertEquals(huber, result);
   }
 
 
@@ -139,6 +144,12 @@ public class ColumnDatabaseQBSelectTest extends TestCase
 
     List<String> result = where.where().element().isEqual(huber).or().element()
         .isEqual(maier).asList();
+    assertAllLastNames(result);
+
+    // test shortcut method
+
+    result = where.where().element().isEqual(huber).orElement().isEqual(maier)
+        .asList();
     assertAllLastNames(result);
   }
 

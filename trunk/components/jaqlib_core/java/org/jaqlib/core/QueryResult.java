@@ -164,13 +164,25 @@ public class QueryResult<T, DataSourceType> extends
    * Simple condition that can be used to test all elements for a specific
    * condition. This condition is appended using an AND connector.
    * 
-   * @param <R> the result element type.
+   * @param <ResultType> the result element type.
    * @return an object that represents a WHERE condition on a single element of
    *         the data source.
    */
-  public <R> SingleElementWhereCondition<T, DataSourceType, R> and()
+  public <ResultType> SingleElementWhereCondition<T, DataSourceType, ResultType> and()
   {
     return getQuery().addElementAndWhereCondition();
+  }
+
+
+  /**
+   * Shortcut method for <tt>and().element()</tt>.
+   * 
+   * @param <ResultType> the result element type.
+   * @return an object to specify the condition on an element.
+   */
+  public <ResultType> ComparableWhereCondition<T, DataSourceType, ResultType> andElement()
+  {
+    return this.<ResultType> and().element();
   }
 
 
@@ -185,6 +197,18 @@ public class QueryResult<T, DataSourceType> extends
   public <R> SingleElementWhereCondition<T, DataSourceType, R> or()
   {
     return getQuery().addElementOrWhereCondition();
+  }
+
+
+  /**
+   * Shortcut method for <tt>or().element()</tt>.
+   * 
+   * @param <ResultType> the result element type.
+   * @return an object to specify the condition on an element.
+   */
+  public <ResultType> ComparableWhereCondition<T, DataSourceType, ResultType> orElement()
+  {
+    return this.<ResultType> or().element();
   }
 
 

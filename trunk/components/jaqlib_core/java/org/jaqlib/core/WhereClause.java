@@ -23,13 +23,25 @@ public class WhereClause<T, DataSourceType> extends
    * Simple WHERE clause that can be used to test all elements of the data
    * source for a specific condition.
    * 
-   * @param <R> the result element type.
+   * @param <ResultType> the result element type.
    * @return an object that represents a WHERE condition on a single element of
    *         the data source.
    */
-  public <R> SingleElementWhereCondition<T, DataSourceType, R> where()
+  public <ResultType> SingleElementWhereCondition<T, DataSourceType, ResultType> where()
   {
     return getQuery().addElementAndWhereCondition();
+  }
+
+
+  /**
+   * Shortcut method for <tt>where().element()</tt>.
+   * 
+   * @param <ResultType> the result element type.
+   * @return an object to specify the condition on an element.
+   */
+  public <ResultType> ComparableWhereCondition<T, DataSourceType, ResultType> whereElement()
+  {
+    return this.<ResultType> where().element();
   }
 
 
