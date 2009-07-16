@@ -1,8 +1,7 @@
 package org.jaqlib.util.lang;
 
+import java.util.HashMap;
 import java.util.Map;
-
-import org.jaqlib.util.CollectionUtil;
 
 /**
  * Performs save conversions (without loss of data) of primitive data types.
@@ -12,8 +11,7 @@ import org.jaqlib.util.CollectionUtil;
 public class SaveConversions
 {
 
-  private static Map<Class<?>, SaveConversion> saveConversions = CollectionUtil
-      .newDefaultMap();
+  private static Map<Class<?>, SaveConversion> saveConversions = new HashMap<Class<?>, SaveConversion>();
 
   static
   {

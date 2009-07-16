@@ -34,10 +34,31 @@ public abstract class AbstractDbDataSource
   private final Map<String, PreparedStatement> prepStatements = CollectionUtil
       .newDefaultMap();
 
+  private boolean autoCloseConnection = false;
+
 
   public AbstractDbDataSource(DataSource dataSource)
   {
     this.dataSource = Assert.notNull(dataSource);
+  }
+
+
+  /**
+   * <p>
+   * If <tt>true</tt> the database {@link Connection} is automatically closed
+   * after executing the SQL statement. By default the database
+   * {@link Connection} is <b>not</b> closed.
+   * </p>
+   * <p>
+   * <b>NOTE: use this method with care. Creating and closing database
+   * connections can be costly operations.</b>
+   * </p>
+   * 
+   * @param autoCloseConnection
+   */
+  public void setAutoCloseConnection(boolean autoCloseConnection)
+  {
+    this.autoCloseConnection = autoCloseConnection;
   }
 
 
@@ -86,7 +107,11 @@ public abstract class AbstractDbDataSource
     statement = null;
     closePreparedStatements();
     prepStatements.clear();
-    DbUtil.close(connection);
+
+    if (autoCloseConnection)
+    {
+      DbUtil.close(connection);
+    }
     connection = null;
   }
 
@@ -127,13 +152,19 @@ public abstract class AbstractDbDataSource
 
   private Connection getConnection() throws SQLException
   {
-    if (connection == null)
+    if (connection == null || isClosed(connection))
     {
       log.fine("Getting JDBC connection");
 
       connection = dataSource.getConnection();
     }
     return connection;
+  }
+
+
+  private boolean isClosed(Connection connection) throws SQLException
+  {
+    return connection.isClosed() && !connection.isValid(2);
   }
 
 
