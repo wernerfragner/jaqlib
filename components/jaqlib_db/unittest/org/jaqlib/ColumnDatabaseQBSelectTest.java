@@ -123,7 +123,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
   }
 
 
-  public void testSelect_SimpleCondition()
+  public void testSelect_SimpleCondition() throws Exception
   {
     String huber = HUBER_ACCOUNT.getLastName();
 
@@ -134,6 +134,10 @@ public class ColumnDatabaseQBSelectTest extends TestCase
 
     result = where.whereElement().isEqual(huber).uniqueResult();
     assertEquals(huber, result);
+
+    // test if connection has been closed
+
+    assertFalse(getDataSource().getConnection().isClosed());
   }
 
 

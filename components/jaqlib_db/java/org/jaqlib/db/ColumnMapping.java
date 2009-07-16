@@ -110,7 +110,7 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
 
   /**
-   * @param the database column name.
+   * @param columnName the database column name.
    */
   public void setColumnName(String columnName)
   {
