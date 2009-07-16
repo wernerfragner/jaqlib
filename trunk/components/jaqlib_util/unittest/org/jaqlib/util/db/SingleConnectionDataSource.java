@@ -125,6 +125,7 @@ public class SingleConnectionDataSource implements DataSource
   {
 
     private final Connection c;
+    private boolean closed = false;
 
 
     public ConnectionInvocationHandler(Connection c)
@@ -150,8 +151,14 @@ public class SingleConnectionDataSource implements DataSource
       }
       else if (method.getName().equals("close"))
       {
+        closed = true;
+
         // do no close connection; connection is closed by datasource
         return null;
+      }
+      else if (method.getName().equals("isClosed"))
+      {
+        return closed;
       }
       else
       {
