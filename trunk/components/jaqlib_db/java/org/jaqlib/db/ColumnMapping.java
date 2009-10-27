@@ -2,6 +2,7 @@ package org.jaqlib.db;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 
 
@@ -161,7 +162,53 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   {
     Object value = getFieldValue(bean);
     value = beanMapping.applyJavaTypeHandler(getFieldName(), value);
-    stmt.setObject(index, value);
+    if (value == null)
+    {
+      stmt.setNull(index, getColumnDataType(bean));
+    }
+    else
+    {
+      stmt.setObject(index, value);
+    }
+  }
+
+
+  private int getColumnDataType(Object bean)
+  {
+    if (columnDataType == Types.OTHER)
+    {
+      return getBestMatchColumnDataType(bean);
+    }
+    else
+    {
+      return columnDataType;
+    }
+  }
+
+
+  private int getBestMatchColumnDataType(Object bean)
+  {
+    Class<?> fieldType = getFieldType(bean);
+    if (fieldType.equals(String.class))
+    {
+      return Types.VARCHAR;
+    }
+    else if (fieldType.equals(Number.class))
+    {
+      return Types.NUMERIC;
+    }
+    else if (fieldType.equals(java.util.Date.class))
+    {
+      return Types.TIMESTAMP;
+    }
+    else if (fieldType.equals(Timestamp.class))
+    {
+      return Types.TIMESTAMP;
+    }
+    else
+    {
+      return Types.OTHER;
+    }
   }
 
 

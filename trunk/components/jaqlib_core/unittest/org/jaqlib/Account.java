@@ -21,6 +21,15 @@ public interface Account extends Comparable<Account>
   CreditRating getCreditRating();
 
 
+  void setDepartmentObject(Department department);
+
+
+  void setDepartment(String department);
+
+
+  Department getDepartmentObj();
+
+
   void sendInfoEmail();
 
 
@@ -28,5 +37,6 @@ public interface Account extends Comparable<Account>
 
 
   boolean isActive();
+
 
 }

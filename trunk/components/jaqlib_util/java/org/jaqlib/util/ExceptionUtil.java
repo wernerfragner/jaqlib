@@ -14,4 +14,16 @@ public class ExceptionUtil
     return re;
   }
 
+
+  public static RuntimeException toRuntimeException(String message, Throwable t)
+  {
+    if (t instanceof RuntimeException)
+    {
+      return (RuntimeException) t;
+    }
+    RuntimeException re = new RuntimeException(message, t);
+    re.setStackTrace(t.getStackTrace());
+    return re;
+  }
+
 }

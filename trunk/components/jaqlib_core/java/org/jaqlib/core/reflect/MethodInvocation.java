@@ -3,6 +3,7 @@ package org.jaqlib.core.reflect;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.jaqlib.util.ExceptionUtil;
 import org.jaqlib.util.ReflectionUtil;
 
 /**
@@ -30,11 +31,13 @@ public class MethodInvocation
     }
     catch (IllegalAccessException e)
     {
-      throw new RuntimeException(e);
+      throw ExceptionUtil.toRuntimeException("Could not invoke method '"
+          + toString() + "' on target object '" + target + "'", e);
     }
     catch (InvocationTargetException e)
     {
-      throw new RuntimeException(e);
+      throw ExceptionUtil.toRuntimeException("Could not invoke method '"
+          + toString() + "' on target object '" + target + "'", e);
     }
   }
 
@@ -47,8 +50,17 @@ public class MethodInvocation
     sb.append("(");
     if (methodArgs != null)
     {
+      boolean first = true;
       for (Object methodArg : methodArgs)
       {
+        if (first)
+        {
+          first = false;
+        }
+        else
+        {
+          sb.append(", ");
+        }
         sb.append(ReflectionUtil.getPlainClassName(methodArg));
       }
     }
