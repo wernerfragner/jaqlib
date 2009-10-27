@@ -53,4 +53,10 @@ public abstract class AbstractMapping<T>
   }
 
 
+  protected Class<?> getFieldType(Object bean)
+  {
+    return ReflectionUtil.getFieldType(bean.getClass(), getFieldName());
+  }
+
+
 }

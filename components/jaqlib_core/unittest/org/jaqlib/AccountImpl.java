@@ -13,6 +13,7 @@ public class AccountImpl implements Account
 
   private Double balance = 0.0;
   private CreditRating creditRating = CreditRating.POOR;
+  private Department department;
 
   private boolean active = true;
   private boolean changed = false;
@@ -95,6 +96,31 @@ public class AccountImpl implements Account
   }
 
 
+  public Department getDepartmentObj()
+  {
+    return department;
+  }
+
+
+  protected Department getDepartmentProtected()
+  {
+    return department;
+  }
+
+
+  public void setDepartmentObject(Department department)
+  {
+    setChanged();
+    this.department = department;
+  }
+
+
+  public void setDepartment(String department)
+  {
+    setDepartmentObject(new Department(department));
+  }
+
+
   public int compareTo(Account o)
   {
     if (balance == null)
@@ -128,5 +154,6 @@ public class AccountImpl implements Account
   {
     return active;
   }
+
 
 }

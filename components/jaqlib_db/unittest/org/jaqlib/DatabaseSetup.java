@@ -32,7 +32,7 @@ public class DatabaseSetup
 
   public static final String ACCOUNT_SELECT = "SELECT id, lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM "
       + ACCOUNT_TABLE;
-  public static final String EXACT_ACCOUNT_SELECT = "SELECT id, lastname, firstname, creditrating AS creditrating, balance, active FROM "
+  public static final String EXACT_ACCOUNT_SELECT = "SELECT id, lastname, firstname, creditrating AS creditrating, balance, active, department FROM "
       + EXACT_ACCOUNT_TABLE;
 
   public static final AccountImpl HUBER_ACCOUNT;
@@ -48,12 +48,14 @@ public class DatabaseSetup
     HUBER_ACCOUNT.setFirstName("sepp");
     HUBER_ACCOUNT.setBalance(5000.0);
     HUBER_ACCOUNT.setCreditRating(CreditRating.GOOD);
+    HUBER_ACCOUNT.setDepartment("linz");
 
     MAIER_ACCOUNT = new AccountImpl();
     MAIER_ACCOUNT.setLastName("maier");
     MAIER_ACCOUNT.setFirstName("franz");
     MAIER_ACCOUNT.setBalance(2000.0);
     MAIER_ACCOUNT.setCreditRating(CreditRating.POOR);
+    MAIER_ACCOUNT.setDepartment("wien");
 
     ACCOUNTS = new AccountImpl[] { HUBER_ACCOUNT, MAIER_ACCOUNT };
   }
@@ -118,9 +120,11 @@ public class DatabaseSetup
         + "(START WITH 1, INCREMENT BY 1)," + "LNAME    VARCHAR(30), "
         + "FNAME   VARCHAR(30)," + "CREDITRATING INTEGER, BALANCE DOUBLE)";
 
-    String createExactAccount = "CREATE table " + EXACT_ACCOUNT_TABLE + " ("
+    String createExactAccount = "CREATE table "
+        + EXACT_ACCOUNT_TABLE
+        + " ("
         + "ID INTEGER, LASTNAME VARCHAR(30), FIRSTNAME VARCHAR(30),"
-        + "CREDITRATING INTEGER, BALANCE DOUBLE, ACTIVE INTEGER)";
+        + "CREDITRATING INTEGER, BALANCE DOUBLE, ACTIVE INTEGER, DEPARTMENT VARCHAR(100))";
 
     executeStatement(createAccount);
     executeStatement(createExactAccount);

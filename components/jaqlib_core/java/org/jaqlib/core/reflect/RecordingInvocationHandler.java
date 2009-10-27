@@ -33,17 +33,35 @@ public class RecordingInvocationHandler implements MethodCallRecorder,
   public Object invoke(Object target, Method method, Object[] methodArgs)
       throws Throwable
   {
-    if (log.isLoggable(Level.FINE))
+    if (shouldRecordMethodCall(target, method))
     {
-      String s = "Recording method call. Method: " + method
-          + "; MethodArguments: " + CollectionUtil.toString(methodArgs, ",");
-      log.fine(s);
-    }
+      if (log.isLoggable(Level.FINE))
+      {
+        String s = "Recording method call. Method: " + method
+            + "; MethodArguments: " + CollectionUtil.toString(methodArgs, ",");
+        log.fine(s);
+      }
 
-    methodInvocations.add(new MethodInvocation(method, methodArgs));
+      methodInvocations.add(new MethodInvocation(method, methodArgs));
+    }
 
     // return default instance (needed for CGLib when unboxing types)
     return StandardValueObjectFactory.newInstance(method.getReturnType());
+  }
+
+
+  private boolean shouldRecordMethodCall(Object target, Method method)
+  {
+    // ignore Object.finalize() method
+    if (method.getDeclaringClass().equals(Object.class)
+        && method.getName().equals("finalize"))
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+    }
   }
 
 

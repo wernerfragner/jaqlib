@@ -156,4 +156,29 @@ public abstract class AbstractReflectiveConditionTest<AccountType extends Accoun
   }
 
 
+  public void testSelect_ReflectiveCondition_MultipleEquals()
+  {
+    AccountType dummy = IterableQB.getRecorder(getAccountClass());
+
+    AccountType other = createAccountType(10.0);
+    CreditRating rating = CreditRating.GOOD;
+    final Department department = new Department("athome");
+
+    List<AccountType> accounts = createTestAccounts();
+    for (AccountType element : accounts)
+    {
+      if (element != null)
+      {
+        element.setDepartmentObject(department);
+      }
+    }
+
+    AccountType result = IterableQB.selectFrom(accounts).whereCall(
+        dummy.getBalance()).isEqual(other.getBalance()).andCall(
+        dummy.getCreditRating()).isEqual(rating).andCall(dummy.getDepartmentObj())
+        .isEqual(department).firstResult();
+    assertNotNull(result);
+  }
+
+
 }

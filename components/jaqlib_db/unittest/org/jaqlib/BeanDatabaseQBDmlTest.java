@@ -36,6 +36,7 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     mapping = Database.getDefaultBeanMapping(AccountImpl.class);
     mapping.removeChildColumn("id");
     mapping.removeChildColumn("active");
+    mapping.removeChildColumn("department");
     mapping.getChildColumn("lastName").setColumnName("lname");
     mapping.getChildColumn("firstName").setColumnName("fname");
   }
@@ -110,6 +111,19 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   public void testInsert_CustomMapping()
   {
+    DbInsertDataSource ds = getInsertDataSource(TABLE);
+    int cnt = DatabaseQB.insert(account).into(ds).using(mapping);
+    assertEquals(1, cnt);
+
+    AccountImpl dbAccount = selectAccount(SELECT);
+    assertEqualAccount(account, dbAccount);
+  }
+
+
+  public void testInsert_DefaultMapping_NullValue()
+  {
+    account.setFirstName(null);
+
     DbInsertDataSource ds = getInsertDataSource(TABLE);
     int cnt = DatabaseQB.insert(account).into(ds).using(mapping);
     assertEquals(1, cnt);
