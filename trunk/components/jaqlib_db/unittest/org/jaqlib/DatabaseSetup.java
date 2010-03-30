@@ -1,6 +1,7 @@
 package org.jaqlib;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -267,15 +268,19 @@ public class DatabaseSetup
   {
     ResultSet resultSet = getMockResultSet();
     Statement stmt = EasyMock.createNiceMock(Statement.class);
+    PreparedStatement prepStmt = EasyMock
+        .createNiceMock(PreparedStatement.class);
     Connection conn = EasyMock.createNiceMock(Connection.class);
     DataSource ds = EasyMock.createNiceMock(DataSource.class);
 
     EasyMock.expect(ds.getConnection()).andReturn(conn);
     EasyMock.expect(conn.createStatement()).andReturn(stmt);
+    EasyMock.expect(conn.prepareStatement(SELECT_SQL)).andReturn(prepStmt);
     EasyMock.expect(stmt.executeQuery(SELECT_SQL)).andReturn(resultSet)
         .anyTimes();
+    EasyMock.expect(prepStmt.executeQuery()).andReturn(resultSet).anyTimes();
 
-    EasyMock.replay(ds, conn, stmt);
+    EasyMock.replay(ds, conn, stmt, prepStmt);
     return ds;
   }
 

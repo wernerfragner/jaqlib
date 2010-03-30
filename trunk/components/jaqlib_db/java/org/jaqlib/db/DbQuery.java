@@ -1,9 +1,12 @@
 package org.jaqlib.db;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.jaqlib.core.AbstractQuery;
+import org.jaqlib.core.QueryResult;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;
@@ -13,14 +16,15 @@ import org.jaqlib.util.Assert;
  * 
  * @param <T> the result element class of the query.
  */
-public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
+public class DbQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
   private final AbstractMapping<T> mapping;
-  private DatabaseQueryCache<T> cache;
+  private DbQueryCache<T> cache;
+  private final List<Object> prepStmtParameters = new ArrayList<Object>();
 
 
-  public DatabaseQuery(MethodCallRecorder methodCallRecorder,
+  public DbQuery(MethodCallRecorder methodCallRecorder,
       AbstractMapping<T> mapping)
   {
     super(methodCallRecorder);
@@ -29,17 +33,32 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 
 
   @Override
+  public QueryResult<T, DbSelectDataSource> createQueryResult()
+  {
+    return new DbQueryResult<T>(this);
+  }
+
+
+  public DbWhereClause<T> createDbWhereClause(DbSelectDataSource dataSource)
+  {
+    setDataSource(dataSource);
+    return new DbWhereClause<T>(this);
+  }
+
+
+  @Override
   protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
     final MethodInvocation invocation = getCurrentInvocation();
-    getCachingFetchStrategy().addResults(resultMap, invocation);
+    getCachingFetchStrategy().addResults(resultMap, invocation,
+        prepStmtParameters);
   }
 
 
   @Override
   protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
   {
-    getFetchStrategy(stopAtFirstMatch).addResults(result);
+    getFetchStrategy(stopAtFirstMatch).addResults(result, prepStmtParameters);
   }
 
 
@@ -78,11 +97,11 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
   }
 
 
-  private DatabaseQueryCache<T> getCache()
+  private DbQueryCache<T> getCache()
   {
     if (cache == null)
     {
-      cache = new DatabaseQueryCache<T>(tree);
+      cache = new DbQueryCache<T>(tree);
     }
     return cache;
   }
@@ -92,6 +111,20 @@ public class DatabaseQuery<T> extends AbstractQuery<T, DbSelectDataSource>
   protected String getResultDefinitionString()
   {
     return mapping.getLogString();
+  }
+
+
+  public QueryResult<T, DbSelectDataSource> addPrepStmtParameters(
+      Object[] prepStmtParameters)
+  {
+    if (prepStmtParameters != null)
+    {
+      for (Object param : prepStmtParameters)
+      {
+        this.prepStmtParameters.add(param);
+      }
+    }
+    return createQueryResult();
   }
 
 }

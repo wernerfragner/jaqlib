@@ -13,15 +13,39 @@ import org.jaqlib.util.Assert;
 public class DbDeleteDataSource extends AbstractDbDataSource
 {
 
-  private final String whereClause;
-  private final String tableName;
+  private String whereClause;
+  private String tableName;
 
 
   public DbDeleteDataSource(DataSource dataSource, String tableName,
       String whereClause)
   {
     super(dataSource);
+    setTableName(tableName);
+    setWhereClause(whereClause);
+  }
+
+
+  public void setTableName(String tableName)
+  {
     this.tableName = Assert.notNull(tableName);
+  }
+
+
+  public String getTableName()
+  {
+    return tableName;
+  }
+
+
+  public String getWhereClause()
+  {
+    return whereClause;
+  }
+
+
+  public void setWhereClause(String whereClause)
+  {
     this.whereClause = whereClause;
   }
 
@@ -55,7 +79,7 @@ public class DbDeleteDataSource extends AbstractDbDataSource
     }
     finally
     {
-      close();
+      closeAfterQuery();
     }
   }
 

@@ -13,13 +13,25 @@ import org.jaqlib.util.Assert;
 public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
 {
 
-  protected final String tableName;
+  protected String tableName;
 
 
   public AbstractDbDmlDataSource(DataSource dataSource, String tableName)
   {
     super(dataSource);
+    setTableName(tableName);
+  }
+
+
+  public void setTableName(String tableName)
+  {
     this.tableName = Assert.notNull(tableName);
+  }
+
+
+  public String getTableName()
+  {
+    return tableName;
   }
 
 
@@ -32,14 +44,7 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
     try
     {
       PreparedStatement stmt = getPreparedStatement(sql);
-
-      int i = 1;
-      for (ColumnMapping<?> mapping : beanMapping)
-      {
-        mapping.setValue(i, stmt, bean, beanMapping);
-        i++;
-      }
-
+      setParameters(bean, beanMapping, stmt);
       stmt.execute();
       commit();
       return stmt.getUpdateCount();
@@ -50,7 +55,19 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
     }
     finally
     {
-      close();
+      closeAfterQuery();
+    }
+  }
+
+
+  private <T> void setParameters(T bean, BeanMapping<T> beanMapping,
+      PreparedStatement stmt) throws SQLException
+  {
+    int i = 1;
+    for (ColumnMapping<?> mapping : beanMapping)
+    {
+      mapping.setValue(i, stmt, bean, beanMapping);
+      i++;
     }
   }
 

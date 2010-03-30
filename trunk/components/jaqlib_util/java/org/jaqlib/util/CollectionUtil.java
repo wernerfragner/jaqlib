@@ -67,4 +67,15 @@ public class CollectionUtil
     return new HashSet<E>();
   }
 
+
+  public static <E> List<E> newList(E... elements)
+  {
+    List<E> l = newDefaultList();
+    for (E element : elements)
+    {
+      l.add(element);
+    }
+    return l;
+  }
+
 }

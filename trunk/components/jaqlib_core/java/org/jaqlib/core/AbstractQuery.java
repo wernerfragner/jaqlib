@@ -55,11 +55,9 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  public WhereClause<T, DataSourceType> createWhereClause(
-      DataSourceType dataSource)
+  protected void setDataSource(DataSourceType dataSource)
   {
     this.dataSource = dataSource;
-    return new WhereClause<T, DataSourceType>(this);
   }
 
 

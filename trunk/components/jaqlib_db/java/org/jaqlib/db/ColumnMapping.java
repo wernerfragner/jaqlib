@@ -25,7 +25,7 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
 
   /**
-   * Default constructor. When using this constructor eigther a column name or a
+   * Default constructor. When using this constructor either a column name or a
    * column index must be set.
    */
   public ColumnMapping()

@@ -15,6 +15,8 @@
  */
 package org.jaqlib;
 
+import java.sql.PreparedStatement;
+
 import javax.sql.DataSource;
 
 import org.jaqlib.core.AbstractQueryBuilder;
@@ -24,9 +26,10 @@ import org.jaqlib.db.AbstractMapping;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
-import org.jaqlib.db.DatabaseQuery;
+import org.jaqlib.db.DbQuery;
+import org.jaqlib.db.DbFromClause;
+import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DeleteFromClause;
-import org.jaqlib.db.FromClause;
 import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
 import org.jaqlib.db.Using;
@@ -140,6 +143,35 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * Account account = DatabaseQB.getRecorder(Account.class);
  * Map&lt;Long, AccountImpl&gt; results = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).asMap(account.getId());
+ * </pre>
+ * 
+ * <i>Select all account with some constraints using a {@link PreparedStatement}
+ * :</i>
+ * <p>
+ * If the same {@link PreparedStatement} should be used for multiple queries
+ * then a PreparedStatement pool (like http://commons.apache.org/dbcp/) must be
+ * used. Alternatively following code example can be used. It's important to set
+ * the property <tt>AutoClosePreparedStatement</tt> to false and to close the
+ * {@link DbSelectDataSource} after having issued the queries.
+ * </p>
+ * 
+ * <pre>
+ * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT WHERE fname = ? AND balance &gt; ?&quot;;
+ * DbSelectDataSource accounts = Database.getSelectDataSource(getJdbcDataSource(),
+ *     sql); 
+ * accounts.setAutoClosePreparedStatement(false);
+ * 
+ * try {
+ *   List&lt;AccountImpl&gt; results1000 = DatabaseQB.select(AccountImpl.class).from(
+ *     accounts).using(&quot;werner&quot;, 1000).asList();
+ *   List&lt;AccountImpl&gt; results2000 = DatabaseQB.select(AccountImpl.class).from(
+ *     accounts).using(&quot;werner&quot;, 2000).asList();
+ *   List&lt;AccountImpl&gt; results3000 = DatabaseQB.select(AccountImpl.class).from(
+ *     accounts).using(&quot;werner&quot;, 3000).asList());
+ * } finally {    
+ *   // close all used statements
+ *   accounts.close();
+ * }
  * </pre>
  * 
  * </p>
@@ -318,7 +350,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * <p>
    * Selects one column of a given database SELECT statement. The SELECT
    * statement that should be used must be specified in the returned
-   * {@link FromClause}. The {@link FromClause} hereby returns a
+   * {@link DbFromClause}. The {@link DbFromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of custom {@link WhereCondition}s and custom conditions using a
@@ -336,9 +368,9 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T> select(ColumnMapping<T> columnMapping)
+  public <T> DbFromClause<T> select(ColumnMapping<T> columnMapping)
   {
-    return new FromClause<T>(this, columnMapping);
+    return new DbFromClause<T>(this, columnMapping);
   }
 
 
@@ -346,7 +378,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * <p>
    * Uses a given database SELECT statement to fill a user-defined Java bean.
    * The SELECT statement that should be used must be specified in the returned
-   * {@link FromClause}. The {@link FromClause} hereby returns a
+   * {@link DbFromClause}. The {@link DbFromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of custom {@link WhereCondition}s and custom conditions using a
@@ -368,7 +400,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T> select(Class<? extends T> beanClass)
+  public <T> DbFromClause<T> select(Class<? extends T> beanClass)
   {
     BeanMapping<T> beanMapping = Database.getDefaultBeanMapping(beanClass);
     return select(beanMapping);
@@ -388,9 +420,9 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public <T> FromClause<T> select(BeanMapping<T> beanMapping)
+  public <T> DbFromClause<T> select(BeanMapping<T> beanMapping)
   {
-    return new FromClause<T>(this, beanMapping);
+    return new DbFromClause<T>(this, beanMapping);
   }
 
 
@@ -399,9 +431,9 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * @return a query for using the functionality of JaQLib without the fluent
    *         API.
    */
-  public <T> DatabaseQuery<T> createQuery(AbstractMapping<T> mapping)
+  public <T> DbQuery<T> createQuery(AbstractMapping<T> mapping)
   {
-    return new DatabaseQuery<T>(getMethodCallRecorder(), mapping);
+    return new DbQuery<T>(getMethodCallRecorder(), mapping);
   }
 
 

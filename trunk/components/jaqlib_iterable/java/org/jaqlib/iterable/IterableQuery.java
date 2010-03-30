@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.jaqlib.core.AbstractQuery;
+import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.MethodInvocation;
 
@@ -18,6 +19,13 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
   public IterableQuery(MethodCallRecorder methodCallRecorder)
   {
     super(methodCallRecorder);
+  }
+
+
+  public WhereClause<T, Iterable<T>> createWhereClause(Iterable<T> dataSource)
+  {
+    setDataSource(dataSource);
+    return new WhereClause<T, Iterable<T>>(this);
   }
 
 

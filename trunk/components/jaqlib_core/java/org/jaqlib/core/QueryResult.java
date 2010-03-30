@@ -333,4 +333,5 @@ public class QueryResult<T, DataSourceType> extends
     return getQuery().addReflectiveAndWhereCondition().isEqual(false);
   }
 
+
 }

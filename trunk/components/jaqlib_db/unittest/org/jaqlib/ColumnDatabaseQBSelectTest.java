@@ -13,10 +13,10 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DbWhereClause;
 
 
 public class ColumnDatabaseQBSelectTest extends TestCase
@@ -24,7 +24,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
 
   private DatabaseSetup dbSetup;
 
-  private WhereClause<String, DbSelectDataSource> where;
+  private DbWhereClause<String> where;
 
 
   @Override
@@ -59,33 +59,33 @@ public class ColumnDatabaseQBSelectTest extends TestCase
   }
 
 
-  private void assertLastResult(WhereClause<String, DbSelectDataSource> where)
+  private void assertLastResult(DbWhereClause<String> where)
   {
     assertEquals(MAIER_ACCOUNT.getLastName(), where.lastResult());
   }
 
 
-  private void assertFirstResult(WhereClause<String, DbSelectDataSource> where)
+  private void assertFirstResult(DbWhereClause<String> where)
   {
     assertEquals(HUBER_ACCOUNT.getLastName(), where.firstResult());
   }
 
 
-  private void assertSetResult(WhereClause<String, DbSelectDataSource> where)
+  private void assertSetResult(DbWhereClause<String> where)
   {
     Set<String> result = where.asSet();
     assertAllLastNames(result);
   }
 
 
-  private void assertVectorResult(WhereClause<String, DbSelectDataSource> where)
+  private void assertVectorResult(DbWhereClause<String> where)
   {
     Vector<String> result = where.asVector();
     assertAllLastNames(result);
   }
 
 
-  private void assertListResult(WhereClause<String, DbSelectDataSource> where)
+  private void assertListResult(DbWhereClause<String> where)
   {
     List<String> result = where.asList();
     assertAllLastNames(result);
@@ -188,8 +188,8 @@ public class ColumnDatabaseQBSelectTest extends TestCase
         getStrictMockDataSource(sql), sql);
 
     Account dummy = DatabaseQB.getRecorder(Account.class);
-    WhereClause<AccountImpl, DbSelectDataSource> where = DatabaseQB.select(
-        AccountImpl.class).from(dataSource);
+    DbWhereClause<AccountImpl> where = DatabaseQB.select(AccountImpl.class)
+        .from(dataSource);
 
     assertNotNull(where.asList());
     assertNotNull(where.asVector());

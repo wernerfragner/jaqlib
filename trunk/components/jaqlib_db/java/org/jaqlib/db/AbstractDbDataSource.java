@@ -35,6 +35,7 @@ public abstract class AbstractDbDataSource
       .newDefaultMap();
 
   private boolean autoCloseConnection = false;
+  private boolean autoClosePreparedStatement = true;
 
 
   public AbstractDbDataSource(DataSource dataSource)
@@ -59,6 +60,35 @@ public abstract class AbstractDbDataSource
   public void setAutoCloseConnection(boolean autoCloseConnection)
   {
     this.autoCloseConnection = autoCloseConnection;
+  }
+
+
+  /**
+   * <p>
+   * If <tt>true</tt> the {@link PreparedStatement} is automatically closed
+   * after executing the SQL statement. By default the statement is closed. If a
+   * prepared statement pool is implemented 'around' JaQLib this value can be
+   * set to false. In that case it is important to close the statements yourself
+   * after you don't need them anymore (note: this can be done using the
+   * {@link #close()} method).
+   * </p>
+   * <p>
+   * <b>NOTE: use this method with care. Not closing prepared statements can
+   * stress the database (because it has to cache the prepared statement). So
+   * make sure that prepared statement are always closed.</b>
+   * </p>
+   * 
+   * @param value
+   */
+  public void setAutoClosePreparedStatement(boolean value)
+  {
+    this.autoClosePreparedStatement = value;
+  }
+
+
+  protected boolean isAutoClosePreparedStatement()
+  {
+    return autoClosePreparedStatement;
   }
 
 
@@ -101,18 +131,40 @@ public abstract class AbstractDbDataSource
   }
 
 
+  /**
+   * Closes all used {@link Statement} and {@link PreparedStatement} instances.
+   * If the property <tt>autoCloseConnection</tt> is set to true then the
+   * {@link Connection} is also closed.
+   */
   public void close()
+  {
+    close(true, autoCloseConnection);
+  }
+
+
+  void closeAfterQuery()
+  {
+    close(autoClosePreparedStatement, autoCloseConnection);
+  }
+
+
+  private void close(boolean autoClosePreparedStatement,
+      boolean autoCloseConnection)
   {
     DbUtil.close(statement);
     statement = null;
-    closePreparedStatements();
-    prepStatements.clear();
+
+    if (autoClosePreparedStatement)
+    {
+      closePreparedStatements();
+      prepStatements.clear();
+    }
 
     if (autoCloseConnection)
     {
       DbUtil.close(connection);
+      connection = null;
     }
-    connection = null;
   }
 
 

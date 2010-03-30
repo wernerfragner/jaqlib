@@ -1,12 +1,15 @@
 package org.jaqlib.db;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
 import org.jaqlib.DatabaseSetup;
+import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.ExceptionUtil;
 
 public class DbSelectDataSourceTest extends TestCase
@@ -92,24 +95,33 @@ public class DbSelectDataSourceTest extends TestCase
   }
 
 
-  public void testExecute() throws SQLException
+  public void testExecute_NormalStatement() throws SQLException
   {
-    DbResultSet rs = dataSource.execute();
+    DbResultSet rs = dataSource.execute(Collections.emptyList());
     assertNotNull(rs);
-    assertNotSame(rs, dataSource.execute());
+    assertNotSame(rs, dataSource.execute(Collections.emptyList()));
+  }
+
+
+  public void testExecute_PreparedStatement() throws SQLException
+  {
+    List<Integer> prepStmtParameters = CollectionUtil.newList(5000);
+    DbResultSet rs = dataSource.execute(prepStmtParameters);
+    assertNotNull(rs);
+    assertNotSame(rs, dataSource.execute(prepStmtParameters));
   }
 
 
   public void testClose_NoExecutePerformed()
   {
-    dataSource.close();
+    dataSource.closeAfterQuery();
   }
 
 
   public void testClose_ExecutePerformed() throws SQLException
   {
-    dataSource.execute();
-    dataSource.close();
+    dataSource.execute(Collections.emptyList());
+    dataSource.closeAfterQuery();
   }
 
 }
