@@ -1,8 +1,13 @@
 package org.jaqlib;
 
 /**
+ * <p>
  * Facade for the different query builders of JaQLib. <br/>
- * This class is the main entry point to JaQLib.
+ * This class is the main entry point to JaQLib.<br/>
+ * Usage examples are given here: {@link IterableQueryBuilder} and
+ * {@link DatabaseQueryBuilder}.
+ * </p>
+ * This class is thread-safe.
  * 
  * @author Werner Fragner
  */
