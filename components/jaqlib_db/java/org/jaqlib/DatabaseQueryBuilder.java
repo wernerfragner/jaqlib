@@ -162,15 +162,20 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  *     sql); 
  * accounts.setAutoClosePreparedStatement(false);
  * 
- * try {
+ * try 
+ * {
  *   List&lt;AccountImpl&gt; results1000 = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).using(&quot;werner&quot;, 1000).asList();
+ *     
  *   List&lt;AccountImpl&gt; results2000 = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).using(&quot;werner&quot;, 2000).asList();
+ *     
  *   List&lt;AccountImpl&gt; results3000 = DatabaseQB.select(AccountImpl.class).from(
  *     accounts).using(&quot;werner&quot;, 3000).asList());
- * } finally {    
- *   // close all used statements
+ * } 
+ * finally 
+ * {    
+ *   // close all used statements (in that case it's only one statement)
  *   accounts.close();
  * }
  * </pre>

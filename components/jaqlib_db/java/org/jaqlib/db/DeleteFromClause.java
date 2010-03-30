@@ -23,7 +23,7 @@ public class DeleteFromClause
   /**
    * Defines the table from which records should be deleted.
    * 
-   * @param ds the data source holding the database connection.
+   * @param dataSource the data source holding the database connection.
    * @param tableName the name of the table from which records should be
    *          deleted.
    * @param whereClause the where clause that should be applied to the DELETE

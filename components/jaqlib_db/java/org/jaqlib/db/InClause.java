@@ -38,7 +38,7 @@ public class InClause<T>
   /**
    * Defines the table that should be updated.
    * 
-   * @param ds the data source holding the database connection.
+   * @param dataSource the data source holding the database connection.
    * @param tableName the name of the table that should be updated.
    * @param whereClause the where clause that should be applied to the UPDATE
    *          statement.
