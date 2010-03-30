@@ -104,7 +104,12 @@ public class IterableQB
   }
 
 
-  private static IterableQueryBuilder getQueryBuilder()
+  /**
+   * See return tag.
+   * 
+   * @return the query builder instance for the current thread.
+   */
+  static IterableQueryBuilder getQueryBuilder()
   {
     IterableQueryBuilder queryBuilder = QUERYBUILDER.get();
     if (queryBuilder == null)

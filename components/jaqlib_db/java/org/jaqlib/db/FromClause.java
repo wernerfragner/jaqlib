@@ -1,5 +1,7 @@
 package org.jaqlib.db;
 
+import javax.sql.DataSource;
+
 import org.jaqlib.DatabaseQueryBuilder;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.util.Assert;
@@ -35,6 +37,20 @@ public class FromClause<T>
   public WhereClause<T, DbSelectDataSource> from(DbSelectDataSource dataSource)
   {
     return this.getQuery().createWhereClause(dataSource);
+  }
+
+
+  /**
+   * Defines the data source for the query.
+   * 
+   * @param dataSource a not null data source for the query.
+   * @param sql the SQL statement that should be executed.
+   * @return a where clause for defining the query conditions.
+   */
+  public WhereClause<T, DbSelectDataSource> from(DataSource dataSource,
+      String sql)
+  {
+    return from(new DbSelectDataSource(dataSource, sql));
   }
 
 
