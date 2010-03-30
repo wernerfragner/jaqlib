@@ -42,7 +42,7 @@ public class Jaqlib
    * 
    * @return a query builder for querying database tables.
    */
-  public static DatabaseQueryBuilder Db()
+  public static DatabaseQueryBuilder DB()
   {
     return DatabaseQB.getQueryBuilder();
   }
