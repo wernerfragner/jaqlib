@@ -72,6 +72,14 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * DbSelectDataSource accounts = db.getSelectDataSource(sql);
  * </pre>
  * 
+ * or if the simplified API should be used:
+ * 
+ * <pre>
+ * DataSource ds = getJdbcDataSource();
+ * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
+ * DatabaseQB.select(AccountImpl.class).from(ds, sql).where(...)
+ * </pre>
+ * 
  * <i>Method call recording mechanism:</i>
  * 
  * <pre>
@@ -238,11 +246,10 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * beanMapping.removeChildColumn(&quot;id&quot;);
  * beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
  * 
- * // insert account using the custom bean mapping
+ * // insert account using the custom bean mapping and the simplified API
  * String tableName = &quot;ACCOUNT&quot;;
- * DbInsertDataSource ds = Database
- *     .getInsertDataSource(getDataSource(), tableName);
- * int updateCount = DatabaseQB.insert(account).into(ds).using(beanMapping);
+ * int updateCount = DatabaseQB.insert(account).into(getDataSource(), tableName)
+ *     .using(beanMapping);
  * </pre>
  * 
  * <i>Updating a Java bean in a database table:</i>
@@ -272,9 +279,8 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * String whereClause = &quot;id = &quot; + account.getId();
  * String tableName = &quot;ACCOUNT&quot;;
- * DbUpdateDataSource ds = Database.getUpdateDataSource(getDataSource(),
- *     tableName, whereClause);
- * int updateCount = DatabaseQB.update(account).in(ds).using(beanMapping);
+ * int updateCount = DatabaseQB.update(account).in(getDataSource(), tableName,
+ *     whereClause).using(beanMapping);
  * </pre>
  * 
  * <i>Delete specific records from a database table:</i>
@@ -296,9 +302,7 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * <pre>
  * // delete all records from the ACCOUNT table 
  * String tableName = &quot;ACCOUNT&quot;;
- * DbDeleteDataSource ds = Database
- *     .getDeleteDataSource(getDataSource(), tableName);
- * int updateCount = DatabaseQB.delete().from(ds);
+ * int updateCount = DatabaseQB.delete().from(getDataSource(), tableName);
  * </pre>
  * 
  * </p>
