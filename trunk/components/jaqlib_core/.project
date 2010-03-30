@@ -10,8 +10,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>com.hello2morrow.sonarclipse.sonarclipseBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>com.hello2morrow.sonarclipse.sonarclipseNature</nature>
 	</natures>
 </projectDescription>

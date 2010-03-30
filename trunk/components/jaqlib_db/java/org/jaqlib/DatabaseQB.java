@@ -181,18 +181,6 @@ public class DatabaseQB
   }
 
 
-  private static DatabaseQueryBuilder getQueryBuilder()
-  {
-    DatabaseQueryBuilder queryBuilder = QUERYBUILDER.get();
-    if (queryBuilder == null)
-    {
-      queryBuilder = new DatabaseQueryBuilder();
-      QUERYBUILDER.set(queryBuilder);
-    }
-    return queryBuilder;
-  }
-
-
   /**
    * Inserts the given bean into the table that must be specified in the
    * returned {@link IntoClause}. The mapping between the given bean field
@@ -234,6 +222,23 @@ public class DatabaseQB
   public static DeleteFromClause delete()
   {
     return getQueryBuilder().delete();
+  }
+
+
+  /**
+   * See return tag.
+   * 
+   * @return the query builder instance for the current thread.
+   */
+  static DatabaseQueryBuilder getQueryBuilder()
+  {
+    DatabaseQueryBuilder queryBuilder = QUERYBUILDER.get();
+    if (queryBuilder == null)
+    {
+      queryBuilder = new DatabaseQueryBuilder();
+      QUERYBUILDER.set(queryBuilder);
+    }
+    return queryBuilder;
   }
 
 }
