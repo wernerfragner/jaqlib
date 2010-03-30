@@ -26,8 +26,8 @@ import org.jaqlib.db.AbstractMapping;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
-import org.jaqlib.db.DbQuery;
 import org.jaqlib.db.DbFromClause;
+import org.jaqlib.db.DbQuery;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DeleteFromClause;
 import org.jaqlib.db.InClause;
@@ -152,7 +152,8 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * then a PreparedStatement pool (like http://commons.apache.org/dbcp/) must be
  * used. Alternatively following code example can be used. It's important to set
  * the property <tt>AutoClosePreparedStatement</tt> to false and to close the
- * {@link DbSelectDataSource} after having issued the queries.
+ * {@link DbSelectDataSource} after having issued the queries. By default the
+ * <tt>AutoClosePreparedStatement</tt> is set to true.
  * </p>
  * 
  * <pre>
