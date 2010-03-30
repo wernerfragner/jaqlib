@@ -8,13 +8,25 @@ import javax.sql.DataSource;
 public class DbUpdateDataSource extends AbstractDbDmlDataSource
 {
 
-  private final String whereClause;
+  private String whereClause;
 
 
   public DbUpdateDataSource(DataSource dataSource, String tableName,
       String whereClause)
   {
     super(dataSource, tableName);
+    setWhereClause(whereClause);
+  }
+
+
+  public String getWhereClause()
+  {
+    return whereClause;
+  }
+
+
+  public void setWhereClause(String whereClause)
+  {
     this.whereClause = whereClause;
   }
 

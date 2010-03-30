@@ -1,6 +1,7 @@
 package org.jaqlib.db;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -19,17 +20,17 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
 {
 
   private final Logger log = LogUtil.getLogger(this);
-  private final DatabaseQueryCache<T> cache;
+  private final DbQueryCache<T> cache;
 
 
-  public CachingFetchStrategy(DatabaseQueryCache<T> cache)
+  public CachingFetchStrategy(DbQueryCache<T> cache)
   {
     this.cache = Assert.notNull(cache);
   }
 
 
   @Override
-  public void addResults(Collection<T> result)
+  public void addResults(Collection<T> result, List<?> prepStmtParameters)
   {
     if (cache.isFilled())
     {
@@ -41,7 +42,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
     {
       log.fine("Fetching query results from database.");
 
-      super.addResults(result);
+      super.addResults(result, prepStmtParameters);
       cache.setFilled();
     }
   }
@@ -49,7 +50,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
 
   @Override
   public <KeyType> void addResults(Map<KeyType, T> resultMap,
-      MethodInvocation invocation)
+      MethodInvocation invocation, List<?> prepStmtParameters)
   {
     if (cache.isFilled())
     {
@@ -61,7 +62,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
     {
       log.fine("Fetching query results from database.");
 
-      super.addResults(resultMap, invocation);
+      super.addResults(resultMap, invocation, prepStmtParameters);
       cache.setFilled();
     }
   }

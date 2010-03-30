@@ -18,7 +18,7 @@ public class DatabaseQueryCacheTest extends TestCase
 {
 
   private ElementPredicate<Account> predicate;
-  private DatabaseQueryCache<Account> cache;
+  private DbQueryCache<Account> cache;
 
 
   @Override
@@ -27,7 +27,7 @@ public class DatabaseQueryCacheTest extends TestCase
     super.setUp();
 
     predicate = EasyMock.createMock(ElementPredicate.class);
-    cache = new DatabaseQueryCache<Account>(predicate);
+    cache = new DbQueryCache<Account>(predicate);
   }
 
 
@@ -35,7 +35,7 @@ public class DatabaseQueryCacheTest extends TestCase
   {
     try
     {
-      new DatabaseQueryCache<Account>(null);
+      new DbQueryCache<Account>(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)

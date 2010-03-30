@@ -1,7 +1,9 @@
 package org.jaqlib.db;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -26,7 +28,7 @@ import org.jaqlib.util.Assert;
 public class DbSelectDataSource extends AbstractDbDataSource
 {
 
-  private final String sql;
+  private String sql;
 
   private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
   private DbResultSet resultSet;
@@ -35,6 +37,12 @@ public class DbSelectDataSource extends AbstractDbDataSource
   public DbSelectDataSource(DataSource dataSource, String sql)
   {
     super(dataSource);
+    setSql(sql);
+  }
+
+
+  public void setSql(String sql)
+  {
     this.sql = Assert.notNull(sql);
   }
 
@@ -65,24 +73,77 @@ public class DbSelectDataSource extends AbstractDbDataSource
   }
 
 
-  @Override
-  public void close()
+  private void closeResultSet()
   {
     close(resultSet);
     resultSet = null;
+  }
 
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public void close()
+  {
+    closeResultSet();
     super.close();
   }
 
 
-  public DbResultSet execute() throws SQLException
+  @Override
+  void closeAfterQuery()
+  {
+    closeResultSet();
+    super.closeAfterQuery();
+  }
+
+
+  public DbResultSet execute(List<?> prepStmtParameters) throws SQLException
+  {
+    if (prepStmtParameters.isEmpty())
+    {
+      resultSet = executeStatement();
+    }
+    else
+    {
+      resultSet = executePreparedStatement(prepStmtParameters);
+    }
+
+    return resultSet;
+  }
+
+
+  private DbResultSet executePreparedStatement(List<?> prepStmtParameters)
+      throws SQLException
+  {
+    log.fine("Executing prepared SQL SELECT statement: " + getSql());
+
+    PreparedStatement stmt = getPreparedStatement(getSql());
+    setParameters(stmt, prepStmtParameters);
+    prepStmtParameters.clear();
+
+    final ResultSet rs = stmt.executeQuery();
+    return new DbResultSet(rs, getSqlTypeHandlerRegistry(), strictColumnCheck);
+  }
+
+
+  private void setParameters(PreparedStatement stmt, List<?> prepStmtParameters)
+      throws SQLException
+  {
+    for (int i = 0; i < prepStmtParameters.size(); i++)
+    {
+      stmt.setObject(i + 1, prepStmtParameters.get(i));
+    }
+  }
+
+
+  private DbResultSet executeStatement() throws SQLException
   {
     log.fine("Executing SQL SELECT statement: " + getSql());
 
     final ResultSet rs = getStatement().executeQuery(getSql());
-    resultSet = new DbResultSet(rs, getSqlTypeHandlerRegistry(),
-        strictColumnCheck);
-    return resultSet;
+    return new DbResultSet(rs, getSqlTypeHandlerRegistry(), strictColumnCheck);
   }
 
 
@@ -91,5 +152,6 @@ public class DbSelectDataSource extends AbstractDbDataSource
   {
     return "[SQL: " + sql + "]";
   }
+
 
 }

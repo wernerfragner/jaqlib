@@ -21,7 +21,7 @@ import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DeleteFromClause;
-import org.jaqlib.db.FromClause;
+import org.jaqlib.db.DbFromClause;
 import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
 import org.jaqlib.db.Using;
@@ -88,7 +88,7 @@ public class DatabaseQB
    * <p>
    * Selects one column of a given database SELECT statement. The SELECT
    * statement that should be used must be specified in the returned
-   * {@link FromClause}. The {@link FromClause} hereby returns a
+   * {@link DbFromClause}. The {@link DbFromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of custom {@link WhereCondition}s and custom conditions using a
@@ -106,7 +106,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T> select(ColumnMapping<T> columnMapping)
+  public static <T> DbFromClause<T> select(ColumnMapping<T> columnMapping)
   {
     return getQueryBuilder().select(columnMapping);
   }
@@ -124,7 +124,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static FromClause<Object> select(String columnName)
+  public static DbFromClause<Object> select(String columnName)
   {
     return select(new ColumnMapping<Object>(columnName));
   }
@@ -134,7 +134,7 @@ public class DatabaseQB
    * <p>
    * Uses a given database SELECT statement to fill a user-defined Java bean.
    * The SELECT statement that should be used must be specified in the returned
-   * {@link FromClause}. The {@link FromClause} hereby returns a
+   * {@link DbFromClause}. The {@link DbFromClause} hereby returns a
    * {@link WhereClause} that can be used to specify an arbitrary WHERE
    * condition. This WHERE condition supports AND and OR connectors, the
    * evaluation of custom {@link WhereCondition}s and custom conditions using a
@@ -156,7 +156,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T> select(Class<T> beanClass)
+  public static <T> DbFromClause<T> select(Class<T> beanClass)
   {
     return getQueryBuilder().select(beanClass);
   }
@@ -175,7 +175,7 @@ public class DatabaseQB
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
-  public static <T> FromClause<T> select(BeanMapping<T> beanMapping)
+  public static <T> DbFromClause<T> select(BeanMapping<T> beanMapping)
   {
     return getQueryBuilder().select(beanMapping);
   }

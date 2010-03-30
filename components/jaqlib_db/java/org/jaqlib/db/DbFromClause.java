@@ -3,7 +3,6 @@ package org.jaqlib.db;
 import javax.sql.DataSource;
 
 import org.jaqlib.DatabaseQueryBuilder;
-import org.jaqlib.core.WhereClause;
 import org.jaqlib.util.Assert;
 
 /**
@@ -13,14 +12,14 @@ import org.jaqlib.util.Assert;
  * 
  * @param <T>
  */
-public class FromClause<T>
+public class DbFromClause<T>
 {
 
   private final DatabaseQueryBuilder queryBuilder;
   private final AbstractMapping<T> mapping;
 
 
-  public FromClause(DatabaseQueryBuilder queryBuilder,
+  public DbFromClause(DatabaseQueryBuilder queryBuilder,
       AbstractMapping<T> mapping)
   {
     this.queryBuilder = Assert.notNull(queryBuilder);
@@ -34,9 +33,9 @@ public class FromClause<T>
    * @param dataSource a not null data source for the query.
    * @return a where clause for defining the query conditions.
    */
-  public WhereClause<T, DbSelectDataSource> from(DbSelectDataSource dataSource)
+  public DbWhereClause<T> from(DbSelectDataSource dataSource)
   {
-    return this.getQuery().createWhereClause(dataSource);
+    return this.createQuery().createDbWhereClause(dataSource);
   }
 
 
@@ -47,14 +46,13 @@ public class FromClause<T>
    * @param sql the SQL statement that should be executed.
    * @return a where clause for defining the query conditions.
    */
-  public WhereClause<T, DbSelectDataSource> from(DataSource dataSource,
-      String sql)
+  public DbWhereClause<T> from(DataSource dataSource, String sql)
   {
     return from(new DbSelectDataSource(dataSource, sql));
   }
 
 
-  private DatabaseQuery<T> getQuery()
+  private DbQuery<T> createQuery()
   {
     return queryBuilder.createQuery(mapping);
   }

@@ -43,6 +43,7 @@ public class DefaultBeanFactoryTest extends TestCase
   private static class NoDefaultConstructorClass
   {
 
+    @SuppressWarnings("unused")
     public NoDefaultConstructorClass(String arg)
     {
     }

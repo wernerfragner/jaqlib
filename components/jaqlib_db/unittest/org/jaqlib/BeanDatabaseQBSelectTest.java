@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DbWhereClause;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 
 
@@ -20,7 +20,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   private static final String HUBER = DatabaseSetup.HUBER_ACCOUNT.getLastName();
   private static final String MAIER = DatabaseSetup.MAIER_ACCOUNT.getLastName();
 
-  private WhereClause<Account, DbSelectDataSource> where;
+  private DbWhereClause<Account> where;
 
 
   @Override
@@ -39,8 +39,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   }
 
 
-  private void assertHashtableResult(
-      WhereClause<Account, DbSelectDataSource> where)
+  private void assertHashtableResult(DbWhereClause<Account> where)
   {
     Account account = DatabaseQB.getRecorder(Account.class);
     Hashtable<String, Account> accounts = where.asHashtable(account
@@ -49,7 +48,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   }
 
 
-  private void assertMapResult(WhereClause<Account, DbSelectDataSource> where)
+  private void assertMapResult(DbWhereClause<Account> where)
   {
     Account account = DatabaseQB.getRecorder(Account.class);
     Map<String, Account> accounts = where.asMap(account.getLastName());
@@ -64,7 +63,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   }
 
 
-  private void assertSetResult(WhereClause<Account, DbSelectDataSource> where)
+  private void assertSetResult(DbWhereClause<Account> where)
   {
     Set<Account> accounts = where.asSet();
     assertEquals(2, accounts.size());
@@ -73,14 +72,14 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   }
 
 
-  private void assertVectorResult(WhereClause<Account, DbSelectDataSource> where)
+  private void assertVectorResult(DbWhereClause<Account> where)
   {
     Vector<Account> accounts = where.asVector();
     assertListResult(accounts);
   }
 
 
-  private void assertListResult(WhereClause<Account, DbSelectDataSource> where)
+  private void assertListResult(DbWhereClause<Account> where)
   {
     List<Account> accounts = where.asList();
     assertListResult(accounts);
@@ -197,6 +196,27 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
         .isEqual(CreditRating.GOOD).uniqueResult();
     assertNotNull(account);
     assertHuberAccount(account);
+  }
+
+
+  public void testSelect_PreparedStatement()
+  {
+    String sql = "SELECT id, lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT WHERE lname = ?";
+    DbSelectDataSource ds = Database.getSelectDataSource(getDataSource(), sql);
+    ds.setAutoClosePreparedStatement(false);
+
+    DbWhereClause<AccountImpl> where = DatabaseQB.select(AccountImpl.class)
+        .from(ds);
+
+    Account account = where.using(HUBER).firstResult();
+    assertNotNull(account);
+    assertHuberAccount(account);
+
+    account = where.using(MAIER).firstResult();
+    assertNotNull(account);
+    assertMaierAccount(account);
+
+    ds.close();
   }
 
 }

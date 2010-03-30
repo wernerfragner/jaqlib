@@ -11,9 +11,6 @@ public interface Query<T, DataSourceType> extends
     ResultProvider<T, DataSourceType>
 {
 
-  WhereClause<T, DataSourceType> createWhereClause(DataSourceType dataSource);
-
-
   QueryResult<T, DataSourceType> createQueryResult();
 
 

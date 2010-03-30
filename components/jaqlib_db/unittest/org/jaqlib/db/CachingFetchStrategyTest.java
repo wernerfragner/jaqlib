@@ -1,6 +1,7 @@
 package org.jaqlib.db;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,7 @@ import org.jaqlib.core.reflect.MethodInvocation;
 public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
 {
 
-  private DatabaseQueryCache<AccountImpl> cache;
+  private DbQueryCache<AccountImpl> cache;
   private CachingFetchStrategy<AccountImpl> strategy;
 
 
@@ -21,7 +22,7 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
   {
     super.setUp();
 
-    cache = new DatabaseQueryCache<AccountImpl>(predicate);
+    cache = new DbQueryCache<AccountImpl>(predicate);
     strategy = new CachingFetchStrategy<AccountImpl>(cache);
     initStrategy(strategy);
   }
@@ -36,7 +37,7 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
     assertFalse(cache.isFilled());
 
     List<AccountImpl> results = new ArrayList<AccountImpl>();
-    strategy.addResults(results);
+    strategy.addResults(results, Collections.emptyList());
 
     assertTrue(cache.isFilled());
     assertEquals(2, results.size());
@@ -56,7 +57,7 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
 
     MethodInvocation invocation = getMethodInvocation();
     Map<Long, AccountImpl> results = new HashMap<Long, AccountImpl>();
-    strategy.addResults(results, invocation);
+    strategy.addResults(results, invocation, Collections.emptyList());
 
     assertTrue(cache.isFilled());
     assertEquals(2, results.size());
