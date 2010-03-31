@@ -36,31 +36,6 @@ public class DatabaseSetup
   public static final String EXACT_ACCOUNT_SELECT = "SELECT id, lastname, firstname, creditrating AS creditrating, balance, active, department FROM "
       + EXACT_ACCOUNT_TABLE;
 
-  public static final AccountImpl HUBER_ACCOUNT;
-  public static final AccountImpl MAIER_ACCOUNT;
-
-  public static final AccountImpl[] ACCOUNTS;
-
-
-  static
-  {
-    HUBER_ACCOUNT = new AccountImpl();
-    HUBER_ACCOUNT.setLastName("huber");
-    HUBER_ACCOUNT.setFirstName("sepp");
-    HUBER_ACCOUNT.setBalance(5000.0);
-    HUBER_ACCOUNT.setCreditRating(CreditRating.GOOD);
-    HUBER_ACCOUNT.setDepartment("linz");
-
-    MAIER_ACCOUNT = new AccountImpl();
-    MAIER_ACCOUNT.setLastName("maier");
-    MAIER_ACCOUNT.setFirstName("franz");
-    MAIER_ACCOUNT.setBalance(2000.0);
-    MAIER_ACCOUNT.setCreditRating(CreditRating.POOR);
-    MAIER_ACCOUNT.setDepartment("wien");
-
-    ACCOUNTS = new AccountImpl[] { HUBER_ACCOUNT, MAIER_ACCOUNT };
-  }
-
 
   public void clear() throws SQLException
   {
@@ -137,7 +112,7 @@ public class DatabaseSetup
     DbInsertDataSource ds = createAccountInsertDataSource(ACCOUNT_TABLE);
     BeanMapping<AccountImpl> mapping = createAccountMapping();
 
-    for (AccountImpl account : ACCOUNTS)
+    for (AccountImpl account : AccountSetup.ACCOUNTS)
     {
       insertAccount(ds, mapping, account);
     }
@@ -221,16 +196,18 @@ public class DatabaseSetup
     EasyMock.expect(rs.next()).andReturn(true);
     EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(1));
     EasyMock.expect(rs.getObject("lastName")).andReturn(
-        HUBER_ACCOUNT.getLastName());
+        AccountSetup.HUBER_ACCOUNT.getLastName());
     EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(1));
-    EasyMock.expect(rs.getObject(2)).andReturn(HUBER_ACCOUNT.getLastName());
+    EasyMock.expect(rs.getObject(2)).andReturn(
+        AccountSetup.HUBER_ACCOUNT.getLastName());
 
     EasyMock.expect(rs.next()).andReturn(true);
     EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(2));
     EasyMock.expect(rs.getObject("lastName")).andReturn(
-        MAIER_ACCOUNT.getLastName());
+        AccountSetup.MAIER_ACCOUNT.getLastName());
     EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(2));
-    EasyMock.expect(rs.getObject(2)).andReturn(MAIER_ACCOUNT.getLastName());
+    EasyMock.expect(rs.getObject(2)).andReturn(
+        AccountSetup.MAIER_ACCOUNT.getLastName());
 
     EasyMock.expect(rs.next()).andReturn(false);
 

@@ -1,7 +1,7 @@
 package org.jaqlib;
 
-import static org.jaqlib.DatabaseSetup.HUBER_ACCOUNT;
-import static org.jaqlib.DatabaseSetup.MAIER_ACCOUNT;
+import static org.jaqlib.AccountSetup.HUBER_ACCOUNT;
+import static org.jaqlib.AccountSetup.MAIER_ACCOUNT;
 
 import java.sql.SQLException;
 import java.util.Collection;

@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.AccountSetup;
 import org.jaqlib.DatabaseSetup;
 
 public class ColumnMappingTest extends TestCase
@@ -23,7 +24,7 @@ public class ColumnMappingTest extends TestCase
 
   public void testGetValue_ColumnIndexAvailable() throws SQLException
   {
-    final String lastName = DatabaseSetup.HUBER_ACCOUNT.getLastName();
+    final String lastName = AccountSetup.HUBER_ACCOUNT.getLastName();
     DbResultSet rs = DatabaseSetup.getMockDbResultSet();
 
     mapping.setColumnIndex(2);
@@ -34,7 +35,7 @@ public class ColumnMappingTest extends TestCase
 
   public void testGetValue_ColumnLabelAvailable() throws SQLException
   {
-    final String lastName = DatabaseSetup.HUBER_ACCOUNT.getLastName();
+    final String lastName = AccountSetup.HUBER_ACCOUNT.getLastName();
     DbResultSet rs = DatabaseSetup.getMockDbResultSet();
 
     mapping.setColumnLabel("lastName");
