@@ -1,0 +1,19 @@
+<bank>
+	<accounts>
+	
+		<account lastname="huber" firstname="sepp" balance="5000" creditRating="GOOD" department="linz">
+		  <transactions>
+			  <transaction id="1" amount="100"/>
+			  <transaction id="2" amount="-100"/>
+		  </transactions>
+		</account>
+		
+		<account lastname="maier" firstname="franz" balance="2000" creditRating="POOR" department="wien">
+		  <transactions>
+	      <transaction id="1" amount="-500"/>
+	      <transaction id="2" amount="-1000"/>
+      </transactions>
+    </account>
+    
+	</accounts>
+</bank>
