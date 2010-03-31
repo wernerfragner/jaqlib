@@ -1,5 +1,8 @@
 package org.jaqlib;
 
+import static org.jaqlib.AccountAssert.assertHuberAccount;
+import static org.jaqlib.AccountAssert.assertMaierAccount;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -13,12 +16,11 @@ import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbWhereClause;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 
-
 public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 {
 
-  private static final String HUBER = DatabaseSetup.HUBER_ACCOUNT.getLastName();
-  private static final String MAIER = DatabaseSetup.MAIER_ACCOUNT.getLastName();
+  private static final String HUBER = AccountSetup.HUBER_ACCOUNT.getLastName();
+  private static final String MAIER = AccountSetup.MAIER_ACCOUNT.getLastName();
 
   private DbWhereClause<Account> where;
 
@@ -58,8 +60,8 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 
   private void assertMapResult(Map<String, Account> accounts)
   {
-    assertEquals(DatabaseSetup.MAIER_ACCOUNT, accounts.get(MAIER));
-    assertEquals(DatabaseSetup.HUBER_ACCOUNT, accounts.get(HUBER));
+    assertEquals(AccountSetup.MAIER_ACCOUNT, accounts.get(MAIER));
+    assertEquals(AccountSetup.HUBER_ACCOUNT, accounts.get(HUBER));
   }
 
 
@@ -103,27 +105,6 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     {
       fail("No matching account available!");
     }
-  }
-
-
-  private void assertMaierAccount(Account account)
-  {
-    assertEquals(DatabaseSetup.MAIER_ACCOUNT, account);
-  }
-
-
-  private void assertHuberAccount(Account account)
-  {
-    assertEquals(DatabaseSetup.HUBER_ACCOUNT, account);
-  }
-
-
-  private void assertEquals(Account expected, Account given)
-  {
-    assertEquals(expected.getLastName(), given.getLastName());
-    assertEquals(expected.getFirstName(), given.getFirstName());
-    assertEquals(expected.getBalance(), given.getBalance());
-    assertEquals(expected.getCreditRating(), given.getCreditRating());
   }
 
 

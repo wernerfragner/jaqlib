@@ -134,7 +134,10 @@ public class AccountImpl implements Account
   @Override
   public String toString()
   {
-    return getClass().getName() + ": id=" + id + "; balance=" + balance;
+    return "AccountImpl [active=" + active + ", balance=" + balance
+        + ", changed=" + changed + ", creditRating=" + creditRating
+        + ", department=" + department + ", firstName=" + firstName + ", id="
+        + id + ", lastName=" + lastName + "]";
   }
 
 

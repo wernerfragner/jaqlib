@@ -7,6 +7,7 @@ import java.sql.Types;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.jaqlib.AccountSetup;
 import org.jaqlib.DatabaseSetup;
 import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
@@ -92,14 +93,14 @@ public class DbResultSetTest extends TestCase
   public void testGetObject_ColumnName() throws SQLException
   {
     Object value = resultSet.getObject(Types.OTHER, "lastName");
-    assertEquals(DatabaseSetup.HUBER_ACCOUNT.getLastName(), value);
+    assertEquals(AccountSetup.HUBER_ACCOUNT.getLastName(), value);
   }
 
 
   public void testGetObject_ColumnIndex() throws SQLException
   {
     Object value = resultSet.getObject(Types.OTHER, 1);
-    assertEquals(DatabaseSetup.HUBER_ACCOUNT.getId(), value);
+    assertEquals(AccountSetup.HUBER_ACCOUNT.getId(), value);
   }
 
 

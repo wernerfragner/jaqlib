@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import junit.framework.TestCase;
 
 import org.jaqlib.AccountImpl;
+import org.jaqlib.AccountSetup;
 import org.jaqlib.CreditRating;
 import org.jaqlib.DatabaseSetup;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
@@ -28,8 +29,8 @@ public class BeanMappingTest extends TestCase
 
   public void testGetValue() throws SQLException
   {
-    final Long id = DatabaseSetup.HUBER_ACCOUNT.getId();
-    final String lastName = DatabaseSetup.HUBER_ACCOUNT.getLastName();
+    final Long id = AccountSetup.HUBER_ACCOUNT.getId();
+    final String lastName = AccountSetup.HUBER_ACCOUNT.getLastName();
     DbResultSet rs = DatabaseSetup.getMockDbResultSet();
 
     // get account
