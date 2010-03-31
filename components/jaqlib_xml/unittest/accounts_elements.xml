@@ -1,0 +1,29 @@
+<bank>
+	<accounts>
+	
+		<account>
+		  <lastname>huber</lastname>
+		  <firstname>sepp</firstname>
+		  <balance>5000</balance>
+		  <creditRating>GOOD</creditRating>
+		  <department>linz</department>
+		  <transactions>
+			  <transaction id="1" amount="100"/>
+			  <transaction id="2" amount="-100"/>
+		  </transactions>
+		</account>
+		
+		<account>
+		  <lastname>maier</lastname>
+      <firstname>franz</firstname>
+      <balance>2000</balance>
+      <creditRating>POOR</creditRating>
+      <department>wien</department>
+      <transactions>
+	      <transaction id="1" amount="-500"/>
+	      <transaction id="2" amount="-1000"/>
+      </transactions>
+    </account>
+    
+	</accounts>
+</bank>
