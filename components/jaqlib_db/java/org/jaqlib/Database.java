@@ -212,6 +212,17 @@ public class Database
 
 
   /**
+   * @param tableName the not null name of the table where to insert the record.
+   * @return an object representing the source for a (or multiple) database
+   *         insert.
+   */
+  public DbUpdateDataSource getUpdateDataSource(String tableName)
+  {
+    return getUpdateDataSource(tableName, null);
+  }
+
+
+  /**
    * Gets a datasource for deleting a set of records of a table. Which records
    * should be deleted can be specified with a given where clause (without the
    * WHERE keyword).
@@ -285,6 +296,20 @@ public class Database
       String tableName, String whereClause)
   {
     return new Database(dataSource).getUpdateDataSource(tableName, whereClause);
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to update the record.
+   * @return an object representing the source for a (or multiple) database
+   *         update.
+   */
+  public static DbUpdateDataSource getUpdateDataSource(DataSource dataSource,
+      String tableName)
+  {
+    return new Database(dataSource).getUpdateDataSource(tableName);
   }
 
 

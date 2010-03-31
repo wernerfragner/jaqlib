@@ -15,15 +15,23 @@
  */
 package org.jaqlib;
 
+import javax.sql.DataSource;
+
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.BeanFactory;
 import org.jaqlib.db.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
-import org.jaqlib.db.DeleteFromClause;
+import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbFromClause;
+import org.jaqlib.db.DbInsertDataSource;
+import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DbUpdateDataSource;
+import org.jaqlib.db.Defaults;
+import org.jaqlib.db.DeleteFromClause;
 import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
+import org.jaqlib.db.MappingStrategy;
 import org.jaqlib.db.Using;
 
 
@@ -222,6 +230,131 @@ public class DatabaseQB
   public static DeleteFromClause delete()
   {
     return getQueryBuilder().delete();
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param sql a not null SELECT statement.
+   * @return an object representing the source for a database query.
+   */
+  public static DbSelectDataSource getSelectDataSource(DataSource dataSource,
+      String sql)
+  {
+    return Database.getSelectDataSource(dataSource, sql);
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to insert the record.
+   * @return an object representing the source for a (or multiple) database
+   *         insert.
+   */
+  public static DbInsertDataSource getInsertDataSource(DataSource dataSource,
+      String tableName)
+  {
+    return Database.getInsertDataSource(dataSource, tableName);
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to update the record.
+   * @param whereClause the where clause of the UPDATE statement without the
+   *          WHERE keyword.
+   * @return an object representing the source for a (or multiple) database
+   *         update.
+   */
+  public static DbUpdateDataSource getUpdateDataSource(DataSource dataSource,
+      String tableName, String whereClause)
+  {
+    return Database.getUpdateDataSource(dataSource, tableName, whereClause);
+  }
+
+
+  /**
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to update the record.
+   * @return an object representing the source for a (or multiple) database
+   *         update.
+   */
+  public static DbUpdateDataSource getUpdateDataSource(DataSource dataSource,
+      String tableName)
+  {
+    return Database.getUpdateDataSource(dataSource, tableName);
+  }
+
+
+  /**
+   * Gets a datasource for deleting a set of records of a table. Which records
+   * should be deleted can be specified with a given where clause (without the
+   * WHERE keyword).
+   * 
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to delete the
+   *          records.
+   * @param whereClause the where clause of the DELETE statement without the
+   *          WHERE keyword.
+   * @return an object representing the source for a database table delete.
+   */
+  public static DbDeleteDataSource getDeleteDataSource(DataSource dataSource,
+      String tableName, String whereClause)
+  {
+    return Database.getDeleteDataSource(dataSource, tableName, whereClause);
+  }
+
+
+  /**
+   * Gets a datasource for deleting all records of a table.
+   * 
+   * @param dataSource a not null {@link DataSource} for obtaining a JDBC
+   *          connection.
+   * @param tableName the not null name of the table where to delete the
+   *          records.
+   * @return an object representing the source for a database table delete.
+   */
+  public static DbDeleteDataSource getDeleteDataSource(DataSource dataSource,
+      String tableName)
+  {
+    return Database.getDeleteDataSource(dataSource, tableName);
+  }
+
+
+  /**
+   * Creates a {@link BeanMapping} instance by using the bean properties of the
+   * given class. Bean properties must have a valid get and set method in order
+   * to be in the returned {@link BeanMapping}.
+   * 
+   * @param <T> the type of the result bean.
+   * @param beanClass the class that should be used to hold the result of the
+   *          SELECT statement. Additionally this class is used to retrieve the
+   *          bean properties for storing the result of the SELECT statement.
+   * @return an object describing where to store a SELECT statement result.
+   */
+  public static <T> BeanMapping<T> getDefaultBeanMapping(
+      Class<? extends T> beanClass)
+  {
+    return Database.getBeanMapping(Defaults.getMappingStrategy(), beanClass);
+  }
+
+
+  /**
+   * @param mappingStrategy a custom strategy how to map SELECT statement
+   *          results to the fields of the given bean.
+   * @param beanClass the class that should be used to hold the result of the
+   *          SELECT statement.
+   * @return an object describing where to store a SELECT statement result.
+   */
+  public static <T> BeanMapping<T> getBeanMapping(
+      MappingStrategy mappingStrategy, Class<? extends T> beanClass)
+  {
+    return Database.getBeanMapping(mappingStrategy, beanClass);
   }
 
 
