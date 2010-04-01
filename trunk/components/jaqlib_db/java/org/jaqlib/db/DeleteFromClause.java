@@ -35,4 +35,18 @@ public class DeleteFromClause
     return from(new DbDeleteDataSource(dataSource, tableName, whereClause));
   }
 
+
+  /**
+   * Defines the table from which records should be deleted.
+   * 
+   * @param dataSource the data source holding the database connection.
+   * @param tableName the name of the table from which records should be
+   *          deleted.
+   * @return the number of deleted records.
+   */
+  public int from(DataSource dataSource, String tableName)
+  {
+    return from(dataSource, tableName, null);
+  }
+
 }

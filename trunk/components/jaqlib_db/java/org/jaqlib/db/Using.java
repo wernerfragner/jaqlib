@@ -11,8 +11,8 @@ import org.jaqlib.util.Assert;
 public class Using<T>
 {
 
-  private final T bean;
-  private final AbstractDbDmlDataSource dataSource;
+  protected final T bean;
+  protected final AbstractDbDmlDataSource dataSource;
 
 
   public Using(T bean, AbstractDbDmlDataSource dataSource)

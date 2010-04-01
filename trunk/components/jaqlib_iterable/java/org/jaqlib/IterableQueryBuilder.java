@@ -37,6 +37,10 @@ import org.jaqlib.iterable.IterableQuery;
  * This class is thread-safe.
  * <p>
  * <b>Usage examples:</b><br>
+ * <p>
+ * The following examples use Jaqlib.List for accessing the
+ * IterableQueryBuilder. Alternatively the class IterableQB can be used, too.
+ * </p>
  * <i>Method call recording mechanism:</i>
  * 
  * <pre>
@@ -44,10 +48,10 @@ import org.jaqlib.iterable.IterableQuery;
  * List&lt;Account&gt; accounts = getAccounts();
  * 
  * // create a 'dummy' object for recording a method call for the WHERE clause
- * Account account = IterableQB.getRecorder(Account.class);
+ * Account account = Jaqlib.List.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = IterableQB.selectFrom(accounts).whereCall(
+ * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts).whereCall(
  *     account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
@@ -72,14 +76,14 @@ import org.jaqlib.iterable.IterableQuery;
  * }
  * 
  * // execute query with these conditions 
- * List&lt;Account&gt; highRiskAccounts = IterableQB.selectFrom(accounts)
+ * List&lt;Account&gt; highRiskAccounts = Jaqlib.List.selectFrom(accounts)
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
  * <i>Filtering null elements:</i>
  * 
  * <pre>
- * List&lt;Account&gt; notNullAccounts = IterableQB.selectFrom(accounts).where()
+ * List&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).where()
  *     .element().isNotNull().asList();
  * </pre>
  * 
@@ -90,15 +94,15 @@ import org.jaqlib.iterable.IterableQuery;
  * AccountImpl spec = new AccountImpl();
  * account.setBalance(5000);
  * 
- * List&lt;Account&gt; result = IterableQB.selectFrom(accounts).where().element()
+ * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts).where().element()
  *     .isSmallerThan(spec).asList();
  * </pre>
  * 
  * <i>Map as result:</i>
  * 
  * <pre>
- * Account account = IterableQB.getRecorder(Account.class);
- * Map&lt;Long, Account&gt; results = IterableQB.selectFrom(accounts).asMap(
+ * Account account = Jaqlib.List.getRecorder(Account.class);
+ * Map&lt;Long, Account&gt; results = Jaqlib.List.selectFrom(accounts).asMap(
  *     account.getId());
  * </pre>
  * 
@@ -115,7 +119,7 @@ import org.jaqlib.iterable.IterableQuery;
  *   }
  * 
  * };
- * IterableQB.selectFrom(accounts).execute(task);
+ * Jaqlib.List.selectFrom(accounts).execute(task);
  * </pre>
  * 
  * <pre>
@@ -131,10 +135,10 @@ import org.jaqlib.iterable.IterableQuery;
  * };
  * 
  * // execute task only on elements that match the given condition 
- * IterableQB.selectFrom(accounts).where(deptCond).execute(task);
+ * Jaqlib.List.selectFrom(accounts).where(deptCond).execute(task);
  * 
  * // or ...
- * List&lt;Account&gt; result = IterableQB.selectFrom(accounts).where(deptCond)
+ * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts).where(deptCond)
  *     .executeWithResult(task).asList();
  * </pre>
  * 
