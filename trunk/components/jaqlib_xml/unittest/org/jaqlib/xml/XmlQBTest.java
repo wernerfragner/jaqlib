@@ -13,6 +13,7 @@ import junit.framework.TestCase;
 
 import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
+import org.jaqlib.XmlQB;
 import org.jaqlib.util.CollectionUtil;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -28,8 +29,9 @@ public class XmlQBTest extends TestCase
 
     Account recorder = XmlQB.getRecorder(Account.class);
     List<AccountImpl> accounts = XmlQB.select(AccountImpl.class)
-        .fromAttributes("unittest/accounts_attributes.xml", "/bank/accounts/*")
-        .whereCall(recorder.getLastName()).isEqual("huber").asList();
+        .fromAttributes("unittest/accounts_attributes.xml").where(
+            "/bank/accounts/*").andCall(recorder.getLastName())
+        .isEqual("huber").asList();
 
     assertNotNull(accounts);
     assertEquals(1, accounts.size());
@@ -38,7 +40,7 @@ public class XmlQBTest extends TestCase
     // select maier account
 
     accounts = XmlQB.select(AccountImpl.class).fromAttributes(
-        "unittest/accounts_attributes.xml", "/bank/accounts/*").whereCall(
+        "unittest/accounts_attributes.xml").where("/bank/accounts/*").andCall(
         recorder.getLastName()).isEqual("maier").asList();
 
     assertNotNull(accounts);
@@ -51,7 +53,7 @@ public class XmlQBTest extends TestCase
   {
     Account recorder = XmlQB.getRecorder(Account.class);
     List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(
-        "unittest/accounts_attributes.xml", "/bank/accounts/*").whereCall(
+        "unittest/accounts_attributes.xml").where("/bank/accounts/*").andCall(
         recorder.getLastName()).isEqual("huber").asList();
 
     assertNotNull(accounts);
@@ -67,7 +69,7 @@ public class XmlQBTest extends TestCase
 
     Account recorder = XmlQB.getRecorder(Account.class);
     List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds,
-        "/bank/accounts/*").whereCall(recorder.getLastName()).isEqual("huber")
+       ).where( "/bank/accounts/*").andCall(recorder.getLastName()).isEqual("huber")
         .asList();
 
     assertNotNull(accounts);
@@ -77,7 +79,7 @@ public class XmlQBTest extends TestCase
     // re-use datasource
 
     List<TransactionImpl> transactions = XmlQB.select(TransactionImpl.class)
-        .from(ds, "/bank//transactions/*").asList();
+        .from(ds).where("/bank//transactions/*").asList();
 
     assertNotNull(accounts);
     assertEquals(4, accounts.size());
@@ -88,12 +90,29 @@ public class XmlQBTest extends TestCase
   {
     Account recorder = XmlQB.getRecorder(Account.class);
     List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).fromElements(
-        "unittest/accounts_elements.xml", "/bank/accounts/*").whereCall(
+        "unittest/accounts_elements.xml").where("/bank/accounts/*").andCall(
         recorder.getLastName()).isEqual("maier").asList();
 
     assertNotNull(accounts);
     assertEquals(1, accounts.size());
     assertMaierAccount(accounts.get(0));
+  }
+
+
+  public void testSelectAccount_CustomXPathEngine()
+  {
+    XmlSelectDataSource ds = XmlQB
+        .getSelectDataSource("unittest/accounts_attributes.xml");
+    ds.setXPathEngine(new JaxenXPathEngine());
+
+    Account recorder = XmlQB.getRecorder(Account.class);
+    List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds)
+        .where("/bank/accounts/*").andCall(recorder.getLastName()).isEqual(
+            "huber").asList();
+
+    assertNotNull(accounts);
+    assertEquals(1, accounts.size());
+    assertHuberAccount(accounts.get(0));
   }
 
 
