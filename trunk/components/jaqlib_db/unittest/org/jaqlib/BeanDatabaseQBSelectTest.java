@@ -60,8 +60,10 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 
   private void assertMapResult(Map<String, Account> accounts)
   {
-    assertEquals(AccountSetup.MAIER_ACCOUNT, accounts.get(MAIER));
-    assertEquals(AccountSetup.HUBER_ACCOUNT, accounts.get(HUBER));
+    org.jaqlib.AccountAssert.assertEquals(AccountSetup.MAIER_ACCOUNT, accounts
+        .get(MAIER));
+    org.jaqlib.AccountAssert.assertEquals(AccountSetup.HUBER_ACCOUNT, accounts
+        .get(HUBER));
   }
 
 
