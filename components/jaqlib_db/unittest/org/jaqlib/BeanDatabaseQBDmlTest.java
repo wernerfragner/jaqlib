@@ -187,6 +187,58 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
   }
 
 
+  public void testUpdate_MatchingWhereClause()
+  {
+    // insert account
+
+    dbSetup.insertExactAccount(account);
+    AccountImpl insertedAccount = selectAccount(EXACT_SELECT);
+
+    // update account with matching where clause
+
+    DbUpdateDataSource ds = getUpdateDataSource(insertedAccount.getId(),
+        EXACT_TABLE);
+    String whereClause = "lastname = '" + account.getLastName() + "'";
+    account.setBalance(3000d);
+    int cnt = DatabaseQB.update(account).in(ds).where(whereClause)
+        .usingDefaultMapping();
+    assertEquals(1, cnt);
+
+    // check if account has been updated at database
+
+    AccountImpl dbAccount = selectAccount(EXACT_SELECT);
+    assertEqualAccount(account, dbAccount);
+  }
+
+
+  public void testUpdate_NonMatchingWhereClause()
+  {
+    double originalBalance = account.getBalance();
+
+    // insert account
+
+    dbSetup.insertExactAccount(account);
+    AccountImpl insertedAccount = selectAccount(EXACT_SELECT);
+
+    // update account with non-matching where clause
+
+    DbUpdateDataSource ds = getUpdateDataSource(insertedAccount.getId(),
+        EXACT_TABLE);
+    String whereClause = "lastname = 'nonmatching'";
+    account.setBalance(originalBalance + 1000);
+    int cnt = DatabaseQB.update(account).in(ds).where(whereClause)
+        .usingDefaultMapping();
+    assertEquals(0, cnt);
+    // reset for compare operation
+    account.setBalance(originalBalance);
+
+    // check if account has been updated at database
+
+    AccountImpl dbAccount = selectAccount(EXACT_SELECT);
+    assertEqualAccount(account, dbAccount);
+  }
+
+
   public void testDelete()
   {
     assertEquals(2, getNrRecords(TABLE));

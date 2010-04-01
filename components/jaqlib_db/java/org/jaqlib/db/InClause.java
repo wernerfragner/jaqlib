@@ -27,11 +27,11 @@ public class InClause<T>
    * Defines the table that should be updated.
    * 
    * @param ds holds information about the table that should be updated.
-   * @return a using clause for defining the db column to object field mapping.
+   * @return a using clause for defining the DB column to object field mapping.
    */
-  public Using<T> in(DbUpdateDataSource ds)
+  public UpdateUsing<T> in(DbUpdateDataSource ds)
   {
-    return new Using<T>(bean, ds);
+    return new UpdateUsing<T>(bean, ds);
   }
 
 
@@ -40,13 +40,11 @@ public class InClause<T>
    * 
    * @param dataSource the data source holding the database connection.
    * @param tableName the name of the table that should be updated.
-   * @param whereClause the where clause that should be applied to the UPDATE
-   *          statement.
-   * @return a using clause for defining the db column to object field mapping.
+   * @return a using clause for defining the DB column to object field mapping.
    */
-  public Using<T> in(DataSource dataSource, String tableName, String whereClause)
+  public Using<T> in(DataSource dataSource, String tableName)
   {
-    return in(new DbUpdateDataSource(dataSource, tableName, whereClause));
+    return in(new DbUpdateDataSource(dataSource, tableName, null));
   }
 
 }
