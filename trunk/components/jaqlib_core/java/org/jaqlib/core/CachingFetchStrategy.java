@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
 import java.util.Collection;
 import java.util.Map;

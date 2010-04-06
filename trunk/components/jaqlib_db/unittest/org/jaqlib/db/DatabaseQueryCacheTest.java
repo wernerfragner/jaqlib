@@ -11,6 +11,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
+import org.jaqlib.core.DbQueryCache;
 import org.jaqlib.core.ElementPredicate;
 import org.jaqlib.core.reflect.MethodInvocation;
 

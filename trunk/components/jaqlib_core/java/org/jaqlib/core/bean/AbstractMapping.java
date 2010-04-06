@@ -1,7 +1,6 @@
-package org.jaqlib.db;
+package org.jaqlib.core.bean;
 
-import java.sql.SQLException;
-
+import org.jaqlib.core.DsResultSet;
 import org.jaqlib.util.ReflectionUtil;
 
 /**
@@ -38,7 +37,7 @@ public abstract class AbstractMapping<T>
    * @param rs the database result set.
    * @return the value from the result set.
    */
-  public abstract T getValue(DbResultSet rs) throws SQLException;
+  public abstract T getValue(DsResultSet rs);
 
 
   /**

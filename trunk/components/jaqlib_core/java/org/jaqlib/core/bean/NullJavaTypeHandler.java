@@ -1,4 +1,4 @@
-package org.jaqlib.db.java.typehandler;
+package org.jaqlib.core.bean;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

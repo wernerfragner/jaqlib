@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.ColumnMapping;
 import org.jaqlib.util.Assert;
 
 /**

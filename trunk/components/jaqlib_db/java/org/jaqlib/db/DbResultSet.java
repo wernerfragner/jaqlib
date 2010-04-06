@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+import org.jaqlib.core.DataSourceQueryException;
+import org.jaqlib.core.DsResultSet;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -13,7 +15,7 @@ import org.jaqlib.util.LogUtil;
 /**
  * @author Werner Fragner
  */
-public class DbResultSet
+public class DbResultSet implements DsResultSet
 {
 
   public static final Object NO_RESULT = new Object();
@@ -49,31 +51,59 @@ public class DbResultSet
   }
 
 
-  public boolean next() throws SQLException
+  public boolean next()
   {
-    return resultSet.next();
+    try
+    {
+      return resultSet.next();
+    }
+    catch (SQLException ex)
+    {
+      throw toDataSourceQueryException(ex);
+    }
   }
 
 
   public Object getObject(int sqlDataType, String columnLabel)
-      throws SQLException
   {
-    if (strictColumnCheck || hasColumn(columnLabel))
+    try
     {
-      return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnLabel);
+      if (strictColumnCheck || hasColumn(columnLabel))
+      {
+        return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnLabel);
+      }
+      else
+      {
+        log.info("SELECT statement does not contain colum '" + columnLabel
+            + "'. Column is ignored.");
+        return NO_RESULT;
+      }
     }
-    else
+    catch (SQLException ex)
     {
-      log.info("SELECT statement does not contain colum '" + columnLabel
-          + "'. Column is ignored.");
-      return NO_RESULT;
+      throw toDataSourceQueryException(ex);
     }
   }
 
 
-  public Object getObject(int sqlDataType, int columnIndex) throws SQLException
+  public Object getObject(int sqlDataType, int columnIndex)
   {
-    return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnIndex);
+    try
+    {
+      return getSqlTypeHandler(sqlDataType).getObject(resultSet, columnIndex);
+    }
+    catch (SQLException ex)
+    {
+      throw toDataSourceQueryException(ex);
+    }
+  }
+
+
+  private DataSourceQueryException toDataSourceQueryException(SQLException e)
+  {
+    DataSourceQueryException ex = new DataSourceQueryException(e);
+    ex.setStackTrace(e.getStackTrace());
+    return ex;
   }
 
 

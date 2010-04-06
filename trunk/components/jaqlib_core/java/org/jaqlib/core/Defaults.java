@@ -1,11 +1,12 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
-import org.jaqlib.db.java.typehandler.DefaultJavaTypeHandlerRegistry;
-import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
-import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
-import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
-import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
+import org.jaqlib.core.bean.BeanConventionMappingStrategy;
+import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.DefaultBeanFactory;
+import org.jaqlib.core.bean.DefaultJavaTypeHandlerRegistry;
+import org.jaqlib.core.bean.JavaTypeHandler;
+import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
+import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.util.Assert;
 
 /**
@@ -31,7 +32,6 @@ public class Defaults
   private static BeanFactory beanFactory;
   private static MappingStrategy mappingStrategy;
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry;
-  private static SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
   private static boolean strictColumnCheck;
 
 
@@ -52,7 +52,6 @@ public class Defaults
     beanFactory = new DefaultBeanFactory();
     mappingStrategy = new BeanConventionMappingStrategy();
     javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
-    sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
     strictColumnCheck = false;
   }
 
@@ -129,39 +128,6 @@ public class Defaults
   public static void registerJavaTypeHandler(JavaTypeHandler typeHandler)
   {
     getJavaTypeHandlerRegistry().registerTypeHandler(typeHandler);
-  }
-
-
-  /**
-   * @return the default SQL type handler registry.
-   */
-  public static SqlTypeHandlerRegistry getSqlTypeHandlerRegistry()
-  {
-    return sqlTypeHandlerRegistry;
-  }
-
-
-  /**
-   * Sets the default SQL type handler registry.<br>
-   * <b>NOTE: this method changes the default SQL type handler registry for the
-   * whole application! Use with care.</b>
-   * 
-   * @param registry a not null registry.
-   */
-  public static void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
-  {
-    Defaults.sqlTypeHandlerRegistry = Assert.notNull(registry);
-  }
-
-
-  /**
-   * See {@link SqlTypeHandlerRegistry#registerTypeHandler(int, SqlTypeHandler)}
-   * .
-   */
-  public static void registerSqlTypeHandler(int sqlDataType,
-      SqlTypeHandler typeHandler)
-  {
-    getSqlTypeHandlerRegistry().registerTypeHandler(sqlDataType, typeHandler);
   }
 
 

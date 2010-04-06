@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core.bean;
 
 /**
  * Abstracts the creation of bean instances.

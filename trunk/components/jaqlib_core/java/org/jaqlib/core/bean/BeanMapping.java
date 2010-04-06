@@ -1,13 +1,13 @@
-package org.jaqlib.db;
+package org.jaqlib.core.bean;
 
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
+import org.jaqlib.core.Defaults;
+import org.jaqlib.core.DsResultSet;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.ReflectionUtil;
+
 
 /**
  * Defines a mapping between several database columns to the fields of a Java
@@ -120,13 +120,13 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
 
   @Override
-  public T getValue(DbResultSet rs) throws SQLException
+  public T getValue(DsResultSet rs)
   {
     T bean = newBeanInstance();
     for (ColumnMapping<?> mapping : this)
     {
       Object value = mapping.getValue(rs);
-      if (value != DbResultSet.NO_RESULT)
+      if (value != DsResultSet.NO_RESULT)
       {
         setValue(bean, mapping.getFieldName(), value);
       }

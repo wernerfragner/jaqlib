@@ -9,6 +9,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jaqlib.AccountSetup;
 import org.jaqlib.DatabaseSetup;
+import org.jaqlib.core.Defaults;
 import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
@@ -36,7 +37,7 @@ public class DbResultSetTest extends TestCase
 
   public void testDbResultSet_Null() throws SQLException
   {
-    invalidConstructurArgs(null, Defaults.getSqlTypeHandlerRegistry(), false);
+    invalidConstructurArgs(null, DbDefaults.getSqlTypeHandlerRegistry(), false);
     invalidConstructurArgs(rs, null, false);
   }
 

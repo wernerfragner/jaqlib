@@ -1,4 +1,4 @@
-package org.jaqlib.db.java.typehandler;
+package org.jaqlib.core.bean;
 
 import static org.jaqlib.util.CollectionUtil.newDefaultMap;
 

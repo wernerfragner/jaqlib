@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.DataSourceQueryException;
+import org.jaqlib.core.SelectDataSource;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -26,12 +28,14 @@ import org.jaqlib.util.Assert;
  * 
  * @author Werner Fragner
  */
-public class DbSelectDataSource extends AbstractDbDataSource
+public class DbSelectDataSource extends AbstractDbDataSource implements
+    SelectDataSource
 {
 
   private String sql;
 
-  private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
+  private boolean strictColumnCheck = org.jaqlib.core.Defaults
+      .getStrictColumnCheck();
   private DbResultSet resultSet;
 
   private final List<Object> prepStmtParameters = new ArrayList<Object>();
@@ -130,25 +134,40 @@ public class DbSelectDataSource extends AbstractDbDataSource
 
 
   @Override
-  void closeAfterQuery()
+  public void closeAfterQuery()
   {
     closeResultSet();
     super.closeAfterQuery();
   }
 
 
-  public DbResultSet execute() throws SQLException
+  public DbResultSet execute()
   {
-    if (prepStmtParameters.isEmpty())
+    try
     {
-      resultSet = executeStatement();
-    }
-    else
-    {
-      resultSet = executePreparedStatement();
-    }
+      if (prepStmtParameters.isEmpty())
+      {
+        resultSet = executeStatement();
+      }
+      else
+      {
+        resultSet = executePreparedStatement();
+      }
 
-    return resultSet;
+      return resultSet;
+    }
+    catch (SQLException ex)
+    {
+      throw toDataSourceQueryException(ex);
+    }
+  }
+
+
+  private DataSourceQueryException toDataSourceQueryException(SQLException ex)
+  {
+    DataSourceQueryException e = new DataSourceQueryException(ex);
+    e.setStackTrace(ex.getStackTrace());
+    return e;
   }
 
 

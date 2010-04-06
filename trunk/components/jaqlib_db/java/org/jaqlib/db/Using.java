@@ -1,6 +1,7 @@
 package org.jaqlib.db;
 
 import org.jaqlib.Database;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.util.Assert;
 
 /**

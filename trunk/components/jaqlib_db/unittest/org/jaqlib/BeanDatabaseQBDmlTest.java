@@ -1,11 +1,11 @@
 package org.jaqlib;
 
-import org.jaqlib.db.BeanMapping;
+import org.jaqlib.core.Defaults;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbUpdateDataSource;
-import org.jaqlib.db.Defaults;
 import org.jaqlib.db.java.typehandler.BooleanTypeHandler;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 

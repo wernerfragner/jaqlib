@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.jaqlib.AccountImpl;
+import org.jaqlib.core.FirstOccurrenceFetchStrategy;
 import org.jaqlib.core.reflect.MethodInvocation;
 
 public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest

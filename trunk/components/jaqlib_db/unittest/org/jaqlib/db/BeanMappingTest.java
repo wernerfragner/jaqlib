@@ -8,6 +8,8 @@ import org.jaqlib.AccountImpl;
 import org.jaqlib.AccountSetup;
 import org.jaqlib.CreditRating;
 import org.jaqlib.DatabaseSetup;
+import org.jaqlib.core.bean.BeanConventionMappingStrategy;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 
 

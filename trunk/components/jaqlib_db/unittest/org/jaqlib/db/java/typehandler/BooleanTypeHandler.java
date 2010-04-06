@@ -2,6 +2,8 @@ package org.jaqlib.db.java.typehandler;
 
 import java.util.List;
 
+import org.jaqlib.core.bean.AbstractJavaTypeHandler;
+
 /**
  * @author Werner Fragner
  */
