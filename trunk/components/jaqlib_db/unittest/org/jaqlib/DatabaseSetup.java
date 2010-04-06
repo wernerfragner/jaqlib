@@ -30,6 +30,7 @@ public class DatabaseSetup
   public static final String ACCOUNT_TABLE = "APP.ACCOUNT";
   public static final String EXACT_ACCOUNT_TABLE = "APP.EXACT_ACCOUNT";
   public static final String SELECT_SQL = "SELET column FROM table";
+  public static final String SELECT_SQL_WHERE = "lname LIKE 'h%'";
 
   public static final String ACCOUNT_SELECT = "SELECT id, lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM "
       + ACCOUNT_TABLE;
