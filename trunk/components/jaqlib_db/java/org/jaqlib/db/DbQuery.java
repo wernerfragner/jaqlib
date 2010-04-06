@@ -6,7 +6,7 @@ import java.util.Map;
 import org.jaqlib.core.AbstractFetchStrategy;
 import org.jaqlib.core.AbstractQuery;
 import org.jaqlib.core.CachingFetchStrategy;
-import org.jaqlib.core.DbQueryCache;
+import org.jaqlib.core.QueryCache;
 import org.jaqlib.core.FirstOccurrenceFetchStrategy;
 import org.jaqlib.core.QueryResult;
 import org.jaqlib.core.bean.AbstractMapping;
@@ -23,7 +23,7 @@ public class DbQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 {
 
   private final AbstractMapping<T> mapping;
-  private DbQueryCache<T> cache;
+  private QueryCache<T> cache;
 
 
   public DbQuery(MethodCallRecorder methodCallRecorder,
@@ -98,11 +98,11 @@ public class DbQuery<T> extends AbstractQuery<T, DbSelectDataSource>
   }
 
 
-  private DbQueryCache<T> getCache()
+  private QueryCache<T> getCache()
   {
     if (cache == null)
     {
-      cache = new DbQueryCache<T>(tree);
+      cache = new QueryCache<T>(tree);
     }
     return cache;
   }

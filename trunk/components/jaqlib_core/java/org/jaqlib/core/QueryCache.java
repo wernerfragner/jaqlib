@@ -14,7 +14,7 @@ import org.jaqlib.util.CollectionUtil;
  * 
  * @param <T> the element type of the query.
  */
-public class DbQueryCache<T>
+public class QueryCache<T>
 {
 
   private final ElementPredicate<T> predicate;
@@ -22,7 +22,7 @@ public class DbQueryCache<T>
   private final List<T> cache = CollectionUtil.newDefaultList();
 
 
-  public DbQueryCache(ElementPredicate<T> predicate)
+  public QueryCache(ElementPredicate<T> predicate)
   {
     this.predicate = Assert.notNull(predicate);
   }

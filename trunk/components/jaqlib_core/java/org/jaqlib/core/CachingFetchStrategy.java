@@ -19,10 +19,10 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
 {
 
   private final Logger log = LogUtil.getLogger(this);
-  private final DbQueryCache<T> cache;
+  private final QueryCache<T> cache;
 
 
-  public CachingFetchStrategy(DbQueryCache<T> cache)
+  public CachingFetchStrategy(QueryCache<T> cache)
   {
     this.cache = Assert.notNull(cache);
   }
