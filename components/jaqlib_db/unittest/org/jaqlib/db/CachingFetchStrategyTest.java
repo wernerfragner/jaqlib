@@ -8,13 +8,13 @@ import java.util.Map;
 import org.easymock.EasyMock;
 import org.jaqlib.AccountImpl;
 import org.jaqlib.core.CachingFetchStrategy;
-import org.jaqlib.core.DbQueryCache;
+import org.jaqlib.core.QueryCache;
 import org.jaqlib.core.reflect.MethodInvocation;
 
 public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
 {
 
-  private DbQueryCache<AccountImpl> cache;
+  private QueryCache<AccountImpl> cache;
   private CachingFetchStrategy<AccountImpl> strategy;
 
 
@@ -23,7 +23,7 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
   {
     super.setUp();
 
-    cache = new DbQueryCache<AccountImpl>(predicate);
+    cache = new QueryCache<AccountImpl>(predicate);
     strategy = new CachingFetchStrategy<AccountImpl>(cache);
     initStrategy(strategy);
   }

@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
-import org.jaqlib.core.DbQueryCache;
+import org.jaqlib.core.QueryCache;
 import org.jaqlib.core.ElementPredicate;
 import org.jaqlib.core.reflect.MethodInvocation;
 
@@ -19,7 +19,7 @@ public class DatabaseQueryCacheTest extends TestCase
 {
 
   private ElementPredicate<Account> predicate;
-  private DbQueryCache<Account> cache;
+  private QueryCache<Account> cache;
 
 
   @Override
@@ -28,7 +28,7 @@ public class DatabaseQueryCacheTest extends TestCase
     super.setUp();
 
     predicate = EasyMock.createMock(ElementPredicate.class);
-    cache = new DbQueryCache<Account>(predicate);
+    cache = new QueryCache<Account>(predicate);
   }
 
 
@@ -36,7 +36,7 @@ public class DatabaseQueryCacheTest extends TestCase
   {
     try
     {
-      new DbQueryCache<Account>(null);
+      new QueryCache<Account>(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
