@@ -71,7 +71,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
    * All records must be processed. So this method always returns false.
    */
   @Override
-  protected boolean recordProcessed(T element, boolean isMatch)
+  protected boolean elementProcessed(T element, boolean isMatch)
   {
     cache.add(element);
     return false;

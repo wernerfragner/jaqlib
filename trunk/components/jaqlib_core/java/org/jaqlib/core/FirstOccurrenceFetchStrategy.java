@@ -15,7 +15,7 @@ public class FirstOccurrenceFetchStrategy<T> extends AbstractFetchStrategy<T>
    * If a match has been found then the fetch operation can be stopped.
    */
   @Override
-  protected boolean recordProcessed(T element, boolean isMatch)
+  protected boolean elementProcessed(T element, boolean isMatch)
   {
     return isMatch;
   }
