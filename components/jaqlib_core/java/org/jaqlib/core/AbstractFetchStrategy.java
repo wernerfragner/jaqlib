@@ -47,7 +47,7 @@ public abstract class AbstractFetchStrategy<T>
   {
     try
     {
-      final DsResultSet rs = queryDatabase();
+      final DsResultSet rs = queryDataSource();
 
       boolean stop = false;
       while (!stop && rs.next())
@@ -56,11 +56,11 @@ public abstract class AbstractFetchStrategy<T>
         if (shouldAddToResult(element))
         {
           results.add(element);
-          stop = recordProcessed(element, true);
+          stop = elementProcessed(element, true);
         }
         else
         {
-          stop = recordProcessed(element, false);
+          stop = elementProcessed(element, false);
         }
       }
     }
@@ -71,7 +71,7 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  protected abstract boolean recordProcessed(T element, boolean isMatch);
+  protected abstract boolean elementProcessed(T element, boolean isMatch);
 
 
   private boolean shouldAddToResult(T element)
@@ -86,7 +86,7 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  private DsResultSet queryDatabase()
+  private DsResultSet queryDataSource()
   {
     return getDataSource().execute();
   }
@@ -103,7 +103,7 @@ public abstract class AbstractFetchStrategy<T>
   {
     try
     {
-      final DsResultSet rs = queryDatabase();
+      final DsResultSet rs = queryDataSource();
 
       boolean stop = false;
       while (!stop && rs.next())
@@ -115,11 +115,11 @@ public abstract class AbstractFetchStrategy<T>
           final KeyType elementKey = (KeyType) getKey(element, invocation);
           results.put(elementKey, element);
 
-          stop = recordProcessed(element, true);
+          stop = elementProcessed(element, true);
         }
         else
         {
-          stop = recordProcessed(element, false);
+          stop = elementProcessed(element, false);
         }
       }
     }
