@@ -1,74 +1,37 @@
 package org.jaqlib.xml;
 
-import java.util.Collection;
-import java.util.Map;
-
-import org.jaqlib.core.AbstractQuery;
+import org.jaqlib.core.DataSourceQuery;
 import org.jaqlib.core.QueryResult;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.reflect.MethodCallRecorder;
-import org.jaqlib.util.FilePath;
 
-public class XmlQuery<T> extends AbstractQuery<T, XmlDataSource>
+public class XmlQuery<T> extends DataSourceQuery<T, XmlSelectDataSource>
 {
 
-  private BeanMapping<T> beanMapping;
-  private FilePath xmlPath;
-  private String xPath;
 
-
-  public XmlQuery(MethodCallRecorder methodCallRecorder)
+  public XmlQuery(MethodCallRecorder methodCallRecorder, BeanMapping<T> mapping)
   {
-    super(methodCallRecorder);
+    super(methodCallRecorder, mapping);
   }
 
 
-  public XmlFromClause<T> createFromClause(BeanMapping<T> beanMapping)
+  public XmlFromClause<T> createFromClause()
   {
-    this.beanMapping = beanMapping;
     return new XmlFromClause<T>(this);
   }
 
 
-  public XmlWhereClause<T> createWhereClause(XmlDataSource dataSource)
+  public XmlWhereClause<T> createWhereClause(XmlSelectDataSource dataSource)
   {
     super.setDataSource(dataSource);
     return new XmlWhereClause<T>(this);
   }
 
 
-  public QueryResult<T, XmlDataSource> createQueryResult(String xPath)
+  public QueryResult<T, XmlSelectDataSource> createQueryResult(String xPath)
   {
-    this.xPath = xPath;
+    getDataSource().setXPathExpression(xPath);
     return super.createQueryResult();
-  }
-
-
-  protected void setxPath(String xPath)
-  {
-    this.xPath = xPath;
-  }
-
-
-  @Override
-  protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
-  {
-    // TODO Auto-generated method stub
-  }
-
-
-  @Override
-  protected <KeyType> void addResults(Map<KeyType, T> resultMap)
-  {
-    // TODO Auto-generated method stub
-  }
-
-
-  @Override
-  protected String getResultDefinitionString()
-  {
-    // TODO Auto-generated method stub
-    return null;
   }
 
 

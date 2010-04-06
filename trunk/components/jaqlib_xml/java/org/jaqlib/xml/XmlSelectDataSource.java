@@ -1,14 +1,19 @@
 package org.jaqlib.xml;
 
 import org.jaqlib.XmlDefaults;
+import org.jaqlib.core.DsResultSet;
+import org.jaqlib.core.SelectDataSource;
 import org.jaqlib.util.FilePath;
 import org.jaqlib.xml.xpath.XPathEngine;
+import org.w3c.dom.NodeList;
 
-public class XmlSelectDataSource extends XmlDataSource
+public class XmlSelectDataSource extends XmlDataSource implements
+    SelectDataSource
 {
 
-  private final boolean useAttributes;
   private XPathEngine xPathEngine = XmlDefaults.getXPathEngine();
+  private String xPathExpression;
+  private final boolean useAttributes;
 
 
   public XmlSelectDataSource(FilePath xmlPath)
@@ -30,9 +35,27 @@ public class XmlSelectDataSource extends XmlDataSource
   }
 
 
-  public XmlResultSet execute(String xPathExpression)
+  public void setXPathExpression(String xPathExpression)
   {
-    return new XmlResultSet(xPathEngine.getResults(xPathExpression));
+    this.xPathExpression = xPathExpression;
   }
+
+
+  @Override
+  public void closeAfterQuery()
+  {
+    xPathEngine.close();
+  }
+
+
+  @Override
+  public DsResultSet execute()
+  {
+    xPathEngine.open(getXmlPath());
+
+    NodeList nodes = xPathEngine.getResults(xPathExpression);
+    return new XmlResultSet(nodes, useAttributes);
+  }
+
 
 }
