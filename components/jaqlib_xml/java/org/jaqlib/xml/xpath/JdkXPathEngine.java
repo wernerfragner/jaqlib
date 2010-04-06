@@ -1,7 +1,5 @@
 package org.jaqlib.xml.xpath;
 
-import java.io.IOException;
-
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -15,16 +13,24 @@ import org.xml.sax.InputSource;
 public class JdkXPathEngine implements XPathEngine
 {
 
+  private FilePath xmlPath;
   private InputSource inputSource;
   private XPathFactory factory;
 
 
   public void open(FilePath xmlPath)
   {
+    if (xmlPath.equals(this.xmlPath))
+    {
+      return;
+    }
+    this.xmlPath = xmlPath;
+
     if (inputSource != null)
     {
       close();
     }
+
     inputSource = new InputSource(xmlPath.getStream());
     factory = XPathFactory.newInstance();
   }
@@ -32,21 +38,21 @@ public class JdkXPathEngine implements XPathEngine
 
   public void close()
   {
-    try
-    {
-      if (inputSource != null)
-      {
-        inputSource.getByteStream().close();
-      }
-    }
-    catch (IOException ex)
-    {
-      throw ExceptionUtil.toRuntimeException(ex);
-    }
-    finally
-    {
-      inputSource = null;
-    }
+    // try
+    // {
+    // if (inputSource != null)
+    // {
+    // inputSource.getByteStream().close();
+    // }
+    // }
+    // catch (IOException ex)
+    // {
+    // throw ExceptionUtil.toRuntimeException(ex);
+    // }
+    // finally
+    // {
+    // inputSource = null;
+    // }
   }
 
 

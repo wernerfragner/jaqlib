@@ -19,13 +19,13 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
 
   public <T> XmlFromClause<T> select(BeanMapping<T> beanMapping)
   {
-    return this.<T> createQuery().createFromClause(beanMapping);
+    return this.<T> createQuery(beanMapping).createFromClause();
   }
 
 
-  private <T> XmlQuery<T> createQuery()
+  private <T> XmlQuery<T> createQuery(BeanMapping<T> beanMapping)
   {
-    return new XmlQuery<T>(getMethodCallRecorder());
+    return new XmlQuery<T>(getMethodCallRecorder(), beanMapping);
   }
 
 

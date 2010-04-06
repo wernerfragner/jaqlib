@@ -3,7 +3,7 @@ package org.jaqlib.xml;
 import org.jaqlib.core.QueryResult;
 import org.jaqlib.core.WhereClause;
 
-public class XmlWhereClause<T> extends WhereClause<T, XmlDataSource>
+public class XmlWhereClause<T> extends WhereClause<T, XmlSelectDataSource>
 {
 
   public XmlWhereClause(XmlQuery<T> query)
@@ -12,7 +12,7 @@ public class XmlWhereClause<T> extends WhereClause<T, XmlDataSource>
   }
 
 
-  public QueryResult<T, XmlDataSource> where(String xPath)
+  public QueryResult<T, XmlSelectDataSource> where(String xPath)
   {
     return getXmlQuery().createQueryResult(xPath);
   }

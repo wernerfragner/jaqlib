@@ -14,4 +14,10 @@ public class XmlDataSource
   }
 
 
+  public FilePath getXmlPath()
+  {
+    return xmlPath;
+  }
+
+
 }
