@@ -2,7 +2,6 @@ package org.jaqlib.db;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import org.jaqlib.core.ElementPredicate;
@@ -45,11 +44,11 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  public void addResults(Collection<T> results, List<?> prepStmtParameters)
+  public void addResults(Collection<T> results)
   {
     try
     {
-      final DbResultSet rs = queryDatabase(prepStmtParameters);
+      final DbResultSet rs = queryDatabase();
 
       boolean stop = false;
       while (!stop && rs.next())
@@ -100,10 +99,9 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  private DbResultSet queryDatabase(List<?> prepStmtParameters)
-      throws SQLException
+  private DbResultSet queryDatabase() throws SQLException
   {
-    return getDataSource().execute(prepStmtParameters);
+    return getDataSource().execute();
   }
 
 
@@ -114,11 +112,11 @@ public abstract class AbstractFetchStrategy<T>
 
 
   public <KeyType> void addResults(Map<KeyType, T> results,
-      MethodInvocation invocation, List<?> prepStmtParameters)
+      MethodInvocation invocation)
   {
     try
     {
-      final DbResultSet rs = queryDatabase(prepStmtParameters);
+      final DbResultSet rs = queryDatabase();
 
       boolean stop = false;
       while (!stop && rs.next())
@@ -153,5 +151,6 @@ public abstract class AbstractFetchStrategy<T>
   {
     return invocation.invoke(element);
   }
+
 
 }

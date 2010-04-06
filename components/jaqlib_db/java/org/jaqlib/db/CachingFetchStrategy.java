@@ -1,7 +1,6 @@
 package org.jaqlib.db;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -30,7 +29,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
 
 
   @Override
-  public void addResults(Collection<T> result, List<?> prepStmtParameters)
+  public void addResults(Collection<T> result)
   {
     if (cache.isFilled())
     {
@@ -42,7 +41,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
     {
       log.fine("Fetching query results from database.");
 
-      super.addResults(result, prepStmtParameters);
+      super.addResults(result);
       cache.setFilled();
     }
   }
@@ -50,7 +49,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
 
   @Override
   public <KeyType> void addResults(Map<KeyType, T> resultMap,
-      MethodInvocation invocation, List<?> prepStmtParameters)
+      MethodInvocation invocation)
   {
     if (cache.isFilled())
     {
@@ -62,7 +61,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
     {
       log.fine("Fetching query results from database.");
 
-      super.addResults(resultMap, invocation, prepStmtParameters);
+      super.addResults(resultMap, invocation);
       cache.setFilled();
     }
   }

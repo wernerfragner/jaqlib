@@ -110,4 +110,18 @@ public class DbWhereClause<T> extends DbQueryResult<T>
         .addAndWhereCondition(condition);
   }
 
+
+  /**
+   * WHERE clause with a custom SQL WHERE condition (without the WHERE clause).
+   * 
+   * @param sqlWhereCondition a not null SQL WHERE condition.
+   * @return the result of the query (including methods to add other WHERE
+   *         conditions).
+   */
+  public DbQueryResult<T> where(String sqlWhereCondition)
+  {
+    return (DbQueryResult<T>) getDatabaseQuery().addAndWhereCondition(
+        sqlWhereCondition);
+  }
+
 }

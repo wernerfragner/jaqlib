@@ -42,7 +42,7 @@ public class InClause<T>
    * @param tableName the name of the table that should be updated.
    * @return a using clause for defining the DB column to object field mapping.
    */
-  public Using<T> in(DataSource dataSource, String tableName)
+  public UpdateUsing<T> in(DataSource dataSource, String tableName)
   {
     return in(new DbUpdateDataSource(dataSource, tableName, null));
   }

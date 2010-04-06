@@ -1,6 +1,6 @@
 /**
  * This package contains the main entry point of JaQLib: the class 
- * {@link Jaqlib}. This class contains references to all available query 
+ * {@link org.jaqlib.Jaqlib}. This class contains references to all available query 
  * builders (short QB) of JaQLib. Currently JaQLib supports following data 
  * sources:<br>
  * <ul>

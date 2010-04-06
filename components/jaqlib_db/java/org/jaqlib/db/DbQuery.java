@@ -1,8 +1,6 @@
 package org.jaqlib.db;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import org.jaqlib.core.AbstractQuery;
@@ -21,7 +19,6 @@ public class DbQuery<T> extends AbstractQuery<T, DbSelectDataSource>
 
   private final AbstractMapping<T> mapping;
   private DbQueryCache<T> cache;
-  private final List<Object> prepStmtParameters = new ArrayList<Object>();
 
 
   public DbQuery(MethodCallRecorder methodCallRecorder,
@@ -50,15 +47,14 @@ public class DbQuery<T> extends AbstractQuery<T, DbSelectDataSource>
   protected <KeyType> void addResults(final Map<KeyType, T> resultMap)
   {
     final MethodInvocation invocation = getCurrentInvocation();
-    getCachingFetchStrategy().addResults(resultMap, invocation,
-        prepStmtParameters);
+    getCachingFetchStrategy().addResults(resultMap, invocation);
   }
 
 
   @Override
   protected void addResults(Collection<T> result, boolean stopAtFirstMatch)
   {
-    getFetchStrategy(stopAtFirstMatch).addResults(result, prepStmtParameters);
+    getFetchStrategy(stopAtFirstMatch).addResults(result);
   }
 
 
@@ -121,10 +117,18 @@ public class DbQuery<T> extends AbstractQuery<T, DbSelectDataSource>
     {
       for (Object param : prepStmtParameters)
       {
-        this.prepStmtParameters.add(param);
+        getDataSource().addPreparedStatementParameter(param);
       }
     }
+
     return createQueryResult();
   }
 
+
+  public QueryResult<T, DbSelectDataSource> addAndWhereCondition(
+      String sqlWhereCondition)
+  {
+    getDataSource().setSqlWhereCondition(sqlWhereCondition);
+    return createQueryResult();
+  }
 }

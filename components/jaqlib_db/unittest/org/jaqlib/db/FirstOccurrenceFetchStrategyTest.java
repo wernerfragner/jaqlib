@@ -1,7 +1,6 @@
 package org.jaqlib.db;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
     EasyMock.replay(predicate);
 
     List<AccountImpl> results = new ArrayList<AccountImpl>();
-    strategy.addResults(results, Collections.emptyList());
+    strategy.addResults(results);
 
     assertEquals(1, results.size());
     assertSame(accounts.get(0), results.get(0));
@@ -50,7 +49,7 @@ public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
     MethodInvocation invocation = getMethodInvocation();
 
     Map<Long, AccountImpl> results = new HashMap<Long, AccountImpl>();
-    strategy.addResults(results, invocation, Collections.emptyList());
+    strategy.addResults(results, invocation);
 
     assertEquals(1, results.size());
     assertTrue(results.containsValue(accounts.get(0)));

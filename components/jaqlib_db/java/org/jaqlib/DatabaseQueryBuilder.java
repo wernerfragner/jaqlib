@@ -350,9 +350,9 @@ import org.jaqlib.db.java.typehandler.JavaTypeHandler;
  * 
  * </p>
  * 
- * @see Database
- * @see DatabaseQB
- * @see Jaqlib.DB
+ * @see org.jaqlib.Database
+ * @see org.jaqlib.DatabaseQB
+ * @see org.jaqlib.Jaqlib.DB
  * @author Werner Fragner
  */
 public class DatabaseQueryBuilder extends AbstractQueryBuilder

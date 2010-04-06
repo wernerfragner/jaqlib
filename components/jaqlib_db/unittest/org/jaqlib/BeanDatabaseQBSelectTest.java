@@ -202,4 +202,38 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     ds.close();
   }
 
+
+  /**
+   * Given WHERE clause produces one match.
+   */
+  public void testSelect_CustomSqlCondition_OneMatch()
+  {
+    Account account = where.where(DatabaseSetup.SELECT_SQL_WHERE)
+        .uniqueResult();
+    assertNotNull(account);
+    assertHuberAccount(account);
+  }
+
+
+  /**
+   * Given WHERE clause produces no match.
+   */
+  public void testSelect_CustomSqlCondition_NoMatch()
+  {
+    Account account = where.where("lname = 'invalid'").uniqueResult();
+    assertNull(account);
+  }
+
+
+  /**
+   * No SQL WHERE condition is specified, but a custom where condition class.
+   */
+  public void testSelect_CustomSqlCondition_Null()
+  {
+    WhereCondition<Account> condition = createWhereCondition(3500.0);
+    Account account = where.where("").and(condition).uniqueResult();
+    assertNotNull(account);
+    assertHuberAccount(account);
+  }
+
 }

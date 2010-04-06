@@ -1,21 +1,19 @@
 package org.jaqlib.db;
 
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.List;
 
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
 import org.jaqlib.DatabaseSetup;
-import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.ExceptionUtil;
 
 public class DbSelectDataSourceTest extends TestCase
 {
 
   private static final String SQL = DatabaseSetup.SELECT_SQL;
+  private static final String SELECT_SQL_WHERE = DatabaseSetup.SELECT_SQL_WHERE;
 
   private DbSelectDataSource dataSource;
 
@@ -95,20 +93,27 @@ public class DbSelectDataSourceTest extends TestCase
   }
 
 
+  public void testGetSql_WithWhereCondition()
+  {
+    dataSource.setSqlWhereCondition(SELECT_SQL_WHERE);
+    assertEquals(SQL + " WHERE " + SELECT_SQL_WHERE, dataSource.getSql());
+  }
+
+
   public void testExecute_NormalStatement() throws SQLException
   {
-    DbResultSet rs = dataSource.execute(Collections.emptyList());
+    DbResultSet rs = dataSource.execute();
     assertNotNull(rs);
-    assertNotSame(rs, dataSource.execute(Collections.emptyList()));
+    assertNotSame(rs, dataSource.execute());
   }
 
 
   public void testExecute_PreparedStatement() throws SQLException
   {
-    List<Integer> prepStmtParameters = CollectionUtil.newList(5000);
-    DbResultSet rs = dataSource.execute(prepStmtParameters);
+    dataSource.addPreparedStatementParameter(5000);
+    DbResultSet rs = dataSource.execute();
     assertNotNull(rs);
-    assertNotSame(rs, dataSource.execute(prepStmtParameters));
+    assertNotSame(rs, dataSource.execute());
   }
 
 
@@ -120,7 +125,7 @@ public class DbSelectDataSourceTest extends TestCase
 
   public void testClose_ExecutePerformed() throws SQLException
   {
-    dataSource.execute(Collections.emptyList());
+    dataSource.execute();
     dataSource.closeAfterQuery();
   }
 

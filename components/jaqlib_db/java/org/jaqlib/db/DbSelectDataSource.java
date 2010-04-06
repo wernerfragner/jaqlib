@@ -3,6 +3,7 @@ package org.jaqlib.db;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -33,6 +34,9 @@ public class DbSelectDataSource extends AbstractDbDataSource
   private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
   private DbResultSet resultSet;
 
+  private final List<Object> prepStmtParameters = new ArrayList<Object>();
+  private String sqlWhereCondition;
+
 
   public DbSelectDataSource(DataSource dataSource, String sql)
   {
@@ -47,9 +51,37 @@ public class DbSelectDataSource extends AbstractDbDataSource
   }
 
 
+  /**
+   * Sets the SQL WHERE condition. <b>NOTE: this WHERE condition is simply
+   * appended to the given SQL statement using the WHERE keyword (e.g.
+   * sql="SELECT name FROM user", sqlWhereCondition="name like 'w%'" results in
+   * the SQL statement "SELECT name FROM user WHERE name like 'w%'"). So do not
+   * add a WHERE condition in the SQL statement when using this method!</b>
+   * 
+   * @param sqlWhereCondition an optional SQL WHERE condition.
+   */
+  public void setSqlWhereCondition(String sqlWhereCondition)
+  {
+    this.sqlWhereCondition = sqlWhereCondition;
+  }
+
+
   public String getSql()
   {
-    return sql;
+    if (isEmpty(sqlWhereCondition))
+    {
+      return sql;
+    }
+    else
+    {
+      return sql + " WHERE " + sqlWhereCondition;
+    }
+  }
+
+
+  private boolean isEmpty(String str)
+  {
+    return str == null || str.trim().length() < 1;
   }
 
 
@@ -70,6 +102,12 @@ public class DbSelectDataSource extends AbstractDbDataSource
   public void setStrictColumnCheck(boolean strictColumnCheck)
   {
     this.strictColumnCheck = strictColumnCheck;
+  }
+
+
+  public void addPreparedStatementParameter(Object param)
+  {
+    prepStmtParameters.add(param);
   }
 
 
@@ -99,7 +137,7 @@ public class DbSelectDataSource extends AbstractDbDataSource
   }
 
 
-  public DbResultSet execute(List<?> prepStmtParameters) throws SQLException
+  public DbResultSet execute() throws SQLException
   {
     if (prepStmtParameters.isEmpty())
     {
@@ -107,15 +145,14 @@ public class DbSelectDataSource extends AbstractDbDataSource
     }
     else
     {
-      resultSet = executePreparedStatement(prepStmtParameters);
+      resultSet = executePreparedStatement();
     }
 
     return resultSet;
   }
 
 
-  private DbResultSet executePreparedStatement(List<?> prepStmtParameters)
-      throws SQLException
+  private DbResultSet executePreparedStatement() throws SQLException
   {
     log.fine("Executing prepared SQL SELECT statement: " + getSql());
 
@@ -150,7 +187,7 @@ public class DbSelectDataSource extends AbstractDbDataSource
   @Override
   public String toString()
   {
-    return "[SQL: " + sql + "]";
+    return "[SQL: " + getSql() + "]";
   }
 
 
