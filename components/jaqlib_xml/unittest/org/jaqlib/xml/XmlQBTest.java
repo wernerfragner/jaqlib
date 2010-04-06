@@ -13,8 +13,10 @@ import junit.framework.TestCase;
 
 import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
+import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlQB;
 import org.jaqlib.util.CollectionUtil;
+import org.jaqlib.xml.xpath.JaxenXPathEngine;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -68,9 +70,9 @@ public class XmlQBTest extends TestCase
         .getSelectDataSource("unittest/accounts_attributes.xml");
 
     Account recorder = XmlQB.getRecorder(Account.class);
-    List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds,
-       ).where( "/bank/accounts/*").andCall(recorder.getLastName()).isEqual("huber")
-        .asList();
+    List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds)
+        .where("/bank/accounts/*").andCall(recorder.getLastName()).isEqual(
+            "huber").asList();
 
     assertNotNull(accounts);
     assertEquals(1, accounts.size());
@@ -81,8 +83,8 @@ public class XmlQBTest extends TestCase
     List<TransactionImpl> transactions = XmlQB.select(TransactionImpl.class)
         .from(ds).where("/bank//transactions/*").asList();
 
-    assertNotNull(accounts);
-    assertEquals(4, accounts.size());
+    assertNotNull(transactions);
+    assertEquals(4, transactions.size());
   }
 
 

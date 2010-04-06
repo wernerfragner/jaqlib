@@ -1,5 +1,7 @@
 package org.jaqlib.xml;
 
+import org.jaqlib.util.FilePath;
+
 public class XmlDataSource
 {
 
@@ -10,5 +12,6 @@ public class XmlDataSource
   {
     this.xmlPath = xmlPath;
   }
+
 
 }

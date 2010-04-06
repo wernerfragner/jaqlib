@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.jaqlib.core.AbstractQuery;
 import org.jaqlib.core.QueryResult;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.reflect.MethodCallRecorder;
+import org.jaqlib.util.FilePath;
 
 public class XmlQuery<T> extends AbstractQuery<T, XmlDataSource>
 {
@@ -28,9 +30,9 @@ public class XmlQuery<T> extends AbstractQuery<T, XmlDataSource>
   }
 
 
-  public XmlWhereClause<T> createWhereClause(FilePath xmlPath)
+  public XmlWhereClause<T> createWhereClause(XmlDataSource dataSource)
   {
-    this.xmlPath = xmlPath;
+    super.setDataSource(dataSource);
     return new XmlWhereClause<T>(this);
   }
 
