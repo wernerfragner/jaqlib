@@ -3,8 +3,13 @@ package org.jaqlib.db;
 import java.util.Collection;
 import java.util.Map;
 
+import org.jaqlib.core.AbstractFetchStrategy;
 import org.jaqlib.core.AbstractQuery;
+import org.jaqlib.core.CachingFetchStrategy;
+import org.jaqlib.core.DbQueryCache;
+import org.jaqlib.core.FirstOccurrenceFetchStrategy;
 import org.jaqlib.core.QueryResult;
+import org.jaqlib.core.bean.AbstractMapping;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.Assert;

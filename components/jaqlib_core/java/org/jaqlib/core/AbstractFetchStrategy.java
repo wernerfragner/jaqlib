@@ -1,10 +1,9 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
 
-import org.jaqlib.core.ElementPredicate;
+import org.jaqlib.core.bean.AbstractMapping;
 import org.jaqlib.core.reflect.MethodInvocation;
 
 /**
@@ -16,7 +15,7 @@ public abstract class AbstractFetchStrategy<T>
 {
 
   private ElementPredicate<T> predicate;
-  private DbSelectDataSource dataSource;
+  private SelectDataSource dataSource;
   private AbstractMapping<T> mapping;
 
 
@@ -32,7 +31,7 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  public void setDataSource(DbSelectDataSource dataSource)
+  public void setDataSource(SelectDataSource dataSource)
   {
     this.dataSource = dataSource;
   }
@@ -48,7 +47,7 @@ public abstract class AbstractFetchStrategy<T>
   {
     try
     {
-      final DbResultSet rs = queryDatabase();
+      final DsResultSet rs = queryDatabase();
 
       boolean stop = false;
       while (!stop && rs.next())
@@ -64,10 +63,6 @@ public abstract class AbstractFetchStrategy<T>
           stop = recordProcessed(element, false);
         }
       }
-    }
-    catch (SQLException sqle)
-    {
-      handleSqlException(sqle);
     }
     finally
     {
@@ -85,27 +80,19 @@ public abstract class AbstractFetchStrategy<T>
   }
 
 
-  private T extractElement(DbResultSet rs) throws SQLException
+  private T extractElement(DsResultSet rs)
   {
     return mapping.getValue(rs);
   }
 
 
-  private void handleSqlException(SQLException sqle)
-  {
-    DataSourceQueryException e = new DataSourceQueryException(sqle);
-    e.setStackTrace(sqle.getStackTrace());
-    throw e;
-  }
-
-
-  private DbResultSet queryDatabase() throws SQLException
+  private DsResultSet queryDatabase()
   {
     return getDataSource().execute();
   }
 
 
-  private DbSelectDataSource getDataSource()
+  private SelectDataSource getDataSource()
   {
     return dataSource;
   }
@@ -116,7 +103,7 @@ public abstract class AbstractFetchStrategy<T>
   {
     try
     {
-      final DbResultSet rs = queryDatabase();
+      final DsResultSet rs = queryDatabase();
 
       boolean stop = false;
       while (!stop && rs.next())
@@ -135,10 +122,6 @@ public abstract class AbstractFetchStrategy<T>
           stop = recordProcessed(element, false);
         }
       }
-    }
-    catch (SQLException sqle)
-    {
-      handleSqlException(sqle);
     }
     finally
     {

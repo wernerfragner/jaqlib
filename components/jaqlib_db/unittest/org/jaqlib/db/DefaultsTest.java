@@ -4,8 +4,12 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
+import org.jaqlib.core.Defaults;
+import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.core.bean.JavaTypeHandler;
+import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
+import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 
@@ -16,7 +20,7 @@ public class DefaultsTest extends TestCase
   @Override
   public void tearDown()
   {
-    Defaults.reset();
+    DbDefaults.reset();
   }
 
 
@@ -131,7 +135,7 @@ public class DefaultsTest extends TestCase
 
   public void testGetSqlTypeHandlerRegistry()
   {
-    assertNotNull(Defaults.getSqlTypeHandlerRegistry());
+    assertNotNull(DbDefaults.getSqlTypeHandlerRegistry());
   }
 
 
@@ -139,7 +143,7 @@ public class DefaultsTest extends TestCase
   {
     try
     {
-      Defaults.setSqlTypeHandlerRegistry(null);
+      DbDefaults.setSqlTypeHandlerRegistry(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -165,8 +169,8 @@ public class DefaultsTest extends TestCase
       }
 
     };
-    Defaults.setSqlTypeHandlerRegistry(registry);
-    assertSame(registry, Defaults.getSqlTypeHandlerRegistry());
+    DbDefaults.setSqlTypeHandlerRegistry(registry);
+    assertSame(registry, DbDefaults.getSqlTypeHandlerRegistry());
   }
 
 

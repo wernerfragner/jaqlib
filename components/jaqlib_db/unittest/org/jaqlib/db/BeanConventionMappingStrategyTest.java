@@ -6,6 +6,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.jaqlib.AccountImpl;
+import org.jaqlib.core.bean.BeanConventionMappingStrategy;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.ColumnMapping;
 
 public class BeanConventionMappingStrategyTest extends TestCase
 {

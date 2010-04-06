@@ -3,6 +3,7 @@ package org.jaqlib.db;
 import javax.sql.DataSource;
 
 import org.jaqlib.DatabaseQueryBuilder;
+import org.jaqlib.core.bean.AbstractMapping;
 import org.jaqlib.util.Assert;
 
 /**

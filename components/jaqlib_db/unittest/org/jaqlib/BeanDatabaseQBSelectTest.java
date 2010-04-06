@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.jaqlib.core.WhereCondition;
-import org.jaqlib.db.BeanMapping;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbWhereClause;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;

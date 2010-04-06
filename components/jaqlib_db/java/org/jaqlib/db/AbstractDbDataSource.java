@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -26,7 +27,7 @@ public abstract class AbstractDbDataSource
 
   private final DataSource dataSource;
 
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = Defaults
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = DbDefaults
       .getSqlTypeHandlerRegistry();
 
   private Connection connection;

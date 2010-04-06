@@ -1,9 +1,11 @@
-package org.jaqlib.db;
+package org.jaqlib.core.bean;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
+
+import org.jaqlib.core.DsResultSet;
 
 
 /**
@@ -140,7 +142,7 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
   @Override
   @SuppressWarnings("unchecked")
-  public T getValue(DbResultSet rs) throws SQLException
+  public T getValue(DsResultSet rs)
   {
     if (hasColumnIndex())
     {

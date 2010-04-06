@@ -2,18 +2,18 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.db.BeanConventionMappingStrategy;
-import org.jaqlib.db.BeanFactory;
-import org.jaqlib.db.BeanMapping;
-import org.jaqlib.db.DataSourceQueryException;
+import org.jaqlib.core.DataSourceQueryException;
+import org.jaqlib.core.Defaults;
+import org.jaqlib.core.bean.BeanConventionMappingStrategy;
+import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.JavaTypeHandler;
+import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
+import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbUpdateDataSource;
-import org.jaqlib.db.Defaults;
-import org.jaqlib.db.MappingStrategy;
-import org.jaqlib.db.java.typehandler.JavaTypeHandler;
-import org.jaqlib.db.java.typehandler.JavaTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -43,7 +43,7 @@ public class Database
   private MappingStrategy mappingStrategy = Defaults.getMappingStrategy();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
       .getJavaTypeHandlerRegistry();
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = Defaults
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = org.jaqlib.db.DbDefaults
       .getSqlTypeHandlerRegistry();
   private BeanFactory beanFactory = Defaults.getBeanFactory();
   private boolean strictColumnCheck = Defaults.getStrictColumnCheck();

@@ -2,6 +2,9 @@ package org.jaqlib.db;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.ColumnMapping;
+
 /**
  * @author Werner Fragner
  */

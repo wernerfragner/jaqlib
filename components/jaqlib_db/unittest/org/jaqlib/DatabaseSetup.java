@@ -10,12 +10,13 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
-import org.jaqlib.db.BeanMapping;
+import org.jaqlib.core.Defaults;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.ManualMappingStrategy;
+import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbResultSet;
 import org.jaqlib.db.DbSelectDataSource;
-import org.jaqlib.db.Defaults;
-import org.jaqlib.db.ManualMappingStrategy;
 import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 import org.jaqlib.util.DbUtil;
 import org.jaqlib.util.db.DriverManagerDataSource;
@@ -220,7 +221,7 @@ public class DatabaseSetup
 
   public static DbResultSet getMockDbResultSet() throws SQLException
   {
-    return new DbResultSet(getMockResultSet(), Defaults
+    return new DbResultSet(getMockResultSet(), DbDefaults
         .getSqlTypeHandlerRegistry(), Defaults.getStrictColumnCheck());
   }
 

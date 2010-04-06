@@ -3,6 +3,8 @@ package org.jaqlib.db;
 import junit.framework.TestCase;
 
 import org.jaqlib.AccountImpl;
+import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.DefaultBeanFactory;
 
 public class DefaultBeanFactoryTest extends TestCase
 {

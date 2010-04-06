@@ -17,21 +17,21 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.Defaults;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
-import org.jaqlib.db.BeanFactory;
-import org.jaqlib.db.BeanMapping;
-import org.jaqlib.db.ColumnMapping;
+import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbFromClause;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbUpdateDataSource;
-import org.jaqlib.db.Defaults;
 import org.jaqlib.db.DeleteFromClause;
 import org.jaqlib.db.InClause;
 import org.jaqlib.db.IntoClause;
-import org.jaqlib.db.MappingStrategy;
 import org.jaqlib.db.Using;
 
 

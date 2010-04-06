@@ -9,7 +9,10 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jaqlib.AccountImpl;
 import org.jaqlib.DatabaseSetup;
+import org.jaqlib.core.AbstractFetchStrategy;
 import org.jaqlib.core.ElementPredicate;
+import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.CollectionUtil;
 
