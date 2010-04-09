@@ -31,7 +31,7 @@ public class JdkXPathEngine implements XPathEngine
       close();
     }
 
-    inputSource = new InputSource(xmlPath.getStream());
+    inputSource = new InputSource(xmlPath.getPath());
     factory = XPathFactory.newInstance();
   }
 

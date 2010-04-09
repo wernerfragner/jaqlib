@@ -15,6 +15,7 @@ import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
 import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlQB;
+import org.jaqlib.core.Defaults;
 import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.xml.xpath.JaxenXPathEngine;
 import org.w3c.dom.NamedNodeMap;
@@ -24,6 +25,15 @@ import org.xml.sax.InputSource;
 
 public class XmlQBTest extends TestCase
 {
+
+
+  @Override
+  public void setUp()
+  {
+    Defaults.getJavaTypeHandlerRegistry().registerTypeHandler(
+        new CreditRatingStringTypeHandler());
+  }
+
 
   public void testSelectAccount_SimpleAPI_Attributes()
   {
@@ -91,13 +101,12 @@ public class XmlQBTest extends TestCase
   public void testSelectAccount_SimpleAPI_Elements()
   {
     Account recorder = XmlQB.getRecorder(Account.class);
-    List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).fromElements(
+    AccountImpl account = XmlQB.select(AccountImpl.class).fromElements(
         "unittest/accounts_elements.xml").where("/bank/accounts/*").andCall(
-        recorder.getLastName()).isEqual("maier").asList();
+        recorder.getLastName()).isEqual("maier").uniqueResult();
 
-    assertNotNull(accounts);
-    assertEquals(1, accounts.size());
-    assertMaierAccount(accounts.get(0));
+    assertNotNull(account);
+    assertMaierAccount(account);
   }
 
 

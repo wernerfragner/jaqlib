@@ -2,8 +2,8 @@
 	<accounts>
 	
 		<account>
-		  <lastname>huber</lastname>
-		  <firstname>sepp</firstname>
+		  <lastName>huber</lastName>
+		  <firstName>sepp</firstName>
 		  <balance>5000</balance>
 		  <creditRating>GOOD</creditRating>
 		  <department>linz</department>
@@ -14,8 +14,8 @@
 		</account>
 		
 		<account>
-		  <lastname>maier</lastname>
-      <firstname>franz</firstname>
+		  <lastName>maier</lastName>
+      <firstName>franz</firstName>
       <balance>2000</balance>
       <creditRating>POOR</creditRating>
       <department>wien</department>
