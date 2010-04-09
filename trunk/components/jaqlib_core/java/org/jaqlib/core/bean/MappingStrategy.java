@@ -18,6 +18,6 @@ public interface MappingStrategy
    * @param beanClass the not null Java bean class.
    * @return a list containing all mappings for the given bean class.
    */
-  List<ColumnMapping<?>> getMappings(Class<?> beanClass);
+  List<FieldMapping<?>> getMappings(Class<?> beanClass);
 
 }

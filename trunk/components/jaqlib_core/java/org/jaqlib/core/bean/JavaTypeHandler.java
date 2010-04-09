@@ -50,6 +50,13 @@ public interface JavaTypeHandler
 {
 
   /**
+   * Null implementation of the {@link JavaTypeHandler} interface. This object
+   * can be used as a placeholder object instead of a <tt>null</tt> value.
+   */
+  JavaTypeHandler NULL = new NullJavaTypeHandler();
+
+
+  /**
    * @return the Java types that can be converted into and from database types.
    *         This method must return at least one supported type.
    */

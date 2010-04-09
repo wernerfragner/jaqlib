@@ -1,11 +1,12 @@
-package org.jaqlib.core.bean;
+package org.jaqlib.db;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 
-import org.jaqlib.core.DsResultSet;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.FieldMapping;
 
 
 /**
@@ -15,7 +16,7 @@ import org.jaqlib.core.DsResultSet;
  * @author Werner Fragner
  * @param <T> The Java type of the mapping.
  */
-public class ColumnMapping<T> extends AbstractMapping<T>
+public class ColumnMapping<T> extends FieldMapping<T>
 {
 
   private static final int NO_INDEX = Integer.MIN_VALUE;
@@ -40,7 +41,7 @@ public class ColumnMapping<T> extends AbstractMapping<T>
    */
   public ColumnMapping(String columnLabel)
   {
-    setFieldName(columnLabel);
+    super(columnLabel);
     setColumnLabel(columnLabel);
   }
 
@@ -86,6 +87,16 @@ public class ColumnMapping<T> extends AbstractMapping<T>
 
 
   /**
+   * @return the data type of this column at database. The type must be one as
+   *         defined at {@link java.sql.Types}.
+   */
+  public int getColumnDataType()
+  {
+    return columnDataType;
+  }
+
+
+  /**
    * @return the database column label.
    */
   public String getColumnLabel()
@@ -121,7 +132,7 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   }
 
 
-  private boolean hasColumnLabel()
+  boolean hasColumnLabel()
   {
     return columnLabel != null;
   }
@@ -133,29 +144,10 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   }
 
 
-  private boolean hasColumnIndex()
+  boolean hasColumnIndex()
   {
     // DB column index starts with 1
     return columnIndex > 0;
-  }
-
-
-  @Override
-  @SuppressWarnings("unchecked")
-  public T getValue(DsResultSet rs)
-  {
-    if (hasColumnIndex())
-    {
-      return (T) rs.getObject(columnDataType, columnIndex);
-    }
-    else if (hasColumnLabel())
-    {
-      return (T) rs.getObject(columnDataType, columnLabel);
-    }
-    else
-    {
-      throw handleInvalidMapping();
-    }
   }
 
 
@@ -232,13 +224,6 @@ public class ColumnMapping<T> extends AbstractMapping<T>
   }
 
 
-  private IllegalStateException handleInvalidMapping()
-  {
-    return new IllegalStateException(
-        "Mapping must have a column index or a colum name.");
-  }
-
-
   public void appendColumn(StringBuilder columns, StringBuilder values)
   {
     columns.append(getColumnForSql());
@@ -271,5 +256,22 @@ public class ColumnMapping<T> extends AbstractMapping<T>
     return column;
   }
 
+
+  private IllegalStateException handleInvalidMapping()
+  {
+    return new IllegalStateException(
+        "Mapping must have a column index or a colum name.");
+  }
+
+
+  public static <T> ColumnMapping<T> cast(FieldMapping<T> mapping)
+  {
+    if (mapping instanceof ColumnMapping)
+    {
+      return (ColumnMapping<T>) mapping;
+    }
+
+    return new ColumnMapping<T>(mapping.getFieldName());
+  }
 
 }

@@ -14,7 +14,6 @@ import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbWhereClause;
-import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 
 public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 {

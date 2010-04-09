@@ -10,15 +10,17 @@ import org.jaqlib.util.CollectionUtil;
 public enum CreditRating
 {
 
-  GOOD(2), POOR(1);
+  GOOD(2, "GOOD"), POOR(1, "POOR");
 
   private static Map<Integer, CreditRating> ratings;
   private final int intValue;
+  private final String name;
 
 
-  private CreditRating(int intValue)
+  private CreditRating(int intValue, String name)
   {
     this.intValue = intValue;
+    this.name = name;
     register(this);
   }
 
@@ -42,6 +44,12 @@ public enum CreditRating
   public static CreditRating rating(int intValue)
   {
     return ratings.get(intValue);
+  }
+
+
+  public String getName()
+  {
+    return name;
   }
 
 }

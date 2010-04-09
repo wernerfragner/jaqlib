@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 
 import org.jaqlib.AccountSetup;
 import org.jaqlib.DatabaseSetup;
-import org.jaqlib.core.bean.ColumnMapping;
 
 public class ColumnMappingTest extends TestCase
 {

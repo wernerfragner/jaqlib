@@ -3,7 +3,7 @@ package org.jaqlib.db;
 import javax.sql.DataSource;
 
 import org.jaqlib.core.bean.BeanMapping;
-import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.core.bean.FieldMapping;
 
 /**
  * @author Werner Fragner
@@ -25,8 +25,9 @@ public class DbInsertDataSource extends AbstractDbDmlDataSource
     final StringBuilder values = new StringBuilder();
 
     boolean first = true;
-    for (ColumnMapping<?> mapping : beanMapping)
+    for (FieldMapping<?> mapping : beanMapping)
     {
+      ColumnMapping<?> cMapping = cast(mapping);
       if (!first)
       {
         columns.append(", ");
@@ -37,7 +38,7 @@ public class DbInsertDataSource extends AbstractDbDmlDataSource
         first = false;
       }
 
-      mapping.appendColumn(columns, values);
+      cMapping.appendColumn(columns, values);
     }
 
     final StringBuilder insertSql = new StringBuilder();
@@ -50,5 +51,6 @@ public class DbInsertDataSource extends AbstractDbDmlDataSource
     insertSql.append(")");
     return insertSql.toString();
   }
+
 
 }

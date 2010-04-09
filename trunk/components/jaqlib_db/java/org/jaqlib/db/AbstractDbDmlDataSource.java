@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.jaqlib.core.bean.BeanMapping;
-import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.util.Assert;
 
 /**
@@ -66,9 +66,10 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
       PreparedStatement stmt) throws SQLException
   {
     int i = 1;
-    for (ColumnMapping<?> mapping : beanMapping)
+    for (FieldMapping<?> mapping : beanMapping)
     {
-      mapping.setValue(i, stmt, bean, beanMapping);
+      ColumnMapping<?> cMapping = cast(mapping);
+      cMapping.setValue(i, stmt, bean, beanMapping);
       i++;
     }
   }

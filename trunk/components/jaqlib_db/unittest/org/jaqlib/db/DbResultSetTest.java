@@ -2,7 +2,6 @@ package org.jaqlib.db;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 
 import junit.framework.TestCase;
 
@@ -93,14 +92,16 @@ public class DbResultSetTest extends TestCase
 
   public void testGetObject_ColumnName() throws SQLException
   {
-    Object value = resultSet.getObject(Types.OTHER, "lastName");
+    ColumnMapping<?> mapping = new ColumnMapping<Object>("lastName");
+    Object value = resultSet.getObject(mapping);
     assertEquals(AccountSetup.HUBER_ACCOUNT.getLastName(), value);
   }
 
 
   public void testGetObject_ColumnIndex() throws SQLException
   {
-    Object value = resultSet.getObject(Types.OTHER, 1);
+    ColumnMapping<?> mapping = new ColumnMapping<Object>(1);
+    Object value = resultSet.getObject(mapping);
     assertEquals(AccountSetup.HUBER_ACCOUNT.getId(), value);
   }
 
@@ -120,7 +121,9 @@ public class DbResultSetTest extends TestCase
 
     // get object from result set
 
-    resultSet.getObject(sqlDataType, 1);
+    ColumnMapping<?> mapping = new ColumnMapping<Object>(1);
+    mapping.setColumnDataType(sqlDataType);
+    resultSet.getObject(mapping);
 
     EasyMock.verify(th);
   }

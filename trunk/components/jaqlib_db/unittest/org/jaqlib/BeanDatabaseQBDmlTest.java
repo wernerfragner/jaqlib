@@ -2,12 +2,11 @@ package org.jaqlib;
 
 import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbUpdateDataSource;
-import org.jaqlib.db.java.typehandler.BooleanTypeHandler;
-import org.jaqlib.db.java.typehandler.CreditRatingTypeHandler;
 
 
 public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
@@ -37,8 +36,16 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     mapping.removeChildColumn("id");
     mapping.removeChildColumn("active");
     mapping.removeChildColumn("department");
-    mapping.getChildColumn("lastName").setColumnName("lname");
-    mapping.getChildColumn("firstName").setColumnName("fname");
+    mapping.removeChildColumn("lastName");
+    mapping.removeChildColumn("firstName");
+
+    ColumnMapping<?> lname = new ColumnMapping<Object>("lastName");
+    lname.setColumnName("lname");
+    mapping.addChild(lname);
+
+    ColumnMapping<?> fname = new ColumnMapping<Object>("firstName");
+    fname.setColumnName("fname");
+    mapping.addChild(fname);
   }
 
 

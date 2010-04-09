@@ -1,4 +1,4 @@
-package org.jaqlib.db.java.typehandler;
+package org.jaqlib;
 
 import java.util.List;
 

@@ -13,7 +13,7 @@ public class DefaultJavaTypeHandlerRegistry implements JavaTypeHandlerRegistry
 {
 
   private final Map<Class<?>, JavaTypeHandler> handlers = newDefaultMap();
-  private final JavaTypeHandler defaultHandler = new NullJavaTypeHandler();
+  private final JavaTypeHandler defaultHandler = JavaTypeHandler.NULL;
 
 
   /**

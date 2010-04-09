@@ -40,4 +40,10 @@ public class FilePath
     return classLoader.getResource(path);
   }
 
+
+  public String getPath()
+  {
+    return path;
+  }
+
 }
