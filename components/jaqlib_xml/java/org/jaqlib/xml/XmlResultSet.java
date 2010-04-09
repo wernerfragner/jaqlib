@@ -1,6 +1,11 @@
 package org.jaqlib.xml;
 
+import java.util.logging.Logger;
+
 import org.jaqlib.core.DsResultSet;
+import org.jaqlib.core.bean.FieldMapping;
+import org.jaqlib.core.bean.JavaTypeHandler;
+import org.jaqlib.util.LogUtil;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -8,10 +13,12 @@ import org.w3c.dom.NodeList;
 public class XmlResultSet implements DsResultSet
 {
 
+  private final Logger log = LogUtil.getLogger(this);
+
   private final NodeList nodes;
   private final boolean useAttributes;
 
-  private int curNodeIndex = 0;
+  private int curNodeIndex = -1;
 
 
   public XmlResultSet(NodeList nodes, boolean useAttributes)
@@ -26,48 +33,91 @@ public class XmlResultSet implements DsResultSet
 
 
   @Override
-  public Object getObject(int valueDataType, int valueIndex)
+  public Object getObject(FieldMapping<?> mapping)
   {
+    String name = mapping.getTargetName();
     Node n = nodes.item(curNodeIndex);
 
-    Node result = null;
+    Node resultNode = null;
     if (useAttributes)
     {
       NamedNodeMap attributes = n.getAttributes();
-      result = attributes.item(valueIndex);
+      resultNode = attributes.getNamedItem(name);
     }
     else
     {
-      result = findNode(n, valueIndex);
+      resultNode = findNode(n, name);
+      if (resultNode != null)
+        resultNode = resultNode.getFirstChild();
     }
 
-    return result.getTextContent();
+    if (resultNode == null)
+    {
+      String str = useAttributes ? "attribute" : "element";
+      log.info("XML file does not contain an " + str + " named '" + name
+          + "'; " + str + " is ignored.");
+      return NO_RESULT;
+    }
+
+    return convert(mapping, resultNode.getNodeValue());
   }
 
 
-  private Node findNode(Node n, int valueIndex)
+  public Object convert(FieldMapping<?> mapping, String nodeValue)
   {
-    return n.getChildNodes().item(valueIndex);
+    if (nodeValue == null || nodeValue.trim().length() < 1)
+    {
+      return null;
+    }
+
+    JavaTypeHandler typeHandler = mapping.getTypeHandler();
+    if (typeHandler != JavaTypeHandler.NULL)
+    {
+      return typeHandler.convert(nodeValue);
+    }
+
+    return defaultConvert(mapping, nodeValue);
   }
 
 
-  @Override
-  public Object getObject(int valueDataType, String valueLabel)
+  private Object defaultConvert(FieldMapping<?> mapping, String nodeValue)
   {
-    Node n = nodes.item(curNodeIndex);
-
-    Node result = null;
-    if (useAttributes)
+    Class<?> fieldType = mapping.getFieldType();
+    if (fieldType.equals(String.class))
     {
-      NamedNodeMap attributes = n.getAttributes();
-      result = attributes.getNamedItem(valueLabel);
+      return nodeValue;
     }
-    else
+    else if (fieldType.equals(Integer.class))
     {
-      result = findNode(n, valueLabel);
+      return Integer.valueOf(nodeValue);
+    }
+    else if (fieldType.equals(Long.class))
+    {
+      return Long.valueOf(nodeValue);
+    }
+    else if (fieldType.equals(Double.class))
+    {
+      return Double.valueOf(nodeValue);
+    }
+    else if (fieldType.equals(Float.class))
+    {
+      return Float.valueOf(nodeValue);
+    }
+    else if (fieldType.equals(Byte.class))
+    {
+      return Byte.valueOf(nodeValue);
+    }
+    else if (fieldType.equals(char.class))
+    {
+      return new Character(nodeValue.charAt(0));
+    }
+    else if (fieldType.equals(Boolean.class))
+    {
+      return Boolean.valueOf(nodeValue);
     }
 
-    return result.getNodeValue();
+    throw new IllegalArgumentException("Unsupported field type '" + fieldType
+        + "' for field '" + mapping.getFieldName() + "'.");
   }
 
 
