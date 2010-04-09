@@ -19,13 +19,13 @@ import org.jaqlib.util.ReflectionUtil;
  * @param <T> the Java bean type of the mapping.
  */
 public class BeanMapping<T> extends AbstractMapping<T> implements
-    Iterable<ColumnMapping<?>>
+    Iterable<FieldMapping<?>>
 {
 
   // state
 
   private final Class<? extends T> beanClass;
-  private List<ColumnMapping<?>> mappings;
+  private List<FieldMapping<?>> mappings;
 
   // infrastructure
 
@@ -93,13 +93,13 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   /**
    * {@inheritDoc}
    */
-  public Iterator<ColumnMapping<?>> iterator()
+  public Iterator<FieldMapping<?>> iterator()
   {
     return getMappings().iterator();
   }
 
 
-  private List<ColumnMapping<?>> getMappings()
+  private List<FieldMapping<?>> getMappings()
   {
     if (mappings == null)
     {
@@ -123,7 +123,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public T getValue(DsResultSet rs)
   {
     T bean = newBeanInstance();
-    for (ColumnMapping<?> mapping : this)
+    for (FieldMapping<?> mapping : this)
     {
       Object value = mapping.getValue(rs);
       if (value != DsResultSet.NO_RESULT)
@@ -161,9 +161,15 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  public ColumnMapping<?> removeChildColumn(String fieldName)
+  public void addChild(FieldMapping<?> child)
   {
-    ColumnMapping<?> mapping = getChildColumn(fieldName);
+    this.mappings.add(child);
+  }
+
+
+  public FieldMapping<?> removeChildColumn(String fieldName)
+  {
+    FieldMapping<?> mapping = getChildField(fieldName);
     if (mapping != null)
     {
       getMappings().remove(mapping);
@@ -172,9 +178,9 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  public ColumnMapping<?> getChildColumn(String fieldName)
+  public FieldMapping<?> getChildField(String fieldName)
   {
-    for (ColumnMapping<?> mapping : getMappings())
+    for (FieldMapping<?> mapping : getMappings())
     {
       if (fieldName.equals(mapping.getFieldName()))
       {
@@ -190,5 +196,6 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   {
     return ReflectionUtil.getPlainClassName(beanClass);
   }
+
 
 }

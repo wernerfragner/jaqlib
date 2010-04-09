@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import org.jaqlib.core.DataSourceQueryException;
+import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -251,6 +252,12 @@ public abstract class AbstractDbDataSource
   private boolean shouldAppendWhereClause(String whereClause)
   {
     return (whereClause != null && whereClause.trim().length() > 0);
+  }
+
+
+  public static ColumnMapping<?> cast(FieldMapping<?> mapping)
+  {
+    return ColumnMapping.cast(mapping);
   }
 
 }

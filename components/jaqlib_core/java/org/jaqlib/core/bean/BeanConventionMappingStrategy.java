@@ -24,26 +24,28 @@ public class BeanConventionMappingStrategy implements MappingStrategy
   /**
    * {@inheritDoc}
    */
-  public List<ColumnMapping<?>> getMappings(Class<?> beanClass)
+  public List<FieldMapping<?>> getMappings(Class<?> beanClass)
   {
     Assert.notNull(beanClass);
 
-    List<ColumnMapping<?>> mappings = CollectionUtil.newDefaultList();
+    List<FieldMapping<?>> mappings = CollectionUtil.newDefaultList();
     BeanInfo beanInfo = getBeanInfo(beanClass);
     for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors())
     {
       if (shouldAddBeanProperty(descriptor))
       {
-        mappings.add(getPrimitiveResult(descriptor.getName()));
+        mappings.add(getPrimitiveResult(descriptor.getName(), descriptor
+            .getPropertyType()));
       }
     }
     return mappings;
   }
 
 
-  private ColumnMapping<?> getPrimitiveResult(String columnName)
+  private FieldMapping<?> getPrimitiveResult(String fieldName,
+      Class<?> fieldType)
   {
-    return new ColumnMapping<Object>(columnName);
+    return new FieldMapping<Object>(fieldName, fieldType);
   }
 
 

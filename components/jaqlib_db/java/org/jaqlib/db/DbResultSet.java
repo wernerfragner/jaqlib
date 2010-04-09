@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.core.DsResultSet;
+import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
@@ -18,7 +19,6 @@ import org.jaqlib.util.LogUtil;
 public class DbResultSet implements DsResultSet
 {
 
-  public static final Object NO_RESULT = new Object();
   private final Logger log = LogUtil.getLogger(this);
 
   private final SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
@@ -64,7 +64,7 @@ public class DbResultSet implements DsResultSet
   }
 
 
-  public Object getObject(int sqlDataType, String columnLabel)
+  private Object getObject(int sqlDataType, String columnLabel)
   {
     try
     {
@@ -86,7 +86,7 @@ public class DbResultSet implements DsResultSet
   }
 
 
-  public Object getObject(int sqlDataType, int columnIndex)
+  private Object getObject(int sqlDataType, int columnIndex)
   {
     try
     {
@@ -110,6 +110,32 @@ public class DbResultSet implements DsResultSet
   private SqlTypeHandler getSqlTypeHandler(int sqlDataType)
   {
     return sqlTypeHandlerRegistry.getTypeHandler(sqlDataType);
+  }
+
+
+  public Object getObject(FieldMapping<?> mapping)
+  {
+    ColumnMapping<?> cMapping = ColumnMapping.cast(mapping);
+
+    if (cMapping.hasColumnIndex())
+    {
+      return getObject(cMapping.getColumnDataType(), cMapping.getColumnIndex());
+    }
+    else if (cMapping.hasColumnLabel())
+    {
+      return getObject(cMapping.getColumnDataType(), cMapping.getColumnLabel());
+    }
+    else
+    {
+      throw handleInvalidMapping();
+    }
+  }
+
+
+  private IllegalStateException handleInvalidMapping()
+  {
+    return new IllegalStateException(
+        "Mapping must have a column index or a colum name.");
   }
 
 

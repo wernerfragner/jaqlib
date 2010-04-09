@@ -1,15 +1,14 @@
 package org.jaqlib.core;
 
+import org.jaqlib.core.bean.FieldMapping;
+
 public interface DsResultSet
 {
 
   Object NO_RESULT = new Object();
 
 
-  Object getObject(int valueDataType, int valueIndex);
-
-
-  Object getObject(int valueDataType, String valueLabel);
+  Object getObject(FieldMapping<?> mapping);
 
 
   boolean next();

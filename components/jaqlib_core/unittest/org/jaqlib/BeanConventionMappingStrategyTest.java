@@ -1,14 +1,13 @@
-package org.jaqlib.db;
+package org.jaqlib;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.AccountImpl;
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanMapping;
-import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.core.bean.FieldMapping;
 
 public class BeanConventionMappingStrategyTest extends TestCase
 {
@@ -58,9 +57,9 @@ public class BeanConventionMappingStrategyTest extends TestCase
   private List<String> getResults(BeanMapping<AccountImpl> result)
   {
     List<String> results = new ArrayList<String>();
-    for (ColumnMapping<?> dbSelectResult : result)
+    for (FieldMapping<?> fieldMapping : result)
     {
-      results.add(dbSelectResult.getColumnLabel());
+      results.add(fieldMapping.getFieldName());
     }
     return results;
   }

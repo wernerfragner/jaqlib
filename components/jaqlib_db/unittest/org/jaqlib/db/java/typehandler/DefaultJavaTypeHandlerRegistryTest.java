@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import org.jaqlib.Account;
 import org.jaqlib.CreditRating;
+import org.jaqlib.CreditRatingTypeHandler;
 import org.jaqlib.core.bean.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.NullJavaTypeHandler;
 

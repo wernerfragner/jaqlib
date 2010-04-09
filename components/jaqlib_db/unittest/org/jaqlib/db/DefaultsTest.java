@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 
 import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanFactory;
-import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.MappingStrategy;
@@ -21,6 +21,7 @@ public class DefaultsTest extends TestCase
   public void tearDown()
   {
     DbDefaults.reset();
+    Defaults.reset();
   }
 
 
@@ -54,8 +55,13 @@ public class DefaultsTest extends TestCase
       }
 
     };
+
+    BeanFactory prev = Defaults.getBeanFactory();
+
     Defaults.setBeanFactory(factory);
     assertSame(factory, Defaults.getBeanFactory());
+
+    Defaults.setBeanFactory(prev);
   }
 
 
@@ -75,6 +81,10 @@ public class DefaultsTest extends TestCase
     catch (IllegalArgumentException e)
     {
     }
+    finally
+    {
+
+    }
   }
 
 
@@ -83,7 +93,7 @@ public class DefaultsTest extends TestCase
     MappingStrategy strategy = new MappingStrategy()
     {
 
-      public List<ColumnMapping<?>> getMappings(Class<?> beanClass)
+      public List<FieldMapping<?>> getMappings(Class<?> beanClass)
       {
         return null;
       }
@@ -128,8 +138,11 @@ public class DefaultsTest extends TestCase
       {
       }
     };
+    JavaTypeHandlerRegistry previous = Defaults.getJavaTypeHandlerRegistry();
     Defaults.setJavaTypeHandlerRegistry(registry);
     assertSame(registry, Defaults.getJavaTypeHandlerRegistry());
+
+    Defaults.setJavaTypeHandlerRegistry(previous);
   }
 
 

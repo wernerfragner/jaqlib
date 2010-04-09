@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 import junit.framework.TestCase;
 
 import org.jaqlib.core.WhereCondition;
-import org.jaqlib.core.bean.ColumnMapping;
+import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbWhereClause;
 

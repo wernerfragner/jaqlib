@@ -14,7 +14,7 @@ public class JaqlibDbTests
     TestSuite suite = new TestSuite("Test for org.jaqlib.db");
     // $JUnit-BEGIN$
     suite.addTestSuite(DbSelectDataSourceTest.class);
-    suite.addTestSuite(BeanConventionMappingStrategyTest.class);
+
     suite.addTestSuite(DefaultsTest.class);
     suite.addTestSuite(BeanMappingTest.class);
     suite.addTestSuite(ColumnMappingTest.class);

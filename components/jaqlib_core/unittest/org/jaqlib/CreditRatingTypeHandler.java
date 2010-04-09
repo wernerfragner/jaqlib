@@ -1,8 +1,7 @@
-package org.jaqlib.db.java.typehandler;
+package org.jaqlib;
 
 import java.util.List;
 
-import org.jaqlib.CreditRating;
 import org.jaqlib.core.bean.AbstractJavaTypeHandler;
 
 /**
@@ -20,6 +19,19 @@ public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 
   public Object convert(Object value)
   {
+    if (value instanceof String)
+    {
+      String str = (String) value;
+      if (str.equals(CreditRating.POOR.getName()))
+      {
+        return CreditRating.POOR;
+      }
+      else if (str.equals(CreditRating.GOOD.getName()))
+      {
+        return CreditRating.GOOD;
+      }
+      value = Integer.valueOf((String) value);
+    }
     if (value instanceof Integer)
     {
       return CreditRating.rating((Integer) value);
@@ -31,6 +43,7 @@ public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
     }
     else
     {
+      // return value;
       throw handleIllegalInputValue(value, CreditRating.class);
     }
   }

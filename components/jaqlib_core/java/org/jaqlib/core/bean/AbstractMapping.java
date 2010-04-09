@@ -12,6 +12,19 @@ public abstract class AbstractMapping<T>
   private String fieldName;
 
 
+  public AbstractMapping()
+  {
+    super();
+  }
+
+
+  public AbstractMapping(String fieldName)
+  {
+    super();
+    setFieldName(fieldName);
+  }
+
+
   /**
    * @return the Java bean field name.
    */
