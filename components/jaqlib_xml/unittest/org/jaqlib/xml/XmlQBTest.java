@@ -17,7 +17,7 @@ import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlQB;
 import org.jaqlib.core.Defaults;
 import org.jaqlib.util.CollectionUtil;
-import org.jaqlib.xml.xpath.JaxenXPathEngine;
+import org.jaqlib.xml.xpath.XalanXPathEngine;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -114,7 +114,7 @@ public class XmlQBTest extends TestCase
   {
     XmlSelectDataSource ds = XmlQB
         .getSelectDataSource("unittest/accounts_attributes.xml");
-    ds.setXPathEngine(new JaxenXPathEngine());
+    ds.setXPathEngine(new XalanXPathEngine());
 
     Account recorder = XmlQB.getRecorder(Account.class);
     List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds)
@@ -146,7 +146,7 @@ public class XmlQBTest extends TestCase
       AccountImpl account = new AccountImpl();
 
       NamedNodeMap attributes = n.getAttributes();
-      account.setLastName(attributes.getNamedItem("lastname").getTextContent());
+      account.setLastName(attributes.getNamedItem("lastName").getTextContent());
 
       System.out.println(account);
 

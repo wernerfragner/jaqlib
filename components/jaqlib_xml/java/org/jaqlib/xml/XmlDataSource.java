@@ -1,20 +1,20 @@
 package org.jaqlib.xml;
 
-import org.jaqlib.util.FilePath;
+import org.jaqlib.util.Resource;
 
 public class XmlDataSource
 {
 
-  private final FilePath xmlPath;
+  private final Resource xmlPath;
 
 
-  public XmlDataSource(FilePath xmlPath)
+  public XmlDataSource(Resource xmlPath)
   {
     this.xmlPath = xmlPath;
   }
 
 
-  public FilePath getXmlPath()
+  public Resource getXmlPath()
   {
     return xmlPath;
   }

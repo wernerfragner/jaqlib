@@ -6,5 +6,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="src" path="/jaqlib_util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_core"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/serializer.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xalan.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xml-apis.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xsltc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
