@@ -1,13 +1,13 @@
 package org.jaqlib.xml.xpath;
 
-import org.jaqlib.util.FilePath;
+import org.jaqlib.util.Resource;
 import org.w3c.dom.NodeList;
 
 
 public interface XPathEngine
 {
 
-  void open(FilePath xmlPath);
+  void open(Resource xmlPath);
 
 
   void close();

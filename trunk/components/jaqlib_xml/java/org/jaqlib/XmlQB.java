@@ -1,6 +1,6 @@
 package org.jaqlib;
 
-import org.jaqlib.util.FilePath;
+import org.jaqlib.util.FileResource;
 import org.jaqlib.xml.XmlFromClause;
 import org.jaqlib.xml.XmlSelectDataSource;
 
@@ -72,7 +72,7 @@ public class XmlQB
 
   public static XmlSelectDataSource getSelectDataSource(String filePath)
   {
-    return new XmlSelectDataSource(new FilePath(filePath));
+    return new XmlSelectDataSource(new FileResource(filePath));
   }
 
 }

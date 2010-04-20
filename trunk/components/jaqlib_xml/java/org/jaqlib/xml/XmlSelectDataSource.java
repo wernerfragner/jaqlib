@@ -3,7 +3,7 @@ package org.jaqlib.xml;
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.core.SelectDataSource;
-import org.jaqlib.util.FilePath;
+import org.jaqlib.util.Resource;
 import org.jaqlib.xml.xpath.XPathEngine;
 import org.w3c.dom.NodeList;
 
@@ -16,13 +16,13 @@ public class XmlSelectDataSource extends XmlDataSource implements
   private final boolean useAttributes;
 
 
-  public XmlSelectDataSource(FilePath xmlPath)
+  public XmlSelectDataSource(Resource xmlPath)
   {
     this(xmlPath, true);
   }
 
 
-  public XmlSelectDataSource(FilePath xmlPath, boolean useAttributes)
+  public XmlSelectDataSource(Resource xmlPath, boolean useAttributes)
   {
     super(xmlPath);
     this.useAttributes = useAttributes;
