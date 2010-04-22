@@ -1,18 +1,47 @@
 package org.jaqlib.xml.xpath;
 
+import java.io.IOException;
+
 import org.jaqlib.util.Resource;
 import org.w3c.dom.NodeList;
 
-
+/**
+ * Abstraction for arbitrary XPath engines. Examples are Saxon, Xalan or the
+ * built-in XPath engine in the JDK.
+ * 
+ * @author Werner Fragner
+ */
 public interface XPathEngine
 {
 
-  void open(Resource xmlPath);
+  /**
+   * Opens the given XML file using the given namespaces.
+   * 
+   * @param xmlPath a not null resource pointing to an XML file.
+   * @param namespaces a not null object containing all namespaces that should
+   *          be applied.
+   * @throws IOException in case a problem accessing or parsing the XML file
+   *           occurs.
+   */
+  void open(Resource xmlPath, XmlNamespaces namespaces) throws IOException;
 
 
-  void close();
+  /**
+   * Closes the engine. That means that used resources are cleaned up.
+   * 
+   * @throws IOException in case a problem closing resources occurs.
+   */
+  void close() throws IOException;
 
 
-  NodeList getResults(String expression);
+  /**
+   * Gets all nodes that match the given expression.
+   * 
+   * @param expression an XPath expression.
+   * @return all nodes that match the given expression.
+   * @throws IOException in case a problem accessing or parsing the XML file
+   *           occurs.
+   */
+  NodeList getResults(String xpathExpression) throws IOException;
 
 }

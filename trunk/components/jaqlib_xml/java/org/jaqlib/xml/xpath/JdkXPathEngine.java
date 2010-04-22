@@ -44,23 +44,24 @@ public class JdkXPathEngine extends AbstractXPathEngine
     {
 
       @Override
+      @SuppressWarnings("unchecked")
       public Iterator getPrefixes(String namespace)
       {
-        return getAttributeNamespaces().findPrefixes(namespace).iterator();
+        return getXmlNamespaces().findPrefixes(namespace).iterator();
       }
 
 
       @Override
       public String getPrefix(String namespace)
       {
-        return getAttributeNamespaces().findPrefix(namespace);
+        return getXmlNamespaces().findPrefix(namespace);
       }
 
 
       @Override
       public String getNamespaceURI(String prefix)
       {
-        return getAttributeNamespaces().findNamespace(prefix);
+        return getXmlNamespaces().findNamespace(prefix);
       }
     };
   }
