@@ -27,6 +27,7 @@ import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.db.ColumnMapping;
+import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbFromClause;
 import org.jaqlib.db.DbQuery;
 import org.jaqlib.db.DbSelectDataSource;
@@ -357,6 +358,13 @@ import org.jaqlib.db.Using;
  */
 public class DatabaseQueryBuilder extends AbstractQueryBuilder
 {
+
+  /**
+   * Contains the application wide default values for the database query
+   * builder.
+   */
+  public static final DbDefaults DEFAULTS = DbDefaults.INSTANCE;
+
 
   /**
    * <p>

@@ -17,13 +17,13 @@ package org.jaqlib;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.core.Defaults;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.db.ColumnMapping;
+import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbFromClause;
 import org.jaqlib.db.DbInsertDataSource;
@@ -340,7 +340,8 @@ public class DatabaseQB
   public static <T> BeanMapping<T> getDefaultBeanMapping(
       Class<? extends T> beanClass)
   {
-    return Database.getBeanMapping(Defaults.getMappingStrategy(), beanClass);
+    return Database.getBeanMapping(DbDefaults.INSTANCE.getMappingStrategy(),
+        beanClass);
   }
 
 

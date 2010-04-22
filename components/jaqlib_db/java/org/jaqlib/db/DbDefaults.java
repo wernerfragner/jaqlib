@@ -1,5 +1,6 @@
 package org.jaqlib.db;
 
+import org.jaqlib.core.DefaultsDelegate;
 import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
@@ -13,19 +14,23 @@ import org.jaqlib.util.Assert;
  * 
  * @author Werner Fragner
  */
-public class DbDefaults
+public class DbDefaults extends DefaultsDelegate
 {
 
   /**
-   * This class is not intended to be instantiated.
+   * This class must only be instantiated as singleton.
    */
   private DbDefaults()
   {
-    throw new UnsupportedOperationException();
   }
 
 
-  private static SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
+  /**
+   * Singleton instance of this class.
+   */
+  public static final DbDefaults INSTANCE = new DbDefaults();
+
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
 
 
   /**
@@ -33,15 +38,17 @@ public class DbDefaults
    */
   static
   {
-    reset();
+    INSTANCE.reset();
   }
 
 
   /**
    * Resets the static fields to their original default values.
    */
-  public static void reset()
+  @Override
+  public void reset()
   {
+    super.reset();
     sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
   }
 
@@ -49,7 +56,7 @@ public class DbDefaults
   /**
    * @return the default SQL type handler registry.
    */
-  public static SqlTypeHandlerRegistry getSqlTypeHandlerRegistry()
+  public SqlTypeHandlerRegistry getSqlTypeHandlerRegistry()
   {
     return sqlTypeHandlerRegistry;
   }
@@ -62,9 +69,9 @@ public class DbDefaults
    * 
    * @param registry a not null registry.
    */
-  public static void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
+  public void setSqlTypeHandlerRegistry(SqlTypeHandlerRegistry registry)
   {
-    DbDefaults.sqlTypeHandlerRegistry = Assert.notNull(registry);
+    sqlTypeHandlerRegistry = Assert.notNull(registry);
   }
 
 
@@ -72,8 +79,7 @@ public class DbDefaults
    * See {@link SqlTypeHandlerRegistry#registerTypeHandler(int, SqlTypeHandler)}
    * .
    */
-  public static void registerSqlTypeHandler(int sqlDataType,
-      SqlTypeHandler typeHandler)
+  public void registerSqlTypeHandler(int sqlDataType, SqlTypeHandler typeHandler)
   {
     getSqlTypeHandlerRegistry().registerTypeHandler(sqlDataType, typeHandler);
   }

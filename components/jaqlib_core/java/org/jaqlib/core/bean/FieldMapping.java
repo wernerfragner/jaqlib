@@ -1,6 +1,6 @@
 package org.jaqlib.core.bean;
 
-import org.jaqlib.core.Defaults;
+import org.jaqlib.Defaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.util.ReflectionUtil;
 

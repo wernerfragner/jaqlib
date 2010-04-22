@@ -3,7 +3,7 @@ package org.jaqlib.core.bean;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jaqlib.core.Defaults;
+import org.jaqlib.Defaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.ReflectionUtil;

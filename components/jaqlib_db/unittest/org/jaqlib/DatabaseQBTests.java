@@ -19,13 +19,13 @@ public class DatabaseQBTests
     Logger.getLogger("org.jaqlib").setLevel(Level.ALL);
 
     TestSuite suite = new TestSuite("Test for org.jaqlib");
+
     // $JUnit-BEGIN$
     suite.addTestSuite(ColumnDatabaseQBSelectTest.class);
     suite.addTestSuite(BeanDatabaseQBSelectTest.class);
     suite.addTestSuite(BeanDatabaseQBDmlTest.class);
-
+    suite.addTestSuite(DbDefaultsTest.class);
     suite.addTest(JaqlibDbTests.suite());
-
     // $JUnit-END$
     return suite;
   }

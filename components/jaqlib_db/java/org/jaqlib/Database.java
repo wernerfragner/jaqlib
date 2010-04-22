@@ -3,13 +3,13 @@ package org.jaqlib;
 import javax.sql.DataSource;
 
 import org.jaqlib.core.DataSourceQueryException;
-import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
@@ -40,13 +40,14 @@ public class Database
 
   // optional / configurable fields
 
-  private MappingStrategy mappingStrategy = Defaults.getMappingStrategy();
-  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
+  private MappingStrategy mappingStrategy = DbDefaults.INSTANCE
+      .getMappingStrategy();
+  private JavaTypeHandlerRegistry javaTypeHandlerRegistry = DbDefaults.INSTANCE
       .getJavaTypeHandlerRegistry();
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = org.jaqlib.db.DbDefaults
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = DbDefaults.INSTANCE
       .getSqlTypeHandlerRegistry();
-  private BeanFactory beanFactory = Defaults.getBeanFactory();
-  private boolean strictColumnCheck = Defaults.getStrictColumnCheck();
+  private BeanFactory beanFactory = DbDefaults.INSTANCE.getBeanFactory();
+  private boolean strictColumnCheck = DbDefaults.INSTANCE.getStrictFieldCheck();
 
 
   /**
@@ -363,7 +364,7 @@ public class Database
   public static <T> BeanMapping<T> getDefaultBeanMapping(
       Class<? extends T> beanClass)
   {
-    return getBeanMapping(Defaults.getMappingStrategy(), beanClass);
+    return getBeanMapping(DbDefaults.INSTANCE.getMappingStrategy(), beanClass);
   }
 
 

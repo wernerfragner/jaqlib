@@ -1,4 +1,4 @@
-package org.jaqlib.core;
+package org.jaqlib;
 
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanFactory;
@@ -32,7 +32,7 @@ public class Defaults
   private static BeanFactory beanFactory;
   private static MappingStrategy mappingStrategy;
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry;
-  private static boolean strictColumnCheck;
+  private static boolean strictFieldCheck;
 
 
   /**
@@ -52,7 +52,7 @@ public class Defaults
     beanFactory = new DefaultBeanFactory();
     mappingStrategy = new BeanConventionMappingStrategy();
     javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
-    strictColumnCheck = false;
+    strictFieldCheck = false;
   }
 
 
@@ -132,25 +132,25 @@ public class Defaults
 
 
   /**
-   * Sets the default value for 'strictColumnCheck'.<br>
+   * Sets the default value for 'strictFieldCheck'.<br>
    * <b>NOTE: this method changes the default value for the whole application!
    * Use with care.</b>
    * 
-   * @param strictColumnCheck
+   * @param strictFieldCheck
    */
-  public static void setStrictColumnCheck(boolean strictColumnCheck)
+  public static void setStrictFieldCheck(boolean strictFieldCheck)
   {
-    Defaults.strictColumnCheck = strictColumnCheck;
+    Defaults.strictFieldCheck = strictFieldCheck;
   }
 
 
   /**
-   * @return true if all desired bean fields must be present in the result of
-   *         the SQL SELECT statement.
+   * @return true if all desired bean fields must be present in the result of a
+   *         query.
    */
-  public static boolean getStrictColumnCheck()
+  public static boolean getStrictFieldCheck()
   {
-    return strictColumnCheck;
+    return strictFieldCheck;
   }
 
 }
