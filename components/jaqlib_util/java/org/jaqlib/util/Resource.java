@@ -31,4 +31,12 @@ public interface Resource
    */
   URL getURL() throws MalformedURLException;
 
+
+  /**
+   * See return tag.
+   * 
+   * @return true if this resource exists physically.
+   */
+  boolean exists();
+
 }

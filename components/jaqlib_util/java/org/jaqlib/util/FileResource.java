@@ -49,4 +49,23 @@ public class FileResource implements Resource
     return file.toURI().toURL();
   }
 
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean exists()
+  {
+    return file.exists();
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString()
+  {
+    return file.toString();
+  }
+
 }

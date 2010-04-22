@@ -266,7 +266,7 @@ public class ColumnMapping<T> extends FieldMapping<T>
 
   public static <T> ColumnMapping<T> cast(FieldMapping<T> mapping)
   {
-    if (mapping instanceof ColumnMapping)
+    if (mapping instanceof ColumnMapping<?>)
     {
       return (ColumnMapping<T>) mapping;
     }

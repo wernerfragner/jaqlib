@@ -13,6 +13,8 @@ public class UtilTests
     suite.addTestSuite(ExceptionUtilTest.class);
     suite.addTestSuite(CompareUtilTest.class);
     suite.addTestSuite(CollectionUtilTest.class);
+    suite.addTestSuite(FileResourceTest.class);
+    suite.addTestSuite(ClassPathResourceTest.class);
     suite.addTestSuite(ReflectionUtilTest.class);
     //$JUnit-END$
     return suite;

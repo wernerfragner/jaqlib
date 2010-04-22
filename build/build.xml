@@ -39,6 +39,10 @@
 	<property name="jaqlib_db.base" value="${build.source}/jaqlib_db" />
 	<property name="jaqlib_db.source" value="${jaqlib_db.base}/java" />
 	<property name="jaqlib_db.unittest" value="${jaqlib_db.base}/unittest" />
+
+  <property name="jaqlib_xml.base" value="${build.source}/jaqlib_xml" />
+  <property name="jaqlib_xml.source" value="${jaqlib_xml.base}/java" />
+  <property name="jaqlib_xml.unittest" value="${jaqlib_xml.base}/unittest" />
 	
 	<property name="jaqlib_facade.base" value="${build.source}/jaqlib_facade" />
 	<property name="jaqlib_facade.source" value="${jaqlib_facade.base}/java" />
@@ -52,6 +56,7 @@
 	<path id="jaqlib.libs">
 		<fileset file="${vendor.base}/cglib/cglib-nodep-2.1_3.jar" />
 		<fileset file="${vendor.base}/derby/derby.jar" />
+		<fileset dir="${vendor.base}/xalan/" />
 	</path>
 	
 	<path id="jaqlib.unittest.libs">
@@ -115,8 +120,9 @@
 
 	      <fileset dir="${build.temp}/bin/jaqlib_util" includes="**/*.class" />
 	    	<fileset dir="${build.temp}/bin/jaqlib_core" includes="**/*.class" />
-	      <fileset dir="${build.temp}/bin/jaqlib_db" includes="**/*.class" />
 	      <fileset dir="${build.temp}/bin/jaqlib_iterable" includes="**/*.class" />
+	    	<fileset dir="${build.temp}/bin/jaqlib_db" includes="**/*.class" />
+        <fileset dir="${build.temp}/bin/jaqlib_xml" includes="**/*.class" />
 	    	<fileset dir="${build.temp}/bin/jaqlib_facade" includes="**/*.class" />
 	    </cobertura-instrument>
 	</target>
@@ -167,6 +173,9 @@
 	    <param name="component.name" value="jaqlib_db" />
 	  </antcall>
 	  <antcall target="compile_component" >
+	    <param name="component.name" value="jaqlib_xml" />
+	  </antcall>		
+	  <antcall target="compile_component" >
 	    <param name="component.name" value="jaqlib_facade" />
 	  </antcall>  	  	
 	</target>
@@ -180,6 +189,7 @@
 			<sourcepath path="${jaqlib_core.source}" />
 			<sourcepath path="${jaqlib_iterable.source}" />
 			<sourcepath path="${jaqlib_db.source}" />
+			<sourcepath path="${jaqlib_xml.source}" />
 			<sourcepath path="${jaqlib_facade.source}" />
 		</javadoc>
 	</target>
@@ -198,6 +208,9 @@
 	  <antcall target="compile_unittestcomponent" >
 	    <param name="component.name" value="jaqlib_db" />
 	  </antcall>
+	  <antcall target="compile_unittestcomponent" >
+	    <param name="component.name" value="jaqlib_xml" />
+	  </antcall>		
 	  <antcall target="compile_unittestcomponent" >
 	    <param name="component.name" value="jaqlib_facade" />
 	  </antcall>  		
@@ -240,7 +253,19 @@
       <classpath refid="jaqlib.unittest.libs" />
 	    <test name="org.jaqlib.DatabaseQBTests" toDir="${build.temp}/unittest_results/jaqlib" />
 	    <formatter type="xml"/>
-	  </junit>		
+	  </junit>	
+		
+    <!-- XML tests -->
+    <junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+      <classpath location="${instrumented.dir}" />
+      <classpath refid="cobertura.classpath" />
+      <classpath refid="jaqlib.components" />
+      <classpath refid="jaqlib.unittest.components" />
+      <classpath refid="jaqlib.libs" />
+      <classpath refid="jaqlib.unittest.libs" />
+      <test name="org.jaqlib.XmlQBTests" toDir="${build.temp}/unittest_results/jaqlib" />
+      <formatter type="xml"/>
+    </junit>    		
 		
 		<!-- Util tests -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
@@ -273,6 +298,7 @@
     	<fileset dir="${jaqlib_core.source}" includes="**/*.java" />
       <fileset dir="${jaqlib_iterable.source}" includes="**/*.java" />
     	<fileset dir="${jaqlib_db.source}" includes="**/*.java" />
+    	<fileset dir="${jaqlib_xml.source}" includes="**/*.java" />
     	<fileset dir="${jaqlib_facade.source}" includes="**/*.java" />
     </cobertura-report>
   </target>
@@ -306,6 +332,7 @@
 			<fileset dir="${jaqlib_core.source}" />
 			<fileset dir="${jaqlib_iterable.source}" />
 			<fileset dir="${jaqlib_db.source}" />
+			<fileset dir="${jaqlib_xml.source}" />
 			<fileset dir="${jaqlib_facade.source}" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-unittest.zip" >
@@ -313,6 +340,7 @@
 			<fileset dir="${jaqlib_core.unittest}" />
 			<fileset dir="${jaqlib_iterable.unittest}" />
 			<fileset dir="${jaqlib_db.unittest}" />
+			<fileset dir="${jaqlib_xml.unittest}" />
 			<fileset dir="${jaqlib_facade.unittest}" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-doc.zip" basedir="${build.temp}/javadoc/jaqlib" />

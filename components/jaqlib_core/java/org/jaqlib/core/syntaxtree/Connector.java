@@ -40,7 +40,7 @@ public abstract class Connector<T> implements SyntaxTreeNode<T>
 
   public void appendLogString(StringBuilder sb)
   {
-    if (!(getLeft() instanceof NullSyntraxTreeNode))
+    if (!(getLeft() instanceof NullSyntraxTreeNode<?>))
     {
       getLeft().appendLogString(sb);
       sb.append(" ");
