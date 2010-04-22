@@ -29,13 +29,15 @@ public class XalanXPathEngine extends AbstractXPathEngine
     if (isNamespaceAware())
     {
       DOMImplementation impl = builder.getDOMImplementation();
-      Document namespaceHolder = impl.createDocument(null, null, null);
+      Document namespaceHolder = impl.createDocument(
+          XmlNamespace.XMLNS_ATTRIBUTE_NS_URI,
+          XmlNamespace.XMLNS_ATTRIBUTE, null);
       root = namespaceHolder.getDocumentElement();
 
-      for (AttributeNamespace namespace : getAttributeNamespaces())
+      for (XmlNamespace namespace : getXmlNamespaces())
       {
-        root.setAttributeNS(namespace.getAttributeNsURI(), namespace
-            .getAttributeNsPrefix(), namespace.getValue());
+        root.setAttributeNS(namespace.getDefaultUri(), namespace
+            .getCompletePrefix(), namespace.getUri());
       }
     }
   }

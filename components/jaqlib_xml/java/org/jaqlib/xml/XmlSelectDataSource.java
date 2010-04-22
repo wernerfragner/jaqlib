@@ -1,10 +1,14 @@
 package org.jaqlib.xml;
 
+import java.io.IOException;
+
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.core.SelectDataSource;
+import org.jaqlib.util.ExceptionUtil;
 import org.jaqlib.util.Resource;
 import org.jaqlib.xml.xpath.XPathEngine;
+import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NodeList;
 
 public class XmlSelectDataSource extends XmlDataSource implements
@@ -13,7 +17,8 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
   private XPathEngine xPathEngine = XmlDefaults.getXPathEngine();
   private String xPathExpression;
-  private final boolean useAttributes;
+  private boolean useAttributes;
+  private final XmlNamespaces namespaces = XmlDefaults.getNamespaces();
 
 
   public XmlSelectDataSource(Resource xmlPath)
@@ -29,6 +34,12 @@ public class XmlSelectDataSource extends XmlDataSource implements
   }
 
 
+  public void addAttributeNamespace(String prefix, String uri)
+  {
+    namespaces.add(prefix, uri);
+  }
+
+
   public void setXPathEngine(XPathEngine xPathEngine)
   {
     this.xPathEngine = xPathEngine;
@@ -41,20 +52,46 @@ public class XmlSelectDataSource extends XmlDataSource implements
   }
 
 
+  public void setUseAttributes(boolean useAttributes)
+  {
+    this.useAttributes = useAttributes;
+  }
+
+
+  public boolean isUseAttributes()
+  {
+    return useAttributes;
+  }
+
+
   @Override
   public void closeAfterQuery()
   {
-    xPathEngine.close();
+    try
+    {
+      xPathEngine.close();
+    }
+    catch (IOException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
   }
 
 
   @Override
   public DsResultSet execute()
   {
-    xPathEngine.open(getXmlPath());
+    try
+    {
+      xPathEngine.open(getXmlPath(), namespaces);
 
-    NodeList nodes = xPathEngine.getResults(xPathExpression);
-    return new XmlResultSet(nodes, useAttributes);
+      NodeList nodes = xPathEngine.getResults(xPathExpression);
+      return new XmlResultSet(nodes, useAttributes, namespaces);
+    }
+    catch (IOException e)
+    {
+      throw ExceptionUtil.toRuntimeException(e);
+    }
   }
 
 

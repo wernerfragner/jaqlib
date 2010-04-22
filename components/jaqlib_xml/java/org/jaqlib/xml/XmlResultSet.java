@@ -6,6 +6,8 @@ import org.jaqlib.core.DsResultSet;
 import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.util.LogUtil;
+import org.jaqlib.xml.xpath.XmlNamespace;
+import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -17,11 +19,13 @@ public class XmlResultSet implements DsResultSet
 
   private final NodeList nodes;
   private final boolean useAttributes;
+  private final XmlNamespaces namespaces;
 
   private int curNodeIndex = -1;
 
 
-  public XmlResultSet(NodeList nodes, boolean useAttributes)
+  public XmlResultSet(NodeList nodes, boolean useAttributes,
+      XmlNamespaces namespaces)
   {
     if (nodes == null)
     {
@@ -29,6 +33,7 @@ public class XmlResultSet implements DsResultSet
     }
     this.nodes = nodes;
     this.useAttributes = useAttributes;
+    this.namespaces = namespaces;
   }
 
 
@@ -42,7 +47,7 @@ public class XmlResultSet implements DsResultSet
     if (useAttributes)
     {
       NamedNodeMap attributes = n.getAttributes();
-      resultNode = attributes.getNamedItem(name);
+      resultNode = getNamedAttribute(attributes, name);
     }
     else
     {
@@ -60,6 +65,24 @@ public class XmlResultSet implements DsResultSet
     }
 
     return convert(mapping, resultNode.getNodeValue());
+  }
+
+
+  private Node getNamedAttribute(NamedNodeMap attributes, String name)
+  {
+    Node result = attributes.getNamedItem(name);
+    if (result == null)
+    {
+      for (XmlNamespace ns : namespaces)
+      {
+        result = attributes.getNamedItemNS(ns.getUri(), name);
+        if (result != null)
+        {
+          return result;
+        }
+      }
+    }
+    return result;
   }
 
 

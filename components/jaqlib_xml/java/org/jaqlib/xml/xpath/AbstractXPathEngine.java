@@ -5,35 +5,27 @@ import java.io.InputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
-import org.jaqlib.util.ExceptionUtil;
 import org.jaqlib.util.Resource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 public abstract class AbstractXPathEngine implements XPathEngine
 {
 
   private Resource xmlPath;
   private InputSource inputSource;
-
   private Document doc;
-  private final AttributeNamespaces attributeNamespaces = new AttributeNamespaces();
+  private XmlNamespaces namespaces;
 
 
-  public void addAttributeNamespace(AttributeNamespace namespace)
-  {
-    attributeNamespaces.add(namespace);
-  }
-
-
-  protected AttributeNamespaces getAttributeNamespaces()
-  {
-    return attributeNamespaces;
-  }
-
-
-  public final void open(Resource xmlPath)
+  /**
+   * {@inheritDoc}
+   */
+  public final void open(Resource xmlPath, XmlNamespaces namespaces)
+      throws IOException
   {
     if (xmlPath.equals(this.xmlPath))
     {
@@ -46,20 +38,25 @@ public abstract class AbstractXPathEngine implements XPathEngine
       close();
     }
 
+    this.namespaces = namespaces;
+
     inputSource = new InputSource(getInputStream());
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setNamespaceAware(isNamespaceAware());
+
     try
     {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setNamespaceAware(isNamespaceAware());
       DocumentBuilder builder = factory.newDocumentBuilder();
-
       doc = builder.parse(inputSource);
-
       doOpen(builder);
     }
-    catch (Exception e)
+    catch (SAXException x)
     {
-      throw ExceptionUtil.toRuntimeException(e);
+      throw toIOException(x);
+    }
+    catch (ParserConfigurationException x)
+    {
+      throw toIOException(x);
     }
   }
 
@@ -70,32 +67,26 @@ public abstract class AbstractXPathEngine implements XPathEngine
   }
 
 
-  public boolean isNamespaceAware()
+  protected XmlNamespaces getXmlNamespaces()
   {
-    return !attributeNamespaces.isEmpty();
+    return namespaces;
+  }
+
+
+  protected boolean isNamespaceAware()
+  {
+    return !namespaces.isEmpty();
   }
 
 
   protected abstract void doOpen(DocumentBuilder builder);
 
 
+  /**
+   * {@inheritDoc}
+   */
   public void close()
   {
-    // try
-    // {
-    // if (inputSource != null)
-    // {
-    // inputSource.getByteStream().close();
-    // }
-    // }
-    // catch (IOException ex)
-    // {
-    // throw ExceptionUtil.toRuntimeException(ex);
-    // }
-    // finally
-    // {
-    // inputSource = null;
-    // }
   }
 
 
@@ -105,16 +96,21 @@ public abstract class AbstractXPathEngine implements XPathEngine
   }
 
 
-  private InputStream getInputStream()
+  private InputStream getInputStream() throws IOException
   {
-    try
+    if (!xmlPath.exists())
     {
-      return xmlPath.getInputStream();
+      throw new IOException("Resource '" + xmlPath + "' not found.");
     }
-    catch (IOException e)
-    {
-      throw ExceptionUtil.toRuntimeException(e);
-    }
+    return xmlPath.getInputStream();
+  }
+
+
+  private static IOException toIOException(Throwable t)
+  {
+    IOException ioe = new IOException(t);
+    ioe.setStackTrace(t.getStackTrace());
+    return ioe;
   }
 
 }
