@@ -1,7 +1,6 @@
 package org.jaqlib;
 
 import org.jaqlib.core.AbstractQueryBuilder;
-import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.xml.XmlFromClause;
 import org.jaqlib.xml.XmlQuery;
@@ -9,6 +8,12 @@ import org.jaqlib.xml.XmlQuery;
 
 public class XmlQueryBuilder extends AbstractQueryBuilder
 {
+
+  /**
+   * Contains the application wide default values for the XML query builder.
+   */
+  public static final XmlDefaults DEFAULTS = XmlDefaults.INSTANCE;
+
 
   public <T> XmlFromClause<T> select(Class<T> beanClass)
   {
@@ -32,7 +37,7 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
   public <T> BeanMapping<T> getDefaultBeanMapping(Class<T> beanClass)
   {
     BeanMapping<T> beanMapping = new BeanMapping<T>(beanClass);
-    beanMapping.setMappingStrategy(Defaults.getMappingStrategy());
+    beanMapping.setMappingStrategy(XmlDefaults.INSTANCE.getMappingStrategy());
     return beanMapping;
   }
 
