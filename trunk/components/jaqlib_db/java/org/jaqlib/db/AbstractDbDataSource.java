@@ -28,7 +28,7 @@ public abstract class AbstractDbDataSource
 
   private final DataSource dataSource;
 
-  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = DbDefaults
+  private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = DbDefaults.INSTANCE
       .getSqlTypeHandlerRegistry();
 
   private Connection connection;

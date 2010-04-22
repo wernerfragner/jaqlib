@@ -34,8 +34,7 @@ public class DbSelectDataSource extends AbstractDbDataSource implements
 
   private String sql;
 
-  private boolean strictColumnCheck = org.jaqlib.core.Defaults
-      .getStrictColumnCheck();
+  private boolean strictFieldCheck = DbDefaults.INSTANCE.getStrictFieldCheck();
   private DbResultSet resultSet;
 
   private final List<Object> prepStmtParameters = new ArrayList<Object>();
@@ -105,7 +104,7 @@ public class DbSelectDataSource extends AbstractDbDataSource implements
    */
   public void setStrictColumnCheck(boolean strictColumnCheck)
   {
-    this.strictColumnCheck = strictColumnCheck;
+    this.strictFieldCheck = strictColumnCheck;
   }
 
 
@@ -180,7 +179,7 @@ public class DbSelectDataSource extends AbstractDbDataSource implements
     prepStmtParameters.clear();
 
     final ResultSet rs = stmt.executeQuery();
-    return new DbResultSet(rs, getSqlTypeHandlerRegistry(), strictColumnCheck);
+    return new DbResultSet(rs, getSqlTypeHandlerRegistry(), strictFieldCheck);
   }
 
 
@@ -199,7 +198,7 @@ public class DbSelectDataSource extends AbstractDbDataSource implements
     log.fine("Executing SQL SELECT statement: " + getSql());
 
     final ResultSet rs = getStatement().executeQuery(getSql());
-    return new DbResultSet(rs, getSqlTypeHandlerRegistry(), strictColumnCheck);
+    return new DbResultSet(rs, getSqlTypeHandlerRegistry(), strictFieldCheck);
   }
 
 

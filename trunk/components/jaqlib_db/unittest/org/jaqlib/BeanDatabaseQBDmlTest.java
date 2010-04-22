@@ -1,8 +1,8 @@
 package org.jaqlib;
 
-import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.ColumnMapping;
+import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
@@ -27,8 +27,8 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
   {
     super.setUp();
 
-    Defaults.registerJavaTypeHandler(new CreditRatingTypeHandler());
-    Defaults.registerJavaTypeHandler(new BooleanTypeHandler());
+    DbDefaults.INSTANCE.registerJavaTypeHandler(new CreditRatingTypeHandler());
+    DbDefaults.INSTANCE.registerJavaTypeHandler(new BooleanTypeHandler());
 
     account = createAccount();
 

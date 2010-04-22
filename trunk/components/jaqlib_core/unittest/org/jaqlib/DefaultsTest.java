@@ -1,17 +1,14 @@
-package org.jaqlib.db;
+package org.jaqlib;
 
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.MappingStrategy;
-import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
-import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 
 public class DefaultsTest extends TestCase
 {
@@ -20,7 +17,6 @@ public class DefaultsTest extends TestCase
   @Override
   public void tearDown()
   {
-    DbDefaults.reset();
     Defaults.reset();
   }
 
@@ -146,67 +142,26 @@ public class DefaultsTest extends TestCase
   }
 
 
-  public void testGetSqlTypeHandlerRegistry()
-  {
-    assertNotNull(DbDefaults.getSqlTypeHandlerRegistry());
-  }
-
-
-  public void testSetSqlTypeHandlerRegistry_Null()
-  {
-    try
-    {
-      DbDefaults.setSqlTypeHandlerRegistry(null);
-      fail("Did not throw IllegalArgumentException");
-    }
-    catch (IllegalArgumentException e)
-    {
-    }
-  }
-
-
-  public void testSetSqlTypeHandlerRegistry()
-  {
-    SqlTypeHandlerRegistry registry = new SqlTypeHandlerRegistry()
-    {
-
-      public SqlTypeHandler getTypeHandler(int sqlDataType)
-      {
-        return null;
-      }
-
-
-      public void registerTypeHandler(int sqlDataType,
-          SqlTypeHandler typeHandler)
-      {
-      }
-
-    };
-    DbDefaults.setSqlTypeHandlerRegistry(registry);
-    assertSame(registry, DbDefaults.getSqlTypeHandlerRegistry());
-  }
-
-
   public void testSetStrictColumnCheck()
   {
-    boolean prevValue = Defaults.getStrictColumnCheck();
+    boolean prevValue = Defaults.getStrictFieldCheck();
     try
     {
-      assertFalse(Defaults.getStrictColumnCheck());
-      Defaults.setStrictColumnCheck(true);
-      assertTrue(Defaults.getStrictColumnCheck());
+      assertFalse(Defaults.getStrictFieldCheck());
+      Defaults.setStrictFieldCheck(true);
+      assertTrue(Defaults.getStrictFieldCheck());
     }
     finally
     {
       // clean up
-      Defaults.setStrictColumnCheck(prevValue);
+      Defaults.setStrictFieldCheck(prevValue);
     }
   }
 
 
   public void testGetStrictColumnCheck()
   {
-    assertFalse(Defaults.getStrictColumnCheck());
+    assertFalse(Defaults.getStrictFieldCheck());
   }
 
 }

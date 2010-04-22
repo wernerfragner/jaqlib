@@ -10,7 +10,6 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 
 import org.easymock.EasyMock;
-import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbInsertDataSource;
@@ -220,8 +219,8 @@ public class DatabaseSetup
 
   public static DbResultSet getMockDbResultSet() throws SQLException
   {
-    return new DbResultSet(getMockResultSet(), DbDefaults
-        .getSqlTypeHandlerRegistry(), Defaults.getStrictColumnCheck());
+    return new DbResultSet(getMockResultSet(), DbDefaults.INSTANCE
+        .getSqlTypeHandlerRegistry(), DbDefaults.INSTANCE.getStrictFieldCheck());
   }
 
 

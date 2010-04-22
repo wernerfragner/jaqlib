@@ -9,9 +9,10 @@ public class JaqlibCoreTests
   public static Test suite()
   {
     TestSuite suite = new TestSuite("Test for org.jaqlib");
-    //$JUnit-BEGIN$
+    // $JUnit-BEGIN$
+    suite.addTestSuite(DefaultsTest.class);
     suite.addTestSuite(BeanConventionMappingStrategyTest.class);
-    //$JUnit-END$
+    // $JUnit-END$
     return suite;
   }
 

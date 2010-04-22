@@ -48,4 +48,16 @@ public class Jaqlib
   }
 
 
+  /**
+   * Gets a query builder for querying XML files. For further information see
+   * {@link XmlQueryBuilder}.
+   * 
+   * @return a query builder for querying database tables.
+   */
+  public static XmlQueryBuilder Xml()
+  {
+    return XmlQB.getQueryBuilder();
+  }
+
+
 }

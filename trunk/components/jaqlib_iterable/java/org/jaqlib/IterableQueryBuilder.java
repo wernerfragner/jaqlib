@@ -150,6 +150,13 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
 {
 
   /**
+   * Contains the application wide default values for the Iterable query
+   * builder.
+   */
+  public static final IterableDefaults DEFAULTS = IterableDefaults.INSTANCE;
+
+
+  /**
    * Selects a certain set of objects in a given collection. The collection that
    * should be used must be specified in the returned {@link FromClause}. The
    * {@link FromClause} hereby returns a {@link WhereClause} that can be used to
