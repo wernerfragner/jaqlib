@@ -10,7 +10,7 @@ public class XmlQBJdkTest extends XmlQBTest
   public void setUp()
   {
     super.setUp();
-    XmlDefaults.setXPathEngine(new JdkXPathEngine());
+    XmlDefaults.INSTANCE.setXPathEngine(new JdkXPathEngine());
   }
 
 }

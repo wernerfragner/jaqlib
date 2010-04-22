@@ -10,7 +10,7 @@ public class XmlQBXalanTest extends XmlQBTest
   public void setUp()
   {
     super.setUp();
-    XmlDefaults.setXPathEngine(new XalanXPathEngine());
+    XmlDefaults.INSTANCE.setXPathEngine(new XalanXPathEngine());
   }
 
 }

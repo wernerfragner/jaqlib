@@ -13,7 +13,6 @@ import org.jaqlib.AccountImpl;
 import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.XmlQB;
-import org.jaqlib.core.Defaults;
 import org.jaqlib.util.ClassPathResource;
 import org.jaqlib.util.FileResource;
 
@@ -31,7 +30,7 @@ public abstract class XmlQBTest extends TestCase
   @Override
   public void setUp()
   {
-    Defaults.getJavaTypeHandlerRegistry().registerTypeHandler(
+    XmlDefaults.INSTANCE.getJavaTypeHandlerRegistry().registerTypeHandler(
         new CreditRatingStringTypeHandler());
   }
 
@@ -39,7 +38,7 @@ public abstract class XmlQBTest extends TestCase
   @Override
   public void tearDown()
   {
-    XmlDefaults.reset();
+    XmlDefaults.INSTANCE.reset();
   }
 
 
@@ -280,7 +279,7 @@ public abstract class XmlQBTest extends TestCase
 
   private void addAttributeNamespace(String prefix, String namespace)
   {
-    XmlDefaults.addNamespace(prefix, namespace);
+    XmlDefaults.INSTANCE.addNamespace(prefix, namespace);
   }
 
   //

@@ -15,10 +15,10 @@ public class XmlSelectDataSource extends XmlDataSource implements
     SelectDataSource
 {
 
-  private XPathEngine xPathEngine = XmlDefaults.getXPathEngine();
+  private XPathEngine xPathEngine = XmlDefaults.INSTANCE.getXPathEngine();
   private String xPathExpression;
   private boolean useAttributes;
-  private final XmlNamespaces namespaces = XmlDefaults.getNamespaces();
+  private final XmlNamespaces namespaces = XmlDefaults.INSTANCE.getNamespaces();
 
 
   public XmlSelectDataSource(Resource xmlPath)
