@@ -44,7 +44,7 @@ public class LogUtil
    */
   public static Logger getLogger(Object obj)
   {
-    if (obj instanceof Class)
+    if (obj instanceof Class<?>)
     {
       return getLogger((Class<?>) obj);
     }

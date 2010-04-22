@@ -22,7 +22,7 @@ public abstract class ComparableFunction<T, ResultType> extends
   @Override
   public boolean doEvaluate(ResultType actual)
   {
-    if (actual instanceof Comparable)
+    if (actual instanceof Comparable<?>)
     {
       // 'actual' is a Comparable and is a ResultType --> safe type cast
       @SuppressWarnings("unchecked")

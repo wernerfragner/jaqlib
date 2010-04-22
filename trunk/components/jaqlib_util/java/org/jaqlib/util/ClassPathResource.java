@@ -69,4 +69,23 @@ public class ClassPathResource implements Resource
     return path;
   }
 
+
+  /**
+   * {@inheritDoc}
+   */
+  public boolean exists()
+  {
+    return getURL() != null;
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  public String toString()
+  {
+    return path;
+  }
+
 }

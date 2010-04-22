@@ -61,6 +61,7 @@ public class AbstractFetchStrategyTest extends TestCase
       private int index = -1;
 
 
+      @SuppressWarnings("unchecked")
       public <T> T newInstance(Class<T> beanClass)
       {
         index++;

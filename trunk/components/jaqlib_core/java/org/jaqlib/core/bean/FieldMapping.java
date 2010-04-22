@@ -98,6 +98,7 @@ public class FieldMapping<T> extends AbstractMapping<T>
 
 
   @Override
+  @SuppressWarnings("unchecked")
   public T getValue(DsResultSet rs)
   {
     return (T) rs.getObject(this);
