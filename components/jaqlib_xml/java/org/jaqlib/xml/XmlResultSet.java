@@ -12,6 +12,12 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Represents the 'raw' XML result of the query. This result set is used
+ * internally to extract XML data and to map it to Java beans.
+ * 
+ * @author Werner Fragner
+ */
 public class XmlResultSet implements DsResultSet
 {
 
@@ -24,6 +30,14 @@ public class XmlResultSet implements DsResultSet
   private int curNodeIndex = -1;
 
 
+  /**
+   * Default constructor.
+   * 
+   * @param nodes the 'raw' XML data. Can be null.
+   * @param useAttributes if true, XML attributes are used to map data to Java
+   *          bean fields.
+   * @param namespaces the XML namespaces to use to extract the XML data.
+   */
   public XmlResultSet(NodeList nodes, boolean useAttributes,
       XmlNamespaces namespaces)
   {
@@ -32,11 +46,20 @@ public class XmlResultSet implements DsResultSet
       nodes = EmptyNodeList.INSTANCE;
     }
     this.nodes = nodes;
+
     this.useAttributes = useAttributes;
+
+    if (namespaces == null)
+    {
+      namespaces = new XmlNamespaces();
+    }
     this.namespaces = namespaces;
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Object getObject(FieldMapping<?> mapping)
   {
@@ -86,7 +109,7 @@ public class XmlResultSet implements DsResultSet
   }
 
 
-  public Object convert(FieldMapping<?> mapping, String nodeValue)
+  private Object convert(FieldMapping<?> mapping, String nodeValue)
   {
     if (nodeValue == null || nodeValue.trim().length() < 1)
     {
@@ -159,6 +182,9 @@ public class XmlResultSet implements DsResultSet
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean next()
   {

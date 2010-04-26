@@ -12,6 +12,12 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * Abstract base class for {@link XPathEngine}s. It provides basic XML XPath
+ * functionality for providing an XML DOM tree.
+ * 
+ * @author Werner Fragner
+ */
 public abstract class AbstractXPathEngine implements XPathEngine
 {
 
@@ -61,24 +67,56 @@ public abstract class AbstractXPathEngine implements XPathEngine
   }
 
 
+  /**
+   * Gets the W3C DOM XML document.
+   * 
+   * @return see description.
+   */
   protected Document getDocument()
   {
     return doc;
   }
 
 
+  /**
+   * Returns the {@link InputSource} representing the XML file.
+   * 
+   * @return see description.
+   */
+  protected InputSource getInputSource()
+  {
+    return inputSource;
+  }
+
+
+  /**
+   * Gets all XML namespaces that have been registered by the Jaqlib user.
+   * 
+   * @return see description.
+   */
   protected XmlNamespaces getXmlNamespaces()
   {
     return namespaces;
   }
 
 
+  /**
+   * Returns <tt>true</tt> if user-defined XML namespaces are available.
+   * 
+   * @return see description.
+   */
   protected boolean isNamespaceAware()
   {
     return !namespaces.isEmpty();
   }
 
 
+  /**
+   * Extending classes must override this method in order to perform tasks for
+   * opening the XML file.
+   * 
+   * @param builder the builder that has been used to build the W3C DOM tree.
+   */
   protected abstract void doOpen(DocumentBuilder builder);
 
 
@@ -87,12 +125,6 @@ public abstract class AbstractXPathEngine implements XPathEngine
    */
   public void close()
   {
-  }
-
-
-  protected InputSource getInputSource()
-  {
-    return inputSource;
   }
 
 

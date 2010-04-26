@@ -18,6 +18,16 @@ public class XmlNamespace
   private String uri;
 
 
+  /**
+   * Constructs a new XML namespace object. This namespace is used to lookup XML
+   * attribute or element values.
+   * 
+   * @param prefix the prefix of the namespace. E.g. jaqlib in the definition
+   *          'xmlns:jaqlib=http://org.jaqlib/example'.
+   * @param uri the URI of the namespace (can or cannot really exist). E.g.
+   *          'http://org.jaqlib/example' in the definition
+   *          'xmlns:jaqlib=http://org.jaqlib/example'.
+   */
   public XmlNamespace(String prefix, String uri)
   {
     super();
@@ -50,12 +60,24 @@ public class XmlNamespace
   }
 
 
+  /**
+   * Gets the URI for the default XML namespace. Normally this is
+   * "http://www.w3.org/2000/xmlns/".
+   * 
+   * @return see description.
+   */
   public String getDefaultUri()
   {
     return XMLNS_ATTRIBUTE_NS_URI;
   }
 
 
+  /**
+   * Gets the complete XML namespace prefix (including {@link #XMLNS_ATTRIBUTE}.
+   * For example, 'xmlns:jaqlib'.
+   * 
+   * @return see description.
+   */
   public String getCompletePrefix()
   {
     return XMLNS_ATTRIBUTE + ":" + getPrefix();
