@@ -26,13 +26,18 @@ public class IterableDefaults extends DefaultsDelegate
    */
   public static final IterableDefaults INSTANCE = new IterableDefaults();
 
-
+  /**
+   * Resets all defaults to their initial values.
+   */
   static
   {
     INSTANCE.reset();
   }
 
 
+  /**
+   * Resets all defaults to their initial values.
+   */
   @Override
   public void reset()
   {

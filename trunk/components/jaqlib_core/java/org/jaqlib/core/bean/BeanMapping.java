@@ -198,4 +198,37 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
+  /**
+   * Creates a {@link BeanMapping} instance by using the bean properties of the
+   * given class. Bean properties must have a valid get and set method in order
+   * to be in the returned {@link BeanMapping}.
+   * 
+   * @param <T> the type of the result bean.
+   * @param beanClass the class that should be used to hold the result of the
+   *          query. Additionally this class is used to retrieve the bean
+   *          properties for storing the result of the query.
+   * @return an object describing where and how to store a query result.
+   */
+  public static <T> BeanMapping<T> build(Class<? extends T> beanClass)
+  {
+    return build(Defaults.getMappingStrategy(), beanClass);
+  }
+
+
+  /**
+   * @param mappingStrategy a custom strategy how to map query results to the
+   *          fields of the given bean.
+   * @param beanClass the class that should be used to hold the result of the
+   *          query.
+   * @return an object describing where and how to store a query result.
+   */
+  public static <T> BeanMapping<T> build(MappingStrategy mappingStrategy,
+      Class<? extends T> beanClass)
+  {
+    BeanMapping<T> beanMapping = new BeanMapping<T>(beanClass);
+    beanMapping.setMappingStrategy(mappingStrategy);
+    return beanMapping;
+  }
+
+
 }

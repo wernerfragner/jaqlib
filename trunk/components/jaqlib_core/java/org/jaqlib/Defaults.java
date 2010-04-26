@@ -36,7 +36,7 @@ public class Defaults
 
 
   /**
-   * Initializes the static fields with default values.
+   * Resets all defaults to their initial values.
    */
   static
   {
@@ -45,7 +45,7 @@ public class Defaults
 
 
   /**
-   * Resets the static fields to their original default values.
+   * Resets all defaults to their initial values.
    */
   public static void reset()
   {

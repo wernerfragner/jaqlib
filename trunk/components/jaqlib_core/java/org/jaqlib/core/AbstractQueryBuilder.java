@@ -15,6 +15,9 @@
  */
 package org.jaqlib.core;
 
+import org.jaqlib.Defaults;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.RecordingProxy;
 import org.jaqlib.core.reflect.ThreadLocalMethodCallRecorder;
@@ -84,6 +87,25 @@ public abstract class AbstractQueryBuilder
     RecordingProxy<T> proxy = new RecordingProxy<T>(getClassLoader());
     methodCallRecorder.set(proxy.getMethodCallRecorder());
     return proxy.getProxy(resultElementClass);
+  }
+
+
+  /**
+   * See {@link BeanMapping#build(MappingStrategy, Class)}.
+   */
+  public <T> BeanMapping<T> getDefaultBeanMapping(Class<? extends T> beanClass)
+  {
+    return getBeanMapping(Defaults.getMappingStrategy(), beanClass);
+  }
+
+
+  /**
+   * See {@link BeanMapping#build(Class)}.
+   */
+  public <T> BeanMapping<T> getBeanMapping(MappingStrategy mappingStrategy,
+      Class<? extends T> beanClass)
+  {
+    return BeanMapping.build(mappingStrategy, beanClass);
   }
 
 }
