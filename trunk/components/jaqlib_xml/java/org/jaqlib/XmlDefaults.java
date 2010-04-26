@@ -33,13 +33,19 @@ public class XmlDefaults extends DefaultsDelegate
   private XPathEngine xPathEngine;
   private XmlNamespaces namespaces;
 
-
+  /**
+   * Resets all defaults to their initial values.
+   */
   static
   {
     INSTANCE.reset();
   }
 
 
+  /**
+   * Resets all defaults to their initial values.
+   */
+  @Override
   public void reset()
   {
     super.reset();
@@ -48,30 +54,54 @@ public class XmlDefaults extends DefaultsDelegate
   }
 
 
+  /**
+   * Gets the current default {@link XPathEngine}.
+   * 
+   * @return see description.
+   */
   public XPathEngine getXPathEngine()
   {
     return xPathEngine;
   }
 
 
+  /**
+   * Sets the new application-wide {@link XPathEngine}.
+   * 
+   * @param xPathEngine the new {@link XPathEngine}.
+   */
   public void setXPathEngine(XPathEngine xPathEngine)
   {
     this.xPathEngine = Assert.notNull(xPathEngine);
   }
 
 
+  /**
+   * Gets the current default XML namespaces.
+   * 
+   * @return see description.
+   */
   public XmlNamespaces getNamespaces()
   {
     return namespaces;
   }
 
 
+  /**
+   * Adds the given namespace to the application-wide defaults.
+   * 
+   * @param prefix the prefix of the namespace (e.g., 'ns').
+   * @param uri the URI for the namespace (e.g., 'http://jaqlib.org/myns').
+   */
   public void addNamespace(String prefix, String uri)
   {
     namespaces.add(new XmlNamespace(prefix, uri));
   }
 
 
+  /**
+   * Removes all previously added namespaces.
+   */
   public void clearNamespaces()
   {
     namespaces.clear();
