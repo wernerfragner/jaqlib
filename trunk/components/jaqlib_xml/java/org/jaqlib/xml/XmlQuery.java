@@ -5,9 +5,16 @@ import org.jaqlib.core.QueryResult;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 
+/**
+ * Central class representing the XML query. It holds information about the XML
+ * query.
+ * 
+ * @author Werner Fragner
+ * 
+ * @param <T> the result type of the query.
+ */
 public class XmlQuery<T> extends DataSourceQuery<T, XmlSelectDataSource>
 {
-
 
   public XmlQuery(MethodCallRecorder methodCallRecorder, BeanMapping<T> mapping)
   {
@@ -33,6 +40,5 @@ public class XmlQuery<T> extends DataSourceQuery<T, XmlSelectDataSource>
     getDataSource().setXPathExpression(xPath);
     return super.createQueryResult();
   }
-
 
 }

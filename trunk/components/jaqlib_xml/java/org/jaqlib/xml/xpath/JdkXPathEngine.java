@@ -12,12 +12,30 @@ import javax.xml.xpath.XPathFactory;
 import org.jaqlib.util.ExceptionUtil;
 import org.w3c.dom.NodeList;
 
+/**
+ * Implementation of the {@link XPathEngine} interface for the JDK XPath engine.
+ * 
+ * @author Werner Fragner
+ */
 public class JdkXPathEngine extends AbstractXPathEngine
 {
 
   private XPathFactory factory;
 
 
+  /**
+   * {@inheritDoc}
+   */
+  @Override
+  protected void doOpen(DocumentBuilder builder)
+  {
+    factory = XPathFactory.newInstance();
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
   public NodeList getResults(String expression)
   {
     try
@@ -43,6 +61,9 @@ public class JdkXPathEngine extends AbstractXPathEngine
     return new NamespaceContext()
     {
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       @SuppressWarnings("unchecked")
       public Iterator getPrefixes(String namespace)
@@ -51,6 +72,9 @@ public class JdkXPathEngine extends AbstractXPathEngine
       }
 
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       public String getPrefix(String namespace)
       {
@@ -58,6 +82,9 @@ public class JdkXPathEngine extends AbstractXPathEngine
       }
 
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       public String getNamespaceURI(String prefix)
       {
@@ -66,11 +93,5 @@ public class JdkXPathEngine extends AbstractXPathEngine
     };
   }
 
-
-  @Override
-  protected void doOpen(DocumentBuilder builder)
-  {
-    factory = XPathFactory.newInstance();
-  }
 
 }

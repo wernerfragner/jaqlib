@@ -10,13 +10,21 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
+/**
+ * Implementation of the {@link XPathEngine} interface for the <a
+ * href="http://xalan.apache.org/">Xalan</a> library.
+ * 
+ * @author Werner Fragner
+ */
 public class XalanXPathEngine extends AbstractXPathEngine
 {
 
   private Element root;
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public void doOpen(DocumentBuilder builder)
   {
@@ -30,8 +38,8 @@ public class XalanXPathEngine extends AbstractXPathEngine
     {
       DOMImplementation impl = builder.getDOMImplementation();
       Document namespaceHolder = impl.createDocument(
-          XmlNamespace.XMLNS_ATTRIBUTE_NS_URI,
-          XmlNamespace.XMLNS_ATTRIBUTE, null);
+          XmlNamespace.XMLNS_ATTRIBUTE_NS_URI, XmlNamespace.XMLNS_ATTRIBUTE,
+          null);
       root = namespaceHolder.getDocumentElement();
 
       for (XmlNamespace namespace : getXmlNamespaces())
@@ -43,6 +51,9 @@ public class XalanXPathEngine extends AbstractXPathEngine
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public NodeList getResults(String expression)
   {
     try
@@ -58,6 +69,5 @@ public class XalanXPathEngine extends AbstractXPathEngine
       throw ExceptionUtil.toRuntimeException(e);
     }
   }
-
 
 }
