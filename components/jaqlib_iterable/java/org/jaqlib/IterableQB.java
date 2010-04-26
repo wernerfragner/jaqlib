@@ -17,6 +17,8 @@ package org.jaqlib;
 
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.MappingStrategy;
 import org.jaqlib.iterable.FromClause;
 
 
@@ -32,6 +34,7 @@ import org.jaqlib.iterable.FromClause;
  * This class is thread-safe.
  * 
  * @see IterableQueryBuilder
+ * @see IterableDefaults
  * @author Werner Fragner
  */
 public class IterableQB
@@ -101,6 +104,26 @@ public class IterableQB
   public static <T> WhereClause<T, Iterable<T>> selectFrom(Iterable<T> iterable)
   {
     return getQueryBuilder().selectFrom(iterable);
+  }
+
+
+  /**
+   * See {@link BeanMapping#build(Class)}.
+   */
+  public static <T> BeanMapping<T> getDefaultBeanMapping(
+      Class<? extends T> beanClass)
+  {
+    return getQueryBuilder().getDefaultBeanMapping(beanClass);
+  }
+
+
+  /**
+   * See {@link BeanMapping#build(MappingStrategy, Class)}.
+   */
+  public static <T> BeanMapping<T> getBeanMapping(
+      MappingStrategy mappingStrategy, Class<? extends T> beanClass)
+  {
+    return getQueryBuilder().getBeanMapping(mappingStrategy, beanClass);
   }
 
 

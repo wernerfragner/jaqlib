@@ -48,6 +48,7 @@ import org.jaqlib.db.Using;
  * 
  * @see DatabaseQueryBuilder
  * @see Database
+ * @see DbDefaults
  * @author Werner Fragner
  */
 public class DatabaseQB
@@ -327,35 +328,22 @@ public class DatabaseQB
 
 
   /**
-   * Creates a {@link BeanMapping} instance by using the bean properties of the
-   * given class. Bean properties must have a valid get and set method in order
-   * to be in the returned {@link BeanMapping}.
-   * 
-   * @param <T> the type of the result bean.
-   * @param beanClass the class that should be used to hold the result of the
-   *          SELECT statement. Additionally this class is used to retrieve the
-   *          bean properties for storing the result of the SELECT statement.
-   * @return an object describing where to store a SELECT statement result.
+   * See {@link BeanMapping#build(Class)}.
    */
   public static <T> BeanMapping<T> getDefaultBeanMapping(
       Class<? extends T> beanClass)
   {
-    return Database.getBeanMapping(DbDefaults.INSTANCE.getMappingStrategy(),
-        beanClass);
+    return getQueryBuilder().getDefaultBeanMapping(beanClass);
   }
 
 
   /**
-   * @param mappingStrategy a custom strategy how to map SELECT statement
-   *          results to the fields of the given bean.
-   * @param beanClass the class that should be used to hold the result of the
-   *          SELECT statement.
-   * @return an object describing where to store a SELECT statement result.
+   * See {@link BeanMapping#build(MappingStrategy, Class)}.
    */
   public static <T> BeanMapping<T> getBeanMapping(
       MappingStrategy mappingStrategy, Class<? extends T> beanClass)
   {
-    return Database.getBeanMapping(mappingStrategy, beanClass);
+    return getQueryBuilder().getBeanMapping(mappingStrategy, beanClass);
   }
 
 

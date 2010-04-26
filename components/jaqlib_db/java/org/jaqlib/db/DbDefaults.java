@@ -34,7 +34,7 @@ public class DbDefaults extends DefaultsDelegate
 
 
   /**
-   * Initializes the static fields with default values.
+   * Resets all defaults to their initial values.
    */
   static
   {
@@ -43,7 +43,7 @@ public class DbDefaults extends DefaultsDelegate
 
 
   /**
-   * Resets the static fields to their original default values.
+   * Resets all defaults to their initial values.
    */
   @Override
   public void reset()
