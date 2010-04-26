@@ -133,13 +133,16 @@ public class DbSelectDataSource extends AbstractDbDataSource implements
 
 
   @Override
-  public void closeAfterQuery()
+  void closeAfterQuery()
   {
     closeResultSet();
     super.closeAfterQuery();
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public DbResultSet execute()
   {
     try

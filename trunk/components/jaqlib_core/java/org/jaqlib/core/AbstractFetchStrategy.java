@@ -45,28 +45,21 @@ public abstract class AbstractFetchStrategy<T>
 
   public void addResults(Collection<T> results)
   {
-    try
-    {
-      final DsResultSet rs = queryDataSource();
+    final DsResultSet rs = queryDataSource();
 
-      boolean stop = false;
-      while (!stop && rs.next())
-      {
-        final T element = extractElement(rs);
-        if (shouldAddToResult(element))
-        {
-          results.add(element);
-          stop = elementProcessed(element, true);
-        }
-        else
-        {
-          stop = elementProcessed(element, false);
-        }
-      }
-    }
-    finally
+    boolean stop = false;
+    while (!stop && rs.next())
     {
-      getDataSource().closeAfterQuery();
+      final T element = extractElement(rs);
+      if (shouldAddToResult(element))
+      {
+        results.add(element);
+        stop = elementProcessed(element, true);
+      }
+      else
+      {
+        stop = elementProcessed(element, false);
+      }
     }
   }
 
@@ -101,31 +94,24 @@ public abstract class AbstractFetchStrategy<T>
   public <KeyType> void addResults(Map<KeyType, T> results,
       MethodInvocation invocation)
   {
-    try
-    {
-      final DsResultSet rs = queryDataSource();
+    final DsResultSet rs = queryDataSource();
 
-      boolean stop = false;
-      while (!stop && rs.next())
+    boolean stop = false;
+    while (!stop && rs.next())
+    {
+      final T element = extractElement(rs);
+      if (element != null && shouldAddToResult(element))
       {
-        final T element = extractElement(rs);
-        if (element != null && shouldAddToResult(element))
-        {
-          @SuppressWarnings("unchecked")
-          final KeyType elementKey = (KeyType) getKey(element, invocation);
-          results.put(elementKey, element);
+        @SuppressWarnings("unchecked")
+        final KeyType elementKey = (KeyType) getKey(element, invocation);
+        results.put(elementKey, element);
 
-          stop = elementProcessed(element, true);
-        }
-        else
-        {
-          stop = elementProcessed(element, false);
-        }
+        stop = elementProcessed(element, true);
       }
-    }
-    finally
-    {
-      getDataSource().closeAfterQuery();
+      else
+      {
+        stop = elementProcessed(element, false);
+      }
     }
   }
 
