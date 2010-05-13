@@ -53,9 +53,10 @@ import org.jaqlib.db.Using;
  * The Method {@link #getRecorder(Class)} can be used to define a WHERE
  * condition using a method call recording mechanism (see also the first example
  * below). First the programmer must call the desired method on the returned
- * proxy object. This method call is recorded by JaQLib. When evaluating the
- * WHERE condition this method call is replayed on every selected element. The
- * result of this method call is then evaluated against the specified condition.
+ * proxy object. This method call is recorded by JaQLib. When JaqLib evaluates
+ * the WHERE condition this method call is replayed on every selected element.
+ * The result of this method call is then evaluated against the specified
+ * condition.
  * </p>
  * This class is thread-safe.
  * <p>

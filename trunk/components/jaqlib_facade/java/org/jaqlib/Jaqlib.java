@@ -19,6 +19,25 @@ public class Jaqlib
 {
 
   /**
+   * Static instance for querying {@link Iterable} objects. For further
+   * information see {@link IterableQueryBuilder}.
+   */
+  public static IterableQueryBuilder List = IterableQB.getQueryBuilder();
+
+  /**
+   * Static instance for querying database tables. For further information see
+   * {@link DatabaseQueryBuilder}.
+   */
+  public static DatabaseQueryBuilder DB = DatabaseQB.getQueryBuilder();
+
+  /**
+   * Static instance for querying XML files. For further information see
+   * {@link XmlQueryBuilder}.
+   */
+  public static XmlQueryBuilder XML = XmlQB.getQueryBuilder();
+
+
+  /**
    * This class must not be instantiated.
    */
   private Jaqlib()
@@ -26,42 +45,5 @@ public class Jaqlib
     throw new UnsupportedOperationException(
         "This class must not be instantiated.");
   }
-
-
-  /**
-   * Gets a query builder for querying {@link Iterable} objects. For further
-   * information see {@link IterableQueryBuilder}.
-   * 
-   * @return a query builder for querying {@link Iterable} objects.
-   */
-  public static IterableQueryBuilder List()
-  {
-    return IterableQB.getQueryBuilder();
-  }
-
-
-  /**
-   * Gets a query builder for querying database tables. For further information
-   * see {@link DatabaseQueryBuilder}.
-   * 
-   * @return a query builder for querying database tables.
-   */
-  public static DatabaseQueryBuilder DB()
-  {
-    return DatabaseQB.getQueryBuilder();
-  }
-
-
-  /**
-   * Gets a query builder for querying XML files. For further information see
-   * {@link XmlQueryBuilder}.
-   * 
-   * @return a query builder for querying database tables.
-   */
-  public static XmlQueryBuilder Xml()
-  {
-    return XmlQB.getQueryBuilder();
-  }
-
 
 }
