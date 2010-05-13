@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  * 
  * @author Werner Fragner
  */
-public abstract class AbstractXPathEngine implements XPathEngine
+public abstract class AbstractDomXPathEngine implements XPathEngine
 {
 
   private Resource xmlPath;

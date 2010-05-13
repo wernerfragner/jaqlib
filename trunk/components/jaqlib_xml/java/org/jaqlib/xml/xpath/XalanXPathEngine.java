@@ -16,7 +16,7 @@ import org.w3c.dom.NodeList;
  * 
  * @author Werner Fragner
  */
-public class XalanXPathEngine extends AbstractXPathEngine
+public class XalanXPathEngine extends AbstractDomXPathEngine
 {
 
   private Element root;
