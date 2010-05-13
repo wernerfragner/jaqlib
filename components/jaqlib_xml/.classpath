@@ -11,5 +11,7 @@
 	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xml-apis.jar"/>
 	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xsltc.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/jaxen/jaxen-1.1.2.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/saxon/saxon9he.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
