@@ -8,7 +8,7 @@ import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 
 public class DefaultsTest extends TestCase
 {
@@ -86,7 +86,7 @@ public class DefaultsTest extends TestCase
 
   public void testSetMappingStrategy()
   {
-    MappingStrategy strategy = new MappingStrategy()
+    BeanMappingStrategy strategy = new BeanMappingStrategy()
     {
 
       public List<FieldMapping<?>> getMappings(Class<?> beanClass)

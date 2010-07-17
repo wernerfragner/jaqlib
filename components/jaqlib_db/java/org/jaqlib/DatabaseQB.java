@@ -21,7 +21,7 @@ import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbDeleteDataSource;
@@ -338,10 +338,10 @@ public class DatabaseQB
 
 
   /**
-   * See {@link BeanMapping#build(MappingStrategy, Class)}.
+   * See {@link BeanMapping#build(BeanMappingStrategy, Class)}.
    */
   public static <T> BeanMapping<T> getBeanMapping(
-      MappingStrategy mappingStrategy, Class<? extends T> beanClass)
+      BeanMappingStrategy mappingStrategy, Class<? extends T> beanClass)
   {
     return getQueryBuilder().getBeanMapping(mappingStrategy, beanClass);
   }

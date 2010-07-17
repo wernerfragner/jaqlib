@@ -3,7 +3,7 @@ package org.jaqlib;
 /**
  * <p>
  * Facade for the different query builders of JaQLib. <br/>
- * This class is the main entry point to JaQLib.
+ * This class is the main entry point of JaQLib.
  * </p>
  * Usage examples are given here:
  * <ul>

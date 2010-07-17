@@ -155,7 +155,7 @@ public class ColumnMapping<T> extends FieldMapping<T>
       BeanType bean, BeanMapping<BeanType> beanMapping) throws SQLException
   {
     Object value = getFieldValue(bean);
-    value = beanMapping.applyJavaTypeHandler(getFieldName(), value);
+    value = beanMapping.applyJavaTypeHandler(getTargetName(), value);
     if (value == null)
     {
       stmt.setNull(index, getColumnDataType(bean));
@@ -271,7 +271,7 @@ public class ColumnMapping<T> extends FieldMapping<T>
       return (ColumnMapping<T>) mapping;
     }
 
-    return new ColumnMapping<T>(mapping.getFieldName());
+    return new ColumnMapping<T>(mapping.getTargetName());
   }
 
 }

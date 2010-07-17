@@ -6,7 +6,7 @@ import org.jaqlib.core.bean.DefaultBeanFactory;
 import org.jaqlib.core.bean.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.util.Assert;
 
 /**
@@ -30,7 +30,7 @@ public class Defaults
 
 
   private static BeanFactory beanFactory;
-  private static MappingStrategy mappingStrategy;
+  private static BeanMappingStrategy mappingStrategy;
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry;
   private static boolean strictFieldCheck;
 
@@ -81,7 +81,7 @@ public class Defaults
   /**
    * @return the default bean mapping strategy.
    */
-  public static MappingStrategy getMappingStrategy()
+  public static BeanMappingStrategy getMappingStrategy()
   {
     return mappingStrategy;
   }
@@ -94,7 +94,7 @@ public class Defaults
    * 
    * @param strategy a not null strategy.
    */
-  public static void setMappingStrategy(MappingStrategy strategy)
+  public static void setMappingStrategy(BeanMappingStrategy strategy)
   {
     Defaults.mappingStrategy = Assert.notNull(strategy);
   }

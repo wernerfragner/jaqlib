@@ -4,12 +4,12 @@ import java.util.List;
 
 
 /**
- * Defines a strategy how to retrieve the mapping between database columns and
- * Java bean instance fields.
+ * Defines a strategy how to retrieve the mapping between source fields (e.g.
+ * database columns, XML attributes, ...) and Java bean fields.
  * 
  * @author Werner Fragner
  */
-public interface MappingStrategy
+public interface BeanMappingStrategy
 {
 
   /**

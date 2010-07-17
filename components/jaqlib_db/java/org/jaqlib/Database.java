@@ -8,7 +8,7 @@ import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
@@ -40,7 +40,7 @@ public class Database
 
   // optional / configurable fields
 
-  private MappingStrategy mappingStrategy = DbDefaults.INSTANCE
+  private BeanMappingStrategy mappingStrategy = DbDefaults.INSTANCE
       .getMappingStrategy();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = DbDefaults.INSTANCE
       .getJavaTypeHandlerRegistry();
@@ -70,7 +70,7 @@ public class Database
    * @param strategy a custom strategy how to map SELECT statement results to
    *          the fields of a given bean.
    */
-  public void setMappingStrategy(MappingStrategy strategy)
+  public void setMappingStrategy(BeanMappingStrategy strategy)
   {
     mappingStrategy = Assert.notNull(strategy);
   }
@@ -376,7 +376,7 @@ public class Database
    * @return an object describing where to store a SELECT statement result.
    */
   public static <T> BeanMapping<T> getBeanMapping(
-      MappingStrategy mappingStrategy, Class<? extends T> beanClass)
+      BeanMappingStrategy mappingStrategy, Class<? extends T> beanClass)
   {
     BeanMapping<T> mapping = new BeanMapping<T>(beanClass);
     mapping.setMappingStrategy(mappingStrategy);

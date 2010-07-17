@@ -17,7 +17,7 @@ package org.jaqlib.core;
 
 import org.jaqlib.Defaults;
 import org.jaqlib.core.bean.BeanMapping;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.core.reflect.MethodCallRecorder;
 import org.jaqlib.core.reflect.RecordingProxy;
 import org.jaqlib.core.reflect.ThreadLocalMethodCallRecorder;
@@ -91,7 +91,7 @@ public abstract class AbstractQueryBuilder
 
 
   /**
-   * See {@link BeanMapping#build(MappingStrategy, Class)}.
+   * See {@link BeanMapping#build(BeanMappingStrategy, Class)}.
    */
   public <T> BeanMapping<T> getDefaultBeanMapping(Class<? extends T> beanClass)
   {
@@ -102,7 +102,7 @@ public abstract class AbstractQueryBuilder
   /**
    * See {@link BeanMapping#build(Class)}.
    */
-  public <T> BeanMapping<T> getBeanMapping(MappingStrategy mappingStrategy,
+  public <T> BeanMapping<T> getBeanMapping(BeanMappingStrategy mappingStrategy,
       Class<? extends T> beanClass)
   {
     return BeanMapping.build(mappingStrategy, beanClass);

@@ -4,7 +4,7 @@ import org.jaqlib.Defaults;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 
 /**
  * Helper class that makes the static methods of {@link Defaults} into methods
@@ -36,16 +36,16 @@ public abstract class DefaultsDelegate
   /**
    * See {@link Defaults#getMappingStrategy()}.
    */
-  public MappingStrategy getMappingStrategy()
+  public BeanMappingStrategy getMappingStrategy()
   {
     return Defaults.getMappingStrategy();
   }
 
 
   /**
-   * See {@link Defaults#setMappingStrategy(MappingStrategy)}.
+   * See {@link Defaults#setMappingStrategy(BeanMappingStrategy)}.
    */
-  public void setMappingStrategy(MappingStrategy strategy)
+  public void setMappingStrategy(BeanMappingStrategy strategy)
   {
     Defaults.setMappingStrategy(strategy);
   }
