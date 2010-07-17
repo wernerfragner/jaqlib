@@ -6,14 +6,21 @@ import org.jaqlib.XmlDefaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.core.SelectDataSource;
 import org.jaqlib.util.ExceptionUtil;
+import org.jaqlib.util.FileResource;
 import org.jaqlib.util.Resource;
 import org.jaqlib.xml.xpath.XPathEngine;
 import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NodeList;
 
 /**
+ * <p>
  * Datasource for selecting XML data. It holds all necessary information to
  * access a XML file and execute a query on it.
+ * </p>
+ * <p>
+ * Note that the <tt>autoClose</tt> property can be used to improve performance
+ * when querying the same XML file multiple times.
+ * </p>
  * 
  * @author Werner Fragner
  */
@@ -24,7 +31,37 @@ public class XmlSelectDataSource extends XmlDataSource implements
   private XPathEngine xPathEngine = XmlDefaults.INSTANCE.getXPathEngine();
   private String xPathExpression;
   private boolean useAttributes;
+  private boolean autoClose = true;
   private final XmlNamespaces namespaces = XmlDefaults.INSTANCE.getNamespaces();
+
+
+  /**
+   * Constructs a new {@link XmlSelectDataSource} using the given XML file path.
+   * XML attributes are used to map the XML data to Java bean fields.
+   * 
+   * @param xmlPath the path to the XML file.
+   */
+  public XmlSelectDataSource(String xmlPath)
+  {
+    this(new FileResource(xmlPath), true);
+  }
+
+
+  /**
+   * Constructs a new {@link XmlSelectDataSource} using the given XML file path.
+   * If <tt>useAttributes</tt> is <tt>true</tt> then XML attributes are used to
+   * map the XML data to Java bean fields. If <tt>false</tt> XML elements are
+   * used for mapping.
+   * 
+   * @param xmlPath the path to the XML file.
+   * @param useAttributes if <tt>true</tt> then XML attributes are used to map
+   *          the XML data to Java bean fields. If <tt>false</tt> XML elements
+   *          are used for mapping.
+   */
+  public XmlSelectDataSource(String xmlPath, boolean useAttributes)
+  {
+    this(new FileResource(xmlPath), false);
+  }
 
 
   /**
@@ -54,6 +91,38 @@ public class XmlSelectDataSource extends XmlDataSource implements
   {
     super(xmlPath);
     this.useAttributes = useAttributes;
+  }
+
+
+  /**
+   * <p>
+   * Returns true if this data source closes itself after executing the XML
+   * query.
+   * </p>
+   * By default auto close is set to true.
+   * 
+   * @return see description.
+   */
+  public boolean isAutoClose()
+  {
+    return autoClose;
+  }
+
+
+  /**
+   * <p>
+   * If set to true this data source closes itself after executing the XML
+   * query. If set to false the Jaqlib user must close this data source by
+   * calling {@link #close()}. Otherwise used resources for reading and parsing
+   * the XML file are <b>NOT</b> freed!
+   * </p>
+   * By default auto close is set to true.
+   * 
+   * @param autoClose see description
+   */
+  public void setAutoClose(boolean autoClose)
+  {
+    this.autoClose = autoClose;
   }
 
 
@@ -125,6 +194,18 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
 
   private void closeAfterQuery()
+  {
+    close();
+  }
+
+
+  /**
+   * Closes this data source. This method releases used resources for reading
+   * and parsing the XML file. This must only needs to be called by the Jaqlib
+   * user when the property <tt>autoClose</tt> is set to false. Otherwise this
+   * data source is automatically closed after executing the XML query.
+   */
+  public void close()
   {
     try
     {
