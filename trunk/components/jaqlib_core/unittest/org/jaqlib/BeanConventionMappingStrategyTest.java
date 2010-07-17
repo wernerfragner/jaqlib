@@ -59,7 +59,7 @@ public class BeanConventionMappingStrategyTest extends TestCase
     List<String> results = new ArrayList<String>();
     for (FieldMapping<?> fieldMapping : result)
     {
-      results.add(fieldMapping.getFieldName());
+      results.add(fieldMapping.getTargetName());
     }
     return results;
   }

@@ -18,7 +18,7 @@ package org.jaqlib;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanMapping;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.iterable.FromClause;
 
 
@@ -118,10 +118,10 @@ public class IterableQB
 
 
   /**
-   * See {@link BeanMapping#build(MappingStrategy, Class)}.
+   * See {@link BeanMapping#build(BeanMappingStrategy, Class)}.
    */
   public static <T> BeanMapping<T> getBeanMapping(
-      MappingStrategy mappingStrategy, Class<? extends T> beanClass)
+      BeanMappingStrategy mappingStrategy, Class<? extends T> beanClass)
   {
     return getQueryBuilder().getBeanMapping(mappingStrategy, beanClass);
   }

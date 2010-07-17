@@ -4,7 +4,7 @@ import java.sql.Types;
 import java.util.List;
 
 import org.jaqlib.core.bean.FieldMapping;
-import org.jaqlib.core.bean.MappingStrategy;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
 
@@ -14,7 +14,7 @@ import org.jaqlib.util.CollectionUtil;
  * 
  * @author Werner Fragner
  */
-public class ManualMappingStrategy implements MappingStrategy
+public class ManualMappingStrategy implements BeanMappingStrategy
 {
 
   private final List<FieldMapping<?>> mappings = CollectionUtil
@@ -43,7 +43,7 @@ public class ManualMappingStrategy implements MappingStrategy
     mapping.setColumnName(columnName);
     mapping.setColumnLabel(columnLabel);
     mapping.setColumnDataType(sqlDataType);
-    mapping.setFieldName(columnLabel);
+    mapping.setTargetName(columnLabel);
     addMapping(mapping);
 
     return mapping;

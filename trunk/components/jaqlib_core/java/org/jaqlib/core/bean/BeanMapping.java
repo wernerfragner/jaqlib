@@ -1,5 +1,6 @@
 package org.jaqlib.core.bean;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import org.jaqlib.util.ReflectionUtil;
 /**
  * Defines a mapping between several database columns to the fields of a Java
  * bean. The strategy how to do this mapping can be defined by setting a custom
- * {@link MappingStrategy}. By default the {@link BeanConventionMappingStrategy}
+ * {@link BeanMappingStrategy}. By default the {@link BeanConventionMappingStrategy}
  * is used.
  * 
  * @author Werner Fragner
@@ -32,7 +33,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   private BeanFactory beanFactory = Defaults.getBeanFactory();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
       .getJavaTypeHandlerRegistry();
-  private MappingStrategy mappingStrategy = Defaults.getMappingStrategy();
+  private BeanMappingStrategy mappingStrategy = Defaults.getMappingStrategy();
 
 
   /**
@@ -50,7 +51,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * 
    * @param strategy a not null custom strategy.
    */
-  public void setMappingStrategy(MappingStrategy strategy)
+  public void setMappingStrategy(BeanMappingStrategy strategy)
   {
     this.mappingStrategy = Assert.notNull(strategy);
   }
@@ -104,6 +105,10 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
     if (mappings == null)
     {
       mappings = mappingStrategy.getMappings(beanClass);
+      if (mappings == null)
+      {
+        mappings = new ArrayList<FieldMapping<?>>();
+      }
     }
     return mappings;
   }
@@ -128,7 +133,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
       Object value = mapping.getValue(rs);
       if (value != DsResultSet.NO_RESULT)
       {
-        setValue(bean, mapping.getFieldName(), value);
+        setValue(bean, mapping.getTargetName(), value);
       }
     }
     return bean;
@@ -182,7 +187,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   {
     for (FieldMapping<?> mapping : getMappings())
     {
-      if (fieldName.equals(mapping.getFieldName()))
+      if (fieldName.equals(mapping.getTargetName()))
       {
         return mapping;
       }
@@ -222,7 +227,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    *          query.
    * @return an object describing where and how to store a query result.
    */
-  public static <T> BeanMapping<T> build(MappingStrategy mappingStrategy,
+  public static <T> BeanMapping<T> build(BeanMappingStrategy mappingStrategy,
       Class<? extends T> beanClass)
   {
     BeanMapping<T> beanMapping = new BeanMapping<T>(beanClass);
