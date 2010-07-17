@@ -63,7 +63,7 @@ public class XmlResultSet implements DsResultSet
   @Override
   public Object getObject(FieldMapping<?> mapping)
   {
-    String name = mapping.getTargetName();
+    String name = mapping.getSourceName();
     Node n = nodes.item(curNodeIndex);
 
     Node resultNode = null;
@@ -163,7 +163,7 @@ public class XmlResultSet implements DsResultSet
     }
 
     throw new IllegalArgumentException("Unsupported field type '" + fieldType
-        + "' for field '" + mapping.getFieldName() + "'.");
+        + "' for field '" + mapping.getTargetName() + "'.");
   }
 
 

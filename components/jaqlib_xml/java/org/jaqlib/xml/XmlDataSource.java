@@ -5,6 +5,7 @@ import org.jaqlib.util.Resource;
 /**
  * Abstract base class for XML data sources.
  * 
+ * @see XmlSelectDataSource
  * @author Werner Fragner
  */
 public abstract class XmlDataSource
@@ -33,6 +34,5 @@ public abstract class XmlDataSource
   {
     return xmlPath;
   }
-
 
 }
