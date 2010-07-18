@@ -5,7 +5,7 @@ import org.jaqlib.core.WhereClause;
 
 /**
  * Represents the WHERE part of the XML query. It provides methods for
- * constraining the query.
+ * specifying the XPath expression.
  * 
  * @author Werner Fragner
  * 
@@ -29,13 +29,13 @@ public class XmlWhereClause<T> extends WhereClause<T, XmlSelectDataSource>
    * Constrains the query using the given XPath expression.<br>
    * (see <a href="http ://www.w3.org/TR/xpath/">W3C XPath Language</a>)
    * 
-   * @param xPath a valid XPath expression (see <a href="http
+   * @param xPathExpression a valid XPath expression (see <a href="http
    *          ://www.w3.org/TR/xpath/">W3C XPath Language</a>).
    * @return the result of the XML query.
    */
-  public QueryResult<T, XmlSelectDataSource> where(String xPath)
+  public QueryResult<T, XmlSelectDataSource> where(String xPathExpression)
   {
-    return getXmlQuery().createQueryResult(xPath);
+    return getXmlQuery().createQueryResult(xPathExpression);
   }
 
 

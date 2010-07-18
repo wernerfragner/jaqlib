@@ -10,9 +10,18 @@ import org.jaxen.XPath;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/**
+ * Implementation of the {@link XPathEngine} interface for the <a
+ * href="http://jaxen.codehaus.org/">Jaxen</a> library.
+ * 
+ * @author Werner Fragner
+ */
 public class JaxenXPathEngine extends AbstractDomXPathEngine
 {
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   protected void doOpen(DocumentBuilder builder)
   {
@@ -20,6 +29,9 @@ public class JaxenXPathEngine extends AbstractDomXPathEngine
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public NodeList getResults(String xpathExpression)
   {

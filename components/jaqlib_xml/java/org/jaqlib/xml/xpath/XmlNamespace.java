@@ -3,7 +3,7 @@ package org.jaqlib.xml.xpath;
 import javax.xml.XMLConstants;
 
 /**
- * Holds all information about an XML namespace that can be applied to a XML
+ * Holds all information about a XML namespace that can be applied to a XML
  * document.
  * 
  * @author Werner Fragner
@@ -36,24 +36,50 @@ public class XmlNamespace
   }
 
 
+  /**
+   * Gets the prefix of the namespace. E.g. jaqlib in the definition
+   * 'xmlns:jaqlib=http://org.jaqlib/example'.
+   * 
+   * @return see description.
+   */
   public String getPrefix()
   {
     return prefix;
   }
 
 
+  /**
+   * See param tag.
+   * 
+   * @param prefix the prefix of the namespace. E.g. jaqlib in the definition
+   *          'xmlns:jaqlib=http://org.jaqlib/example'.
+   */
   public void setPrefix(String prefix)
   {
     this.prefix = prefix;
   }
 
 
+  /**
+   * Gets the URI of the namespace (can or cannot really exist). E.g.
+   * 'http://org.jaqlib/example' in the definition
+   * 'xmlns:jaqlib=http://org.jaqlib/example'.
+   * 
+   * @return see description.
+   */
   public String getUri()
   {
     return uri;
   }
 
 
+  /**
+   * See param tag.
+   * 
+   * @param uri the URI of the namespace (can or cannot really exist). E.g.
+   *          'http://org.jaqlib/example' in the definition
+   *          'xmlns:jaqlib=http://org.jaqlib/example'.
+   */
   public void setUri(String uri)
   {
     this.uri = uri;

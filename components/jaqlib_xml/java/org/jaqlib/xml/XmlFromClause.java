@@ -4,7 +4,7 @@ import org.jaqlib.util.FileResource;
 import org.jaqlib.util.Resource;
 
 /**
- * Represents the 'FROM' part of the XML query.
+ * Represents the 'FROM' part of the XML query. It holds the input XML file.
  * 
  * @author Werner Fragner
  * 
@@ -19,7 +19,7 @@ public class XmlFromClause<T>
   /**
    * Default constructor.
    * 
-   * @param query
+   * @param query the XML query.
    */
   public XmlFromClause(XmlQuery<T> query)
   {
@@ -29,8 +29,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML attributes
-   * are used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * attributes are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -45,8 +45,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> from(String xmlPath)
   {
@@ -56,8 +56,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML attributes
-   * are used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * attributes are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -72,8 +72,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> from(Resource xmlPath)
   {
@@ -83,8 +83,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML attributes
-   * are used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * attributes are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -99,8 +99,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> from(XmlSelectDataSource ds)
   {
@@ -110,8 +110,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML attributes
-   * are used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * attributes are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -126,8 +126,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromAttributes(String xmlPath)
   {
@@ -137,8 +137,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML attributes
-   * are used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * attributes are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -153,8 +153,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromAttributes(Resource xmlPath)
   {
@@ -164,8 +164,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML attributes
-   * are used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * attributes are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -180,8 +180,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromAttributes(XmlSelectDataSource dataSource)
   {
@@ -192,8 +192,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML elements are
-   * used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * elements are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -211,8 +211,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromElements(String xmlPath)
   {
@@ -222,8 +222,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML elements are
-   * used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * elements are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -241,8 +241,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromElements(Resource xmlPath)
   {
@@ -252,8 +252,8 @@ public class XmlFromClause<T>
 
   /**
    * Uses the given <tt>xmlPath</tt> as the source for the query. The returned
-   * {@link XmlWhereClause} can be used to constrain the query. XML elements are
-   * used to map XML data to java bean fields. <br>
+   * {@link XmlWhereClause} can be used to specify the XPath expression. XML
+   * elements are used to map XML data to java bean fields. <br>
    * For example,
    * 
    * <pre>
@@ -271,8 +271,8 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the source for the query.
-   * @return a {@link XmlWhereClause} to constrain the query.
+   * @param xmlPath the input XML file for the query.
+   * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromElements(XmlSelectDataSource dataSource)
   {

@@ -9,7 +9,7 @@ import org.jaqlib.xml.xpath.XmlNamespaces;
 
 /**
  * Static helper class that holds default infrastructure component instances and
- * global properties.<br>
+ * application-wide properties.<br>
  * <b>NOTE: Changes to these components/properties have an effect on the entire
  * application. Use with care!</b>
  * 
@@ -23,6 +23,8 @@ public class XmlDefaults extends DefaultsDelegate
    */
   private XmlDefaults()
   {
+    throw new UnsupportedOperationException(
+        "This class must not be instantiated.");
   }
 
   /**
@@ -90,7 +92,7 @@ public class XmlDefaults extends DefaultsDelegate
   /**
    * Adds the given namespace to the application-wide defaults.
    * 
-   * @param prefix the prefix of the namespace (e.g., 'ns').
+   * @param prefix the prefix of the namespace (e.g., 'myns').
    * @param uri the URI for the namespace (e.g., 'http://jaqlib.org/myns').
    */
   public void addNamespace(String prefix, String uri)

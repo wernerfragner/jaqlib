@@ -20,7 +20,12 @@ import org.w3c.dom.NodeList;
  * </p>
  * <p>
  * Note that the <tt>autoClose</tt> property can be used to improve performance
- * when querying the same XML file multiple times.
+ * when querying the same XML file multiple times. By default the
+ * <tt>autoClose</tt> property is set to <tt>true</tt>.
+ * </p>
+ * <p>
+ * By default this class uses XML attributes to map XML data to Java bean
+ * fields.
  * </p>
  * 
  * @author Werner Fragner
@@ -131,6 +136,7 @@ public class XmlSelectDataSource extends XmlDataSource implements
    * Adds a new XML namespace to this data source. This namespace is used to
    * lookup XML attribute or element values.
    * 
+   * @see XmlDefaults#addNamespace(String, String)
    * @param prefix the prefix of the namespace. E.g. jaqlib in the definition
    *          'xmlns:jaqlib=http://org.jaqlib/example'.
    * @param uri the URI of the namespace (can or cannot really exist). E.g.
@@ -202,7 +208,7 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
   /**
    * Closes this data source. This method releases used resources for reading
-   * and parsing the XML file. This must only needs to be called by the Jaqlib
+   * and parsing the XML file. This method only needs to be called by the Jaqlib
    * user when the property <tt>autoClose</tt> is set to false. Otherwise this
    * data source is automatically closed after executing the XML query.
    */

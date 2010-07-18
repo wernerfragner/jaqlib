@@ -4,21 +4,18 @@ import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.BeanMappingStrategy;
-import org.jaqlib.util.FileResource;
 import org.jaqlib.xml.XmlFromClause;
-import org.jaqlib.xml.XmlSelectDataSource;
 import org.jaqlib.xml.XmlWhereClause;
 
 /**
- * Helper class with static methods for XML query support (see
- * {@link XmlQueryBuilder} for further information).
- * 
  * <p>
  * This class provides static helper methods to easily execute queries against
  * XML files. <br>
  * Examples are given here: {@link XmlQueryBuilder}.
  * </p>
+ * <p>
  * This class is thread-safe.
+ * </p>
  * 
  * @see XmlQueryBuilder
  * @see XmlDefaults
@@ -56,13 +53,15 @@ public class XmlQB
 
   /**
    * @param <T> the type of the result element(s).
-   * @param resultElementClass a not null class of the result element.
+   * @param recorderClass a not null class of element whose method calls should
+   *          be recorded.
    * @return a proxy object that records all method calls. These calls are used
-   *         when evaluating the WHERE clause of a query (see examples).
+   *         when evaluating the WHERE clause of a query (see examples in
+   *         {@link XmlQueryBuilder}).
    */
-  public static <T> T getRecorder(Class<T> resultElementClass)
+  public static <T> T getRecorder(Class<T> recorderClass)
   {
-    return getQueryBuilder().getRecorder(resultElementClass);
+    return getQueryBuilder().getRecorder(recorderClass);
   }
 
 
@@ -87,7 +86,7 @@ public class XmlQB
    * @param beanClass the desired result bean. This bean must provide a default
    *          constructor. If the bean does not provide one a custom
    *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
-   *          {@link BeanMapping} can be instantiated with the <tt>new</tt>
+   *          A {@link BeanMapping} can be instantiated with the <tt>new</tt>
    *          operator or by using {@link XmlQB#getDefaultBeanMapping(Class)}
    *          and {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}. This
    *          {@link BeanMapping} can be used in the
@@ -104,54 +103,19 @@ public class XmlQB
    * This method basically provides the same functionality as
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between XPath expression results and Java bean fields. This mapping
-   * can defined with a {@link BeanMapping} instance. {@link BeanMapping} can be
-   * instantiated with the <tt>new</tt> operator or by using
+   * can defined with a {@link BeanMapping} instance. A {@link BeanMapping} can
+   * be instantiated with the <tt>new</tt> operator or by using
    * {@link XmlQB#getDefaultBeanMapping(Class)} and
    * {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}.
    * 
    * @param <T> the result bean type.
    * @param beanMapping a bean definition that holds information how to map the
    *          result of the query to a Java bean.
-   * @return the FROM clause to specify the XML source for the query.
+   * @return the FROM clause to specify the input XML file for the query.
    */
   public static <T> XmlFromClause<T> select(BeanMapping<T> mapping)
   {
     return getQueryBuilder().select(mapping);
-  }
-
-
-  /**
-   * Creates a new {@link XmlSelectDataSource} using the given XML path. The
-   * returned data source uses XML elements to fill java bean fields.
-   * 
-   * @param xmlPath the path to the XML file.
-   * @return a new {@link XmlSelectDataSource}. This instance can be changed by
-   *         using the various setter methods and can be re-used for multiple
-   *         queries.
-   */
-  public static XmlSelectDataSource getSelectDataSource(String xmlPath)
-  {
-    return new XmlSelectDataSource(new FileResource(xmlPath));
-  }
-
-
-  /**
-   * See {@link BeanMapping#build(Class)}.
-   */
-  public static <T> BeanMapping<T> getDefaultBeanMapping(
-      Class<? extends T> beanClass)
-  {
-    return getQueryBuilder().getDefaultBeanMapping(beanClass);
-  }
-
-
-  /**
-   * See {@link BeanMapping#build(BeanMappingStrategy, Class)}.
-   */
-  public static <T> BeanMapping<T> getBeanMapping(
-      BeanMappingStrategy mappingStrategy, Class<? extends T> beanClass)
-  {
-    return getQueryBuilder().getBeanMapping(mappingStrategy, beanClass);
   }
 
 
