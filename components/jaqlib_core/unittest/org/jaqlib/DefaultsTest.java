@@ -63,7 +63,7 @@ public class DefaultsTest extends TestCase
 
   public void testGetMappingStrategy()
   {
-    assertNotNull(Defaults.getMappingStrategy());
+    assertNotNull(Defaults.getBeanMappingStrategy());
   }
 
 
@@ -71,7 +71,7 @@ public class DefaultsTest extends TestCase
   {
     try
     {
-      Defaults.setMappingStrategy(null);
+      Defaults.setBeanMappingStrategy(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
@@ -95,8 +95,8 @@ public class DefaultsTest extends TestCase
       }
 
     };
-    Defaults.setMappingStrategy(strategy);
-    assertSame(strategy, Defaults.getMappingStrategy());
+    Defaults.setBeanMappingStrategy(strategy);
+    assertSame(strategy, Defaults.getBeanMappingStrategy());
   }
 
 

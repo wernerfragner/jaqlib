@@ -95,7 +95,7 @@ public abstract class AbstractQueryBuilder
    */
   public <T> BeanMapping<T> getDefaultBeanMapping(Class<? extends T> beanClass)
   {
-    return getBeanMapping(Defaults.getMappingStrategy(), beanClass);
+    return getBeanMapping(Defaults.getBeanMappingStrategy(), beanClass);
   }
 
 

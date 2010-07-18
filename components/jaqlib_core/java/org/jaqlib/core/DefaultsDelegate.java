@@ -34,20 +34,20 @@ public abstract class DefaultsDelegate
 
 
   /**
-   * See {@link Defaults#getMappingStrategy()}.
+   * See {@link Defaults#getBeanMappingStrategy()}.
    */
-  public BeanMappingStrategy getMappingStrategy()
+  public BeanMappingStrategy getBeanMappingStrategy()
   {
-    return Defaults.getMappingStrategy();
+    return Defaults.getBeanMappingStrategy();
   }
 
 
   /**
-   * See {@link Defaults#setMappingStrategy(BeanMappingStrategy)}.
+   * See {@link Defaults#setBeanMappingStrategy(BeanMappingStrategy)}.
    */
-  public void setMappingStrategy(BeanMappingStrategy strategy)
+  public void setBeanMappingStrategy(BeanMappingStrategy strategy)
   {
-    Defaults.setMappingStrategy(strategy);
+    Defaults.setBeanMappingStrategy(strategy);
   }
 
 
