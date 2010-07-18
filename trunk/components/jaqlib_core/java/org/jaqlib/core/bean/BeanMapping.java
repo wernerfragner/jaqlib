@@ -13,8 +13,8 @@ import org.jaqlib.util.ReflectionUtil;
 /**
  * Defines a mapping between several database columns to the fields of a Java
  * bean. The strategy how to do this mapping can be defined by setting a custom
- * {@link BeanMappingStrategy}. By default the {@link BeanConventionMappingStrategy}
- * is used.
+ * {@link BeanMappingStrategy}. By default the
+ * {@link BeanConventionMappingStrategy} is used.
  * 
  * @author Werner Fragner
  * @param <T> the Java bean type of the mapping.
@@ -124,6 +124,10 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
+  /**
+   * This method is for internal use only. It should <b>NOT</b> be called by the
+   * Jaqlib user.
+   */
   @Override
   public T getValue(DsResultSet rs)
   {
@@ -212,7 +216,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * @param beanClass the class that should be used to hold the result of the
    *          query. Additionally this class is used to retrieve the bean
    *          properties for storing the result of the query.
-   * @return an object describing where and how to store a query result.
+   * @return an object describing how query results are mapped to Java beans.
    */
   public static <T> BeanMapping<T> build(Class<? extends T> beanClass)
   {
@@ -225,7 +229,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    *          fields of the given bean.
    * @param beanClass the class that should be used to hold the result of the
    *          query.
-   * @return an object describing where and how to store a query result.
+   * @return an object describing how query results are mapped to Java beans.
    */
   public static <T> BeanMapping<T> build(BeanMappingStrategy mappingStrategy,
       Class<? extends T> beanClass)
