@@ -1,7 +1,10 @@
 package org.jaqlib.core.bean;
 
 /**
- * Abstracts the creation of bean instances.
+ * Abstracts the creation of bean instances. This interface can be used if you
+ * want to take control of the bean instantiation by Jaqlib. This could be
+ * useful, for example, if you want to initialize all instantiated beans with
+ * certain values.
  * 
  * @author Werner Fragner
  */
