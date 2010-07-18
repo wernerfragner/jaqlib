@@ -13,6 +13,7 @@ import org.jaqlib.AccountImpl;
 import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.XmlQB;
+import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.util.ClassPathResource;
 import org.jaqlib.util.FileResource;
 
@@ -205,21 +206,29 @@ public abstract class XmlQBTest extends TestCase
   {
     XmlSelectDataSource ds = XmlQB
         .getSelectDataSource("unittest/accounts_attributes.xml");
+    ds.setAutoClose(false);
 
-    Account recorder = XmlQB.getRecorder(Account.class);
-    List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds)
-        .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
-        .asList();
+    try
+    {
+      Account recorder = XmlQB.getRecorder(Account.class);
+      List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds)
+          .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual(
+              "huber").asList();
 
-    assertHuberAccount(accounts);
+      assertHuberAccount(accounts);
 
-    // re-use datasource
+      // re-use datasource
 
-    List<TransactionImpl> transactions = XmlQB.select(TransactionImpl.class)
-        .from(ds).where(XPATH_TRANSACTIONS).asList();
+      List<TransactionImpl> transactions = XmlQB.select(TransactionImpl.class)
+          .from(ds).where(XPATH_TRANSACTIONS).asList();
 
-    assertNotNull(transactions);
-    assertEquals(4, transactions.size());
+      assertNotNull(transactions);
+      assertEquals(4, transactions.size());
+    }
+    finally
+    {
+      ds.close();
+    }
   }
 
 
@@ -239,6 +248,24 @@ public abstract class XmlQBTest extends TestCase
     accounts = selectDefault("unittest/accounts_namespaces.xml",
         XPATH_ACCOUNTS_NS, "maier");
     assertMaierAccount(accounts);
+  }
+
+
+  public void testSelectUsingCustomTypeHandler()
+  {
+    XmlDefaults.INSTANCE.reset();
+
+    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
+        AccountImpl.class);
+    mapping.getChildField("creditRating").setTypeHandler(
+        new CreditRatingStringTypeHandler());
+
+    Account recorder = XmlQB.getRecorder(Account.class);
+    String fileName = "unittest/accounts_attributes.xml";
+    accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
+        .andCall(recorder.getLastName()).isEqual("huber").asList();
+
+    assertHuberAccount(accounts);
   }
 
 

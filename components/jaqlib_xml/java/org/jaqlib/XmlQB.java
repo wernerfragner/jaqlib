@@ -87,8 +87,11 @@ public class XmlQB
    * @param beanClass the desired result bean. This bean must provide a default
    *          constructor. If the bean does not provide one a custom
    *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
-   *          This {@link BeanMapping} can be obtained from {@link Database} and
-   *          can be used with {@link #select(BeanMapping)}.
+   *          {@link BeanMapping} can be instantiated with the <tt>new</tt>
+   *          operator or by using {@link XmlQB#getDefaultBeanMapping(Class)}
+   *          and {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}. This
+   *          {@link BeanMapping} can be used in the
+   *          {@link #select(BeanMapping)} method.
    * @return the FROM clause to specify the input XML file for the query.
    */
   public static <T> XmlFromClause<T> select(Class<T> beanClass)
@@ -98,8 +101,28 @@ public class XmlQB
 
 
   /**
+   * This method basically provides the same functionality as
+   * {@link #select(Class)}. But it gives more flexibility in defining the
+   * mapping between XPath expression results and Java bean fields. This mapping
+   * can defined with a {@link BeanMapping} instance. {@link BeanMapping} can be
+   * instantiated with the <tt>new</tt> operator or by using
+   * {@link XmlQB#getDefaultBeanMapping(Class)} and
+   * {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}.
+   * 
+   * @param <T> the result bean type.
+   * @param beanMapping a bean definition that holds information how to map the
+   *          result of the query to a Java bean.
+   * @return the FROM clause to specify the XML source for the query.
+   */
+  public static <T> XmlFromClause<T> select(BeanMapping<T> mapping)
+  {
+    return getQueryBuilder().select(mapping);
+  }
+
+
+  /**
    * Creates a new {@link XmlSelectDataSource} using the given XML path. The
-   * returned data source uses XML attributes to fill java bean fields.
+   * returned data source uses XML elements to fill java bean fields.
    * 
    * @param xmlPath the path to the XML file.
    * @return a new {@link XmlSelectDataSource}. This instance can be changed by

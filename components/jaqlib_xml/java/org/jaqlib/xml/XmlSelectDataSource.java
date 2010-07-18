@@ -8,6 +8,7 @@ import org.jaqlib.core.SelectDataSource;
 import org.jaqlib.util.ExceptionUtil;
 import org.jaqlib.util.FileResource;
 import org.jaqlib.util.Resource;
+import org.jaqlib.util.StringUtil;
 import org.jaqlib.xml.xpath.XPathEngine;
 import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NodeList;
@@ -136,7 +137,7 @@ public class XmlSelectDataSource extends XmlDataSource implements
    *          'http://org.jaqlib/example' in the definition
    *          'xmlns:jaqlib=http://org.jaqlib/example'.
    */
-  public void addAttributeNamespace(String prefix, String uri)
+  public void addNamespace(String prefix, String uri)
   {
     namespaces.add(prefix, uri);
   }
@@ -224,6 +225,12 @@ public class XmlSelectDataSource extends XmlDataSource implements
   @Override
   public DsResultSet execute()
   {
+    if (StringUtil.isEmpty(this.xPathExpression))
+    {
+      throw new IllegalArgumentException(
+          "No XPath expression was given. Use the 'where(String)' method to specify the XPath expression.");
+    }
+
     try
     {
       xPathEngine.open(getXmlPath(), namespaces);
