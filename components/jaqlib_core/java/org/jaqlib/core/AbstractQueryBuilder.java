@@ -24,6 +24,9 @@ import org.jaqlib.core.reflect.ThreadLocalMethodCallRecorder;
 import org.jaqlib.util.Assert;
 
 /**
+ * Abstract base class for all kinds of query builders. It provides the method
+ * call recording mechanism and the bean mapping functionality.
+ * 
  * @author Werner Fragner
  */
 public abstract class AbstractQueryBuilder
@@ -78,15 +81,15 @@ public abstract class AbstractQueryBuilder
 
   /**
    * @param <T> the type of the result element.
-   * @param resultElementClass a not null class of the result element.
+   * @param recorder a not null class of the recorder object.
    * @return a proxy object that records all method calls. These calls are used
    *         when evaluating the WHERE clause of a query (see examples).
    */
-  public <T> T getRecorder(Class<T> resultElementClass)
+  public <T> T getRecorder(Class<T> recorder)
   {
     RecordingProxy<T> proxy = new RecordingProxy<T>(getClassLoader());
     methodCallRecorder.set(proxy.getMethodCallRecorder());
-    return proxy.getProxy(resultElementClass);
+    return proxy.getProxy(recorder);
   }
 
 

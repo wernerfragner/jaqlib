@@ -1,6 +1,9 @@
 package org.jaqlib.core;
 
 /**
+ * Classes that implement this interface can contain custom WHERE condition
+ * code.
+ * 
  * @author Werner Fragner
  * 
  * @param <T>

@@ -2,18 +2,22 @@ package org.jaqlib;
 
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanFactory;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.core.bean.DefaultBeanFactory;
 import org.jaqlib.core.bean.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
-import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.util.Assert;
 
 /**
+ * <p>
  * Static helper class that holds default infrastructure component instances and
- * global properties.<br>
+ * application-wide properties.
+ * </p>
+ * <p>
  * <b>NOTE: Changes to these components/properties have an effect on the entire
  * application. Use with care!</b>
+ * </p>
  * 
  * @author Werner Fragner
  */
@@ -136,7 +140,8 @@ public class Defaults
    * <b>NOTE: this method changes the default value for the whole application!
    * Use with care.</b>
    * 
-   * @param strictFieldCheck
+   * @param strictFieldCheck if true then all bean fields must be present in the
+   *          result of the query.
    */
   public static void setStrictFieldCheck(boolean strictFieldCheck)
   {
@@ -145,8 +150,7 @@ public class Defaults
 
 
   /**
-   * @return true if all desired bean fields must be present in the result of a
-   *         query.
+   * @return true if all bean fields must be present in the result of the query.
    */
   public static boolean getStrictFieldCheck()
   {

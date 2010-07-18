@@ -1,6 +1,10 @@
 package org.jaqlib.util;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -148,6 +152,44 @@ public class ReflectionUtil
     Assert.notNull(target);
     Assert.notNull(fieldName);
 
+    if (!setFieldValueWithSetter(target, fieldName, fieldValue))
+    {
+      setFieldValueDirect(target, fieldName, fieldValue);
+    }
+  }
+
+
+  private static boolean setFieldValueWithSetter(Object target,
+      String fieldName, Object fieldValue)
+  {
+    try
+    {
+      PropertyDescriptor desc = new PropertyDescriptor(fieldName, target
+          .getClass());
+      Method m = desc.getWriteMethod();
+      m.invoke(target, fieldValue);
+      return true;
+    }
+    catch (IllegalArgumentException e)
+    {
+    }
+    catch (IntrospectionException e)
+    {
+    }
+    catch (IllegalAccessException e)
+    {
+    }
+    catch (InvocationTargetException e)
+    {
+    }
+
+    return false;
+  }
+
+
+  private static void setFieldValueDirect(Object target, String fieldName,
+      Object fieldValue)
+  {
     Field field = getField(target.getClass(), fieldName);
     field.setAccessible(true);
 
@@ -157,7 +199,8 @@ public class ReflectionUtil
     }
     catch (IllegalArgumentException e)
     {
-      final Object convertedFieldValue = saveConvert(fieldValue, field.getType());
+      final Object convertedFieldValue = saveConvert(fieldValue, field
+          .getType());
 
       if (convertedFieldValue == fieldValue)
       {

@@ -2,6 +2,8 @@ package org.jaqlib.core;
 
 
 /**
+ * Common interface for all sorts of queries (DB, XML, Iterable, ...).
+ * 
  * @author Werner Fragner
  * 
  * @param <T> the element type.
