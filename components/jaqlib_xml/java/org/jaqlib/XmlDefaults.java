@@ -23,8 +23,6 @@ public class XmlDefaults extends DefaultsDelegate
    */
   private XmlDefaults()
   {
-    throw new UnsupportedOperationException(
-        "This class must not be instantiated.");
   }
 
   /**
