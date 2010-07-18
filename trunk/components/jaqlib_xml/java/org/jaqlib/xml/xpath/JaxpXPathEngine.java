@@ -14,9 +14,11 @@ import org.jaqlib.util.ExceptionUtil;
 import org.w3c.dom.NodeList;
 
 /**
- * Base class that uses the JAXP API and DOM trees. This class can be configured
- * with custom JAXP factory URIs and factory classes. If nothing is configured
- * then the default JDK XPath engine is used.
+ * Base class that uses the JAXP API and DOM trees (see <a
+ * href="http://en.wikipedia.org/wiki/Java_API_for_XML_Processing" >JAXP on
+ * Wikipedia</a>). This class can be configured with custom JAXP factory URIs
+ * and factory classes. If nothing is configured then the default JDK XPath
+ * engine is used.
  * 
  * @author Werner Fragner
  */
@@ -141,7 +143,7 @@ public class JaxpXPathEngine extends AbstractDomXPathEngine
     try
     {
       XPath xpath = factory.newXPath();
-      if (isNamespaceAware())
+      if (areNamespacesAvailable())
       {
         xpath.setNamespaceContext(getNamespaceContext());
       }

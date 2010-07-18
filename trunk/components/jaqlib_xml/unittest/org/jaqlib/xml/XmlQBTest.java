@@ -204,8 +204,8 @@ public abstract class XmlQBTest extends TestCase
 
   public void testSelectAccount_DataSourceReuse_Default()
   {
-    XmlSelectDataSource ds = XmlQB
-        .getSelectDataSource("unittest/accounts_attributes.xml");
+    XmlSelectDataSource ds = new XmlSelectDataSource(
+        "unittest/accounts_attributes.xml");
     ds.setAutoClose(false);
 
     try
@@ -257,7 +257,7 @@ public abstract class XmlQBTest extends TestCase
 
     BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
         AccountImpl.class);
-    mapping.getChildField("creditRating").setTypeHandler(
+    mapping.getField("creditRating").setTypeHandler(
         new CreditRatingStringTypeHandler());
 
     Account recorder = XmlQB.getRecorder(Account.class);

@@ -34,7 +34,7 @@ public class XalanXPathEngine extends AbstractDomXPathEngine
 
   private void addAttributeNamespaces(DocumentBuilder builder)
   {
-    if (isNamespaceAware())
+    if (areNamespacesAvailable())
     {
       DOMImplementation impl = builder.getDOMImplementation();
       Document namespaceHolder = impl.createDocument(

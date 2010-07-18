@@ -7,7 +7,7 @@ import org.jaqlib.core.reflect.MethodCallRecorder;
 
 /**
  * Central class representing the XML query. It holds information about the XML
- * query.
+ * query. This class is for internal use only.
  * 
  * @author Werner Fragner
  * 
@@ -35,9 +35,9 @@ public class XmlQuery<T> extends DataSourceQuery<T, XmlSelectDataSource>
   }
 
 
-  public QueryResult<T, XmlSelectDataSource> createQueryResult(String xPath)
+  public QueryResult<T, XmlSelectDataSource> createQueryResult(String xPathExpression)
   {
-    getDataSource().setXPathExpression(xPath);
+    getDataSource().setXPathExpression(xPathExpression);
     return super.createQueryResult();
   }
 

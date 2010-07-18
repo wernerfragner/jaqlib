@@ -48,7 +48,7 @@ public abstract class AbstractDomXPathEngine implements XPathEngine
 
     inputSource = new InputSource(getInputStream());
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setNamespaceAware(isNamespaceAware());
+    factory.setNamespaceAware(areNamespacesAvailable());
 
     try
     {
@@ -105,7 +105,7 @@ public abstract class AbstractDomXPathEngine implements XPathEngine
    * 
    * @return see description.
    */
-  protected boolean isNamespaceAware()
+  protected boolean areNamespacesAvailable()
   {
     return !namespaces.isEmpty();
   }

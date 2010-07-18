@@ -17,8 +17,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
 /**
  * <h2>Overview</h2>
  * <p>
- * The main entry point of JaQLib for XML query support. It provides following
- * methods for building queries:
+ * This class is the main entry point of JaQLib for XML query support. It
+ * provides following methods for building queries:
  * <ul>
  * <li>{@link #select(Class)}</li>
  * <li>{@link #select(BeanMapping)}</li>
@@ -26,17 +26,15 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * </p>
  * <p>
  * The mapping between XML data and Java bean fields is done using XML elements
- * or XML attributes. For example, if you have a XML element 'account' with sub
- * elements 'lastName', 'balance' then you would have to have a class with the
- * fields 'lastName' and 'balance'. The same applies when you use XML attributes
- * instead of XML elements.
+ * or XML attributes. For example, if you have a XML element 'account' with the
+ * attributes 'lastName' and 'balance' then you would have to have a class with
+ * the fields 'lastName' and 'balance'. The same applies when you use nested XML
+ * elements instead of XML attributes.
+ * </p>
  * 
  * <pre>
  * {@code
- * <account>
- *   <lastName>Fragner</lastName>
- *   <balance>-5000.0</balance>
- * </account>
+ * <account lastName="Fragner" balance="-5000.0" />
  * }
  * </pre>
  * 
@@ -44,7 +42,10 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * <pre>
  * {@code
- * <account lastName="Fragner" balance="-5000.0" />
+ * <account>
+ *   <lastName>Fragner</lastName>
+ *   <balance>-5000.0</balance>
+ * </account>
  * }
  * </pre>
  * 
@@ -68,23 +69,33 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * }
  * </pre>
  * 
+ * Important issues:
+ * <ul>
+ * <li>
+ * Every query to a XML file results in reading and parsing the XML file by
+ * default. If you want to improve performance then look at example 'Multiple
+ * queries on same XML file'.</li>
+ * <li>
+ * The WHERE condition is not executed by the XPath engine but at Java side.
+ * Avoid executing XPath expressions with lots of data and then constraining it
+ * with the WHERE functionality of JaqLib!</li>
+ * <li>
+ * By default the JDK XPath engine is used. Jaqlib supports a set of other XPath
+ * engines, too. See example 'Using a specific or a custom XPathEngine' for
+ * further details.</li>
+ * <li>
+ * The mapping between XML attributes and elements to Java bean fields can be
+ * adapted by using a {@link BeanMapping} object. See example 'Using a custom
+ * bean mapping' for further details.</li>
+ * <li>
+ * You can register so-called custom {@link JavaTypeHandler}s in order to
+ * perform special conversion logic (e.g. String to Enum conversion). See
+ * example 'Using a custom Java type handler' for further details.</li>
+ * <li>
+ * Various default values for querying XML files can be set application-wide by
+ * using the {@link #DEFAULTS} object.</li>
+ * </ul>
  * 
- * </p>
- * 
- * <p>
- * Note that every query to a XML file results in reading and parsing the XML
- * file by default. If you want to improve performance then look at example
- * 'Multiple queries on same file'.
- * </p>
- * <p>
- * Note that the JDK XPath engine is used by default. Jaqlib supports a set of
- * other XPath engines, too. See example 'Using a specific or a custom
- * XPathEngine' for further details.
- * </p>
- * <p>
- * Note that various default values for querying XML files can be set
- * application-wide by using the {@link #DEFAULTS} object.
- * </p>
  * <p>
  * Some words about relative paths to the XML files. By default Jaqlib uses the
  * <b>application working directory</b> as starting point for the XML files
@@ -102,10 +113,10 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * // cpResource and fResoure point to the same XML file
  * // queries access the same XML file
  * 
- * List&lt;? extends Account&gt; cpAccounts = Jaqlib.XML.select(AccountImpl.class)
- *     .fromAttributes(cpResource).where(&quot;/bank/accounts/*&quot;).asList();
- * List&lt;? extends Account&gt; fAccounts = Jaqlib.XML.select(AccountImpl.class)
- *     .fromAttributes(fResource).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; cpAccounts = Jaqlib.XML.select(AccountImpl.class).from(
+ *     cpResource).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; fAccounts = Jaqlib.XML.select(AccountImpl.class).from(
+ *     fResource).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * </p>
@@ -114,6 +125,19 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * <p>
  * <h2>Usage examples</h2><br>
  * The examples below use following XML files:<br>
+ * <i>Accounts_Attributes.xml:</i>
+ * 
+ * <pre>
+ * {@code
+ * <bank>
+ *   <accounts>
+ *     <account lastName="huber" firstName="sepp" balance="5000" creditRating="GOOD" department="linz" />
+ *     <account lastName="maier" firstName="franz" balance="2000" creditRating="POOR" department="wien" />
+ *   </accounts>
+ * </bank>
+ * }
+ * </pre>
+ * 
  * <i>Accounts_Elements.xml:</i>
  * 
  * <pre>
@@ -139,39 +163,26 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * }
  * </pre>
  * 
- * <i>Accounts_Attributes.xml:</i>
- * 
- * <pre>
- * {@code
- * <bank>
- *   <accounts>
- *     <account lastName="huber" firstName="sepp" balance="5000" creditRating="GOOD" department="linz" />
- *     <account lastName="maier" firstName="franz" balance="2000" creditRating="POOR" department="wien" />
- *   </accounts>
- * </bank>
- * }
- * </pre>
- * 
- * <h3>Selecting Java objects using XML elements (default)</h3>
+ * <h3>Selecting Java objects using XML attributes (default)</h3>
  * 
  * <pre>
  * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class).from(
- *     &quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * or (does the same)
  * 
  * <pre>
- * List&lt;? extends Account&gt; accounts2 = Jaqlib.XML.select(AccountImpl.class)
- *     .fromElements(&quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
- * </pre>
- * 
- * <h3>Selecting Java objects using XML attributes</h3>
- * 
- * <pre>
  * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
  *     .fromAttributes(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;)
  *     .asList();
+ * </pre>
+ * 
+ * <h3>Selecting Java objects using XML elements</h3>
+ * 
+ * <pre>
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
+ *     .fromElements(&quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * <h3>Constraining the result</h3>
@@ -183,6 +194,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * <li>Custom where condition code</li>
  * <li>Simple comparison methods</li>
  * </ul>
+ * 
+ * <p>
  * <b>Method call recording mechanism</b><br>
  * By using the Method {@link #getRecorder(Class)} a recorder object is created
  * (= a JDK dynamic proxy). First the programmer must call the desired method on
@@ -190,6 +203,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * JaqLib evaluates the WHERE condition this method call is replayed on every
  * selected element. The result of this method call is then evaluated against
  * the condition that is specified after the WHERE clause.
+ * </p>
  * 
  * <pre>
  * // get recorder object
@@ -197,20 +211,25 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * // execute query
  * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML.select(
- *     AccountImpl.class).from(&quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;)
- *     .andCall(account.getBalance()).isGreaterThan(500.0).asList();
+ *     AccountImpl.class).from(&quot;Accounts_Attributes.xml&quot;)
+ *     .where(&quot;/bank/accounts/*&quot;).andCall(account.getBalance()).isGreaterThan(
+ *         500.0).asList();
  * </pre>
  * 
+ * <p>
  * In the example above the method call <tt>account.getBalance()</tt> is
  * recorded by Jaqlib. When Jaqlib executes the query this method is called on
  * every selected object. Each result of this method call is then evaluated
  * according to the given condition <tt>isGreaterThan(500.0)</tt>. Only the
  * selected elements that match this condition are returned.
+ * </p>
  * 
+ * <p>
  * <b>Custom where condition code</b><br>
  * By implementing the interface {@link WhereCondition} you can define your own
  * condition code. This alternative gives you most flexibility but is somewhat
  * cumbersome to implement (see example below).
+ * </p>
  * 
  * <pre>
  * // create custom WHERE condition
@@ -228,15 +247,17 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * // execute query
  * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML.select(
- *     AccountImpl.class).from(&quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;)
- *     .and(myCondition).asList();
+ *     AccountImpl.class).from(&quot;Accounts_Attributes.xml&quot;)
+ *     .where(&quot;/bank/accounts/*&quot;).and(myCondition).asList();
  * </pre>
  * 
+ * <p>
  * <b>Simple comparison methods</b><br>
  * There are some comparison methods that can be used for criteria matching (see
  * <a href=
  * "http://java.sun.com/blueprints/corej2eepatterns/Patterns/DataAccessObject.html"
  * >DataAccessObject<a>) or for matching primitive types.
+ * </p>
  * 
  * <pre>
  * long accountId = 15;
@@ -244,17 +265,20 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * criteria.setId(accountId);
  * 
  * Account account15 = Jaqlib.XML.select(AccountImpl.class).from(
- *     &quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;).andElement().isEqual(
+ *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).andElement().isEqual(
  *     criteria).uniqueResult();
  * </pre>
  * 
- * <h3>Multiple queries on same file</h3> The datasource should be used when
- * multiple queries are run against one XML file. With this datasource the XML
- * file is read and parsed only once for multiple queries.
+ * <h3>Multiple queries on same file</h3> When multiple queries are run against
+ * one XML file the {@link XmlSelectDataSource} should be used. With this
+ * datasource the XML file is read and parsed only once for multiple queries.
+ * The {@link XmlSelectDataSource} must be configured with <tt>autoClose</tt> to
+ * false. And additionally the datasource must be closed manually by calling
+ * {@link XmlSelectDataSource#close()}.
  * 
  * <pre>
  * // create data source for caching XML file
- * XmlSelectDataSource ds = new XmlSelectDataSource(&quot;Accounts.xml&quot;);
+ * XmlSelectDataSource ds = new XmlSelectDataSource(&quot;Accounts_Attributes.xml&quot;);
  * ds.setAutoClose(false);
  * 
  * try
@@ -264,7 +288,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  *   // execute first query against XML file
  *   List&lt;? extends Account&gt; allAccounts = Jaqlib.XML.select(AccountImpl.class)
- *       .fromElements(ds).where(&quot;/bank/accounts/*&quot;).asList();
+ *       .from(ds).where(&quot;/bank/accounts/*&quot;).asList();
  * 
  *   // execute second query against XML file
  *   List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML.select(
@@ -282,66 +306,70 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * <h3>Using a specific or a custom {@link XPathEngine}</h3> Jaqlib comes with a
  * set of the most common XPath engines:
  * <ul>
- * <li>the build in JDK XPath engine (default)</li>
- * <li>Jaxen</li>
- * <li>Jaxp</li>
- * <li>Saxon</li>
- * <li>Xalan</li>
+ * <li>the JDK XPath engine (default)</li>
+ * <li><a href="http://jaxen.codehaus.org/">Jaxen</a></li>
+ * <li><a href="http://saxon.sourceforge.net/">Saxon</a></li>
+ * <li><a href="http://xalan.apache.org/">Xalan</a></li>
+ * <li><a href="http://en.wikipedia.org/wiki/Java_API_for_XML_Processing" >JAXP
+ * (on Wikipedia)</a></li>
  * </ul>
  * You are free to implement your own XPath engine wrapper by implementing the
  * {@link XPathEngine} interface and setting the engine using
- * {@link XmlSelectDataSource}. If you want to use another default XPath engine
- * than the JDK XPath engine then just call
- * {@link XmlDefaults#setXPathEngine(XPathEngine)}.<br>
- * e.g. <tt>Jaqlib.XML.DEFAULTS.setXPathEngine(new JaxenXPathEngine());</tt>.
+ * {@link XmlSelectDataSource#setXPathEngine(XPathEngine)}.
  * 
  * <pre>
  * // create data source for setting a specific XPath engine
- * XmlSelectDataSource ds = new XmlSelectDataSource(&quot;Accounts.xml&quot;);
+ * XmlSelectDataSource ds = new XmlSelectDataSource(&quot;Accounts_Attributes.xml&quot;);
  * ds.setXPathEngine(new XalanXPathEngine());
  * 
  * // execute query
  * List&lt;? extends Account&gt; allAccounts = Jaqlib.XML.select(AccountImpl.class)
- *     .fromElements(ds).where(&quot;/bank/accounts/*&quot;).asList();
+ *     .from(ds).where(&quot;/bank/accounts/*&quot;).asList();
+ * </pre>
+ * 
+ * Alternatively you can set the default XPath engine application wide:
+ * 
+ * <pre>
+ * Jaqlib.XML.DEFAULTS.setXPathEngine(new JaxenXPathEngine());
  * </pre>
  * 
  * <h3>Using a custom bean mapping</h3> By default the XML element or attribute
  * names must exactly match the Jave bean field names. This mapping behavior can
  * be changed by using the {@link BeanMapping} class. It holds the information
- * how to map the source XML fields to the target Java bean fields.
+ * how to map the source XML elements/attributes to the target Java bean fields.
  * 
  * <pre>
  * // rename field 'lastName' and remove field 'department'
  * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(Account.class);
- * mapping.getChildField(&quot;lastName&quot;).setSourceName(&quot;last_name&quot;);
- * mapping.removeChildColumn(&quot;department&quot;);
+ * mapping.getField(&quot;lastName&quot;).setSourceName(&quot;last_name&quot;);
+ * mapping.removeField(&quot;department&quot;);
  * 
  * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(mapping).from(
- *     &quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * If you want to take full control of the mapping functionality you can use the
  * {@link BeanMappingStrategy} interface. It can be set into the
- * {@link BeanMapping} object or can be set application-wide by using the
- * {@link Defaults} class.
+ * {@link BeanMapping} object or can be set application-wide by calling
+ * {@link XmlDefaults#setBeanMappingStrategy(BeanMappingStrategy)}.
  * 
- * <h3>Using a custom Java type handler</h3>
- * In some cases the default mapping logic cannot be applied for certain fields.
- * In that case a custom {@link JavaTypeHandler} can be used. The type handler
- * performs conversion from the source data type to the Java bean field type.
- * With this mechanism, for example, a set of string values can be converted to
- * Java enumeration values. The example below shows such a conversion of string
- * values to the <tt>CreditRating</tt> enumeration.
+ * <h3>Using a custom Java type handler</h3> In some cases the default mapping
+ * logic cannot be applied for certain fields. In that case a custom
+ * {@link JavaTypeHandler} can be used. The type handler performs conversion
+ * from the source data type to the Java bean field type. With this mechanism,
+ * for example, a set of string values can be converted to Java enumeration
+ * values. The example below shows such a conversion of string values to the
+ * <tt>CreditRating</tt> enumeration.
  * 
  * <pre>
  * // set a custom type handler for the 'creditRating' field
  * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(Account.class);
- * mapping.getChildField(&quot;creditRating&quot;).setTypeHandler(
+ * mapping.getField(&quot;creditRating&quot;).setTypeHandler(
  *     new CreditRatingStringTypeHandler());
  * 
  * // execute query
- * List&lt;? extends Account&gt; accounts = XmlQB.select(mapping).from(&quot;Accounts.xml&quot;)
- *     .where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; accounts = XmlQB.select(mapping).from(
+ *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * Alternatively the type handler can be set application-wide:
@@ -385,10 +413,9 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * }
  * </pre>
  * 
- * <h3>Using XML namespaces</h3>
- * If XML files use namespaces for the XML elements or attributes you must
- * register these namespaces with the XPath engine. See the examples below how
- * this can be achieved.
+ * <h3>Using XML namespaces</h3> If XML files use namespaces for the XML
+ * elements or attributes you must register these namespaces with the XPath
+ * engine. See the examples below how this can be achieved.
  * 
  * <pre>
  * {@code
@@ -409,7 +436,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * <pre>
  * // register a XML namespace
- * XmlSelectDataSource ds = new XmlSelectDataSource(&quot;Accounts.xml&quot;);
+ * XmlSelectDataSource ds = new XmlSelectDataSource(&quot;Accounts_namespaces.xml&quot;);
  * ds.addNamespace(&quot;bankapp&quot;, &quot;http://werner.fragner.org/jaqlib/bankapp&quot;);
  * 
  * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
@@ -423,15 +450,17 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *     &quot;http://werner.fragner.org/jaqlib/bankapp&quot;);
  * </pre>
  * 
+ * @see XmlDefaults
+ * @see XmlQB
  * @author Werner Fragner
  */
 public class XmlQueryBuilder extends AbstractQueryBuilder
 {
 
   /**
-   * Contains the application wide default values for the XML query builder.
-   * Default values can be specified for the used {@link XPathEngine} or the
-   * used XML namespaces.
+   * Contains the application wide default values for the XML query
+   * functionality. Default values can be specified for the used
+   * {@link XPathEngine} or the used XML namespaces.
    */
   public static final XmlDefaults DEFAULTS = XmlDefaults.INSTANCE;
 
@@ -457,8 +486,11 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
    * @param beanClass the desired result bean. This bean must provide a default
    *          constructor. If the bean does not provide one a custom
    *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
-   *          This {@link BeanMapping} can be obtained from {@link Database} and
-   *          can be used with {@link #select(BeanMapping)}.
+   *          A {@link BeanMapping} can be instantiated with the <tt>new</tt>
+   *          operator or by using {@link XmlQB#getDefaultBeanMapping(Class)}
+   *          and {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}. This
+   *          {@link BeanMapping} can be used in the
+   *          {@link #select(BeanMapping)} method.
    * @return the FROM clause to specify the input XML file for the query.
    */
   public <T> XmlFromClause<T> select(Class<T> beanClass)
@@ -472,15 +504,15 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
    * This method basically provides the same functionality as
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between XPath expression results and Java bean fields. This mapping
-   * can defined with a {@link BeanMapping} instance. {@link BeanMapping} can be
-   * instantiated with the <tt>new</tt> operator or by using
+   * can defined with a {@link BeanMapping} instance. A {@link BeanMapping} can
+   * be instantiated with the <tt>new</tt> operator or by using
    * {@link XmlQB#getDefaultBeanMapping(Class)} and
    * {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}.
    * 
    * @param <T> the result bean type.
    * @param beanMapping a bean definition that holds information how to map the
    *          result of the query to a Java bean.
-   * @return the FROM clause to specify the XML source for the query.
+   * @return the FROM clause to specify the input XML file for the query.
    */
   public <T> XmlFromClause<T> select(BeanMapping<T> beanMapping)
   {
