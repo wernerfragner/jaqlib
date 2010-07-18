@@ -41,7 +41,7 @@ public class Database
   // optional / configurable fields
 
   private BeanMappingStrategy mappingStrategy = DbDefaults.INSTANCE
-      .getMappingStrategy();
+      .getBeanMappingStrategy();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = DbDefaults.INSTANCE
       .getJavaTypeHandlerRegistry();
   private SqlTypeHandlerRegistry sqlTypeHandlerRegistry = DbDefaults.INSTANCE
@@ -364,7 +364,7 @@ public class Database
   public static <T> BeanMapping<T> getDefaultBeanMapping(
       Class<? extends T> beanClass)
   {
-    return getBeanMapping(DbDefaults.INSTANCE.getMappingStrategy(), beanClass);
+    return getBeanMapping(DbDefaults.INSTANCE.getBeanMappingStrategy(), beanClass);
   }
 
 

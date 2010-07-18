@@ -33,19 +33,19 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     account = createAccount();
 
     mapping = Database.getDefaultBeanMapping(AccountImpl.class);
-    mapping.removeChildColumn("id");
-    mapping.removeChildColumn("active");
-    mapping.removeChildColumn("department");
-    mapping.removeChildColumn("lastName");
-    mapping.removeChildColumn("firstName");
+    mapping.removeField("id");
+    mapping.removeField("active");
+    mapping.removeField("department");
+    mapping.removeField("lastName");
+    mapping.removeField("firstName");
 
     ColumnMapping<?> lname = new ColumnMapping<Object>("lastName");
     lname.setColumnName("lname");
-    mapping.addChild(lname);
+    mapping.addField(lname);
 
     ColumnMapping<?> fname = new ColumnMapping<Object>("firstName");
     fname.setColumnName("fname");
-    mapping.addChild(fname);
+    mapping.addField(fname);
   }
 
 

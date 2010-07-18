@@ -34,18 +34,18 @@ public class XmlQBExamples
   private static void selectDefault()
   {
     List<? extends Account> accounts = Jaqlib.XML.select(AccountImpl.class)
-        .from("Accounts_Elements.xml").where("/bank/accounts/*").asList();
+        .from("Accounts_Attributes.xml").where("/bank/accounts/*").asList();
 
     List<? extends Account> accounts2 = Jaqlib.XML.select(AccountImpl.class)
-        .fromElements("Accounts_Elements.xml").where("/bank/accounts/*")
+        .fromElements("Accounts_Attributes.xml").where("/bank/accounts/*")
         .asList();
   }
 
 
-  private static void selectAttributes()
+  private static void selectElements()
   {
     List<? extends Account> accounts = Jaqlib.XML.select(AccountImpl.class)
-        .fromAttributes("Accounts_Attributes.xml").where("/bank/accounts/*")
+        .fromAttributes("Accounts_Elements.xml").where("/bank/accounts/*")
         .asList();
   }
 
@@ -144,8 +144,8 @@ public class XmlQBExamples
   {
     // rename field 'lastName' and remove field 'department'
     BeanMapping<Account> mapping = new BeanMapping<Account>(Account.class);
-    mapping.getChildField("lastName").setSourceName("last_name");
-    mapping.removeChildColumn("department");
+    mapping.getField("lastName").setSourceName("last_name");
+    mapping.removeField("department");
 
     List<? extends Account> accounts = Jaqlib.XML.select(mapping).from(
         "Accounts.xml").where("/bank/accounts/*").asList();
@@ -160,7 +160,7 @@ public class XmlQBExamples
 
     // set a custom type handler for the 'creditRating' field
     BeanMapping<Account> mapping = new BeanMapping<Account>(Account.class);
-    mapping.getChildField("creditRating").setTypeHandler(
+    mapping.getField("creditRating").setTypeHandler(
         new CreditRatingStringTypeHandler());
 
     // execute query

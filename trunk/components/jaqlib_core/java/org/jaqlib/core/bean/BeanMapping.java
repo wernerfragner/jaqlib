@@ -33,7 +33,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   private BeanFactory beanFactory = Defaults.getBeanFactory();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
       .getJavaTypeHandlerRegistry();
-  private BeanMappingStrategy mappingStrategy = Defaults.getMappingStrategy();
+  private BeanMappingStrategy mappingStrategy = Defaults.getBeanMappingStrategy();
 
 
   /**
@@ -170,15 +170,15 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  public void addChild(FieldMapping<?> child)
+  public void addField(FieldMapping<?> field)
   {
-    this.mappings.add(child);
+    this.mappings.add(field);
   }
 
 
-  public FieldMapping<?> removeChildColumn(String fieldName)
+  public FieldMapping<?> removeField(String fieldName)
   {
-    FieldMapping<?> mapping = getChildField(fieldName);
+    FieldMapping<?> mapping = getField(fieldName);
     if (mapping != null)
     {
       getMappings().remove(mapping);
@@ -187,7 +187,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  public FieldMapping<?> getChildField(String fieldName)
+  public FieldMapping<?> getField(String fieldName)
   {
     for (FieldMapping<?> mapping : getMappings())
     {
@@ -220,7 +220,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    */
   public static <T> BeanMapping<T> build(Class<? extends T> beanClass)
   {
-    return build(Defaults.getMappingStrategy(), beanClass);
+    return build(Defaults.getBeanMappingStrategy(), beanClass);
   }
 
 

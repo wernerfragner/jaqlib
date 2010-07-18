@@ -30,7 +30,7 @@ public class Defaults
 
 
   private static BeanFactory beanFactory;
-  private static BeanMappingStrategy mappingStrategy;
+  private static BeanMappingStrategy beanMappingStrategy;
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry;
   private static boolean strictFieldCheck;
 
@@ -50,7 +50,7 @@ public class Defaults
   public static void reset()
   {
     beanFactory = new DefaultBeanFactory();
-    mappingStrategy = new BeanConventionMappingStrategy();
+    beanMappingStrategy = new BeanConventionMappingStrategy();
     javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
     strictFieldCheck = false;
   }
@@ -81,9 +81,9 @@ public class Defaults
   /**
    * @return the default bean mapping strategy.
    */
-  public static BeanMappingStrategy getMappingStrategy()
+  public static BeanMappingStrategy getBeanMappingStrategy()
   {
-    return mappingStrategy;
+    return beanMappingStrategy;
   }
 
 
@@ -94,9 +94,9 @@ public class Defaults
    * 
    * @param strategy a not null strategy.
    */
-  public static void setMappingStrategy(BeanMappingStrategy strategy)
+  public static void setBeanMappingStrategy(BeanMappingStrategy strategy)
   {
-    Defaults.mappingStrategy = Assert.notNull(strategy);
+    Defaults.beanMappingStrategy = Assert.notNull(strategy);
   }
 
 
