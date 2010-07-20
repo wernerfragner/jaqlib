@@ -49,6 +49,7 @@ public class XmlDefaults extends DefaultsDelegate
   public void reset()
   {
     super.reset();
+
     namespaces = new XmlNamespaces();
     xPathEngine = new JdkXPathEngine();
   }
