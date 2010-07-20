@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jaqlib.Defaults;
+import org.jaqlib.core.Defaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.ReflectionUtil;
 
 
 /**
- * Defines a mapping between several database columns to the fields of a Java
- * bean. The strategy how to do this mapping can be defined by setting a custom
- * {@link BeanMappingStrategy}. By default the
+ * Defines a mapping between source data and the fields of a Java bean. The
+ * mappings for the single fields are defined using {@link FieldMapping}
+ * objects. The strategy how to do this mapping can be defined by setting a
+ * custom {@link BeanMappingStrategy}. By default the
  * {@link BeanConventionMappingStrategy} is used.
  * 
  * @author Werner Fragner
@@ -33,10 +34,13 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   private BeanFactory beanFactory = Defaults.getBeanFactory();
   private JavaTypeHandlerRegistry javaTypeHandlerRegistry = Defaults
       .getJavaTypeHandlerRegistry();
-  private BeanMappingStrategy mappingStrategy = Defaults.getBeanMappingStrategy();
+  private BeanMappingStrategy mappingStrategy = Defaults
+      .getBeanMappingStrategy();
 
 
   /**
+   * Creates a new bean mapping for the given bean class.
+   * 
    * @param beanClass a not null class of the bean this mapping belongs to.
    */
   public BeanMapping(Class<? extends T> beanClass)
@@ -62,14 +66,15 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * 
    * @param beanFactory a not null bean factory.
    */
-  public void setBeanFactory(BeanFactory beanFactory)
+  public void setFactory(BeanFactory beanFactory)
   {
     this.beanFactory = Assert.notNull(beanFactory);
   }
 
 
   /**
-   * Registers a custom java type handler.
+   * Registers a custom java type handler. By default no type handlers are
+   * available. The source and target type must match without conversion.
    * 
    * @param typeHandler a not null custom java type handler.
    */
@@ -81,7 +86,8 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
   /**
    * Changes the java type handler registry to a custom implementation. By
-   * default no type handlers are available.
+   * default no type handlers are available. The source and target type must
+   * match without conversion.
    * 
    * @param registry a custom java type handler registry.
    */

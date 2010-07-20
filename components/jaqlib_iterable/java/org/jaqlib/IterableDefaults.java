@@ -5,7 +5,7 @@ import org.jaqlib.core.DefaultsDelegate;
 
 /**
  * Static helper class that holds default infrastructure component instances and
- * global properties.<br>
+ * application-wide properties.<br>
  * <b>NOTE: Changes to these components/properties have an effect on the entire
  * application. Use with care!</b>
  * 

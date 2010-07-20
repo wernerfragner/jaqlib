@@ -15,7 +15,6 @@
  */
 package org.jaqlib.core;
 
-import org.jaqlib.Defaults;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.core.reflect.MethodCallRecorder;

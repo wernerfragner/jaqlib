@@ -6,9 +6,9 @@ import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
-import org.jaqlib.core.bean.BeanMappingStrategy;
 import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
@@ -20,10 +20,15 @@ import org.jaqlib.util.Assert;
 
 /**
  * <p>
+ * Note that instead of using this class the required data classes (
+ * {@link DbSelectDataSource}, {@link DbInsertDataSource}, {@link BeanMapping},
+ * ...) can be instantiated directly by using the <tt>new</tt> operator.
+ * </p>
+ * <p>
  * Helper class that builds objects for executing queries against databases.
  * This class provides static helper methods but can also be instantiated to
- * make the creation of {@link DbSelectDataSource} and {@link BeanMapping}
- * objects more comfortable. <br>
+ * make the creation of {@link DbSelectDataSource}, {@link DbInsertDataSource},
+ * ... and {@link BeanMapping} objects more comfortable. <br>
  * </p>
  * <p>
  * This class is thread-safe.
@@ -163,7 +168,7 @@ public class Database
   public <T> BeanMapping<T> getBeanMapping(Class<? extends T> beanClass)
   {
     BeanMapping<T> mapping = getBeanMapping(mappingStrategy, beanClass);
-    mapping.setBeanFactory(beanFactory);
+    mapping.setFactory(beanFactory);
     mapping.setJavaTypeHandlerRegistry(javaTypeHandlerRegistry);
     return mapping;
   }
@@ -364,7 +369,8 @@ public class Database
   public static <T> BeanMapping<T> getDefaultBeanMapping(
       Class<? extends T> beanClass)
   {
-    return getBeanMapping(DbDefaults.INSTANCE.getBeanMappingStrategy(), beanClass);
+    return getBeanMapping(DbDefaults.INSTANCE.getBeanMappingStrategy(),
+        beanClass);
   }
 
 

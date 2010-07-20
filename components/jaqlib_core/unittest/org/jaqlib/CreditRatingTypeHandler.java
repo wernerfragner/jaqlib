@@ -30,9 +30,22 @@ public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
       {
         return CreditRating.GOOD;
       }
+      value = Integer.valueOf((String) value);
     }
-
-    throw handleIllegalInputValue(value, CreditRating.class);
+    if (value instanceof Integer)
+    {
+      return CreditRating.rating((Integer) value);
+    }
+    else if (value instanceof CreditRating)
+    {
+      CreditRating rating = (CreditRating) value;
+      return rating.intValue();
+    }
+    else
+    {
+      return value;
+      // throw handleIllegalInputValue(value, CreditRating.class);
+    }
   }
 
 }

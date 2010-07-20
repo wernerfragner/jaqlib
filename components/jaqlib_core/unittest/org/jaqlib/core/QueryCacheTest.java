@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import org.jaqlib.core.QueryCache;
 import org.jaqlib.core.ElementPredicate;
 import org.jaqlib.core.reflect.MethodInvocation;
 
-public class DatabaseQueryCacheTest extends TestCase
+public class QueryCacheTest extends TestCase
 {
 
   private ElementPredicate<Account> predicate;

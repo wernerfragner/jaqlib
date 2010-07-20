@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core.bean;
 
 import java.sql.SQLException;
 
@@ -8,9 +8,7 @@ import org.jaqlib.AccountImpl;
 import org.jaqlib.AccountSetup;
 import org.jaqlib.CreditRating;
 import org.jaqlib.CreditRatingTypeHandler;
-import org.jaqlib.DatabaseSetup;
-import org.jaqlib.core.bean.BeanConventionMappingStrategy;
-import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.MockDsResultSet;
 
 
 public class BeanMappingTest extends TestCase
@@ -33,7 +31,7 @@ public class BeanMappingTest extends TestCase
   {
     final Long id = AccountSetup.HUBER_ACCOUNT.getId();
     final String lastName = AccountSetup.HUBER_ACCOUNT.getLastName();
-    DbResultSet rs = DatabaseSetup.getMockDbResultSet();
+    MockDsResultSet rs = new MockDsResultSet();
 
     // get account
 
@@ -64,7 +62,7 @@ public class BeanMappingTest extends TestCase
   {
     try
     {
-      mapping.setBeanFactory(null);
+      mapping.setFactory(null);
       fail("Did not throw IllegalArgumentException");
     }
     catch (IllegalArgumentException e)
