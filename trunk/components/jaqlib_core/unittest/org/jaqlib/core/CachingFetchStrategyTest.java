@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,13 +7,15 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.jaqlib.AccountImpl;
-import org.jaqlib.core.FirstOccurrenceFetchStrategy;
+import org.jaqlib.core.CachingFetchStrategy;
+import org.jaqlib.core.QueryCache;
 import org.jaqlib.core.reflect.MethodInvocation;
 
-public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
+public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
 {
 
-  private FirstOccurrenceFetchStrategy<AccountImpl> strategy;
+  private QueryCache<AccountImpl> cache;
+  private CachingFetchStrategy<AccountImpl> strategy;
 
 
   @Override
@@ -21,7 +23,8 @@ public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
   {
     super.setUp();
 
-    strategy = new FirstOccurrenceFetchStrategy<AccountImpl>();
+    cache = new QueryCache<AccountImpl>(predicate);
+    strategy = new CachingFetchStrategy<AccountImpl>(cache);
     initStrategy(strategy);
   }
 
@@ -32,11 +35,15 @@ public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
     EasyMock.expect(predicate.matches(accounts.get(1))).andStubReturn(true);
     EasyMock.replay(predicate);
 
+    assertFalse(cache.isFilled());
+
     List<AccountImpl> results = new ArrayList<AccountImpl>();
     strategy.addResults(results);
 
-    assertEquals(1, results.size());
-    assertSame(accounts.get(0), results.get(0));
+    assertTrue(cache.isFilled());
+    assertEquals(2, results.size());
+    assertTrue(results.contains(accounts.get(0)));
+    assertTrue(results.contains(accounts.get(1)));
     EasyMock.verify(predicate);
   }
 
@@ -47,13 +54,16 @@ public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
     EasyMock.expect(predicate.matches(accounts.get(1))).andStubReturn(true);
     EasyMock.replay(predicate);
 
-    MethodInvocation invocation = getMethodInvocation();
+    assertFalse(cache.isFilled());
 
+    MethodInvocation invocation = getMethodInvocation();
     Map<Long, AccountImpl> results = new HashMap<Long, AccountImpl>();
     strategy.addResults(results, invocation);
 
-    assertEquals(1, results.size());
+    assertTrue(cache.isFilled());
+    assertEquals(2, results.size());
     assertTrue(results.containsValue(accounts.get(0)));
+    assertTrue(results.containsValue(accounts.get(1)));
     EasyMock.verify(predicate);
   }
 

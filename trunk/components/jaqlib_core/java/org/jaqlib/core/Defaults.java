@@ -1,4 +1,4 @@
-package org.jaqlib;
+package org.jaqlib.core;
 
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanFactory;
@@ -10,6 +10,15 @@ import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
 import org.jaqlib.util.Assert;
 
 /**
+ * <p>
+ * Normally this class should not be used. Use the domain specific defaults
+ * classes instead:
+ * <ul>
+ * <li>IterableDefaults</li>
+ * <li>DbDefaults</li>
+ * <li>XmlDefaults</li>
+ * </ul>
+ * </p>
  * <p>
  * Static helper class that holds default infrastructure component instances and
  * application-wide properties.

@@ -5,36 +5,22 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.util.Assert;
+import org.jaqlib.core.bean.BeanMapping;
 
 /**
  * @author Werner Fragner
  */
-public class DbDeleteDataSource extends AbstractDbDataSource
+public class DbDeleteDataSource extends AbstractDbDmlDataSource
 {
 
   private String whereClause;
-  private String tableName;
 
 
   public DbDeleteDataSource(DataSource dataSource, String tableName,
       String whereClause)
   {
-    super(dataSource);
-    setTableName(tableName);
+    super(dataSource, tableName);
     setWhereClause(whereClause);
-  }
-
-
-  public void setTableName(String tableName)
-  {
-    this.tableName = Assert.notNull(tableName);
-  }
-
-
-  public String getTableName()
-  {
-    return tableName;
   }
 
 
@@ -47,6 +33,13 @@ public class DbDeleteDataSource extends AbstractDbDataSource
   public void setWhereClause(String whereClause)
   {
     this.whereClause = whereClause;
+  }
+
+
+  @Override
+  protected <T> String buildSql(BeanMapping<T> beanMapping)
+  {
+    return buildSql();
   }
 
 
@@ -82,5 +75,6 @@ public class DbDeleteDataSource extends AbstractDbDataSource
       closeAfterQuery();
     }
   }
+
 
 }

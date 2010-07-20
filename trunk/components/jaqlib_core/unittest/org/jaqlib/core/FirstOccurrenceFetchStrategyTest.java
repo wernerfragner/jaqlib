@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,15 +7,13 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.jaqlib.AccountImpl;
-import org.jaqlib.core.CachingFetchStrategy;
-import org.jaqlib.core.QueryCache;
+import org.jaqlib.core.FirstOccurrenceFetchStrategy;
 import org.jaqlib.core.reflect.MethodInvocation;
 
-public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
+public class FirstOccurrenceFetchStrategyTest extends AbstractFetchStrategyTest
 {
 
-  private QueryCache<AccountImpl> cache;
-  private CachingFetchStrategy<AccountImpl> strategy;
+  private FirstOccurrenceFetchStrategy<AccountImpl> strategy;
 
 
   @Override
@@ -23,8 +21,7 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
   {
     super.setUp();
 
-    cache = new QueryCache<AccountImpl>(predicate);
-    strategy = new CachingFetchStrategy<AccountImpl>(cache);
+    strategy = new FirstOccurrenceFetchStrategy<AccountImpl>();
     initStrategy(strategy);
   }
 
@@ -35,15 +32,11 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
     EasyMock.expect(predicate.matches(accounts.get(1))).andStubReturn(true);
     EasyMock.replay(predicate);
 
-    assertFalse(cache.isFilled());
-
     List<AccountImpl> results = new ArrayList<AccountImpl>();
     strategy.addResults(results);
 
-    assertTrue(cache.isFilled());
-    assertEquals(2, results.size());
-    assertTrue(results.contains(accounts.get(0)));
-    assertTrue(results.contains(accounts.get(1)));
+    assertEquals(1, results.size());
+    assertSame(accounts.get(0), results.get(0));
     EasyMock.verify(predicate);
   }
 
@@ -54,16 +47,13 @@ public class CachingFetchStrategyTest extends AbstractFetchStrategyTest
     EasyMock.expect(predicate.matches(accounts.get(1))).andStubReturn(true);
     EasyMock.replay(predicate);
 
-    assertFalse(cache.isFilled());
-
     MethodInvocation invocation = getMethodInvocation();
+
     Map<Long, AccountImpl> results = new HashMap<Long, AccountImpl>();
     strategy.addResults(results, invocation);
 
-    assertTrue(cache.isFilled());
-    assertEquals(2, results.size());
+    assertEquals(1, results.size());
     assertTrue(results.containsValue(accounts.get(0)));
-    assertTrue(results.containsValue(accounts.get(1)));
     EasyMock.verify(predicate);
   }
 

@@ -4,6 +4,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.jaqlib.core.Defaults;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;

@@ -1,6 +1,6 @@
 package org.jaqlib.core.bean;
 
-import org.jaqlib.Defaults;
+import org.jaqlib.core.Defaults;
 import org.jaqlib.core.DsResultSet;
 import org.jaqlib.util.ReflectionUtil;
 
@@ -28,6 +28,12 @@ public class FieldMapping<T> extends AbstractMapping<T>
   }
 
 
+  /**
+   * Constructs a new field mapping by using the given name as source and target
+   * name.
+   * 
+   * @param fieldName the Java bean field name.
+   */
   public FieldMapping(String fieldName)
   {
     setTargetName(fieldName);
@@ -35,6 +41,13 @@ public class FieldMapping<T> extends AbstractMapping<T>
   }
 
 
+  /**
+   * Constructs a new field mapping by using the given name as source and target
+   * name.
+   * 
+   * @param fieldName the Java bean field name.
+   * @param fieldType the type of the Java bean field.
+   */
   public FieldMapping(String fieldName, Class<?> fieldType)
   {
     this(fieldName);
@@ -99,7 +112,7 @@ public class FieldMapping<T> extends AbstractMapping<T>
   /**
    * @return the type handler for converting the source value type to the target
    *         value type. If none is set the default handler is used (see
-   *         {@link Defaults}).
+   *         {@link Defaults#getJavaTypeHandlerRegistry()}).
    */
   public JavaTypeHandler getTypeHandler()
   {
@@ -127,6 +140,9 @@ public class FieldMapping<T> extends AbstractMapping<T>
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String toString()
   {
@@ -134,6 +150,9 @@ public class FieldMapping<T> extends AbstractMapping<T>
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getLogString()
   {
@@ -147,6 +166,9 @@ public class FieldMapping<T> extends AbstractMapping<T>
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   @SuppressWarnings("unchecked")
   public T getValue(DsResultSet rs)

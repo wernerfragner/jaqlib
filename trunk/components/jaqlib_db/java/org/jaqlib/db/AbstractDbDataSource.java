@@ -19,6 +19,8 @@ import org.jaqlib.util.DbUtil;
 import org.jaqlib.util.LogUtil;
 
 /**
+ * Abstract base class for database data sources.
+ * 
  * @author Werner Fragner
  */
 public abstract class AbstractDbDataSource
@@ -36,8 +38,10 @@ public abstract class AbstractDbDataSource
   private final Map<String, PreparedStatement> prepStatements = CollectionUtil
       .newDefaultMap();
 
-  private boolean autoCloseConnection = false;
-  private boolean autoClosePreparedStatement = true;
+  private boolean autoCloseConnection = DbDefaults.INSTANCE
+      .isAutoCloseConnection();
+  private boolean autoClosePreparedStatement = DbDefaults.INSTANCE
+      .isAutoClosePreparedStatement();
 
 
   public AbstractDbDataSource(DataSource dataSource)
@@ -66,6 +70,19 @@ public abstract class AbstractDbDataSource
 
 
   /**
+   * Returns <tt>true</tt> the database {@link Connection} is automatically
+   * closed after executing the SQL statement. By default the database
+   * {@link Connection} is <b>not</b> closed.
+   * 
+   * @return see description.
+   */
+  public boolean isAutoCloseConnection()
+  {
+    return autoCloseConnection;
+  }
+
+
+  /**
    * <p>
    * If <tt>true</tt> the {@link PreparedStatement} is automatically closed
    * after executing the SQL statement. By default the statement is closed. If a
@@ -88,7 +105,13 @@ public abstract class AbstractDbDataSource
   }
 
 
-  protected boolean isAutoClosePreparedStatement()
+  /**
+   * Returns <tt>true</tt> the {@link PreparedStatement} is automatically closed
+   * after executing the SQL statement. By default the statement is closed.
+   * 
+   * @return see description.
+   */
+  public boolean isAutoClosePreparedStatement()
   {
     return autoClosePreparedStatement;
   }

@@ -1,4 +1,4 @@
-package org.jaqlib.db;
+package org.jaqlib.core;
 
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -8,9 +8,6 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.jaqlib.AccountImpl;
-import org.jaqlib.DatabaseSetup;
-import org.jaqlib.core.AbstractFetchStrategy;
-import org.jaqlib.core.ElementPredicate;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.reflect.MethodInvocation;
@@ -38,9 +35,15 @@ public class AbstractFetchStrategyTest extends TestCase
   protected void initStrategy(AbstractFetchStrategy<AccountImpl> strategy)
       throws SQLException
   {
-    strategy.setDataSource(DatabaseSetup.getDbSelectDataSource());
+    strategy.setDataSource(getSelectDataSource());
     strategy.setMapping(createMapping());
     strategy.setPredicate(predicate);
+  }
+
+
+  private SelectDataSource getSelectDataSource()
+  {
+    return new MockSelectDataSource();
   }
 
 
@@ -48,7 +51,7 @@ public class AbstractFetchStrategyTest extends TestCase
   {
     BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
         AccountImpl.class);
-    mapping.setBeanFactory(createBeanFactory());
+    mapping.setFactory(createBeanFactory());
     return mapping;
   }
 

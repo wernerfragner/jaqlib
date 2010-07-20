@@ -9,6 +9,12 @@ import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
 public class DbDefaultsTest extends TestCase
 {
 
+  @Override
+  public void tearDown()
+  {
+    DbDefaults.INSTANCE.reset();
+  }
+
 
   public void testGetSqlTypeHandlerRegistry()
   {

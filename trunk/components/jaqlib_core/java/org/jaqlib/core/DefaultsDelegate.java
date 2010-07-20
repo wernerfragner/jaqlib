@@ -1,6 +1,5 @@
 package org.jaqlib.core;
 
-import org.jaqlib.Defaults;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;

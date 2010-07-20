@@ -8,7 +8,7 @@ import org.jaqlib.util.Assert;
 
 /**
  * Static helper class that holds default infrastructure component instances and
- * global properties.<br>
+ * application-wide properties.<br>
  * <b>NOTE: Changes to these components/properties have an effect on the entire
  * application. Use with care!</b>
  * 
@@ -31,6 +31,8 @@ public class DbDefaults extends DefaultsDelegate
   public static final DbDefaults INSTANCE = new DbDefaults();
 
   private SqlTypeHandlerRegistry sqlTypeHandlerRegistry;
+  private boolean autoCloseConnection = false;
+  private boolean autoClosePreparedStatement = true;
 
 
   /**
@@ -49,7 +51,10 @@ public class DbDefaults extends DefaultsDelegate
   public void reset()
   {
     super.reset();
+
     sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
+    autoCloseConnection = false;
+    autoClosePreparedStatement = true;
   }
 
 
@@ -84,5 +89,40 @@ public class DbDefaults extends DefaultsDelegate
     getSqlTypeHandlerRegistry().registerTypeHandler(sqlDataType, typeHandler);
   }
 
+
+  /**
+   * See {@link AbstractDbDataSource#setAutoCloseConnection(boolean)}.
+   */
+  public void setAutoCloseConnection(boolean autoCloseConnection)
+  {
+    this.autoCloseConnection = autoCloseConnection;
+  }
+
+
+  /**
+   * See {@link AbstractDbDataSource#isAutoCloseConnection()}.
+   */
+  public boolean isAutoCloseConnection()
+  {
+    return autoCloseConnection;
+  }
+
+
+  /**
+   * See {@link AbstractDbDataSource#setAutoClosePreparedStatement(boolean)}.
+   */
+  public void setAutoClosePreparedStatement(boolean value)
+  {
+    this.autoClosePreparedStatement = value;
+  }
+
+
+  /**
+   * See {@link AbstractDbDataSource#isAutoClosePreparedStatement()}.
+   */
+  public boolean isAutoClosePreparedStatement()
+  {
+    return autoClosePreparedStatement;
+  }
 
 }
