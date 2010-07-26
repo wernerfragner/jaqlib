@@ -7,7 +7,9 @@ import java.util.logging.Logger;
 import org.jaqlib.core.bean.BeanConventionMappingStrategy;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMappingStrategy;
+import org.jaqlib.core.bean.CollectionFactory;
 import org.jaqlib.core.bean.DefaultBeanFactory;
+import org.jaqlib.core.bean.DefaultCollectionFactory;
 import org.jaqlib.core.bean.DefaultJavaTypeHandlerRegistry;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
@@ -48,6 +50,7 @@ public class Defaults
 
 
   private static BeanFactory beanFactory;
+  private static CollectionFactory collectionFactory;
   private static BeanMappingStrategy beanMappingStrategy;
   private static JavaTypeHandlerRegistry javaTypeHandlerRegistry;
   private static boolean strictFieldCheck;
@@ -68,6 +71,7 @@ public class Defaults
   public static void reset()
   {
     beanFactory = new DefaultBeanFactory();
+    collectionFactory = new DefaultCollectionFactory();
     beanMappingStrategy = new BeanConventionMappingStrategy();
     javaTypeHandlerRegistry = new DefaultJavaTypeHandlerRegistry();
     strictFieldCheck = false;
@@ -152,6 +156,28 @@ public class Defaults
   public static void setBeanFactory(BeanFactory beanFactory)
   {
     Defaults.beanFactory = Assert.notNull(beanFactory);
+  }
+
+
+  /**
+   * @return the default collection factory.
+   */
+  public static CollectionFactory getCollectionFactory()
+  {
+    return collectionFactory;
+  }
+
+
+  /**
+   * Sets the default collection factory.<br>
+   * <b>NOTE: this method changes the default collection factory for the whole
+   * application! Use with care.</b>
+   * 
+   * @param collectionFactory a not null collection factory.
+   */
+  public static void setCollectionFactory(CollectionFactory collectionFactory)
+  {
+    Defaults.collectionFactory = Assert.notNull(collectionFactory);
   }
 
 

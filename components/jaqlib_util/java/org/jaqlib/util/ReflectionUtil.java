@@ -5,6 +5,10 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -164,8 +168,8 @@ public class ReflectionUtil
   {
     try
     {
-      PropertyDescriptor desc = new PropertyDescriptor(fieldName, target
-          .getClass());
+      PropertyDescriptor desc = new PropertyDescriptor(fieldName,
+          target.getClass());
       Method m = desc.getWriteMethod();
       m.invoke(target, fieldValue);
       return true;
@@ -199,8 +203,8 @@ public class ReflectionUtil
     }
     catch (IllegalArgumentException e)
     {
-      final Object convertedFieldValue = saveConvert(fieldValue, field
-          .getType());
+      final Object convertedFieldValue = saveConvert(fieldValue,
+          field.getType());
 
       if (convertedFieldValue == fieldValue)
       {
@@ -277,6 +281,66 @@ public class ReflectionUtil
     {
       throw ExceptionUtil.toRuntimeException(e);
     }
+  }
+
+
+  public static Type getCollectionElementType(Field field)
+  {
+    if (isCollection(field.getType()))
+    {
+      Type type = field.getGenericType();
+      if (type instanceof ParameterizedType)
+      {
+        ParameterizedType pt = (ParameterizedType) type;
+        Type[] elementTypes = pt.getActualTypeArguments();
+
+        if (elementTypes.length == 1)
+        {
+          return elementTypes[0];
+        }
+        else
+        {
+          throw new IllegalArgumentException(
+              "The collection of the given field '" + field
+                  + "' has multiple element types. Only one is supported.");
+        }
+      }
+      else
+      {
+        throw new IllegalArgumentException(
+            "The collection of the given field '" + field + "' is not generic.");
+      }
+    }
+    else
+    {
+      throw new IllegalArgumentException("Given field '" + field
+          + "' is no collection.");
+    }
+  }
+
+
+  public static boolean isCollection(Class<?> clz)
+  {
+    return Collection.class.isAssignableFrom(clz);
+  }
+
+
+  public static boolean isGeneric(Field field)
+  {
+    Type type = field.getGenericType();
+    if (type instanceof ParameterizedType)
+    {
+      ParameterizedType pt = (ParameterizedType) type;
+      return (pt.getActualTypeArguments().length > 0);
+    }
+    return false;
+  }
+
+
+  public static boolean isAbstract(Class<?> fieldType)
+  {
+    return fieldType.isInterface()
+        || Modifier.isAbstract(fieldType.getModifiers());
   }
 
 }

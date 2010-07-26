@@ -3,14 +3,20 @@ package org.jaqlib.db;
 import java.sql.Types;
 import java.util.List;
 
-import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.BeanMappingStrategy;
+import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
 
 /**
- * Manually defines the mapping between database table columns and Jave bean
+ * <p>
+ * Manually defines the mapping between database table columns and Java bean
  * fields.
+ * </p>
+ * <p>
+ * <b>NOTE: This strategy is only applicable for the database functionality of
+ * Jaqlib!</b>
+ * </p>
  * 
  * @author Werner Fragner
  */
@@ -44,9 +50,15 @@ public class ManualMappingStrategy implements BeanMappingStrategy
     mapping.setColumnLabel(columnLabel);
     mapping.setColumnDataType(sqlDataType);
     mapping.setTargetName(columnLabel);
-    addMapping(mapping);
+    addColumnMapping(mapping);
 
     return mapping;
+  }
+
+
+  public void addColumnMapping(ColumnMapping<?> mapping)
+  {
+    addMapping(mapping);
   }
 
 
@@ -57,6 +69,15 @@ public class ManualMappingStrategy implements BeanMappingStrategy
   }
 
 
+  public void addMappings(List<FieldMapping<?>> fieldMappings)
+  {
+    this.mappings.addAll(fieldMappings);
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
   public List<FieldMapping<?>> getMappings(Class<?> beanClass)
   {
     return mappings;

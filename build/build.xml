@@ -1,12 +1,12 @@
 <project name="JaqLib" default="deploy" basedir=".">
 	
-	<!-- ========================================= -->
-  <!-- External ANT Tasks: -->
-  <!-- .) SVN: http://subclipse.tigris.org/svnant.html --> 
   <!-- ========================================= -->
-	
-	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" /> 
-	
+  <!-- Properties for version management -->
+  <!-- ========================================= -->  
+  
+  <property file="./version.properties" />
+  <property name="version.fullString" value="${version.major}.${version.minor}" />
+
 	
 	<!-- ========================================= -->
 	<!-- User defined paths -->
@@ -14,20 +14,6 @@
 	
 	<property name="dist.dir" value="d:/Projekte/JaQLib/release" />
 	<property name="build.temp" value="d:/Projekte/JaQLib/temp" />
-	
-	
-	<!-- ========================================= -->
-	<!-- Properties for version management -->
-	<!-- ========================================= -->	
-	
-	<property file="./version.properties" />
-	<property name="version.fullString" value="${version.major}.${version.minor}" />
-	
-	
-	<!-- ========================================= -->
-  <!-- User specific properties -->
-  <!-- ========================================= -->  
-	<property file="./user.properties" />
 	
 	
 	<!-- ========================================= -->
@@ -369,17 +355,9 @@
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-doc.zip" basedir="${build.temp}/javadoc/jaqlib" />
 	</target>
+
 	
-	
-	<target name="subversion_tag" if="svn.createTag" >
-	 <svn username="${svn.username}" password="${svn.password}" >
-	    <mkdir url="https://jaqlib.svn.sourceforge.net/svnroot/jaqlib/tags/${version.fullString}" message="Tag for version ${version.fullString}" />
-      <copy srcUrl="https://jaqlib.svn.sourceforge.net/svnroot/jaqlib/trunk" destUrl="https://jaqlib.svn.sourceforge.net/svnroot/jaqlib/tags/${version.fullString}" message="Tag for version ${version.fullString}" revision="HEAD" />
-    </svn>
-	</target>
-	
-	
-	<target name="deploy" depends="clean, init, compile, instrument, unittest, coverage_report, jar, subversion_tag">
+	<target name="deploy" depends="clean, init, compile, instrument, unittest, coverage_report, jar">
 		<mkdir dir="${dist.dir}/${version.fullString}/dist" />
 		<copy toDir="${dist.dir}/${version.fullString}/dist" >
 			<fileset dir="${build.temp}/jar" />

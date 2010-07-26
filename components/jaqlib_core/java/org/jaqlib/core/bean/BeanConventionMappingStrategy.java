@@ -4,11 +4,16 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
 import org.jaqlib.util.ExceptionUtil;
+import org.jaqlib.util.LogUtil;
+import org.jaqlib.util.ReflectionUtil;
 
 /**
  * Implementation of the {@link BeanMappingStrategy} interface that tries to
@@ -20,6 +25,9 @@ import org.jaqlib.util.ExceptionUtil;
  */
 public class BeanConventionMappingStrategy implements BeanMappingStrategy
 {
+
+  private final Logger logger = LogUtil.getLogger(this.getClass());
+
 
   /**
    * {@inheritDoc}
@@ -34,17 +42,46 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
     {
       if (shouldAddBeanProperty(descriptor))
       {
-        mappings.add(getPrimitiveResult(descriptor.getName(), descriptor
-            .getPropertyType()));
+        mappings.add(getMapping(beanClass, descriptor.getName(),
+            descriptor.getPropertyType()));
       }
     }
     return mappings;
   }
 
 
-  private FieldMapping<?> getPrimitiveResult(String fieldName,
+  private FieldMapping<?> getMapping(Class<?> beanClass, String fieldName,
       Class<?> fieldType)
   {
+    if (ReflectionUtil.isCollection(fieldType))
+    {
+      Field field = ReflectionUtil.getField(beanClass, fieldName);
+      if (ReflectionUtil.isGeneric(field))
+      {
+        Type elementType = ReflectionUtil.getCollectionElementType(field);
+        if (elementType instanceof Class)
+        {
+          BeanMapping<?> elementMapping = new BeanMapping<Object>(
+              (Class<?>) elementType);
+          return new CollectionFieldMapping<Object>(fieldName, fieldType,
+              elementMapping);
+        }
+        else
+        {
+          // TODO create Beanmapping for primitive values
+        }
+      }
+      else
+      {
+        logger
+            .fine("Ignoring field '"
+                + beanClass
+                + "."
+                + fieldName
+                + "' because it is a non-generic collection. Only generic collections are supported by this class.");
+      }
+    }
+
     return new FieldMapping<Object>(fieldName, fieldType);
   }
 

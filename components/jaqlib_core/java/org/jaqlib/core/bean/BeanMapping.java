@@ -12,10 +12,10 @@ import org.jaqlib.util.ReflectionUtil;
 
 /**
  * Defines a mapping between source data and the fields of a Java bean. The
- * mappings for the single fields are defined using {@link FieldMapping}
- * objects. The strategy how to do this mapping can be defined by setting a
- * custom {@link BeanMappingStrategy}. By default the
- * {@link BeanConventionMappingStrategy} is used.
+ * mappings for the single fields are defined using {@link FieldMapping} and
+ * {@link CollectionFieldMapping} objects. The strategy how to do this mapping
+ * can be defined by setting a custom {@link BeanMappingStrategy}. By default
+ * the {@link BeanConventionMappingStrategy} is used.
  * 
  * @author Werner Fragner
  * @param <T> the Java bean type of the mapping.
@@ -150,6 +150,10 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
+  /**
+   * This method is for internal use only. It should <b>NOT</b> be called by the
+   * Jaqlib user.
+   */
   public Object applyJavaTypeHandler(String fieldName, Object value)
   {
     Class<?> fieldType = ReflectionUtil.getFieldType(beanClass, fieldName);
@@ -176,12 +180,48 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
-  public void addField(FieldMapping<?> field)
+  /**
+   * Adds the given field to this bean mapping. The given fieldName is used as
+   * source and target name.
+   * 
+   * @param fieldName the Java bean field name.
+   * @param fieldType the type of the Java bean field.
+   * @param the added field. This object can be used to specify further
+   *          properties on the field mapping.
+   */
+  public <FT> FieldMapping<FT> addField(String fieldName, Class<FT> fieldType)
   {
-    this.mappings.add(field);
+    FieldMapping<FT> field = new FieldMapping<FT>(fieldName, fieldType);
+    addField(field);
+    return field;
   }
 
 
+  /**
+   * Adds the given field to this bean mapping. If the given field is null then
+   * no action is performed.
+   * 
+   * @param field the field to add.
+   * @return the given field.
+   */
+  public <FT> FieldMapping<FT> addField(FieldMapping<FT> field)
+  {
+    if (field != null)
+    {
+      this.mappings.add(field);
+    }
+    return field;
+  }
+
+
+  /**
+   * Removes the given field from this bean mapping. If no matching field
+   * mapping has been found then no action is performed.
+   * 
+   * @param fieldName the field mapping to remove.
+   * @return the removed field mapping; null if no matching field mapping has
+   *         been found.
+   */
   public FieldMapping<?> removeField(String fieldName)
   {
     FieldMapping<?> mapping = getField(fieldName);
@@ -193,6 +233,13 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   }
 
 
+  /**
+   * Gets the field mapping for the given field of this bean. Returns null if no
+   * matching field has been found.
+   * 
+   * @param fieldName the name of the field; must not be null.
+   * @return see description.
+   */
   public FieldMapping<?> getField(String fieldName)
   {
     for (FieldMapping<?> mapping : getMappings())
@@ -203,6 +250,70 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
       }
     }
     return null;
+  }
+
+
+  /**
+   * Checks if the given field is a collection field. Returns false if it is no
+   * collection field or if the field does not exist in this bean mapping.
+   * 
+   * @param fieldName the name of the field.
+   * @return see description.
+   */
+  public boolean isCollectionField(String fieldName)
+  {
+    FieldMapping<?> field = getField(fieldName);
+    return (field instanceof CollectionFieldMapping<?>);
+  }
+
+
+  /**
+   * Tries to get the given collection field mapping. Returns null if no
+   * matching field has been found.
+   * 
+   * @param fieldName the name of the field.
+   * @return see description.
+   * @throws IllegalArgumentException if the given field was found but is no
+   *           collection field.
+   */
+  public CollectionFieldMapping<?> getCollectionField(String fieldName)
+  {
+    FieldMapping<?> field = getField(fieldName);
+    if (field == null)
+    {
+      return null;
+    }
+    else if (field instanceof CollectionFieldMapping<?>)
+    {
+      return (CollectionFieldMapping<?>) field;
+    }
+    else
+    {
+      throw new IllegalArgumentException("The given field '" + fieldName
+          + "' has no collection type. It is of type '" + field.getFieldType()
+          + "'.");
+    }
+  }
+
+
+  /**
+   * Removes all field mappings. After calling this method new field mapping can
+   * only be added by using {@link #addField(FieldMapping)} .
+   */
+  public void removeAllFields()
+  {
+    this.mappings = new ArrayList();
+  }
+
+
+  /**
+   * Gets all field mappings of this bean mapping.
+   * 
+   * @return see description.
+   */
+  public List<FieldMapping<?>> getFieldMappings()
+  {
+    return this.getMappings();
   }
 
 
@@ -244,6 +355,5 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
     beanMapping.setMappingStrategy(mappingStrategy);
     return beanMapping;
   }
-
 
 }

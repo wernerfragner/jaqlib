@@ -219,8 +219,9 @@ public class DatabaseSetup
 
   public static DbResultSet getMockDbResultSet() throws SQLException
   {
-    return new DbResultSet(getMockResultSet(), DbDefaults.INSTANCE
-        .getSqlTypeHandlerRegistry(), DbDefaults.INSTANCE.getStrictFieldCheck());
+    return new DbResultSet(getMockResultSet(),
+        DbDefaults.INSTANCE.getSqlTypeHandlerRegistry(),
+        DbDefaults.INSTANCE.getStrictFieldCheck());
   }
 
 

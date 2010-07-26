@@ -1,7 +1,9 @@
 package org.jaqlib.xml;
 
 import static org.jaqlib.AccountAssert.assertHuberAccount;
+import static org.jaqlib.AccountAssert.assertHuberAccountWithTransactions;
 import static org.jaqlib.AccountAssert.assertMaierAccount;
+import static org.jaqlib.AccountAssert.assertMaierAccountWithTransactions;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,7 +24,7 @@ public abstract class XmlQBTest extends TestCase
 
   private static final String XPATH_ACCOUNTS = "/bank/accounts/*";
   private static final String XPATH_ACCOUNTS_NS = "/document/test1:bank/test2:accounts/*";
-  private static final String XPATH_TRANSACTIONS = "/bank//transactions/*";
+  private static final String XPATH_TRANSACTIONS = "/bank//transaction";
 
 
   private List<AccountImpl> accounts;
@@ -90,8 +92,8 @@ public abstract class XmlQBTest extends TestCase
     ClassPathResource resource = new ClassPathResource(
         "accounts_attributes.xml");
     Account recorder = XmlQB.getRecorder(Account.class);
-    accounts = XmlQB.select(AccountImpl.class).from(resource).where(
-        XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
+    accounts = XmlQB.select(AccountImpl.class).from(resource)
+        .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
         .asList();
 
     assertHuberAccount(accounts);
@@ -103,8 +105,8 @@ public abstract class XmlQBTest extends TestCase
     ClassPathResource resource = new ClassPathResource(
         "accounts_attributes.xml");
     Account recorder = XmlQB.getRecorder(Account.class);
-    accounts = XmlQB.select(AccountImpl.class).fromAttributes(resource).where(
-        XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
+    accounts = XmlQB.select(AccountImpl.class).fromAttributes(resource)
+        .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
         .asList();
 
     assertHuberAccount(accounts);
@@ -115,8 +117,8 @@ public abstract class XmlQBTest extends TestCase
   {
     ClassPathResource resource = new ClassPathResource("accounts_elements.xml");
     Account recorder = XmlQB.getRecorder(Account.class);
-    accounts = XmlQB.select(AccountImpl.class).fromElements(resource).where(
-        XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
+    accounts = XmlQB.select(AccountImpl.class).fromElements(resource)
+        .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
         .asList();
 
     assertHuberAccount(accounts);
@@ -142,8 +144,8 @@ public abstract class XmlQBTest extends TestCase
     XmlSelectDataSource ds = new XmlSelectDataSource(r, true);
 
     Account recorder = XmlQB.getRecorder(Account.class);
-    accounts = XmlQB.select(AccountImpl.class).fromAttributes(ds).where(
-        XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
+    accounts = XmlQB.select(AccountImpl.class).fromAttributes(ds)
+        .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
         .asList();
 
     assertHuberAccount(accounts);
@@ -156,8 +158,8 @@ public abstract class XmlQBTest extends TestCase
     XmlSelectDataSource ds = new XmlSelectDataSource(r, false);
 
     Account recorder = XmlQB.getRecorder(Account.class);
-    accounts = XmlQB.select(AccountImpl.class).fromElements(ds).where(
-        XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
+    accounts = XmlQB.select(AccountImpl.class).fromElements(ds)
+        .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
         .asList();
 
     assertHuberAccount(accounts);
@@ -171,9 +173,9 @@ public abstract class XmlQBTest extends TestCase
 
     try
     {
-      accounts = XmlQB.select(AccountImpl.class).from(resource).where(
-          XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
-          .asList();
+      accounts = XmlQB.select(AccountImpl.class).from(resource)
+          .where(XPATH_ACCOUNTS).andCall(recorder.getLastName())
+          .isEqual("huber").asList();
       fail("Did not throw RuntimeException");
     }
     catch (RuntimeException e)
@@ -190,9 +192,9 @@ public abstract class XmlQBTest extends TestCase
 
     try
     {
-      accounts = XmlQB.select(AccountImpl.class).from(resource).where(
-          XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
-          .asList();
+      accounts = XmlQB.select(AccountImpl.class).from(resource)
+          .where(XPATH_ACCOUNTS).andCall(recorder.getLastName())
+          .isEqual("huber").asList();
       fail("Did not throw RuntimeException");
     }
     catch (RuntimeException e)
@@ -205,15 +207,15 @@ public abstract class XmlQBTest extends TestCase
   public void testSelectAccount_DataSourceReuse_Default()
   {
     XmlSelectDataSource ds = new XmlSelectDataSource(
-        "unittest/accounts_attributes.xml");
+        "unittest/accounts_nestedtrans.xml");
     ds.setAutoClose(false);
 
     try
     {
       Account recorder = XmlQB.getRecorder(Account.class);
       List<AccountImpl> accounts = XmlQB.select(AccountImpl.class).from(ds)
-          .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual(
-              "huber").asList();
+          .where(XPATH_ACCOUNTS).andCall(recorder.getLastName())
+          .isEqual("huber").asList();
 
       assertHuberAccount(accounts);
 
@@ -269,6 +271,23 @@ public abstract class XmlQBTest extends TestCase
   }
 
 
+  public void testSelectNestedTransactions()
+  {
+    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
+        AccountImpl.class);
+    Account recorder = XmlQB.getRecorder(Account.class);
+    String fileName = "unittest/accounts_nestedtrans.xml";
+
+    accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
+        .andCall(recorder.getLastName()).isEqual("huber").asList();
+    assertHuberAccountWithTransactions(accounts);
+
+    accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
+        .andCall(recorder.getLastName()).isEqual("maier").asList();
+    assertMaierAccountWithTransactions(accounts);
+  }
+
+
   private List<AccountImpl> selectDefault(String xpathAccounts, String string)
   {
     String fileName = "unittest/accounts_attributes.xml";
@@ -280,8 +299,8 @@ public abstract class XmlQBTest extends TestCase
       String lastName)
   {
     Account recorder = XmlQB.getRecorder(Account.class);
-    return XmlQB.select(AccountImpl.class).from(fileName).where(xPath).andCall(
-        recorder.getLastName()).isEqual(lastName).asList();
+    return XmlQB.select(AccountImpl.class).from(fileName).where(xPath)
+        .andCall(recorder.getLastName()).isEqual(lastName).asList();
   }
 
 
