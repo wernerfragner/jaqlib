@@ -1,6 +1,14 @@
 <project name="JaqLib" default="deploy" basedir=".">
 	
 	<!-- ========================================= -->
+  <!-- External ANT Tasks: -->
+  <!-- .) SVN: http://subclipse.tigris.org/svnant.html --> 
+  <!-- ========================================= -->
+	
+	<typedef resource="org/tigris/subversion/svnant/svnantlib.xml" classpath="svnant.jar" /> 
+	
+	
+	<!-- ========================================= -->
 	<!-- User defined paths -->
 	<!-- ========================================= -->
 	
@@ -14,6 +22,12 @@
 	
 	<property file="./version.properties" />
 	<property name="version.fullString" value="${version.major}.${version.minor}" />
+	
+	
+	<!-- ========================================= -->
+  <!-- User specific properties -->
+  <!-- ========================================= -->  
+	<property file="./user.properties" />
 	
 	
 	<!-- ========================================= -->
@@ -57,6 +71,8 @@
 		<fileset file="${vendor.base}/cglib/cglib-nodep-2.1_3.jar" />
 		<fileset file="${vendor.base}/derby/derby.jar" />
 		<fileset dir="${vendor.base}/xalan/" />
+		<fileset dir="${vendor.base}/jaxen/" />
+		<fileset dir="${vendor.base}/saxon/" />
 	</path>
 	
 	<path id="jaqlib.unittest.libs">
@@ -65,11 +81,11 @@
 	</path>	
 	
 	<path id="jaqlib.components">
-		<fileset dir="${build.temp}/zip" />
+		<fileset dir="${build.temp}/zip" includes="*.zip" />
 	</path>
 	
 	<path id="jaqlib.unittest.components">
-		<fileset dir="${build.temp}/zip_unittest" />
+		<fileset dir="${build.temp}/zip_unittest" includes="*.zip" />
 	</path>	
 
 	<path id="cobertura.classpath">
@@ -145,7 +161,7 @@
 	
 	<target name="compile_unittestcomponent">
 		<!-- Compile component -->
-		<property name="compile.unittest.target.dir" value="${build.temp}/bin/${component.name}" />
+		<property name="compile.unittest.target.dir" value="${build.temp}/bin_unittest/${component.name}" />
 		<mkdir dir="${compile.unittest.target.dir}" />
 		<javac destdir="${compile.unittest.target.dir}" srcDir="${build.source}/${component.name}/unittest" source="1.5" target="1.5" debug="true" failonerror="true" optimize="true" >
 			<classpath refid="jaqlib.libs" />
@@ -155,7 +171,15 @@
 		</javac>
 		
 		<!-- ZIP compiled classes -->
-		<zip destfile="${build.temp}/zip_unittest/${component.name}.zip" basedir="${compile.unittest.target.dir}" />
+		<zip destfile="${build.temp}/zip_unittest/${component.name}.zip" >
+		  <fileset dir="${compile.unittest.target.dir}" />
+		  <fileset dir="${build.source}/${component.name}/unittest" includes="**/*.xml" />
+		</zip>
+		  
+		<!-- Copy test files -->
+		<copy toDir="${build.temp}/zip_unittest/unittest">
+		  <fileset dir="${build.source}/${component.name}/unittest" includes="**/*.xml" />
+		</copy> 
 	</target>
 	
 	
@@ -256,7 +280,7 @@
 	  </junit>	
 		
     <!-- XML tests -->
-    <junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+    <junit dir="${build.temp}/zip_unittest" haltonfailure="false" failureproperty="junit.failure" fork="true" >
       <classpath location="${instrumented.dir}" />
       <classpath refid="cobertura.classpath" />
       <classpath refid="jaqlib.components" />
@@ -265,10 +289,10 @@
       <classpath refid="jaqlib.unittest.libs" />
       <test name="org.jaqlib.XmlQBTests" toDir="${build.temp}/unittest_results/jaqlib" />
       <formatter type="xml"/>
-    </junit>    		
+    </junit>
 		
 		<!-- Util tests -->
-		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+		<junit dir="${build.temp}/zip_unittest" haltonfailure="false" failureproperty="junit.failure" fork="true">
 	    <classpath location="${instrumented.dir}" />
 	    <classpath refid="cobertura.classpath" />
 			<classpath refid="jaqlib.components" />
@@ -347,7 +371,15 @@
 	</target>
 	
 	
-	<target name="deploy" depends="clean, init, compile, instrument, unittest, coverage_report, jar">
+	<target name="subversion_tag" if="svn.createTag" >
+	 <svn username="${svn.username}" password="${svn.password}" >
+	    <mkdir url="https://jaqlib.svn.sourceforge.net/svnroot/jaqlib/tags/${version.fullString}" message="Tag for version ${version.fullString}" />
+      <copy srcUrl="https://jaqlib.svn.sourceforge.net/svnroot/jaqlib/trunk" destUrl="https://jaqlib.svn.sourceforge.net/svnroot/jaqlib/tags/${version.fullString}" message="Tag for version ${version.fullString}" revision="HEAD" />
+    </svn>
+	</target>
+	
+	
+	<target name="deploy" depends="clean, init, compile, instrument, unittest, coverage_report, jar, subversion_tag">
 		<mkdir dir="${dist.dir}/${version.fullString}/dist" />
 		<copy toDir="${dist.dir}/${version.fullString}/dist" >
 			<fileset dir="${build.temp}/jar" />
@@ -369,6 +401,5 @@
 		<delete file="./derby.log" failonerror="false" />
 		<delete file="./cobertura.ser" failonerror="false" />
 	</target>
-	
 	
 </project>
