@@ -99,12 +99,12 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the input XML file for the query.
+   * @param dataSource the data source for the query.
    * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
-  public XmlWhereClause<T> from(XmlSelectDataSource ds)
+  public XmlWhereClause<T> from(XmlSelectDataSource dataSource)
   {
-    return query.createWhereClause(ds);
+    return query.createWhereClause(dataSource);
   }
 
 
@@ -180,7 +180,7 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the input XML file for the query.
+   * @param dataSource the data source for the query.
    * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromAttributes(XmlSelectDataSource dataSource)
@@ -271,7 +271,7 @@ public class XmlFromClause<T>
    * 
    * </pre>
    * 
-   * @param xmlPath the input XML file for the query.
+   * @param dataSource the data source for the query.
    * @return a {@link XmlWhereClause} to specify the XPath expression.
    */
   public XmlWhereClause<T> fromElements(XmlSelectDataSource dataSource)

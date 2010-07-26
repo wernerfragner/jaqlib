@@ -215,8 +215,8 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * 
    * @param fieldName the Java bean field name.
    * @param fieldType the type of the Java bean field.
-   * @param the added field. This object can be used to specify further
-   *          properties on the field mapping.
+   * @return the added field. This object can be used to specify further
+   *         properties on the field mapping.
    */
   public <FT> FieldMapping<FT> addField(String fieldName, Class<FT> fieldType)
   {

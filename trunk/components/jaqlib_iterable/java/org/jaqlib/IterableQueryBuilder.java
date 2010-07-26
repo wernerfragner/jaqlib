@@ -52,8 +52,8 @@ import org.jaqlib.iterable.IterableQuery;
  * Account account = Jaqlib.List.getRecorder(Account.class);
  * 
  * // select all accounts with a balance greater than 5000
- * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts).whereCall(
- *     account.getBalance()).isGreaterThan(5000).asList();
+ * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts)
+ *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
  * </pre>
  * 
  * <i>Custom WHERE conditions:</i>
@@ -91,7 +91,8 @@ import org.jaqlib.iterable.IterableQuery;
  * <i>Filtering {@link Comparable} elements:</i>
  * 
  * <pre>
- * // Account implements the Comparable interface; the balance field is used for comparing two accounts
+ * // Account implements the Comparable interface; the balance field is used for
+ * // comparing two accounts
  * AccountImpl spec = new AccountImpl();
  * account.setBalance(5000);
  * 
@@ -135,7 +136,7 @@ import org.jaqlib.iterable.IterableQuery;
  * 
  * };
  * 
- * // execute task only on elements that match the given condition 
+ * // execute task only on elements that match the given condition
  * Jaqlib.List.selectFrom(accounts).where(deptCond).execute(task);
  * 
  * // or ...
@@ -145,6 +146,9 @@ import org.jaqlib.iterable.IterableQuery;
  * 
  * </p>
  * 
+ * @see IterableDefaults
+ * @see IterableQB
+ * @see org.jaqlib.Jaqlib.List
  * @author Werner Fragner
  */
 public class IterableQueryBuilder extends AbstractQueryBuilder

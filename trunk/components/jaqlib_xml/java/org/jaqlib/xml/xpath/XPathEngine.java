@@ -37,7 +37,7 @@ public interface XPathEngine
   /**
    * Gets all DOM nodes that match the given expression.
    * 
-   * @param expression an XPath expression.
+   * @param xpathExpression an XPath expression.
    * @return all nodes that match the given expression.
    * @throws IOException in case a problem accessing or parsing the XML file
    *           occurs.

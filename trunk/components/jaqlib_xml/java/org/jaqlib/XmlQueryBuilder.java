@@ -585,6 +585,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * @see XmlDefaults
  * @see XmlQB
+ * @see org.jaqlib.Jaqlib.XML
  * @author Werner Fragner
  */
 public class XmlQueryBuilder extends AbstractQueryBuilder
@@ -619,10 +620,8 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
    * @param beanClass the desired result bean. This bean must provide a default
    *          constructor. If the bean does not provide one a custom
    *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
-   *          A {@link BeanMapping} can be instantiated with the <tt>new</tt>
-   *          operator or by using {@link XmlQB#getDefaultBeanMapping(Class)}
-   *          and {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}. This
-   *          {@link BeanMapping} can be used in the
+   *          A {@link BeanMapping} can be simply instantiated with the
+   *          <tt>new</tt> operator. This {@link BeanMapping} can be used in the
    *          {@link #select(BeanMapping)} method.
    * @return the FROM clause to specify the input XML file for the query.
    */
@@ -638,9 +637,7 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
    * {@link #select(Class)}. But it gives more flexibility in defining the
    * mapping between XPath expression results and Java bean fields. This mapping
    * can defined with a {@link BeanMapping} instance. A {@link BeanMapping} can
-   * be instantiated with the <tt>new</tt> operator or by using
-   * {@link XmlQB#getDefaultBeanMapping(Class)} and
-   * {@link XmlQB#getBeanMapping(BeanMappingStrategy, Class)}.
+   * be simply instantiated with the <tt>new</tt> operator.
    * 
    * @param <T> the result bean type.
    * @param beanMapping a bean definition that holds information how to map the

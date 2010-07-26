@@ -73,7 +73,7 @@ public class DefaultsDelegate
 
 
   /**
-   * See {@link Defaults#getCollectionFactory())}.
+   * See {@link Defaults#getCollectionFactory()}.
    */
   public CollectionFactory getCollectionFactory()
   {
