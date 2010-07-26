@@ -540,8 +540,8 @@ import org.jaqlib.db.Using;
  * 
  * </p>
  * 
- * @see org.jaqlib.Database
- * @see org.jaqlib.DatabaseQB
+ * @see DbDefaults
+ * @see DatabaseQB
  * @see org.jaqlib.Jaqlib.DB
  * @author Werner Fragner
  */
