@@ -54,6 +54,10 @@ public class XmlResultSet implements DsResultSet
       namespaces = new XmlNamespaces();
     }
     this.namespaces = namespaces;
+
+    log.fine("Created a new XMLResultSet with " + nodes.getLength()
+        + " XML nodes. XML " + (this.useAttributes ? "attributes" : "elements")
+        + " are used for field mapping.");
   }
 
 

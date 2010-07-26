@@ -254,4 +254,11 @@ public class XmlSelectDataSource extends XmlDataSource implements
     }
   }
 
+
+  @Override
+  public String toString()
+  {
+    return this.getXmlPath() + " [" + this.xPathExpression + "]";
+  }
+
 }
