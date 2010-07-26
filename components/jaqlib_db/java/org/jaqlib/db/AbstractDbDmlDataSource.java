@@ -37,7 +37,7 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
   }
 
 
-  public <T> int execute(T bean, BeanMapping<T> beanMapping)
+  public <T> int execute(T bean, BeanMapping<? extends T> beanMapping)
   {
     final String sql = buildSql(beanMapping);
 
@@ -62,7 +62,7 @@ public abstract class AbstractDbDmlDataSource extends AbstractDbDataSource
   }
 
 
-  private <T> void setParameters(T bean, BeanMapping<T> beanMapping,
+  private <T> void setParameters(T bean, BeanMapping<? extends T> beanMapping,
       PreparedStatement stmt) throws SQLException
   {
     int i = 1;

@@ -30,18 +30,6 @@ public class AccountImpl implements Account
   }
 
 
-  public boolean hasChanged()
-  {
-    return changed;
-  }
-
-
-  private void setChanged()
-  {
-    changed = true;
-  }
-
-
   public void setId(Long id)
   {
     setChanged();
@@ -85,6 +73,18 @@ public class AccountImpl implements Account
   {
     setChanged();
     this.firstName = firstName;
+  }
+
+
+  public boolean hasChanged()
+  {
+    return changed;
+  }
+
+
+  private void setChanged()
+  {
+    changed = true;
   }
 
 

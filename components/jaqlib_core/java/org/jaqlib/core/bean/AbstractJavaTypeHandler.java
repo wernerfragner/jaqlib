@@ -29,10 +29,12 @@ public abstract class AbstractJavaTypeHandler implements JavaTypeHandler
 
   /**
    * Extending class must implement this method. Extending classes must add all
-   * supported types to the given list.
+   * supported target types to the given list. The target type is the type that
+   * is returned in the {@link #convert(Object)} method by the custom type
+   * handler.
    * 
-   * @param types a list to which all supported types must be added. The given
-   *          list is never null.
+   * @param types a list to which all supported target types must be added. The
+   *          given list is never null.
    */
   protected abstract void addSupportedTypes(List<Class<?>> types);
 

@@ -71,7 +71,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * }
  * </pre>
  * 
- * Important issues:
+ * <h2>Important issues</h2>
  * <ul>
  * <li>
  * Every query to a XML file results in reading and parsing the XML file by
@@ -87,8 +87,9 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * further details.</li>
  * <li>
  * The mapping between XML attributes and elements to Java bean fields can be
- * adapted by using a {@link BeanMapping} object. See example 'Using a custom
+ * adapted by using a {@link BeanMapping} object. See example 'Define a custom
  * bean mapping' for further details.</li>
+ * <li>
  * Various default values for querying XML files can be set application-wide by
  * using the {@link #DEFAULTS} object.</li>
  * <li>
@@ -96,6 +97,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * bean can have other Java beans as fields. The XML structure must reflect this
  * hierarchy, of course, in order that Jaqlib can do the right mapping and bean
  * instantiation.</li>
+ * <li>This class is thread-safe.</li>
  * </ul>
  * 
  * <p>
@@ -122,11 +124,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * </pre>
  * 
  * </p>
- * <p>
- * This class is thread-safe.
- * <p>
- * <h2>Usage examples</h2><br>
- * The examples below use following XML files:<br>
+ * 
+ * <h2>Usage examples</h2> The examples below use following XML files:<br>
  * <i>Accounts_Attributes.xml:</i>
  * 
  * <pre>
@@ -306,10 +305,9 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * specified multiple times on an element - so they cannot be used for mapping
  * primitive XML values to Java collection values.
  * 
- * <h3>Constraining the result</h3>
- * There are different ways how to constrain the returned query result. Jaqlib
- * provides an API for specifying WHERE clauses. You can use WHERE clauses in
- * three ways:
+ * <h3>Constraining the result</h3> There are different ways how to constrain
+ * the returned query result. Jaqlib provides an API for specifying WHERE
+ * clauses. You can use WHERE clauses in three ways:
  * <ul>
  * <li>Method call recording mechanism</li>
  * <li>Custom where condition code</li>
@@ -390,6 +388,19 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *     .isEqual(criteria).uniqueResult();
  * </pre>
  * 
+ * For example, you can use this mechanism also for filtering {@link Comparable}
+ * elements:</i>
+ * 
+ * <pre>
+ * // Account implements the Comparable interface; the balance field is used
+ * // for comparing two accounts
+ * AccountImpl criteria = new AccountImpl();
+ * criteria.setBalance(5000.0);
+ * 
+ * List&lt;AccountImpl&gt; result = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).andElement()
+ *     .isSmallerThan(criteria).asList();
+ * </pre>
  * 
  * <h3>Multiple queries on same file</h3> When multiple queries are run against
  * one XML file the {@link XmlSelectDataSource} should be used. With this
@@ -455,7 +466,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * Jaqlib.XML.DEFAULTS.setXPathEngine(new JaxenXPathEngine());
  * </pre>
  * 
- * <h3>Using a custom bean mapping</h3> By default the XML element or attribute
+ * <h3>Define a custom bean mapping</h3> By default the XML element or attribute
  * names must exactly match the Jave bean field names. This mapping behavior can
  * be changed by using the {@link BeanMapping} class. It holds the information
  * how to map the source XML elements/attributes to the target Java bean fields.

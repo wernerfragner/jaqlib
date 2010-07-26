@@ -97,6 +97,19 @@ public class XmlQBExamples
   }
 
 
+  public void selectComparable()
+  {
+    // Account implements the Comparable interface; the balance field is used
+    // for comparing two accounts
+    AccountImpl criteria = new AccountImpl();
+    criteria.setBalance(5000.0);
+
+    List<AccountImpl> result = Jaqlib.XML.select(AccountImpl.class)
+        .from("Accounts.xml").where("/bank/accounts/*").andElement()
+        .isSmallerThan(criteria).asList();
+  }
+
+
   private static void selectElementsUsingDataSource()
   {
     // create data source for caching XML file
