@@ -11,6 +11,9 @@ public interface DsResultSet
   Object getObject(FieldMapping<?> mapping);
 
 
+  Object getAnynomousObject(FieldMapping<?> mapping);
+
+
   boolean next();
 
 }

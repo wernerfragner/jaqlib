@@ -45,7 +45,7 @@ public class StringConversion
     {
       return Byte.valueOf(inputValue);
     }
-    else if (targetType.equals(char.class))
+    else if (targetType.equals(Character.class) || targetType == Character.TYPE)
     {
       return new Character(inputValue.charAt(0));
     }

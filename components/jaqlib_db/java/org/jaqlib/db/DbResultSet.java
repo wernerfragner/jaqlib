@@ -51,6 +51,9 @@ public class DbResultSet implements DsResultSet
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public boolean next()
   {
     try
@@ -113,6 +116,9 @@ public class DbResultSet implements DsResultSet
   }
 
 
+  /**
+   * {@inheritDoc}
+   */
   public Object getObject(FieldMapping<?> mapping)
   {
     ColumnMapping<?> cMapping = ColumnMapping.cast(mapping);
@@ -129,6 +135,20 @@ public class DbResultSet implements DsResultSet
     {
       throw handleInvalidMapping();
     }
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
+  public Object getAnynomousObject(FieldMapping<?> mapping)
+  {
+    ColumnMapping<?> cMapping = ColumnMapping.cast(mapping);
+    int original = cMapping.getColumnIndex();
+    cMapping.setColumnIndex(1); // use first index for anonymous value
+    Object result = getObject(cMapping);
+    cMapping.setColumnDataType(original);
+    return result;
   }
 
 

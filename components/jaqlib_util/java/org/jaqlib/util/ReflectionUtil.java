@@ -24,6 +24,20 @@ public class ReflectionUtil
   private static final String CGLIB_ENHANCER_CLASS = "net.sf.cglib.proxy.Enhancer";
 
 
+  public static boolean isPrimitiveType(Class<?> clz)
+  {
+    if (clz.isPrimitive() || clz.isEnum())
+    {
+      return true;
+    }
+    return clz.equals(String.class) || clz.equals(Short.class)
+        || clz.equals(Integer.class) || clz.equals(Long.class)
+        || clz.equals(Float.class) || clz.equals(Double.class)
+        || clz.equals(Byte.class) || clz.equals(Character.class)
+        || clz.equals(Boolean.class);
+  }
+
+
   private static Class<?> getCgLibEnhancerClass()
   {
     try
@@ -284,7 +298,7 @@ public class ReflectionUtil
   }
 
 
-  public static Type getCollectionElementType(Field field)
+  public static Class<?> getCollectionElementClass(Field field)
   {
     if (isCollection(field.getType()))
     {
@@ -296,7 +310,7 @@ public class ReflectionUtil
 
         if (elementTypes.length == 1)
         {
-          return elementTypes[0];
+          return getClass(elementTypes[0]);
         }
         else
         {
@@ -316,6 +330,16 @@ public class ReflectionUtil
       throw new IllegalArgumentException("Given field '" + field
           + "' is no collection.");
     }
+  }
+
+
+  private static Class<?> getClass(Type type)
+  {
+    if (type instanceof Class)
+    {
+      return (Class<?>) type;
+    }
+    return type.getClass();
   }
 
 
