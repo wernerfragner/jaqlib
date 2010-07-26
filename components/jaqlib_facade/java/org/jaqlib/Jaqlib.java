@@ -1,5 +1,8 @@
 package org.jaqlib;
 
+import org.jaqlib.core.DefaultsDelegate;
+
+
 /**
  * <p>
  * Facade for the different query builders of JaQLib. <br/>
@@ -35,6 +38,45 @@ public class Jaqlib
    * {@link XmlQueryBuilder}.
    */
   public static XmlQueryBuilder XML = XmlQB.getQueryBuilder();
+
+
+  /**
+   * Contains all general application-wide JaqLib default values. The domain
+   * specific default values (Iterable, DB, XML) can be found in the according
+   * static fields (e.g. <tt>Jaqlib.DB.DEFAULTS</tt>).
+   */
+  public static DefaultsDelegate DEFAULTS = new DefaultsDelegate();
+
+
+  /**
+   * <p>
+   * Enables logging of all JaQLib messages to the console. This can be useful,
+   * for example, for debugging.
+   * </p>
+   * <p>
+   * By default logging to the console is disabled.
+   * </p>
+   * <p>
+   * If you want to redirect the JaqLib log output to your own logging handlers
+   * you can use <tt>Jaqlib.DEFAULTS.registerLogHandler(Handler, Level)</tt>.
+   * </p>
+   */
+  public static void enableConsoleLogging()
+  {
+    DEFAULTS.enableConsoleLogging();
+  }
+
+
+  /**
+   * <p>
+   * Disables logging of all JaQLib messages to the console.
+   * </p>
+   * By default logging to the console is disabled.
+   */
+  public static void disableConsoleLogging()
+  {
+    DEFAULTS.disableConsoleLogging();
+  }
 
 
   /**

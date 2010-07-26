@@ -16,7 +16,7 @@ import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbResultSet;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.ManualMappingStrategy;
-import org.jaqlib.util.DbUtil;
+import org.jaqlib.db.util.DbUtil;
 import org.jaqlib.util.db.DriverManagerDataSource;
 import org.jaqlib.util.db.SingleConnectionDataSource;
 

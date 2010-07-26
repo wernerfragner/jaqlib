@@ -3,7 +3,7 @@ package org.jaqlib.core.bean;
 
 /**
  * <p>
- * Converts a given database value to a Java type value and vice versa.
+ * Converts a given data source value to a Java type value and vice versa.
  * Implementations of this interface should inherit from
  * {@link AbstractJavaTypeHandler}.
  * </p>
@@ -23,13 +23,13 @@ package org.jaqlib.core.bean;
  *   {
  *     if (value instanceof Integer)
  *     {
- *       // convert database value to Java enumeration type
+ *       // convert data source value to Java enumeration type
  * 
  *       return CreditRating.rating((Integer) value);
  *     }
  *     else if (value instanceof CreditRating)
  *     {
- *       // convert Java enumeration type to database value
+ *       // convert Java enumeration type to data source value
  * 
  *       CreditRating rating = (CreditRating) value;
  *       return rating.intValue();
@@ -57,8 +57,8 @@ public interface JavaTypeHandler
 
 
   /**
-   * @return the Java types that can be converted into and from database types.
-   *         This method must return at least one supported type.
+   * @return the Java types that can be converted into and from data source
+   *         types. This method must return at least one supported type.
    */
   Class<?>[] getSupportedTypes();
 
@@ -68,7 +68,7 @@ public interface JavaTypeHandler
    * @return the converted or untouched object (depending on the type handler
    *         implementation).
    * @throws IllegalArgumentException if the given value cannot be converted to
-   *           the desired Java or database type.
+   *           the desired Java or data source type.
    */
   Object convert(Object value);
 

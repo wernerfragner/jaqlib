@@ -9,14 +9,15 @@ public class UtilTests
   public static Test suite()
   {
     TestSuite suite = new TestSuite("Test for org.jaqlib.util");
-    //$JUnit-BEGIN$
+    // $JUnit-BEGIN$
     suite.addTestSuite(ExceptionUtilTest.class);
     suite.addTestSuite(CompareUtilTest.class);
     suite.addTestSuite(CollectionUtilTest.class);
     suite.addTestSuite(FileResourceTest.class);
     suite.addTestSuite(ClassPathResourceTest.class);
     suite.addTestSuite(ReflectionUtilTest.class);
-    //$JUnit-END$
+    suite.addTestSuite(LogUtilTest.class);
+    // $JUnit-END$
     return suite;
   }
 

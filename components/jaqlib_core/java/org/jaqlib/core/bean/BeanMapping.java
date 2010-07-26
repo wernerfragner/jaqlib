@@ -50,8 +50,8 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
 
   /**
-   * Sets a custom strategy how to retrieve the mapping between database columns
-   * and Java bean fields.
+   * Sets a custom strategy how to retrieve the mapping between data source
+   * fields and Java bean fields.
    * 
    * @param strategy a not null custom strategy.
    */

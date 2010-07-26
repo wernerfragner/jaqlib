@@ -9,7 +9,8 @@ import org.jaqlib.util.Assert;
 import org.jaqlib.util.LogUtil;
 
 /**
- * Fetch strategy that uses a cache to avoid unnecessary database calls.
+ * Fetch strategy that uses a cache to avoid unnecessary calls to the data
+ * source.
  * 
  * @author Werner Fragner
  * 
@@ -39,7 +40,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
     }
     else
     {
-      log.fine("Fetching query results from database.");
+      log.fine("Fetching query results from data source.");
 
       super.addResults(result);
       cache.setFilled();
@@ -59,7 +60,7 @@ public class CachingFetchStrategy<T> extends AbstractFetchStrategy<T>
     }
     else
     {
-      log.fine("Fetching query results from database.");
+      log.fine("Fetching query results from data source.");
 
       super.addResults(resultMap, invocation);
       cache.setFilled();

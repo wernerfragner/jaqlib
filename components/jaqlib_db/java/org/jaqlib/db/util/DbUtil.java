@@ -1,10 +1,12 @@
-package org.jaqlib.util;
+package org.jaqlib.db.util;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Logger;
+
+import org.jaqlib.util.LogUtil;
 
 /**
  * Helper class for accessing databases via JDBC.
