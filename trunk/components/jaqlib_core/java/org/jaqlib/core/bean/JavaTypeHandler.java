@@ -57,8 +57,8 @@ public interface JavaTypeHandler
 
 
   /**
-   * @return the Java types that can be converted into and from data source
-   *         types. This method must return at least one supported type.
+   * @return the Java types that can be converted from data source types. This
+   *         method must return at least one supported type.
    */
   Class<?>[] getSupportedTypes();
 

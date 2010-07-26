@@ -152,7 +152,8 @@ public class ColumnMapping<T> extends FieldMapping<T>
 
 
   public <BeanType> void setValue(int index, PreparedStatement stmt,
-      BeanType bean, BeanMapping<BeanType> beanMapping) throws SQLException
+      BeanType bean, BeanMapping<? extends BeanType> beanMapping)
+      throws SQLException
   {
     Object value = getFieldValue(bean);
     value = beanMapping.applyJavaTypeHandler(getTargetName(), value);

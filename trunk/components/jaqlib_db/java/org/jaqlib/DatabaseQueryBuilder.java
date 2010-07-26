@@ -15,7 +15,9 @@
  */
 package org.jaqlib;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -37,9 +39,10 @@ import org.jaqlib.db.IntoClause;
 import org.jaqlib.db.Using;
 
 /**
+ * <h2>Overview</h2>
  * <p>
- * The main entry point of JaQLib for database query support. It provides
- * following methods for building queries:
+ * This class is the main entry point of Jaqlib for database query support. It
+ * provides following methods for building queries:
  * <ul>
  * <li>{@link #select(ColumnMapping)}</li>
  * <li>{@link #select(Class)}</li>
@@ -49,188 +52,360 @@ import org.jaqlib.db.Using;
  * <li>{@link #delete()}</li>
  * </ul>
  * </p>
- * <p>
- * The Method {@link #getRecorder(Class)} can be used to define a WHERE
- * condition using a method call recording mechanism (see also the first example
- * below). First the programmer must call the desired method on the returned
- * proxy object. This method call is recorded by JaQLib. When JaqLib evaluates
- * the WHERE condition this method call is replayed on every selected element.
- * The result of this method call is then evaluated against the specified
- * condition.
- * </p>
- * This class is thread-safe.
- * <p>
- * <b>Usage examples:</b><br>
- * All examples use following statements to define the database connection and
- * the SQL statement that should act as data source for some bank accounts.<br>
+ * 
+ * <h2>Important issues</h2>
+ * <ul>
+ * <li>
+ * The Jaqlib WHERE condition is not executed at database but at Java side.
+ * Avoid executing SELECT statements that return lots of data and then
+ * constraining the result with the WHERE functionality of JaqLib!</li>
+ * <li>
+ * The mapping between database columns to Java bean fields can be adapted by
+ * using a {@link BeanMapping} object. See example 'Define a custom bean
+ * mapping' for further details.</li>
+ * <li>Jaqlib does <b>NOT</b> close database connection automatically. It just
+ * obtains the {@link Connection} object from the {@link DataSource} and uses it
+ * without closing it. If Jaqlib should close the {@link Connection} after
+ * performing the query then {@link DbDefaults#setAutoCloseConnection(boolean)}
+ * must be called. Alternatively the auto close functionality can be activated
+ * by calling {@link DbSelectDataSource#setAutoCloseConnection(boolean)}.</li>
+ * <li>Jaqlib does close {@link PreparedStatement} automatically after executing
+ * the query. If Jaqlib should not close the {@link PreparedStatement} after
+ * performing the query then
+ * {@link DbDefaults#setAutoClosePreparedStatement(boolean)} must be called.
+ * Alternatively the auto close functionality can be deactivated by calling
+ * {@link DbSelectDataSource#setAutoClosePreparedStatement(boolean)}.</li>
+ * <li>
+ * Various default values for accessing a database can be set application-wide
+ * by using the {@link #DEFAULTS} object.</li>
+ * <li>This class is thread-safe.</li>
+ * </ul>
+ * 
+ * <h2>Usage examples</h2> All examples use following statements to define the
+ * database connection and the SQL statement that should act as data source for
+ * some bank accounts.<br>
  * 
  * <pre>
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
- * DbSelectDataSource accounts = Jaqlib.DB.getSelectDataSource(
- *     getJdbcDataSource(), sql);
+ * DbSelectDataSource accounts = new DbSelectDataSource(getJdbcDataSource(), sql);
  * </pre>
  * 
- * or if multiple SQL SELECT statements should be executed against the same JDBC
- * {@link DataSource}:
+ * alternatively following API can be used, as well:
  * 
  * <pre>
  * DataSource ds = getJdbcDataSource();
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
- * DbSelectDataSource accounts = Jaqlib.DB.getSelectDataSource(ds, sql);
- * </pre>
  * 
- * or if the simplified API should be used:
- * 
- * <pre>
- * DataSource ds = getJdbcDataSource();
- * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
  * Jaqlib.DB.select(AccountImpl.class).from(ds, sql).where(...)
  * </pre>
  * 
- * <i>Method call recording mechanism:</i>
+ * <h3>Selecting primitive values</h3> If you just want to select one or a list
+ * of primitive values you can use following code:
  * 
  * <pre>
- * // create a 'dummy' object for recording a method call for the WHERE clause
- * Account account = Jaqlib.DB.getRecorder(Account.class);
+ * String sql = &quot;select count(*) from accounts&quot;;
+ * DbSelectDataSource dataSource = new DbSelectDataSource(getDataSource(), sql);
  * 
- * // select all accounts with a balance greater than 5000
- * List&lt;AccountImpl&gt; results = Jaqlib.DB.select(AccountImpl.class).from(accounts)
- *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
+ * int nrRecords = Jaqlib.DB.select(Integer.class).from(dataSource).uniqueResult();
  * </pre>
  * 
- * <i>Custom WHERE conditions:</i>
+ * <h3>Selecting Java objects</h3>
+ * <p>
+ * Jaqlib supports mapping database columns to Java bean fields. It provides a
+ * mechanism to automatically do this mapping. But for more sophisticated use
+ * cases you can also define your own mapping (see example 'Define a custom bean
+ * mapping').
+ * </p>
+ * <p>
+ * Assume that you have following database table:
+ * <table border="1" cellpadding="5" cellspacing="5">
+ * <tr>
+ * <td>id</td>
+ * <td>lastName</td>
+ * <td>firstName</td>
+ * <td>balance</td>
+ * </tr>
+ * <tr>
+ * <td>1</td>
+ * <td>huber</td>
+ * <td>sepp</td>
+ * <td>5000.0</td>
+ * </tr>
+ * <tr>
+ * <td>2</td>
+ * <td>maier</td>
+ * <td>franz</td>
+ * <td>2000.0</td>
+ * </tr>
+ * </table>
+ * </p>
+ * 
+ * and following Java class:
  * 
  * <pre>
- * // create condition for negative balances
- * WhereCondition&lt;AccountImpl&gt; deptCondition = new WhereCondition&lt;AccountImpl&gt;() {
+ * public class AccountImpl implements Account
+ * {
+ *   private Long id;
+ *   private String lastName;
+ *   private String firstName;
+ *   private Double balance = 0.0;
  * 
- *   public boolean evaluate(AccountImpl account) {
- *     return (account.getBalance() &lt; 0);
+ * 
+ *   public Long getId()
+ *   {
+ *     return id;
  *   }
  * 
- * };
  * 
- * // create condition for accounts with poor credit rating
- * WhereCondition&lt;AccountImpl&gt; ratingCondition = new WhereCondition&lt;AccountImpl&gt;() {
+ *   public void setId(Long id)
+ *   {
+ *     this.id = id;
+ *   }
  * 
- *   public boolean evaluate(AccountImpl account) {
- *     return (account.getCreditRating() == CreditRating.POOR);
+ * 
+ *   public void setBalance(Double balance)
+ *   {
+ *     this.balance = balance;
+ *   }
+ * 
+ * 
+ *   public Double getBalance()
+ *   {
+ *     return balance;
+ *   }
+ * 
+ * 
+ *   public String getLastName()
+ *   {
+ *     return lastName;
+ *   }
+ * 
+ * 
+ *   public void setLastName(String lastName)
+ *   {
+ *     this.lastName = lastName;
+ *   }
+ * 
+ * 
+ *   public String getFirstName()
+ *   {
+ *     return firstName;
+ *   }
+ * 
+ * 
+ *   public void setFirstName(String firstName)
+ *   {
+ *     this.firstName = firstName;
  *   }
  * }
- * 
- * // execute query with these conditions 
- * List&lt;AccountImpl&gt; highRiskAccounts = Jaqlib.DB.select(AccountImpl.class).from(accounts)
- *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
- * <i>Filtering null elements:</i>
+ * <p>
+ * Because the database column names and the Java bean field names do exactly
+ * match, Jaqlib can perform full automatic mapping. Following code instantiates
+ * and fills <tt>AccountImpl</tt> objects from database.
+ * </p>
  * 
  * <pre>
- * List&lt;AccountImpl&gt; notNullAccounts = Jaqlib.DB.select(AccountImpl.class).from(
- *     accounts).where().element().isNotNull().asList();
+ * List&lt;? extends Account&gt; result = Jaqlib.DB.select(AccountImpl.class)
+ *     .from(accounts).asList();
  * </pre>
  * 
- * <i>Filtering {@link Comparable} elements:</i>
+ * <h3>Constraining the result</h3>
+ * 
+ * <p>
+ * <b>Method call recording mechanism</b><br>
+ * By using the Method {@link #getRecorder(Class)} a recorder object is created
+ * (= a JDK dynamic proxy). First the programmer must call the desired method on
+ * the returned recorder object. This method call is recorded by JaQLib. When
+ * JaqLib evaluates the WHERE condition this method call is replayed on every
+ * selected element. The result of this method call is then evaluated against
+ * the condition that is specified after the WHERE clause.
+ * </p>
  * 
  * <pre>
- * // Account implements the Comparable interface; the balance field is used for comparing two accounts
+ * // get recorder object
+ * Account account = Jaqlib.DB.getRecorder(Account.class);
+ * 
+ * // select all accounts with a balance greater than 500
+ * List&lt;? extends Account&gt; results = Jaqlib.DB.select(AccountImpl.class)
+ *     .from(accounts).whereCall(account.getBalance()).isGreaterThan(500.0)
+ *     .asList();
+ * </pre>
+ * 
+ * <p>
+ * In the example above the method call <tt>account.getBalance()</tt> is
+ * recorded by Jaqlib. When Jaqlib executes the query this method is called on
+ * every selected object. Each result of this method call is then evaluated
+ * according to the given condition <tt>isGreaterThan(500.0)</tt>. Only the
+ * selected elements that match this condition are returned.
+ * </p>
+ * 
+ * <p>
+ * <b>Custom where condition code</b><br>
+ * By implementing the interface {@link WhereCondition} you can define your own
+ * condition code. This alternative gives you most flexibility but is somewhat
+ * cumbersome to implement (see example below).
+ * </p>
+ * 
+ * <pre>
+ * // create custom WHERE condition
+ * WhereCondition&lt;AccountImpl&gt; myCondition = new WhereCondition&lt;AccountImpl&gt;()
+ * {
+ * 
+ *   public boolean evaluate(AccountImpl element)
+ *   {
+ *     if (element == null)
+ *       return false;
+ *     return element.getBalance() &gt; 500;
+ *   }
+ * };
+ * 
+ * // execute query
+ * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.DB
+ *     .select(AccountImpl.class).from(accounts).where(myCondition).asList();
+ * </pre>
+ * 
+ * <p>
+ * <b>Simple comparison methods</b><br>
+ * There are some comparison methods that can be used for criteria matching (see
+ * <a href=
+ * "http://java.sun.com/blueprints/corej2eepatterns/Patterns/DataAccessObject.html"
+ * >DataAccessObject<a>) or for matching primitive types.
+ * </p>
+ * 
+ * <pre>
+ * long accountId = 15;
+ * AccountImpl criteria = new AccountImpl();
+ * criteria.setId(accountId);
+ * 
+ * Account account15 = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+ *     .whereElement().isEqual(criteria).uniqueResult();
+ * </pre>
+ * 
+ * Or you could use this mechanism to filter <tt>null</tt> elements:
+ * 
+ * <pre>
+ * List&lt;AccountImpl&gt; notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
+ *     .from(accounts).where().element().isNotNull().asList();
+ * </pre>
+ * 
+ * Or for filtering {@link Comparable} elements:</i>
+ * 
+ * <pre>
+ * // Account implements the Comparable interface; the balance field is used
+ * // for comparing two accounts
  * AccountImpl spec = new AccountImpl();
- * account.setBalance(5000);
+ * spec.setBalance(5000.0);
  * 
  * List&lt;AccountImpl&gt; result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
  *     .where().element().isSmallerThan(spec).asList();
  * </pre>
  * 
- * <i>Map as result:</i>
+ * <h3>Using different result kinds</h3> <b>Return result as a {@link Map}:</b>
+ * <p>
+ * The key for the {@link Map} must be specified by using the method call record
+ * mechanism. Again a method call on a recorder object is recorded by Jaqlib.
+ * When returning the query result Jaqlib executes this recorded method on each
+ * selected element and uses the result as key of the map entry.
+ * </p>
  * 
  * <pre>
  * Account account = Jaqlib.DB.getRecorder(Account.class);
- * Map&lt;Long, AccountImpl&gt; results = Jaqlib.DB.select(AccountImpl.class).from(
- *     accounts).asMap(account.getId());
+ * Map&lt;Long, AccountImpl&gt; results = Jaqlib.DB.select(AccountImpl.class)
+ *     .from(accounts).asMap(account.getId());
  * </pre>
  * 
- * <i>Select all account with some constraints using a {@link PreparedStatement}
- * :</i>
+ * <h3>Executing prepared statements</h3>
  * <p>
  * If the same {@link PreparedStatement} should be used for multiple queries
  * then a PreparedStatement pool (like http://commons.apache.org/dbcp/) must be
  * used. Alternatively following code example can be used. It's important to set
  * the property <tt>AutoClosePreparedStatement</tt> to false and to close the
  * {@link DbSelectDataSource} after having issued the queries. By default the
- * <tt>AutoClosePreparedStatement</tt> is set to true.
+ * <tt>AutoClosePreparedStatement</tt> is set to true. The property
+ * <tt>AutoClosePreparedStatement</tt> can also be set application-wide by using
+ * the {@link #DEFAULTS} objects.
  * </p>
  * 
  * <pre>
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT WHERE fname = ? AND balance &gt; ?&quot;;
- * DbSelectDataSource accounts = Jaqlib.DB.getSelectDataSource(getJdbcDataSource(),
- *     sql); 
+ * DbSelectDataSource accounts = new DbSelectDataSource(getJdbcDataSource(), sql);
  * accounts.setAutoClosePreparedStatement(false);
  * 
- * try 
+ * try
  * {
- *   List&lt;AccountImpl&gt; results1000 = Jaqlib.DB.select(AccountImpl.class).from(
- *     accounts).using(&quot;werner&quot;, 1000).asList();
- *     
- *   List&lt;AccountImpl&gt; results2000 = Jaqlib.DB.select(AccountImpl.class).from(
- *     accounts).using(&quot;werner&quot;, 2000).asList();
- *     
- *   List&lt;AccountImpl&gt; results3000 = Jaqlib.DB.select(AccountImpl.class).from(
- *     accounts).using(&quot;werner&quot;, 3000).asList());
- * } 
- * finally 
- * {    
+ *   List&lt;AccountImpl&gt; results1000 = Jaqlib.DB.select(AccountImpl.class)
+ *       .from(accounts).using(&quot;werner&quot;, 1000).asList();
+ * 
+ *   List&lt;AccountImpl&gt; results2000 = Jaqlib.DB.select(AccountImpl.class)
+ *       .from(accounts).using(&quot;werner&quot;, 2000).asList();
+ * 
+ *   List&lt;AccountImpl&gt; results3000 = Jaqlib.DB.select(AccountImpl.class)
+ *       .from(accounts).using(&quot;werner&quot;, 3000).asList();
+ * }
+ * finally
+ * {
  *   // close all used statements (in that case it's only one statement)
  *   accounts.close();
  * }
  * </pre>
  * 
- * </p>
- * <p>
- * <i>Custom Java type handler:</i>
- * <p>
- * Jaqlib.DB column data types can be converted to custom Java types with
- * so-called {@link JavaTypeHandler}s. These handlers can be registered using
- * {@link BeanMapping#registerJavaTypeHandler(JavaTypeHandler)} .
- * </p>
+ * <h3>Custom Java type handler</h3> Database column data types can be converted
+ * to custom Java types with so-called {@link JavaTypeHandler}s. These handlers
+ * can be registered using
+ * {@link BeanMapping#registerJavaTypeHandler(JavaTypeHandler)} or
+ * {@link DbDefaults#registerJavaTypeHandler(JavaTypeHandler)}.</p>
  * <p>
  * The <tt>AccountImpl</tt> class has a <tt>creditRating</tt> field with the
- * custom enumeration type <tt>CreditRating</tt>. At Jaqlib.DB this field is
+ * custom enumeration type <tt>CreditRating</tt>. At database this field is
  * stored as an Integer value. By using a {@link JavaTypeHandler} this Integer
- * value is converted into the according <tt>CreditRating</tt> enumeration
+ * value can be converted into the according <tt>CreditRating</tt> enumeration
  * value.
  * </p>
  * 
  * <pre>
- * // get DbSelectDataSource and BeanMapping
- * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
- * DataSource ds = getJdbcDataSource();
- * DbSelectDataSource dataSource = Jaqlib.DB.getSelectDataSource(ds, sql);
- * BeanMapping&lt;AccountImpl&gt; mapping = db.getBeanMapping(AccountImpl.class);
+ *     // get DbSelectDataSource and BeanMapping
+ *     String sql = "SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT";
+ *     DbSelectDataSource dataSource = new DbSelectDataSource(getJdbcDataSource(),
+ *         sql);
+ *     BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
+ *         AccountImpl.class);
  * 
- * // register custom type handler for CreditRating bean fields
- * mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
+ *     // register custom type handler for CreditRating bean field
+ *     mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
  * 
- * // perform query 
- * Jaqlib.DB.select(mapping).from(dataSource) ...
+ *     // perform query
+ *     Jaqlib.DB.select(mapping).from(dataSource) ...
+ * </pre>
  * 
- * // custom java type handler that converts Integer values from DB into CreditRating enumerations  
+ * <pre>
+ * // custom java type handler that converts Integer values from DB into
+ * // CreditRating enumerations
  * public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
  * {
- *   public Object getObject(Object value)
+ *   &#064;Override
+ *   public Object convert(Object value)
  *   {
  *     if (value instanceof Integer)
  *       return CreditRating.rating((Integer) value);
  *     else
  *       throw handleIllegalInputValue(value, CreditRating.class);
  *   }
- * }
  * 
+ * 
+ *   &#064;Override
+ *   protected void addSupportedTypes(List&lt;Class&lt;?&gt;&gt; types)
+ *   {
+ *     types.add(CreditRating.class);
+ *   }
+ * }
  * </pre>
  * 
- * <i>Executing a task on each element:</i>
+ * <h3>Executing a task on each element</h3>
  * 
  * <pre>
- * // create task that should be executed for each element
+ * // create task that should be executed on each element
  * Task&lt;Account&gt; task = new Task&lt;Account&gt;()
  * {
  * 
@@ -255,29 +430,33 @@ import org.jaqlib.db.Using;
  * 
  * };
  * 
- * // execute task only on elements that match the given condition 
+ * // execute task only on elements that match the given condition
  * Jaqlib.DB.select(Account.class).from(accounts).where(deptCond).execute(task);
  * 
  * // or ...
- * List&lt;Account&gt; result = Jaqlib.DB.select(Account.class).from(accounts).where(
- *     deptCond).executeWithResult(task).asList();
+ * List&lt;Account&gt; result = Jaqlib.DB.select(Account.class).from(accounts)
+ *     .where(deptCond).executeWithResult(task).asList();
  * </pre>
  * 
- * <i>Inserting a Java bean into a Jaqlib.DB table:</i>
+ * <h3>Inserting a Java bean into a database table</h3>
+ * <p>
+ * <b>Using default bean mapping (bean property convention):</b>
+ * </p>
  * 
  * <pre>
  * AccountImpl account = new AccountImpl();
  * // fill account with values ...
  * 
  * String tableName = &quot;ACCOUNT&quot;;
- * DbInsertDataSource dataSource = Jaqlib.DB.getInsertDataSource(
- *     getJdbcDataSource(), tableName);
+ * DbInsertDataSource dataSource = new DbInsertDataSource(getJdbcDataSource(),
+ *     tableName);
  * int updateCount = Jaqlib.DB.insert(account).into(dataSource)
  *     .usingDefaultMapping();
  * </pre>
  * 
- * <i>Inserting a Java bean into a Jaqlib.DB table using a custom bean
- * mapping:</i>
+ * <p>
+ * <b>Using custom bean mapping:</b>
+ * </p>
  * 
  * <pre>
  * AccountImpl account = new AccountImpl();
@@ -286,8 +465,8 @@ import org.jaqlib.db.Using;
  * // create custom bean mapping
  * BeanMapping&lt;AccountImpl&gt; beanMapping = Jaqlib.DB
  *     .getDefaultBeanMapping(AccountImpl.class);
- * beanMapping.removeChildColumn(&quot;id&quot;);
- * beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
+ * beanMapping.removeField(&quot;id&quot;);
+ * beanMapping.getField(&quot;lastName&quot;).setSourceName(&quot;lName&quot;);
  * 
  * // insert account using the custom bean mapping and the simplified API
  * String tableName = &quot;ACCOUNT&quot;;
@@ -295,57 +474,66 @@ import org.jaqlib.db.Using;
  *     .into(getJdbcDataSource(), tableName).using(beanMapping);
  * </pre>
  * 
- * <i>Updating a Java bean in a Jaqlib.DB table:</i>
+ * <h3>Updating a Java bean in a database table</h3>
+ * <p>
+ * <b>Using default bean mapping (bean property convention):</b>
+ * </p>
  * 
  * <pre>
- * // get account that already exists at Jaqlib.DB 
+ * // get account that already exists at database
  * AccountImpl account = getAccount();
  * 
  * String whereClause = &quot;id = &quot; + account.getId();
  * String tableName = &quot;ACCOUNT&quot;;
  * DataSource ds = getJdbcDataSource();
- * DbUpdateDataSource dataSource = Jaqlib.DB.getUpdateDataSource(ds, tableName);
+ * DbUpdateDataSource dataSource = new DbUpdateDataSource(ds, tableName);
  * int updateCount = Jaqlib.DB.update(account).in(dataSource).where(whereClause)
  *     .usingDefaultMapping();
  * </pre>
  * 
- * <i>Updating a Java bean in a Jaqlib.DB table using a custom bean mapping:</i>
+ * <p>
+ * <b>Using custom bean mapping:</b>
+ * </p>
  * 
  * <pre>
- * // get account that already exists at Jaqlib.DB 
- * AccountImpl account = getAccount();
+ * // get account that already exists at database
+ * Account account = getAccount();
  * 
  * // create custom bean mapping
- * BeanMapping&lt;AccountImpl&gt; beanMapping = Jaqlib.DB
- *     .getDefaultBeanMapping(AccountImpl.class);
- * beanMapping.removeChildColumn(&quot;id&quot;);
- * beanMapping.getChildColumn(&quot;lastName&quot;).setColumnName(&quot;lName&quot;);
+ * BeanMapping&lt;Account&gt; beanMapping = new BeanMapping&lt;Account&gt;(Account.class);
+ * beanMapping.removeField(&quot;id&quot;);
+ * beanMapping.getField(&quot;lastName&quot;).setSourceName(&quot;lName&quot;);
  * 
  * String whereClause = &quot;id = &quot; + account.getId();
  * String tableName = &quot;ACCOUNT&quot;;
- * int updateCount = Jaqlib.DB.update(account).in(getJdbcDataSource(), tableName,
- *     ).where(whereClause).using(beanMapping);
+ * int updateCount = Jaqlib.DB.update(account).in(getJdbcDataSource(), tableName)
+ *     .where(whereClause).using(beanMapping);
  * </pre>
  * 
- * <i>Delete specific records from a Jaqlib.DB table:</i>
+ * <h3>Delete records from a database table</h3>
+ * <p>
+ * <b>Delete specific records:</b>
+ * </p>
  * 
  * <pre>
- * // get account that already exists at Jaqlib.DB 
+ * // get account that already exists at database
  * AccountImpl account = getAccount();
  * 
- * // delete account at Jaqlib.DB
+ * // delete account at database
  * String whereClause = &quot;id = &quot; + account.getId();
  * String tableName = &quot;ACCOUNT&quot;;
  * DataSource ds = getJdbcDataSource();
- * DbDeleteDataSource dataSource = Jaqlib.DB.getDeleteDataSource(ds, tableName,
+ * DbDeleteDataSource dataSource = new DbDeleteDataSource(ds, tableName,
  *     whereClause);
  * int updateCount = Jaqlib.DB.delete().from(dataSource);
  * </pre>
  * 
- * <i>Delete all records from a Jaqlib.DB table:</i>
+ * <p>
+ * <b>Delete all records:</b>
+ * </p>
  * 
  * <pre>
- * // delete all records from the ACCOUNT table 
+ * // delete all records from the ACCOUNT table
  * String tableName = &quot;ACCOUNT&quot;;
  * int updateCount = Jaqlib.DB.delete().from(getJdbcDataSource(), tableName);
  * </pre>
@@ -448,6 +636,9 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
 
 
   /**
+   * This method should only be used by the internal classes of Jaqlib. Use the
+   * various select, insert, update, delete methods instead.
+   * 
    * @param <T> the element type of the data source.
    * @return a query for using the functionality of JaQLib without the fluent
    *         API.
