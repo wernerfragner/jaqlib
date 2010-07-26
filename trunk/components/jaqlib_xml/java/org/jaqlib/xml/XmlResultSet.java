@@ -1,11 +1,17 @@
 package org.jaqlib.xml;
 
+import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.jaqlib.core.Defaults;
 import org.jaqlib.core.DsResultSet;
+import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.CollectionFactory;
+import org.jaqlib.core.bean.CollectionFieldMapping;
 import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.util.LogUtil;
+import org.jaqlib.util.lang.StringConversion;
 import org.jaqlib.xml.xpath.XmlNamespace;
 import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NamedNodeMap;
@@ -67,8 +73,111 @@ public class XmlResultSet implements DsResultSet
   @Override
   public Object getObject(FieldMapping<?> mapping)
   {
+    Node node = nodes.item(curNodeIndex);
+
+    if (mapping instanceof CollectionFieldMapping)
+    {
+      return getCollectionObject((CollectionFieldMapping) mapping, node);
+    }
+    else
+    {
+      return getPrimitiveObject(mapping, node);
+    }
+  }
+
+
+  private Object getCollectionObject(CollectionFieldMapping mapping, Node n)
+  {
+    NodeListImpl matches = getMatchingChildNodes(mapping, n);
+
+    Collection result = createCollection(mapping);
+    XmlResultSet childResultSet = new XmlResultSet(matches, useAttributes,
+        namespaces);
+    BeanMapping<?> elementMapping = mapping.getElementMapping();
+
+    while (childResultSet.next())
+    {
+      Object value = elementMapping.getValue(childResultSet);
+      result.add(elementMapping.getValue(childResultSet));
+    }
+
+    return result;
+  }
+
+
+  private NodeListImpl getMatchingChildNodes(CollectionFieldMapping mapping,
+      Node n)
+  {
+    NodeListImpl matches = new NodeListImpl();
+    addMatchingChildNodes(mapping, n, matches);
+    return matches;
+  }
+
+
+  private void addMatchingChildNodes(CollectionFieldMapping mapping, Node n,
+      NodeListImpl matches)
+  {
     String name = mapping.getSourceName();
-    Node n = nodes.item(curNodeIndex);
+
+    if (mapping.hasPluralName())
+    {
+      NodeList children = n.getChildNodes();
+
+      // try to add all child nodes that matches the singular
+
+      String singular = mapping.getSingularName();
+      addMatchingChildNodes(singular, n, matches);
+
+      // try to add all child nodes that matches the plural
+
+      for (int i = 0; i < children.getLength(); i++)
+      {
+        Node child = children.item(i);
+        if (child.getNodeName().equals(name))
+        {
+          addMatchingChildNodes(mapping, child, matches);
+        }
+      }
+    }
+    else
+    {
+      // try to add all child nodes that matches the singular
+
+      addMatchingChildNodes(name, n, matches);
+    }
+  }
+
+
+  private void addMatchingChildNodes(String name, Node n, NodeListImpl matches)
+  {
+    NodeList children = n.getChildNodes();
+    for (int i = 0; i < children.getLength(); i++)
+    {
+      Node child = children.item(i);
+      if (child.getNodeName().equals(name))
+      {
+        matches.add(child);
+      }
+    }
+  }
+
+
+  private Collection<?> createCollection(CollectionFieldMapping mapping)
+  {
+    Class<? extends Collection<?>> fieldType = mapping.getFieldType();
+    return getCollectionFactory().newInstance(fieldType);
+  }
+
+
+  private CollectionFactory getCollectionFactory()
+  {
+    return Defaults.getCollectionFactory();
+  }
+
+
+  private Object getPrimitiveObject(FieldMapping<?> mapping, Node n)
+  {
+    String name = mapping.getSourceName();
 
     Node resultNode = null;
     if (useAttributes)
@@ -133,41 +242,7 @@ public class XmlResultSet implements DsResultSet
   private Object defaultConvert(FieldMapping<?> mapping, String nodeValue)
   {
     Class<?> fieldType = mapping.getFieldType();
-    if (fieldType.equals(String.class))
-    {
-      return nodeValue;
-    }
-    else if (fieldType.equals(Integer.class))
-    {
-      return Integer.valueOf(nodeValue);
-    }
-    else if (fieldType.equals(Long.class))
-    {
-      return Long.valueOf(nodeValue);
-    }
-    else if (fieldType.equals(Double.class))
-    {
-      return Double.valueOf(nodeValue);
-    }
-    else if (fieldType.equals(Float.class))
-    {
-      return Float.valueOf(nodeValue);
-    }
-    else if (fieldType.equals(Byte.class))
-    {
-      return Byte.valueOf(nodeValue);
-    }
-    else if (fieldType.equals(char.class))
-    {
-      return new Character(nodeValue.charAt(0));
-    }
-    else if (fieldType.equals(Boolean.class))
-    {
-      return Boolean.valueOf(nodeValue);
-    }
-
-    throw new IllegalArgumentException("Unsupported field type '" + fieldType
-        + "' for field '" + mapping.getTargetName() + "'.");
+    return StringConversion.fromString(fieldType, nodeValue);
   }
 
 

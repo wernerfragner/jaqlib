@@ -7,6 +7,7 @@ import org.jaqlib.db.DbDeleteDataSource;
 import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbUpdateDataSource;
+import org.jaqlib.db.ManualMappingStrategy;
 
 
 public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
@@ -38,6 +39,7 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     mapping.removeField("department");
     mapping.removeField("lastName");
     mapping.removeField("firstName");
+    mapping.removeField("transactions");
 
     ColumnMapping<?> lname = new ColumnMapping<Object>("lastName");
     lname.setColumnName("lname");
@@ -49,10 +51,23 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
   }
 
 
+  private void registerManualMappingStrategy()
+  {
+    BeanMapping mapping2 = new BeanMapping(AccountImpl.class);
+    mapping2.removeField("transactions");
+
+    ManualMappingStrategy strategy = new ManualMappingStrategy();
+    strategy.addMappings(mapping2.getFieldMappings());
+    DbDefaults.INSTANCE.setBeanMappingStrategy(strategy);
+  }
+
+
   @Override
   public void tearDown() throws Exception
   {
     super.tearDown();
+
+    DbDefaults.INSTANCE.reset();
   }
 
 
@@ -80,9 +95,9 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     DbSelectDataSource dbSelectDataSource = getSelectDataSource(select);
 
     Account dummy = DatabaseQB.getRecorder(Account.class);
-    AccountImpl dbAccount = DatabaseQB.select(AccountImpl.class).from(
-        dbSelectDataSource).whereCall(dummy.getLastName()).isEqual("fragner")
-        .uniqueResult();
+    AccountImpl dbAccount = DatabaseQB.select(AccountImpl.class)
+        .from(dbSelectDataSource).whereCall(dummy.getLastName())
+        .isEqual("fragner").uniqueResult();
     assertEqualAccount(account, dbAccount);
     return dbAccount;
   }
@@ -142,6 +157,10 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   public void testInsert_DefaultMapping()
   {
+    // is needed because default mapping is used (a 'transactions' table is not
+    // available at database)
+    registerManualMappingStrategy();
+
     int cnt = DatabaseQB.insert(account).into(getInsertDataSource(EXACT_TABLE))
         .usingDefaultMapping();
     assertEquals(1, cnt);
@@ -174,6 +193,10 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   public void testUpdate_DefaultMapping()
   {
+    // is needed because default mapping is used (a 'transactions' table is not
+    // available at database)
+    registerManualMappingStrategy();
+
     // insert account
 
     dbSetup.insertExactAccount(account);
@@ -196,6 +219,10 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   public void testUpdate_MatchingWhereClause()
   {
+    // is needed because default mapping is used (a 'transactions' table is not
+    // available at database)
+    registerManualMappingStrategy();
+
     // insert account
 
     dbSetup.insertExactAccount(account);
@@ -220,6 +247,10 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   public void testUpdate_NonMatchingWhereClause()
   {
+    // is needed because default mapping is used (a 'transactions' table is not
+    // available at database)
+    registerManualMappingStrategy();
+
     double originalBalance = account.getBalance();
 
     // insert account

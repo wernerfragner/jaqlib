@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMappingStrategy;
+import org.jaqlib.core.bean.CollectionFactory;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.core.bean.JavaTypeHandlerRegistry;
 
@@ -54,7 +55,7 @@ public class DefaultsDelegate
 
 
   /**
-   * See {@link Defaults#getJavaTypeHandlerRegistry()}.
+   * See {@link Defaults#getBeanFactory()}.
    */
   public BeanFactory getBeanFactory()
   {
@@ -68,6 +69,24 @@ public class DefaultsDelegate
   public void setBeanFactory(BeanFactory beanFactory)
   {
     Defaults.setBeanFactory(beanFactory);
+  }
+
+
+  /**
+   * See {@link Defaults#getCollectionFactory())}.
+   */
+  public CollectionFactory getCollectionFactory()
+  {
+    return Defaults.getCollectionFactory();
+  }
+
+
+  /**
+   * See {@link Defaults#setCollectionFactory(CollectionFactory)}.
+   */
+  public void setcollectionFactory(CollectionFactory collectionFactory)
+  {
+    Defaults.setCollectionFactory(collectionFactory);
   }
 
 

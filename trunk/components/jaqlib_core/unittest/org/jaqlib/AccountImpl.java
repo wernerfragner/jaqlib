@@ -1,5 +1,8 @@
 package org.jaqlib;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Werner Fragner
  */
@@ -17,6 +20,8 @@ public class AccountImpl implements Account
 
   private boolean active = true;
   private boolean changed = false;
+
+  private List<TransactionImpl> transactions = new ArrayList<TransactionImpl>();
 
 
   public Long getId()
@@ -121,6 +126,18 @@ public class AccountImpl implements Account
   }
 
 
+  public void setTransactions(List<TransactionImpl> transactions)
+  {
+    this.transactions = transactions;
+  }
+
+
+  public List<? extends Transaction> getTransactions()
+  {
+    return transactions;
+  }
+
+
   public int compareTo(Account o)
   {
     if (balance == null)
@@ -156,6 +173,15 @@ public class AccountImpl implements Account
   public boolean isActive()
   {
     return active;
+  }
+
+
+  public void addTransaction(String id, double amount)
+  {
+    TransactionImpl trans = new TransactionImpl();
+    trans.setId(id);
+    trans.setAmount(amount);
+    this.transactions.add(trans);
   }
 
 

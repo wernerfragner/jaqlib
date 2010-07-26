@@ -1,5 +1,7 @@
 package org.jaqlib;
 
+import java.util.List;
+
 /**
  * @author Werner Fragner
  */
@@ -37,6 +39,12 @@ public interface Account extends Comparable<Account>
 
 
   boolean isActive();
+
+
+  void setTransactions(List<TransactionImpl> transactions);
+
+
+  List<? extends Transaction> getTransactions();
 
 
 }

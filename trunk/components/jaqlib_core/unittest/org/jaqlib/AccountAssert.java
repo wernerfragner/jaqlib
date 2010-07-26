@@ -45,4 +45,48 @@ public class AccountAssert
     AccountAssert.assertHuberAccount(accounts.get(0));
   }
 
+
+  public static void assertMaierAccountWithTransactions(
+      List<AccountImpl> accounts)
+  {
+    assertMaierAccount(accounts);
+    assertMaierTransactions(accounts);
+  }
+
+
+  public static void assertMaierTransactions(List<AccountImpl> accounts)
+  {
+    List<? extends Transaction> transactions = accounts.get(0)
+        .getTransactions();
+    TestCase.assertEquals(2, transactions.size());
+    assertEqualLists(AccountSetup.MAIER_ACCOUNT.getTransactions(), transactions);
+  }
+
+
+  private static void assertEqualLists(List<?> list1, List<?> list2)
+  {
+    TestCase.assertEquals(list1.size(), list2.size());
+    for (Object obj : list1)
+    {
+      TestCase.assertTrue(list2.contains(obj));
+    }
+  }
+
+
+  public static void assertHuberAccountWithTransactions(
+      List<AccountImpl> accounts)
+  {
+    assertHuberAccount(accounts);
+    assertHuberTransactions(accounts);
+  }
+
+
+  public static void assertHuberTransactions(List<AccountImpl> accounts)
+  {
+    List<? extends Transaction> transactions = accounts.get(0)
+        .getTransactions();
+    TestCase.assertEquals(2, transactions.size());
+    assertEqualLists(AccountSetup.HUBER_ACCOUNT.getTransactions(), transactions);
+  }
+
 }
