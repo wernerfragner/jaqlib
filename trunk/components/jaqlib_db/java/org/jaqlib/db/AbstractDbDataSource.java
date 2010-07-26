@@ -13,9 +13,9 @@ import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
+import org.jaqlib.db.util.DbUtil;
 import org.jaqlib.util.Assert;
 import org.jaqlib.util.CollectionUtil;
-import org.jaqlib.util.DbUtil;
 import org.jaqlib.util.LogUtil;
 
 /**

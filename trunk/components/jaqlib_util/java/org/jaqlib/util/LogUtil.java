@@ -1,6 +1,7 @@
 package org.jaqlib.util;
 
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,17 +15,81 @@ import java.util.logging.Logger;
 public class LogUtil
 {
 
+  private static final ConsoleHandler handler = new ConsoleHandler();
+
+  static
+  {
+    handler.setLevel(Level.ALL);
+  }
+
+
   /**
-   * Enables logging of all JaQLib messages to the console.
+   * Gets the JDK logger for JaqLib.
+   * 
+   * @return see description.
+   */
+  public static Logger getJaqlibLogger()
+  {
+    return Logger.getLogger("org.jaqlib");
+  }
+
+
+  /**
+   * <p>
+   * Enables logging of all JaQLib messages to the console. This can be useful,
+   * for example, for debugging.
+   * </p>
+   * <p>
+   * By default logging to the console is disabled.
+   * </p>
+   * <p>
+   * If you want to redirect the JaqLib log output to your own logging handlers
+   * you can use {@link #registerLogHandler(Handler, Level)}.
+   * </p>
    */
   public static void enableConsoleLogging()
   {
-    ConsoleHandler handler = new ConsoleHandler();
-    handler.setLevel(Level.ALL);
+    registerLogHandler(handler, Level.ALL);
+  }
 
-    Logger logger = Logger.getLogger("org.jaqlib");
-    logger.setLevel(Level.ALL);
+
+  /**
+   * <p>
+   * Disables logging of all JaQLib messages to the console.
+   * </p>
+   * By default logging to the console is disabled.
+   */
+  public static void disableConsoleLogging()
+  {
+    unregisterLogHandler(handler);
+  }
+
+
+  /**
+   * Registers the given log handler using the given log level.
+   * 
+   * @param handler the custom log handler.
+   * @param level the desired log level. Message levels lower then this value
+   *          will be discarded.
+   */
+  public static void registerLogHandler(Handler handler, Level level)
+  {
+    Logger logger = LogUtil.getJaqlibLogger();
+    logger.setLevel(level);
     logger.addHandler(handler);
+  }
+
+
+  /**
+   * Unregisters the given log handler. If the given handler has not been
+   * registered before then no action is performed.
+   * 
+   * @param handler the handler to remove; may me null.
+   */
+  public static void unregisterLogHandler(Handler handler)
+  {
+    Logger logger = LogUtil.getJaqlibLogger();
+    logger.removeHandler(handler);
   }
 
 

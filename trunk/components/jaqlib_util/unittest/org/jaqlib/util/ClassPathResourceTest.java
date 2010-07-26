@@ -22,7 +22,6 @@ public class ClassPathResourceTest extends TestCase
   public void testGetURL() throws MalformedURLException
   {
     String url = resource.getURL().toString();
-    assertTrue(url.startsWith("file:"));
     assertTrue(url.endsWith("somefile.xml"));
   }
 
