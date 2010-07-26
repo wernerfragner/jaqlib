@@ -70,24 +70,36 @@ public class XmlResultSet implements DsResultSet
   /**
    * {@inheritDoc}
    */
+  public Object getAnynomousObject(FieldMapping<?> mapping)
+  {
+    String original = mapping.getSourceName();
+    mapping.setSourceName("#text"); // use #text node for anonymous value
+    Object result = getObject(mapping);
+    mapping.setSourceName(original);
+    return result;
+  }
+
+
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Object getObject(FieldMapping<?> mapping)
   {
-    Node node = nodes.item(curNodeIndex);
-
     if (mapping instanceof CollectionFieldMapping)
     {
-      return getCollectionObject((CollectionFieldMapping) mapping, node);
+      return getCollectionObject((CollectionFieldMapping) mapping);
     }
     else
     {
-      return getPrimitiveObject(mapping, node);
+      return getPrimitiveObject(mapping);
     }
   }
 
 
-  private Object getCollectionObject(CollectionFieldMapping mapping, Node n)
+  private Object getCollectionObject(CollectionFieldMapping mapping)
   {
+    Node n = nodes.item(curNodeIndex);
     NodeListImpl matches = getMatchingChildNodes(mapping, n);
 
     Collection result = createCollection(mapping);
@@ -98,7 +110,7 @@ public class XmlResultSet implements DsResultSet
     while (childResultSet.next())
     {
       Object value = elementMapping.getValue(childResultSet);
-      result.add(elementMapping.getValue(childResultSet));
+      result.add(value);
     }
 
     return result;
@@ -117,33 +129,23 @@ public class XmlResultSet implements DsResultSet
   private void addMatchingChildNodes(CollectionFieldMapping mapping, Node n,
       NodeListImpl matches)
   {
-    String name = mapping.getSourceName();
+    // try to add all child nodes that matches the element source name
 
-    if (mapping.hasPluralName())
+    String elementName = mapping.getElementSourceName();
+    addMatchingChildNodes(elementName, n, matches);
+
+    // try to add all child nodes that matches the collection source name
+
+    String collectionName = mapping.getSourceName();
+    NodeList children = n.getChildNodes();
+
+    for (int i = 0; i < children.getLength(); i++)
     {
-      NodeList children = n.getChildNodes();
-
-      // try to add all child nodes that matches the singular
-
-      String singular = mapping.getSingularName();
-      addMatchingChildNodes(singular, n, matches);
-
-      // try to add all child nodes that matches the plural
-
-      for (int i = 0; i < children.getLength(); i++)
+      Node child = children.item(i);
+      if (child.getNodeName().equals(collectionName))
       {
-        Node child = children.item(i);
-        if (child.getNodeName().equals(name))
-        {
-          addMatchingChildNodes(mapping, child, matches);
-        }
+        addMatchingChildNodes(mapping, child, matches);
       }
-    }
-    else
-    {
-      // try to add all child nodes that matches the singular
-
-      addMatchingChildNodes(name, n, matches);
     }
   }
 
@@ -175,9 +177,11 @@ public class XmlResultSet implements DsResultSet
   }
 
 
-  private Object getPrimitiveObject(FieldMapping<?> mapping, Node n)
+  private Object getPrimitiveObject(FieldMapping<?> mapping)
   {
     String name = mapping.getSourceName();
+
+    Node n = nodes.item(curNodeIndex);
 
     Node resultNode = null;
     if (useAttributes)
@@ -185,11 +189,14 @@ public class XmlResultSet implements DsResultSet
       NamedNodeMap attributes = n.getAttributes();
       resultNode = getNamedAttribute(attributes, name);
     }
-    else
+
+    if (resultNode == null)
     {
       resultNode = findNode(n, name);
-      if (resultNode != null)
+      if (resultNode != null && resultNode.getFirstChild() != null)
+      {
         resultNode = resultNode.getFirstChild();
+      }
     }
 
     if (resultNode == null)
@@ -206,6 +213,11 @@ public class XmlResultSet implements DsResultSet
 
   private Node getNamedAttribute(NamedNodeMap attributes, String name)
   {
+    if (attributes == null)
+    {
+      return null;
+    }
+
     Node result = attributes.getNamedItem(name);
     if (result == null)
     {
@@ -246,13 +258,13 @@ public class XmlResultSet implements DsResultSet
   }
 
 
-  private Node findNode(Node n, String valueLabel)
+  private Node findNode(Node n, String name)
   {
     NodeList childs = n.getChildNodes();
     for (int i = 0; i < childs.getLength(); i++)
     {
       Node child = childs.item(i);
-      if (child.getNodeName().equals(valueLabel))
+      if (child.getNodeName().equals(name))
       {
         return child;
       }
@@ -270,5 +282,6 @@ public class XmlResultSet implements DsResultSet
     curNodeIndex++;
     return curNodeIndex < nodes.getLength();
   }
+
 
 }

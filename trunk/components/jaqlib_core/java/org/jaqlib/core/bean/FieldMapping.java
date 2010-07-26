@@ -15,7 +15,7 @@ import org.jaqlib.util.ReflectionUtil;
 public class FieldMapping<T> extends AbstractMapping<T>
 {
 
-  private Class<?> fieldType;
+  private Class<? extends T> fieldType;
   private String targetName;
   private String sourceName;
 
@@ -48,7 +48,7 @@ public class FieldMapping<T> extends AbstractMapping<T>
    * @param fieldName the Java bean field name.
    * @param fieldType the type of the Java bean field.
    */
-  public FieldMapping(String fieldName, Class<?> fieldType)
+  public FieldMapping(String fieldName, Class<T> fieldType)
   {
     this(fieldName);
     setFieldType(fieldType);
@@ -94,7 +94,7 @@ public class FieldMapping<T> extends AbstractMapping<T>
   /**
    * @return the type of the Java bean field.
    */
-  public Class<?> getFieldType()
+  public Class<? extends T> getFieldType()
   {
     return fieldType;
   }
@@ -103,7 +103,7 @@ public class FieldMapping<T> extends AbstractMapping<T>
   /**
    * @param fieldType the type of the Java bean field.
    */
-  public void setFieldType(Class<?> fieldType)
+  public void setFieldType(Class<? extends T> fieldType)
   {
     this.fieldType = fieldType;
   }
@@ -174,6 +174,20 @@ public class FieldMapping<T> extends AbstractMapping<T>
   public T getValue(DsResultSet rs)
   {
     return (T) rs.getObject(this);
+  }
+
+
+  /**
+   * Extracts the anonymous value that is defined by this class (type and type
+   * handler) from the given result set.
+   * 
+   * @param rs the data source result set.
+   * @return the value from the result set.
+   */
+  @SuppressWarnings("unchecked")
+  public T getAnonymousValue(DsResultSet rs)
+  {
+    return (T) rs.getAnynomousObject(this);
   }
 
 

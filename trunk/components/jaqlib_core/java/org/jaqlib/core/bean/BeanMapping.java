@@ -137,6 +137,19 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   @Override
   public T getValue(DsResultSet rs)
   {
+    if (isPrimitive())
+    {
+      return getPrimitive(rs);
+    }
+    else
+    {
+      return getBean(rs);
+    }
+  }
+
+
+  private T getBean(DsResultSet rs)
+  {
     T bean = newBeanInstance();
     for (FieldMapping<?> mapping : this)
     {
@@ -147,6 +160,22 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
       }
     }
     return bean;
+  }
+
+
+  private T getPrimitive(DsResultSet rs)
+  {
+    FieldMapping<T> mapping = new FieldMapping<T>();
+    mapping.setFieldType(this.beanClass);
+    mapping.setTypeHandler(getJavaTypeHandler(this.beanClass));
+
+    return mapping.getAnonymousValue(rs);
+  }
+
+
+  private boolean isPrimitive()
+  {
+    return ReflectionUtil.isPrimitiveType(this.beanClass);
   }
 
 
@@ -263,7 +292,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
   public boolean isCollectionField(String fieldName)
   {
     FieldMapping<?> field = getField(fieldName);
-    return (field instanceof CollectionFieldMapping<?>);
+    return (field instanceof CollectionFieldMapping);
   }
 
 
@@ -276,16 +305,16 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    * @throws IllegalArgumentException if the given field was found but is no
    *           collection field.
    */
-  public CollectionFieldMapping<?> getCollectionField(String fieldName)
+  public CollectionFieldMapping getCollectionField(String fieldName)
   {
     FieldMapping<?> field = getField(fieldName);
     if (field == null)
     {
       return null;
     }
-    else if (field instanceof CollectionFieldMapping<?>)
+    else if (field instanceof CollectionFieldMapping)
     {
-      return (CollectionFieldMapping<?>) field;
+      return (CollectionFieldMapping) field;
     }
     else
     {
@@ -302,7 +331,7 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
    */
   public void removeAllFields()
   {
-    this.mappings = new ArrayList();
+    this.mappings = new ArrayList<FieldMapping<?>>();
   }
 
 

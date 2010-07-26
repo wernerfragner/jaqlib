@@ -12,6 +12,8 @@ import junit.framework.TestCase;
 
 import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
+import org.jaqlib.CreditRating;
+import org.jaqlib.Temperature;
 import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.XmlQB;
@@ -207,7 +209,7 @@ public abstract class XmlQBTest extends TestCase
   public void testSelectAccount_DataSourceReuse_Default()
   {
     XmlSelectDataSource ds = new XmlSelectDataSource(
-        "unittest/accounts_nestedtrans.xml");
+        "unittest/accounts_nestedbeans.xml");
     ds.setAutoClose(false);
 
     try
@@ -271,12 +273,12 @@ public abstract class XmlQBTest extends TestCase
   }
 
 
-  public void testSelectNestedTransactions()
+  public void testSelectNestedBeans()
   {
     BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
         AccountImpl.class);
     Account recorder = XmlQB.getRecorder(Account.class);
-    String fileName = "unittest/accounts_nestedtrans.xml";
+    String fileName = "unittest/accounts_nestedbeans.xml";
 
     accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
         .andCall(recorder.getLastName()).isEqual("huber").asList();
@@ -285,6 +287,53 @@ public abstract class XmlQBTest extends TestCase
     accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
         .andCall(recorder.getLastName()).isEqual("maier").asList();
     assertMaierAccountWithTransactions(accounts);
+  }
+
+
+  public void testSelectNestedPrimitives()
+  {
+    BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
+        Temperature.class);
+    Temperature recorder = XmlQB.getRecorder(Temperature.class);
+    String fileName = "unittest/temperature_nested_primitives.xml";
+
+    Temperature temp = XmlQB.select(mapping).from(fileName)
+        .where("/house/sensors/temperature").andCall(recorder.getLocation())
+        .isEqual("kitchen").uniqueResult();
+
+    assertNotNull(temp);
+    assertEquals("kitchen", temp.getLocation());
+    assertTrue(temp.getHistory().contains(25));
+    assertTrue(temp.getHistory().contains(26));
+    assertTrue(temp.getHistory().contains(23));
+  }
+
+
+  public void testSelectPrimitives()
+  {
+    String fileName = "unittest/temperature_nested_primitives.xml";
+
+    List<String> locations = XmlQB.select(String.class).from(fileName)
+        .where("//@location").asList();
+
+    assertNotNull(locations);
+    assertEquals(2, locations.size());
+    assertTrue(locations.contains("kitchen"));
+    assertTrue(locations.contains("cellar"));
+  }
+
+
+  public void testSelectPrimitives_TypeHandler()
+  {
+    XmlDefaults.INSTANCE
+        .registerJavaTypeHandler(new CreditRatingStringTypeHandler());
+
+    List<CreditRating> ratings = XmlQB.select(CreditRating.class)
+        .from("unittest/accounts_attributes.xml").where("//@creditRating")
+        .asList();
+    assertEquals(2, ratings.size());
+    assertTrue(ratings.contains(CreditRating.POOR));
+    assertTrue(ratings.contains(CreditRating.GOOD));
   }
 
 

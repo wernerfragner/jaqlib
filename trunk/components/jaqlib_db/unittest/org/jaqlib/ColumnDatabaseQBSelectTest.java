@@ -44,6 +44,17 @@ public class ColumnDatabaseQBSelectTest extends TestCase
   }
 
 
+  public void testSimpleSelect()
+  {
+    final String sql = "SELECT lname AS lastname FROM APP.ACCOUNT";
+    DbSelectDataSource ds = Database.getSelectDataSource(getDataSource(), sql);
+
+    List<String> names = DatabaseQB.select(String.class).from(ds).asList();
+    assertTrue(names.contains(MAIER_ACCOUNT.getLastName()));
+    assertTrue(names.contains(HUBER_ACCOUNT.getLastName()));
+  }
+
+
   @Override
   public void tearDown() throws Exception
   {

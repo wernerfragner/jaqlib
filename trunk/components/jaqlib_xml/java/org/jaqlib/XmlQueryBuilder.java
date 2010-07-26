@@ -29,7 +29,9 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * or XML attributes. For example, if you have a XML element 'account' with the
  * attributes 'lastName' and 'balance' then you would have to have a class with
  * the fields 'lastName' and 'balance'. The same applies when you use nested XML
- * elements instead of XML attributes.
+ * elements instead of XML attributes.<br>
+ * Additionally you can select, for example, only the last names of all account,
+ * too.
  * </p>
  * 
  * <pre>
@@ -87,13 +89,13 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * The mapping between XML attributes and elements to Java bean fields can be
  * adapted by using a {@link BeanMapping} object. See example 'Using a custom
  * bean mapping' for further details.</li>
- * <li>
- * You can register so-called custom {@link JavaTypeHandler}s in order to
- * perform special conversion logic (e.g. String to Enum conversion). See
- * example 'Using a custom Java type handler' for further details.</li>
- * <li>
  * Various default values for querying XML files can be set application-wide by
  * using the {@link #DEFAULTS} object.</li>
+ * <li>
+ * Jaqlib also supports nested Java beans hierarchies. That means that a Java
+ * bean can have other Java beans as fields. The XML structure must reflect this
+ * hierarchy, of course, in order that Jaqlib can do the right mapping and bean
+ * instantiation.</li>
  * </ul>
  * 
  * <p>
@@ -113,10 +115,10 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * // cpResource and fResoure point to the same XML file
  * // queries access the same XML file
  * 
- * List&lt;? extends Account&gt; cpAccounts = Jaqlib.XML.select(AccountImpl.class).from(
- *     cpResource).where(&quot;/bank/accounts/*&quot;).asList();
- * List&lt;? extends Account&gt; fAccounts = Jaqlib.XML.select(AccountImpl.class).from(
- *     fResource).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; cpAccounts = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(cpResource).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; fAccounts = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(fResource).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * </p>
@@ -166,8 +168,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * <h3>Selecting Java objects using XML attributes (default)</h3>
  * 
  * <pre>
- * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class).from(
- *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * or (does the same)
@@ -184,6 +186,125 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
  *     .fromElements(&quot;Accounts_Elements.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
+ * 
+ * <h3>Selecting primitive values</h3> When you want to query XML for primitive
+ * values (e.g. String, int, ...) you can simply write the following:
+ * 
+ * <pre>
+ * List&lt;String&gt; lastNames = Jaqlib.XML.select(String.class).from(&quot;Accounts.xml&quot;)
+ *     .where(&quot;/bank/accounts/account/@lastName&quot;).asList();
+ * </pre>
+ * 
+ * If you want to perform custom type conversions (see also example further
+ * below) you must register the according {@link JavaTypeHandler}
+ * application-wide at the {@link XmlDefaults} class:
+ * 
+ * <pre>
+ * // register java type handler
+ * Jaqlib.XML.DEFAULTS
+ *     .registerJavaTypeHandler(new CreditRatingStringTypeHandler());
+ * 
+ * // execute query
+ * List&lt;CreditRating&gt; ratings = Jaqlib.XML.select(CreditRating.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;//@creditRating&quot;).asList();
+ * </pre>
+ * 
+ * <h3>Selecting complex Java objects</h3> Jaqlib also support nested bean
+ * hierarchies. That means that one Bean has other beans as fields. In the
+ * example below we have the Bean 'Account' that has a collection of other beans
+ * named 'Transaction'. The according XML file could like like this:
+ * 
+ * <pre>
+ * {@code
+ * <account lastName="Fragner" balance="-5000.0" >
+ *   <transaction id="1" value="1349.30" />
+ *   <transaction id="2" value="-400.00" />
+ * </account>
+ * }
+ * </pre>
+ * 
+ * or
+ * 
+ * <pre>
+ * {@code
+ * <account lastName="Fragner" balance="-5000.0" >
+ *   <transactions>
+ *     <transaction id="1" value="1349.30" />
+ *     <transaction id="2" value="-400.00" />
+ *   </transactions>
+ * </account>
+ * }
+ * </pre>
+ * 
+ * The 'Account' class must have a field 'transactions' or 'transactionList' in
+ * order that Jaqlib can automatically do the mapping. Jaqlib requires a
+ * collection field that ends with 's' or 'List' (if that's not possible, see
+ * next example). The 'Transaction' class has two fields 'id' and 'value'. We
+ * can select this account by using following code:
+ * 
+ * <pre>
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(Account.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ * </pre>
+ * 
+ * If the collection field does not end with 's' or 'List' you can define your
+ * own collection mapping logic:
+ * 
+ * <pre>
+ * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(Account.class);
+ * 
+ * // set a custom source name for the transaction collection
+ * mapping.getCollectionField(&quot;transactions&quot;).setSourceName(&quot;accTransactions&quot;);
+ * 
+ * // set a custom source name for the elements of the transaction collection
+ * mapping.getCollectionField(&quot;transactions&quot;).setElementSourceName(
+ *     &quot;accTransaction&quot;);
+ * 
+ * // execute query
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(Account.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ * </pre>
+ * 
+ * Finally, you can also map collections with primitive values:
+ * 
+ * <pre>
+ * {@code
+ * <account lastName="Fragner" balance="-5000.0" >
+ *   <transactions>
+ *     <transaction>1349.30</transaction>
+ *     <transaction>-400.00"</transaction>
+ *   </transactions>
+ * </account>
+ * }
+ * </pre>
+ * 
+ * <pre>
+ * public class AccountImpl
+ * {
+ *   private List&lt;Double&gt; transactions = new ArrayList&lt;Double&gt;();
+ * 
+ * 
+ *   public List&lt;Double&gt; getTransactions()
+ *   {
+ *     return transactions;
+ *   }
+ * 
+ * 
+ *   public void setTransactions(List&lt;Double&gt; tx)
+ *   {
+ *     this.transactions = tx;
+ *   }
+ * 
+ *   // remaining code omitted
+ * }
+ * </pre>
+ * 
+ * Jaqlib determines at runtime the element type of the collection and tries to
+ * convert the string values of the XML elements to the according element type
+ * (also using the {@link JavaTypeHandler} mechanism - see also examples further
+ * below). Note that only XML elements are supported. XML attributes cannot be
+ * specified multiple times on an element - so they cannot be used for mapping
+ * primitive XML values to Java collection values.
  * 
  * <h3>Constraining the result</h3>
  * There are different ways how to constrain the returned query result. Jaqlib
@@ -210,10 +331,10 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * Account account = Jaqlib.XML.getRecorder(Account.class);
  * 
  * // execute query
- * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML.select(
- *     AccountImpl.class).from(&quot;Accounts_Attributes.xml&quot;)
- *     .where(&quot;/bank/accounts/*&quot;).andCall(account.getBalance()).isGreaterThan(
- *         500.0).asList();
+ * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML
+ *     .select(AccountImpl.class).from(&quot;Accounts_Attributes.xml&quot;)
+ *     .where(&quot;/bank/accounts/*&quot;).andCall(account.getBalance())
+ *     .isGreaterThan(500.0).asList();
  * </pre>
  * 
  * <p>
@@ -246,8 +367,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * };
  * 
  * // execute query
- * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML.select(
- *     AccountImpl.class).from(&quot;Accounts_Attributes.xml&quot;)
+ * List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML
+ *     .select(AccountImpl.class).from(&quot;Accounts_Attributes.xml&quot;)
  *     .where(&quot;/bank/accounts/*&quot;).and(myCondition).asList();
  * </pre>
  * 
@@ -264,10 +385,11 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * AccountImpl criteria = new AccountImpl();
  * criteria.setId(accountId);
  * 
- * Account account15 = Jaqlib.XML.select(AccountImpl.class).from(
- *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).andElement().isEqual(
- *     criteria).uniqueResult();
+ * Account account15 = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).andElement()
+ *     .isEqual(criteria).uniqueResult();
  * </pre>
+ * 
  * 
  * <h3>Multiple queries on same file</h3> When multiple queries are run against
  * one XML file the {@link XmlSelectDataSource} should be used. With this
@@ -291,9 +413,9 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *       .from(ds).where(&quot;/bank/accounts/*&quot;).asList();
  * 
  *   // execute second query against XML file
- *   List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML.select(
- *       AccountImpl.class).from(ds).where(&quot;/bank/accounts/*&quot;).andCall(
- *       account.getBalance()).isGreaterThan(500.0).asList();
+ *   List&lt;? extends Account&gt; accountsGreater500 = Jaqlib.XML
+ *       .select(AccountImpl.class).from(ds).where(&quot;/bank/accounts/*&quot;)
+ *       .andCall(account.getBalance()).isGreaterThan(500.0).asList();
  * }
  * finally
  * {
@@ -344,8 +466,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * mapping.getField(&quot;lastName&quot;).setSourceName(&quot;last_name&quot;);
  * mapping.removeField(&quot;department&quot;);
  * 
- * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(mapping).from(
- *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(mapping)
+ *     .from(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * If you want to take full control of the mapping functionality you can use the
@@ -368,8 +490,8 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *     new CreditRatingStringTypeHandler());
  * 
  * // execute query
- * List&lt;? extends Account&gt; accounts = XmlQB.select(mapping).from(
- *     &quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;? extends Account&gt; accounts = XmlQB.select(mapping)
+ *     .from(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * Alternatively the type handler can be set application-wide:

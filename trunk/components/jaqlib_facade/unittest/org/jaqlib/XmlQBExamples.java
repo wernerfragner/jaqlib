@@ -56,10 +56,10 @@ public class XmlQBExamples
     Account account = Jaqlib.XML.getRecorder(Account.class);
 
     // execute query
-    List<? extends Account> accountsGreater500 = Jaqlib.XML.select(
-        AccountImpl.class).from("Accounts_Elements.xml").where(
-        "/bank/accounts/*").andCall(account.getBalance()).isGreaterThan(500.0)
-        .asList();
+    List<? extends Account> accountsGreater500 = Jaqlib.XML
+        .select(AccountImpl.class).from("Accounts_Elements.xml")
+        .where("/bank/accounts/*").andCall(account.getBalance())
+        .isGreaterThan(500.0).asList();
   }
 
 
@@ -79,9 +79,9 @@ public class XmlQBExamples
     };
 
     // execute query
-    List<? extends Account> accountsGreater500 = Jaqlib.XML.select(
-        AccountImpl.class).from("Accounts_Elements.xml").where(
-        "/bank/accounts/*").and(myCondition).asList();
+    List<? extends Account> accountsGreater500 = Jaqlib.XML
+        .select(AccountImpl.class).from("Accounts_Elements.xml")
+        .where("/bank/accounts/*").and(myCondition).asList();
   }
 
 
@@ -91,8 +91,8 @@ public class XmlQBExamples
     AccountImpl criteria = new AccountImpl();
     criteria.setId(accountId);
 
-    Account account15 = Jaqlib.XML.select(AccountImpl.class).from(
-        "Accounts_Elements.xml").where("/bank/accounts/*").andElement()
+    Account account15 = Jaqlib.XML.select(AccountImpl.class)
+        .from("Accounts_Elements.xml").where("/bank/accounts/*").andElement()
         .isEqual(criteria).uniqueResult();
   }
 
@@ -114,9 +114,9 @@ public class XmlQBExamples
           .asList();
 
       // execute second query against XML file
-      List<? extends Account> accountsGreater500 = Jaqlib.XML.select(
-          AccountImpl.class).from(ds).where("/bank/accounts/*").andCall(
-          account.getBalance()).isGreaterThan(500.0).asList();
+      List<? extends Account> accountsGreater500 = Jaqlib.XML
+          .select(AccountImpl.class).from(ds).where("/bank/accounts/*")
+          .andCall(account.getBalance()).isGreaterThan(500.0).asList();
     }
     finally
     {
@@ -147,8 +147,8 @@ public class XmlQBExamples
     mapping.getField("lastName").setSourceName("last_name");
     mapping.removeField("department");
 
-    List<? extends Account> accounts = Jaqlib.XML.select(mapping).from(
-        "Accounts.xml").where("/bank/accounts/*").asList();
+    List<? extends Account> accounts = Jaqlib.XML.select(mapping)
+        .from("Accounts.xml").where("/bank/accounts/*").asList();
   }
 
 
@@ -164,8 +164,8 @@ public class XmlQBExamples
         new CreditRatingStringTypeHandler());
 
     // execute query
-    List<? extends Account> accounts = XmlQB.select(mapping).from(
-        "Accounts.xml").where("/bank/accounts/*").asList();
+    List<? extends Account> accounts = XmlQB.select(mapping)
+        .from("Accounts.xml").where("/bank/accounts/*").asList();
   }
 
 
@@ -180,6 +180,50 @@ public class XmlQBExamples
 
     List<? extends Account> accounts = Jaqlib.XML.select(AccountImpl.class)
         .from(ds).where("/bank/accounts/*").asList();
+  }
+
+
+  private static void selectComplexBean()
+  {
+    List<? extends Account> accounts = Jaqlib.XML.select(Account.class)
+        .from("Accounts.xml").where("/bank/accounts/*").asList();
+  }
+
+
+  private static void selectComplexBean_OwnMappingLogic()
+  {
+    BeanMapping<Account> mapping = new BeanMapping<Account>(Account.class);
+
+    // set a custom source name for the transaction collection
+    mapping.getCollectionField("transactions").setSourceName("accTransactions");
+
+    // set a custom source name for the elements of the transaction collection
+    mapping.getCollectionField("transactions").setElementSourceName(
+        "accTransaction");
+
+    // execute query
+    List<? extends Account> accounts = Jaqlib.XML.select(Account.class)
+        .from("Accounts.xml").where("/bank/accounts/*").asList();
+  }
+
+
+  private static void selectPrimitive()
+  {
+    List<String> lastNames = Jaqlib.XML.select(String.class)
+        .from("Accounts.xml").where("/bank/accounts/account/@lastName")
+        .asList();
+  }
+
+
+  private static void selectPrimitive_JavaTypeHandler()
+  {
+    // register java type handler
+    XmlDefaults.INSTANCE
+        .registerJavaTypeHandler(new CreditRatingStringTypeHandler());
+
+    // execute query
+    List<CreditRating> ratings = Jaqlib.XML.select(CreditRating.class)
+        .from("Accounts.xml").where("//@creditRating").asList();
   }
 
 }

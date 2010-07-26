@@ -49,4 +49,10 @@ public class MockDsResultSet implements DsResultSet
     return cnt < 4;
   }
 
+
+  public Object getAnynomousObject(FieldMapping<?> mapping)
+  {
+    return getObject(mapping);
+  }
+
 }

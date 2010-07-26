@@ -5,7 +5,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -50,6 +50,7 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
   }
 
 
+  @SuppressWarnings("unchecked")
   private FieldMapping<?> getMapping(Class<?> beanClass, String fieldName,
       Class<?> fieldType)
   {
@@ -58,18 +59,11 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
       Field field = ReflectionUtil.getField(beanClass, fieldName);
       if (ReflectionUtil.isGeneric(field))
       {
-        Type elementType = ReflectionUtil.getCollectionElementType(field);
-        if (elementType instanceof Class)
-        {
-          BeanMapping<?> elementMapping = new BeanMapping<Object>(
-              (Class<?>) elementType);
-          return new CollectionFieldMapping<Object>(fieldName, fieldType,
-              elementMapping);
-        }
-        else
-        {
-          // TODO create Beanmapping for primitive values
-        }
+        Class<?> elementType = ReflectionUtil.getCollectionElementClass(field);
+
+        BeanMapping<?> elementMapping = new BeanMapping<Object>(elementType);
+        return new CollectionFieldMapping(fieldName,
+            (Class<Collection<?>>) fieldType, elementMapping);
       }
       else
       {
@@ -82,7 +76,7 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
       }
     }
 
-    return new FieldMapping<Object>(fieldName, fieldType);
+    return new FieldMapping<Object>(fieldName, (Class<Object>) fieldType);
   }
 
 
