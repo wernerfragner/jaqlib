@@ -91,5 +91,4 @@ public class DataSourceQuery<T, DataSourceType extends SelectDataSource>
     return mapping.getLogString();
   }
 
-
 }

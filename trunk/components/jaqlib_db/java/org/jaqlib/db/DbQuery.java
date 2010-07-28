@@ -13,7 +13,6 @@ import org.jaqlib.core.reflect.MethodCallRecorder;
 public class DbQuery<T> extends DataSourceQuery<T, DbSelectDataSource>
 {
 
-
   public DbQuery(MethodCallRecorder methodCallRecorder,
       AbstractMapping<T> mapping)
   {
@@ -21,10 +20,9 @@ public class DbQuery<T> extends DataSourceQuery<T, DbSelectDataSource>
   }
 
 
-  @Override
-  public QueryResult<T, DbSelectDataSource> createQueryResult()
+  public DbFromClause<T> createFromClause()
   {
-    return new DbQueryResult<T>(this);
+    return new DbFromClause<T>(this);
   }
 
 
@@ -32,6 +30,13 @@ public class DbQuery<T> extends DataSourceQuery<T, DbSelectDataSource>
   {
     setDataSource(dataSource);
     return new DbWhereClause<T>(this);
+  }
+
+
+  @Override
+  public QueryResult<T, DbSelectDataSource> createQueryResult()
+  {
+    return new DbQueryResult<T>(this);
   }
 
 
@@ -56,4 +61,5 @@ public class DbQuery<T> extends DataSourceQuery<T, DbSelectDataSource>
     getDataSource().setSqlWhereCondition(sqlWhereCondition);
     return createQueryResult();
   }
+
 }

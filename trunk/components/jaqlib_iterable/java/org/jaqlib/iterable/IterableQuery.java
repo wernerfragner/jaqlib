@@ -75,4 +75,11 @@ public class IterableQuery<T> extends AbstractQuery<T, Iterable<T>>
     return "";
   }
 
+
+  public FromClause createFromClause()
+  {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
 }
