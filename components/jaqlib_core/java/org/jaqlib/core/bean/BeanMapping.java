@@ -263,6 +263,18 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
 
   /**
+   * Returns true if this bean mapping contains a mapping for the given field.
+   * 
+   * @param fieldName the name of the field; must not be null.
+   * @return see description.
+   */
+  public boolean hasField(String fieldName)
+  {
+    return (getField(fieldName) != null);
+  }
+
+
+  /**
    * Gets the field mapping for the given field of this bean. Returns null if no
    * matching field has been found.
    * 
@@ -326,6 +338,48 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
 
   /**
+   * Checks if the given field is a bean field. Returns false if it is no bean
+   * field or if the field does not exist in this bean mapping.
+   * 
+   * @param fieldName the name of the field.
+   * @return see description.
+   */
+  public boolean isBeanField(String fieldName)
+  {
+    FieldMapping<?> field = getField(fieldName);
+    return (field instanceof BeanFieldMapping);
+  }
+
+
+  /**
+   * Tries to get the given bean field mapping. Returns null if no matching
+   * field has been found.
+   * 
+   * @param fieldName the name of the field.
+   * @return see description.
+   * @throws IllegalArgumentException if the given field was found but is no
+   *           bean field.
+   */
+  public BeanFieldMapping<?> getBeanField(String fieldName)
+  {
+    FieldMapping<?> field = getField(fieldName);
+    if (field == null)
+    {
+      return null;
+    }
+    else if (field instanceof BeanFieldMapping)
+    {
+      return (BeanFieldMapping<?>) field;
+    }
+    else
+    {
+      throw new IllegalArgumentException("The given field '" + fieldName
+          + "' has no bean type. It is of type '" + field.getFieldType() + "'.");
+    }
+  }
+
+
+  /**
    * Removes all field mappings. After calling this method new field mapping can
    * only be added by using {@link #addField(FieldMapping)} .
    */
@@ -336,13 +390,14 @@ public class BeanMapping<T> extends AbstractMapping<T> implements
 
 
   /**
-   * Gets all field mappings of this bean mapping.
+   * Gets a copy of all field mappings of this bean mapping. Changes to the
+   * returned list (e.g. add, remove) do <b>NOT</b> affect this object.
    * 
    * @return see description.
    */
   public List<FieldMapping<?>> getFieldMappings()
   {
-    return this.getMappings();
+    return new ArrayList<FieldMapping<?>>(this.getMappings());
   }
 
 

@@ -3,8 +3,12 @@ package org.jaqlib.xml;
 import java.util.Collection;
 import java.util.logging.Logger;
 
+import org.jaqlib.XmlDefaults;
+import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.core.Defaults;
 import org.jaqlib.core.DsResultSet;
+import org.jaqlib.core.QueryResultException;
+import org.jaqlib.core.bean.BeanFieldMapping;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.bean.CollectionFactory;
 import org.jaqlib.core.bean.CollectionFieldMapping;
@@ -90,6 +94,10 @@ public class XmlResultSet implements DsResultSet
     {
       return getCollectionObject((CollectionFieldMapping) mapping);
     }
+    else if (mapping instanceof BeanFieldMapping)
+    {
+      return getBeanObject((BeanFieldMapping<?>) mapping);
+    }
     else
     {
       return getPrimitiveObject(mapping);
@@ -97,10 +105,62 @@ public class XmlResultSet implements DsResultSet
   }
 
 
+  private Object getBeanObject(BeanFieldMapping<?> mapping)
+  {
+    Node current = getCurrentNode();
+    Node match = getMatchingChildNode(mapping, current);
+
+    NodeListImpl childNodes = new NodeListImpl();
+    childNodes.add(match);
+
+    XmlResultSet childResultSet = new XmlResultSet(childNodes, useAttributes,
+        namespaces);
+
+    if (childResultSet.next())
+    {
+      return mapping.getBeanMapping().getValue(childResultSet);
+    }
+    else
+    {
+      return handleNonExistingNode(current, mapping.getSourceName(), "element",
+          true);
+    }
+  }
+
+
+  private Node getMatchingChildNode(BeanFieldMapping<?> mapping, Node n)
+  {
+    String sourceName = mapping.getSourceName();
+
+    Node result = null;
+
+    NodeList childs = n.getChildNodes();
+    for (int i = 0; i < childs.getLength(); i++)
+    {
+      Node child = childs.item(i);
+      if (child.getNodeName().equals(sourceName))
+      {
+        if (result == null)
+        {
+          result = child;
+        }
+        else
+        {
+          throw new QueryResultException(
+              "Cannot perform mapping because multiple XML elements exist for '"
+                  + mapping.getLogString()
+                  + "'. Field should be a collection if multiple XML elements exist.");
+        }
+      }
+    }
+    return result;
+  }
+
+
   private Object getCollectionObject(CollectionFieldMapping mapping)
   {
-    Node n = nodes.item(curNodeIndex);
-    NodeListImpl matches = getMatchingChildNodes(mapping, n);
+    Node current = getCurrentNode();
+    NodeListImpl matches = getMatchingChildNodes(mapping, current);
 
     Collection result = createCollection(mapping);
     XmlResultSet childResultSet = new XmlResultSet(matches, useAttributes,
@@ -179,32 +239,39 @@ public class XmlResultSet implements DsResultSet
 
   private Object getPrimitiveObject(FieldMapping<?> mapping)
   {
-    String name = mapping.getSourceName();
-
-    Node n = nodes.item(curNodeIndex);
+    String sourceName = mapping.getSourceName();
+    Node current = getCurrentNode();
 
     Node resultNode = null;
     if (useAttributes)
     {
-      NamedNodeMap attributes = n.getAttributes();
-      resultNode = getNamedAttribute(attributes, name);
-    }
+      NamedNodeMap attributes = current.getAttributes();
+      resultNode = getNamedAttribute(attributes, sourceName);
 
-    if (resultNode == null)
-    {
-      resultNode = findNode(n, name);
-      if (resultNode != null && resultNode.getFirstChild() != null)
+      if (resultNode == null)
       {
-        resultNode = resultNode.getFirstChild();
+        handleNonExistingNode(current, sourceName, "attribute", false);
       }
     }
 
     if (resultNode == null)
     {
-      String str = useAttributes ? "attribute" : "element";
-      log.info("XML file does not contain an " + str + " named '" + name
-          + "'; " + str + " is ignored.");
-      return NO_RESULT;
+      resultNode = findNode(current, sourceName);
+      if (resultNode != null && resultNode.getFirstChild() != null)
+      {
+        resultNode = resultNode.getFirstChild();
+      }
+
+      if (resultNode == null)
+      {
+        handleNonExistingNode(current, sourceName, "element", false);
+      }
+    }
+
+    if (resultNode == null)
+    {
+      String elemAttr = useAttributes ? "attribute" : "element";
+      return handleNonExistingNode(current, sourceName, elemAttr, true);
     }
 
     return convert(mapping, resultNode.getNodeValue());
@@ -270,6 +337,50 @@ public class XmlResultSet implements DsResultSet
       }
     }
     return null;
+  }
+
+
+  private Object handleNonExistingNode(Node current, String sourceName,
+      String elemAttr, boolean shouldLog)
+  {
+    String msg = "XML file does not contain an XML " + elemAttr + " named '"
+        + sourceName + "' (current XML node: " + getNodePath(current) + ")";
+
+    if (XmlDefaults.INSTANCE.getStrictFieldCheck())
+    {
+      throw new DataSourceQueryException(msg);
+    }
+
+    if (shouldLog)
+    {
+      log.info(msg + "; " + elemAttr + " is ignored.");
+    }
+    return NO_RESULT;
+  }
+
+
+  private String getNodePath(Node current)
+  {
+    StringBuilder sb = new StringBuilder();
+    appendNodePath(current, sb);
+    return sb.toString();
+  }
+
+
+  private void appendNodePath(Node node, StringBuilder sb)
+  {
+    if (node != null)
+    {
+      appendNodePath(node.getParentNode(), sb);
+      sb.append("/");
+      sb.append(node.getNodeName());
+    }
+  }
+
+
+  private Node getCurrentNode()
+  {
+    return nodes.item(curNodeIndex);
   }
 
 

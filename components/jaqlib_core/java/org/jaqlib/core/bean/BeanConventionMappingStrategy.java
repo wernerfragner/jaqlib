@@ -42,8 +42,12 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
     {
       if (shouldAddBeanProperty(descriptor))
       {
-        mappings.add(getMapping(beanClass, descriptor.getName(),
-            descriptor.getPropertyType()));
+        FieldMapping<?> mapping = getMapping(beanClass, descriptor.getName(),
+            descriptor.getPropertyType());
+        if (mapping != null)
+        {
+          mappings.add(mapping);
+        }
       }
     }
     return mappings;
@@ -54,16 +58,18 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
   private FieldMapping<?> getMapping(Class<?> beanClass, String fieldName,
       Class<?> fieldType)
   {
-    if (ReflectionUtil.isCollection(fieldType))
+    if (ReflectionUtil.isPrimitiveType(fieldType))
+    {
+      return new FieldMapping<Object>(fieldName, (Class<Object>) fieldType);
+    }
+    else if (ReflectionUtil.isCollection(fieldType))
     {
       Field field = ReflectionUtil.getField(beanClass, fieldName);
       if (ReflectionUtil.isGeneric(field))
       {
         Class<?> elementType = ReflectionUtil.getCollectionElementClass(field);
-
-        BeanMapping<?> elementMapping = new BeanMapping<Object>(elementType);
         return new CollectionFieldMapping(fieldName,
-            (Class<Collection<?>>) fieldType, elementMapping);
+            (Class<Collection<?>>) fieldType, elementType);
       }
       else
       {
@@ -73,10 +79,13 @@ public class BeanConventionMappingStrategy implements BeanMappingStrategy
                 + "."
                 + fieldName
                 + "' because it is a non-generic collection. Only generic collections are supported by this class.");
+        return null;
       }
     }
-
-    return new FieldMapping<Object>(fieldName, (Class<Object>) fieldType);
+    else
+    {
+      return new BeanFieldMapping<Object>(fieldName, (Class<Object>) fieldType);
+    }
   }
 
 

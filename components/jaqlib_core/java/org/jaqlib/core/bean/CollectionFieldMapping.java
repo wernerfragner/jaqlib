@@ -24,14 +24,13 @@ public class CollectionFieldMapping extends FieldMapping<Collection<?>>
    * 
    * @param fieldName the Java bean field name.
    * @param fieldType the type of the Java bean field.
-   * @param elementMapping the mapping definition for the elements of the
-   *          collection.
+   * @param elementType the type of the elements in the collection.
    */
   public CollectionFieldMapping(String fieldName,
-      Class<Collection<?>> fieldType, BeanMapping<?> elementMapping)
+      Class<Collection<?>> fieldType, Class<?> elementType)
   {
     super(fieldName, fieldType);
-    this.elementMapping = elementMapping;
+    this.elementMapping = new BeanMapping<Object>(elementType);
   }
 
 

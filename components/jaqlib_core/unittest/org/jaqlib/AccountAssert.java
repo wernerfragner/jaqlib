@@ -59,17 +59,8 @@ public class AccountAssert
     List<? extends Transaction> transactions = accounts.get(0)
         .getTransactions();
     TestCase.assertEquals(2, transactions.size());
-    assertEqualLists(AccountSetup.MAIER_ACCOUNT.getTransactions(), transactions);
-  }
-
-
-  private static void assertEqualLists(List<?> list1, List<?> list2)
-  {
-    TestCase.assertEquals(list1.size(), list2.size());
-    for (Object obj : list1)
-    {
-      TestCase.assertTrue(list2.contains(obj));
-    }
+    JaqlibAssert.assertEqualLists(AccountSetup.MAIER_ACCOUNT.getTransactions(),
+        transactions);
   }
 
 
@@ -86,7 +77,8 @@ public class AccountAssert
     List<? extends Transaction> transactions = accounts.get(0)
         .getTransactions();
     TestCase.assertEquals(2, transactions.size());
-    assertEqualLists(AccountSetup.HUBER_ACCOUNT.getTransactions(), transactions);
+    JaqlibAssert.assertEqualLists(AccountSetup.HUBER_ACCOUNT.getTransactions(),
+        transactions);
   }
 
 }

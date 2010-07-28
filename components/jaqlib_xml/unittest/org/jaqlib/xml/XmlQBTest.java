@@ -4,6 +4,7 @@ import static org.jaqlib.AccountAssert.assertHuberAccount;
 import static org.jaqlib.AccountAssert.assertHuberAccountWithTransactions;
 import static org.jaqlib.AccountAssert.assertMaierAccount;
 import static org.jaqlib.AccountAssert.assertMaierAccountWithTransactions;
+import static org.jaqlib.TemperatureAssert.assertKitchenTemperature;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,9 +15,12 @@ import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
 import org.jaqlib.CreditRating;
 import org.jaqlib.Temperature;
+import org.jaqlib.TemperatureAssert;
+import org.jaqlib.TemperatureSetup;
 import org.jaqlib.TransactionImpl;
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.XmlQB;
+import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.util.ClassPathResource;
 import org.jaqlib.util.FileResource;
@@ -27,6 +31,9 @@ public abstract class XmlQBTest extends TestCase
   private static final String XPATH_ACCOUNTS = "/bank/accounts/*";
   private static final String XPATH_ACCOUNTS_NS = "/document/test1:bank/test2:accounts/*";
   private static final String XPATH_TRANSACTIONS = "/bank//transaction";
+
+  private static final Temperature KITCHEN = TemperatureSetup.KITCHEN;
+  private static final Temperature CELLAR = TemperatureSetup.CELLAR;
 
 
   private List<AccountImpl> accounts;
@@ -290,6 +297,30 @@ public abstract class XmlQBTest extends TestCase
   }
 
 
+  public void testSelect_StrictFieldCheck_Enabled()
+  {
+    XmlDefaults.INSTANCE.setStrictFieldCheck(true);
+
+    BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
+        Temperature.class);
+    String fileName = "unittest/temperature_nested_primitives.xml";
+
+    try
+    {
+      XmlQB.select(mapping).from(fileName).where("/house/sensors/temperature")
+          .asList();
+      fail("Did not throw DataSourceQueryException");
+    }
+    catch (DataSourceQueryException e)
+    {
+    }
+    finally
+    {
+      XmlDefaults.INSTANCE.reset();
+    }
+  }
+
+
   public void testSelectNestedPrimitives()
   {
     BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
@@ -299,13 +330,9 @@ public abstract class XmlQBTest extends TestCase
 
     Temperature temp = XmlQB.select(mapping).from(fileName)
         .where("/house/sensors/temperature").andCall(recorder.getLocation())
-        .isEqual("kitchen").uniqueResult();
+        .isEqual(KITCHEN.getLocation()).uniqueResult();
 
-    assertNotNull(temp);
-    assertEquals("kitchen", temp.getLocation());
-    assertTrue(temp.getHistory().contains(25));
-    assertTrue(temp.getHistory().contains(26));
-    assertTrue(temp.getHistory().contains(23));
+    assertKitchenTemperature(temp);
   }
 
 
@@ -318,8 +345,24 @@ public abstract class XmlQBTest extends TestCase
 
     assertNotNull(locations);
     assertEquals(2, locations.size());
-    assertTrue(locations.contains("kitchen"));
-    assertTrue(locations.contains("cellar"));
+    assertTrue(locations.contains(KITCHEN.getLocation()));
+    assertTrue(locations.contains(CELLAR.getLocation()));
+  }
+
+
+  public void testSelect_NestedSingleBean()
+  {
+    BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
+        Temperature.class);
+    Temperature recorder = XmlQB.getRecorder(Temperature.class);
+    String fileName = "unittest/temperature_nested_singlebean.xml";
+
+    Temperature temp = XmlQB.select(mapping).from(fileName)
+        .where("/house/sensors/temperature").andCall(recorder.getLocation())
+        .isEqual(KITCHEN.getLocation()).uniqueResult();
+
+    assertNotNull(temp);
+    TemperatureAssert.assertKitchenSensor(temp.getSensor());
   }
 
 
