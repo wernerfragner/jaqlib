@@ -3,11 +3,14 @@ package org.jaqlib;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Temperature
 {
 
   private String location;
   private List<Integer> history = new ArrayList<Integer>();
+
+  private Sensor sensor;
 
 
   public String getLocation()
@@ -31,6 +34,18 @@ public class Temperature
   public void setHistory(List<Integer> history)
   {
     this.history = history;
+  }
+
+
+  public Sensor getSensor()
+  {
+    return sensor;
+  }
+
+
+  public void setSensor(Sensor sensor)
+  {
+    this.sensor = sensor;
   }
 
 }

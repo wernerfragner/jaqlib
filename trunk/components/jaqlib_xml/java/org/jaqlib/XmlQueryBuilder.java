@@ -93,18 +93,24 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * By default the JDK XPath engine is used. Jaqlib supports a set of other XPath
  * engines, too. See example 'Using a specific or a custom XPathEngine' for
  * further details.</li>
+ * <li>In the FROM clause you can define whether to use XML attributes or XML
+ * elements as source for the Java bean fields. If <tt>strictFieldCheck</tt> is
+ * set to TRUE then an exception is thrown if no match has been found. But if it
+ * is FALSE (= default) then this info is only a hint for Jaqlib where to search
+ * first. Both attributes and elements are searched for matches. If none are
+ * found then an log message is issued.</li>
  * <li>
  * The mapping between XML attributes and elements to Java bean fields can be
  * adapted by using a {@link BeanMapping} object. See example 'Define a custom
  * bean mapping' for further details.</li>
  * <li>
+ * Jaqlib also supports arbitrary nested Java beans hierarchies. That means that
+ * a Java bean can have other Java beans as fields. The XML structure must
+ * reflect this hierarchy, of course, in order that Jaqlib can do the right
+ * mapping and bean instantiation.</li>
+ * <li>
  * Various default values for querying XML files can be set application-wide by
  * using the {@link #DEFAULTS} object.</li>
- * <li>
- * Jaqlib also supports nested Java beans hierarchies. That means that a Java
- * bean can have other Java beans as fields. The XML structure must reflect this
- * hierarchy, of course, in order that Jaqlib can do the right mapping and bean
- * instantiation.</li>
  * <li>This class is thread-safe.</li>
  * </ul>
  * 
@@ -219,10 +225,14 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * </pre>
  * 
  * 
- * <h3>Selecting complex Java objects</h3> Jaqlib also support nested bean
- * hierarchies. That means that one Bean has other beans as fields. In the
- * example below we have the Bean 'Account' that has a collection of other beans
- * named 'Transaction'. The according XML file could like like this:
+ * <h3>Selecting complex Java objects</h3>
+ * <p>
+ * Jaqlib also support nested bean hierarchies. That means that one Bean has
+ * other beans as fields (collection field or 'normal' field). That way it is
+ * possible to read an entire XML file into a Java bean object model.<br>
+ * In the example below we have the Bean 'Account' that has a collection of
+ * other beans named 'Transaction'. The according XML file could like like this:
+ * </p>
  * 
  * <pre>
  * {@code
