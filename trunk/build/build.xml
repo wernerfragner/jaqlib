@@ -267,7 +267,10 @@
 		
     <!-- XML tests -->
     <junit dir="${build.temp}/zip_unittest" haltonfailure="false" failureproperty="junit.failure" fork="true" >
-      <classpath location="${instrumented.dir}" />
+      <sysproperty key="net.sourceforge.cobertura.datafile"
+          file="./cobertura.ser" />
+    	
+    	<classpath location="${instrumented.dir}" />
       <classpath refid="cobertura.classpath" />
       <classpath refid="jaqlib.components" />
       <classpath refid="jaqlib.unittest.components" />
@@ -279,6 +282,9 @@
 		
 		<!-- Util tests -->
 		<junit dir="${build.temp}/zip_unittest" haltonfailure="false" failureproperty="junit.failure" fork="true">
+			<sysproperty key="net.sourceforge.cobertura.datafile"
+			    file="./cobertura.ser" />
+			
 	    <classpath location="${instrumented.dir}" />
 	    <classpath refid="cobertura.classpath" />
 			<classpath refid="jaqlib.components" />
@@ -316,22 +322,6 @@
 	
 	<target name="jar" depends="compile, javadoc">
 		<mkdir dir="${build.temp}/jar" />
-		
-		<!--
-		<jar destfile="${build.temp}/jar/jaqlib_db-${version.fullString}.jar">
-		  <zipgroupfileset file="${build.temp}/zip/jaqlib_util.zip" />
-			<zipgroupfileset file="${build.temp}/zip/jaqlib_core.zip" />
-			<zipgroupfileset file="${build.temp}/zip/jaqlib_db.zip" />
-			<fileset file="${build.base}/doc/apache_license-2.0.txt" />
-		</jar>
-		
-    <jar destfile="${build.temp}/jar/jaqlib_iterable-${version.fullString}.jar">
-      <zipgroupfileset file="${build.temp}/zip/jaqlib_util.zip" />
-      <zipgroupfileset file="${build.temp}/zip/jaqlib_core.zip" />
-      <zipgroupfileset file="${build.temp}/zip/jaqlib_iterable.zip" />
-    	<fileset file="${build.base}/doc/apache_license-2.0.txt" />
-    </jar>
-		-->
 		
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}.jar" >
 			<zipgroupfileset dir="${build.temp}/zip" />
