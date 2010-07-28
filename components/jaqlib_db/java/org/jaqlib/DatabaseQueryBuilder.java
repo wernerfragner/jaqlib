@@ -677,7 +677,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    */
   public <T> DbFromClause<T> select(ColumnMapping<T> columnMapping)
   {
-    return new DbFromClause<T>(this, columnMapping);
+    return this.<T> createQuery(columnMapping).createFromClause();
   }
 
 
@@ -729,21 +729,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    */
   public <T> DbFromClause<T> select(BeanMapping<T> beanMapping)
   {
-    return new DbFromClause<T>(this, beanMapping);
-  }
-
-
-  /**
-   * This method should only be used by the internal classes of Jaqlib. Use the
-   * various select, insert, update, delete methods instead.
-   * 
-   * @param <T> the element type of the data source.
-   * @return a query for using the functionality of JaQLib without the fluent
-   *         API.
-   */
-  public <T> DbQuery<T> createQuery(AbstractMapping<T> mapping)
-  {
-    return new DbQuery<T>(getMethodCallRecorder(), mapping);
+    return this.<T> createQuery(beanMapping).createFromClause();
   }
 
 
@@ -790,5 +776,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
     return new DeleteFromClause();
   }
 
+
+  private <T> DbQuery<T> createQuery(AbstractMapping<T> mapping)
+  {
+    return new DbQuery<T>(getMethodCallRecorder(), mapping);
+  }
 
 }

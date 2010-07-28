@@ -2,8 +2,6 @@ package org.jaqlib.db;
 
 import javax.sql.DataSource;
 
-import org.jaqlib.DatabaseQueryBuilder;
-import org.jaqlib.core.bean.AbstractMapping;
 import org.jaqlib.util.Assert;
 
 /**
@@ -16,15 +14,12 @@ import org.jaqlib.util.Assert;
 public class DbFromClause<T>
 {
 
-  private final DatabaseQueryBuilder queryBuilder;
-  private final AbstractMapping<T> mapping;
+  private final DbQuery<T> query;
 
 
-  public DbFromClause(DatabaseQueryBuilder queryBuilder,
-      AbstractMapping<T> mapping)
+  public DbFromClause(DbQuery<T> query)
   {
-    this.queryBuilder = Assert.notNull(queryBuilder);
-    this.mapping = Assert.notNull(mapping);
+    this.query = Assert.notNull(query);
   }
 
 
@@ -36,7 +31,7 @@ public class DbFromClause<T>
    */
   public DbWhereClause<T> from(DbSelectDataSource dataSource)
   {
-    return this.createQuery().createDbWhereClause(dataSource);
+    return query.createDbWhereClause(dataSource);
   }
 
 
@@ -50,12 +45,6 @@ public class DbFromClause<T>
   public DbWhereClause<T> from(DataSource dataSource, String sql)
   {
     return from(new DbSelectDataSource(dataSource, sql));
-  }
-
-
-  private DbQuery<T> createQuery()
-  {
-    return queryBuilder.createQuery(mapping);
   }
 
 }

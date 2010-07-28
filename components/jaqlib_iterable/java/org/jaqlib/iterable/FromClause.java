@@ -1,6 +1,5 @@
 package org.jaqlib.iterable;
 
-import org.jaqlib.IterableQueryBuilder;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.util.Assert;
 
@@ -13,12 +12,12 @@ import org.jaqlib.util.Assert;
 public class FromClause
 {
 
-  private final IterableQueryBuilder queryBuilder;
+  private final IterableQueryFactory queryFactory;
 
 
-  public FromClause(IterableQueryBuilder queryBuilder)
+  public FromClause(IterableQueryFactory queryFactory)
   {
-    this.queryBuilder = Assert.notNull(queryBuilder);
+    this.queryFactory = Assert.notNull(queryFactory);
   }
 
 
@@ -30,12 +29,13 @@ public class FromClause
    */
   public <T> WhereClause<T, Iterable<T>> from(Iterable<T> iterable)
   {
-    return this.<T> getQuery().createWhereClause(iterable);
+    return this.<T> createQuery().createWhereClause(iterable);
   }
 
 
-  private <T> IterableQuery<T> getQuery()
+  private <T> IterableQuery<T> createQuery()
   {
-    return queryBuilder.createQuery();
+    return queryFactory.createQuery();
   }
+
 }

@@ -26,7 +26,7 @@ import org.jaqlib.core.QueryResultException;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.iterable.FromClause;
-import org.jaqlib.iterable.IterableQuery;
+import org.jaqlib.iterable.IterableQueryFactory;
 
 /**
  * <h2>Overview</h2>
@@ -305,7 +305,9 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
    */
   public FromClause select()
   {
-    return new FromClause(this);
+    IterableQueryFactory factory = new IterableQueryFactory(
+        getMethodCallRecorder());
+    return new FromClause(factory);
   }
 
 
@@ -318,17 +320,6 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
   public <T> WhereClause<T, Iterable<T>> selectFrom(Iterable<T> iterable)
   {
     return select().from(iterable);
-  }
-
-
-  /**
-   * @param <T> the element type of the {@link Iterable}.
-   * @return a query for using the functionality of JaQLib without the fluent
-   *         API.
-   */
-  public <T> IterableQuery<T> createQuery()
-  {
-    return new IterableQuery<T>(getMethodCallRecorder());
   }
 
 }
