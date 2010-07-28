@@ -17,11 +17,16 @@ package org.jaqlib;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
 
 import javax.sql.DataSource;
 
 import org.jaqlib.core.AbstractQueryBuilder;
+import org.jaqlib.core.QueryResultException;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.AbstractMapping;
@@ -44,8 +49,8 @@ import org.jaqlib.db.Using;
  * This class is the main entry point of Jaqlib for database query support. It
  * provides following methods for building queries:
  * <ul>
- * <li>{@link #select(ColumnMapping)}</li>
  * <li>{@link #select(Class)}</li>
+ * <li>{@link #select(ColumnMapping)}</li>
  * <li>{@link #select(BeanMapping)}</li>
  * <li>{@link #insert(Object)}</li>
  * <li>{@link #update(Object)}</li>
@@ -81,6 +86,7 @@ import org.jaqlib.db.Using;
  * <li>This class is thread-safe.</li>
  * </ul>
  * 
+ * 
  * <h2>Usage examples</h2> All examples use following statements to define the
  * database connection and the SQL statement that should act as data source for
  * some bank accounts.<br>
@@ -98,6 +104,7 @@ import org.jaqlib.db.Using;
  * 
  * Jaqlib.DB.select(AccountImpl.class).from(ds, sql).where(...)
  * </pre>
+ * 
  * 
  * <h3>Selecting primitive values</h3> If you just want to select one or a list
  * of primitive values you can use following code:
@@ -211,7 +218,15 @@ import org.jaqlib.db.Using;
  *     .from(accounts).asList();
  * </pre>
  * 
- * <h3>Constraining the result</h3>
+ * 
+ * <h3>Constraining the result</h3> There are different ways how to constrain
+ * the returned query result. Jaqlib provides an API for specifying WHERE
+ * clauses. You can use WHERE clauses in three ways:
+ * <ul>
+ * <li>Method call recording mechanism</li>
+ * <li>Custom where condition code</li>
+ * <li>Simple comparison methods</li>
+ * </ul>
  * 
  * <p>
  * <b>Method call recording mechanism</b><br>
@@ -295,15 +310,30 @@ import org.jaqlib.db.Using;
  * <pre>
  * // Account implements the Comparable interface; the balance field is used
  * // for comparing two accounts
- * AccountImpl spec = new AccountImpl();
- * spec.setBalance(5000.0);
+ * AccountImpl criteria = new AccountImpl();
+ * criteria.setBalance(5000.0);
  * 
  * List&lt;AccountImpl&gt; result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
- *     .where().element().isSmallerThan(spec).asList();
+ *     .where().element().isSmallerThan(criteria).asList();
  * </pre>
  * 
- * <h3>Using different result kinds</h3> <b>Return result as a {@link Map}:</b>
+ * 
+ * <h3>Using different result kinds</h3>
  * <p>
+ * The result of a query can be returned in following ways:
+ * <ul>
+ * <li>as {@link List}
+ * <li>as {@link Vector}
+ * <li>as {@link Set}
+ * <li>as {@link Map}
+ * <li>as {@link Hashtable}
+ * <li>as unique result
+ * <li>as first occurrence
+ * <li>as last occurrence
+ * </ul>
+ * </p>
+ * <p>
+ * <b>Return result as a {@link Map} or {@link Hashtable}:</b><br>
  * The key for the {@link Map} must be specified by using the method call record
  * mechanism. Again a method call on a recorder object is recorded by Jaqlib.
  * When returning the query result Jaqlib executes this recorded method on each
@@ -311,10 +341,112 @@ import org.jaqlib.db.Using;
  * </p>
  * 
  * <pre>
- * Account account = Jaqlib.DB.getRecorder(Account.class);
+ * Account recorder = Jaqlib.DB.getRecorder(Account.class);
  * Map&lt;Long, AccountImpl&gt; results = Jaqlib.DB.select(AccountImpl.class)
- *     .from(accounts).asMap(account.getId());
+ *     .from(accounts).asMap(recorder.getId());
  * </pre>
+ * 
+ * <p>
+ * <b>Return result as {@link Set}:</b><br>
+ * 
+ * <pre>
+ * Set&lt;AccountImpl&gt; notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
+ *     .from(accounts).whereElement().isNotNull().asSet();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return result as {@link List} or {@link Vector}:</b><br>
+ * 
+ * <pre>
+ * List&lt;AccountImpl&gt; notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
+ *     .from(accounts).whereElement().isNotNull().asList();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return unique result:</b> <br>
+ * Only one result is allowed to be selected by the query. If more than one
+ * elements are selected then an {@link QueryResultException} is thrown. <br>
+ * Note that you can use <tt>uniqueResult()</tt> or <tt>asUniqueResult()</tt> -
+ * what you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.DB.getRecorder(Account.class);
+ * Account result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+ *     .whereCall(recorder.getId()).isEqual((long) 5).asUniqueResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return only the first result:</b> <br>
+ * Only the element is returned that matches the given WHERE conditions first. <br>
+ * Note that you can use <tt>firstResult()</tt> or <tt>asFirstResult()</tt> -
+ * what you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.DB.getRecorder(Account.class);
+ * Account result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+ *     .whereCall(recorder.getBalance()).isGreaterThan(500.0).asFirstResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return only the last result:</b> <br>
+ * Only the element is returned that matches the given WHERE conditions last. <br>
+ * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> - what
+ * you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.DB.getRecorder(Account.class);
+ * Account result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+ *     .whereCall(recorder.getBalance()).isGreaterThan(500.0).asLastResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * 
+ * <h3>Executing a task on each element</h3>
+ * 
+ * <pre>
+ * // create task that should be executed for each element
+ * Task&lt;Account&gt; task = new Task&lt;Account&gt;()
+ * {
+ * 
+ *   public void execute(Account account)
+ *   {
+ *     account.sendInfoEmail();
+ *   }
+ * 
+ * };
+ * Jaqlib.DB.select(AccountImpl.class).from(accounts).execute(task);
+ * </pre>
+ * 
+ * <pre>
+ * // create condition for negative balances
+ * WhereCondition&lt;Account&gt; deptCond = new WhereCondition&lt;Account&gt;()
+ * {
+ * 
+ *   public boolean evaluate(Account account)
+ *   {
+ *     return (account.getBalance() &lt; 0);
+ *   }
+ * 
+ * };
+ * 
+ * // execute task only on elements that match the given condition
+ * Jaqlib.DB.select(AccountImpl.class).from(accounts).where(deptCond)
+ *     .execute(task);
+ * 
+ * // or ...
+ * List&lt;AccountImpl&gt; result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+ *     .where(deptCond).executeWithResult(task).asList();
+ * </pre>
+ * 
  * 
  * <h3>Executing prepared statements</h3>
  * <p>
@@ -350,6 +482,7 @@ import org.jaqlib.db.Using;
  *   accounts.close();
  * }
  * </pre>
+ * 
  * 
  * <h3>Custom Java type handler</h3> Database column data types can be converted
  * to custom Java types with so-called {@link JavaTypeHandler}s. These handlers
@@ -402,41 +535,6 @@ import org.jaqlib.db.Using;
  * }
  * </pre>
  * 
- * <h3>Executing a task on each element</h3>
- * 
- * <pre>
- * // create task that should be executed on each element
- * Task&lt;Account&gt; task = new Task&lt;Account&gt;()
- * {
- * 
- *   public void execute(Account account)
- *   {
- *     account.sendInfoEmail();
- *   }
- * 
- * };
- * Jaqlib.DB.select(Account.class).from(accounts).execute(task);
- * </pre>
- * 
- * <pre>
- * // create condition for negative balances
- * WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;()
- * {
- * 
- *   public boolean evaluate(Account account)
- *   {
- *     return (account.getBalance() &lt; 0);
- *   }
- * 
- * };
- * 
- * // execute task only on elements that match the given condition
- * Jaqlib.DB.select(Account.class).from(accounts).where(deptCond).execute(task);
- * 
- * // or ...
- * List&lt;Account&gt; result = Jaqlib.DB.select(Account.class).from(accounts)
- *     .where(deptCond).executeWithResult(task).asList();
- * </pre>
  * 
  * <h3>Inserting a Java bean into a database table</h3>
  * <p>
@@ -474,6 +572,7 @@ import org.jaqlib.db.Using;
  *     .into(getJdbcDataSource(), tableName).using(beanMapping);
  * </pre>
  * 
+ * 
  * <h3>Updating a Java bean in a database table</h3>
  * <p>
  * <b>Using default bean mapping (bean property convention):</b>
@@ -510,6 +609,7 @@ import org.jaqlib.db.Using;
  *     .where(whereClause).using(beanMapping);
  * </pre>
  * 
+ * 
  * <h3>Delete records from a database table</h3>
  * <p>
  * <b>Delete specific records:</b>
@@ -537,8 +637,6 @@ import org.jaqlib.db.Using;
  * String tableName = &quot;ACCOUNT&quot;;
  * int updateCount = Jaqlib.DB.delete().from(getJdbcDataSource(), tableName);
  * </pre>
- * 
- * </p>
  * 
  * @see DbDefaults
  * @see DatabaseQB

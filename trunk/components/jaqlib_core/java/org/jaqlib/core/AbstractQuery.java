@@ -90,7 +90,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
 
   public QueryResult<T, DataSourceType> addAndWhereCondition(
-      WhereCondition<T> condition)
+      WhereCondition<? super T> condition)
   {
     tree.and(new Condition<T>(condition));
     return createQueryResult();
@@ -98,7 +98,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
 
 
   public QueryResult<T, DataSourceType> addOrWhereCondition(
-      WhereCondition<T> condition)
+      WhereCondition<? super T> condition)
   {
     tree.or(new Condition<T>(condition));
     return createQueryResult();
@@ -123,7 +123,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  public QueryResult<T, DataSourceType> addTask(Task<T> task)
+  public QueryResult<T, DataSourceType> addTask(Task<? super T> task)
   {
     TaskWhereCondition<T> condition = new TaskWhereCondition<T>(task);
     addAndWhereCondition(condition);
@@ -131,7 +131,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
-  public void addTaskAndExecute(Task<T> task)
+  public void addTaskAndExecute(Task<? super T> task)
   {
     addTask(task);
 

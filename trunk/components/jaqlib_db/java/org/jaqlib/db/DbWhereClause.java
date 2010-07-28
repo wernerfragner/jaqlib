@@ -104,7 +104,7 @@ public class DbWhereClause<T> extends DbQueryResult<T>
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public DbQueryResult<T> where(WhereCondition<T> condition)
+  public DbQueryResult<T> where(WhereCondition<? super T> condition)
   {
     return (DbQueryResult<T>) getDatabaseQuery()
         .addAndWhereCondition(condition);

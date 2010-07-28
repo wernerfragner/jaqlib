@@ -105,7 +105,7 @@ public class QueryResult<T, DataSourceType> extends
    * 
    * @throws QueryResultException if the query matches more than one element.
    */
-  public T uniqueResult()
+  public T asUniqueResult()
   {
     return getQuery().getUniqueResult();
   }
@@ -115,7 +115,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return the first element that matches the query. Returns null if no match
    *         has been found.
    */
-  public T firstResult()
+  public T asFirstResult()
   {
     return getQuery().getFirstResult();
   }
@@ -125,9 +125,36 @@ public class QueryResult<T, DataSourceType> extends
    * @return the last element that matches the query. Returns null if no match
    *         has been found.
    */
-  public T lastResult()
+  public T asLastResult()
   {
     return getQuery().getLastResult();
+  }
+
+
+  /**
+   * This method is an alias for {@link #asUniqueResult()}.
+   */
+  public T uniqueResult()
+  {
+    return asUniqueResult();
+  }
+
+
+  /**
+   * This method is an alias for {@link #asFirstResult()}.
+   */
+  public T firstResult()
+  {
+    return asFirstResult();
+  }
+
+
+  /**
+   * This method is an alias for {@link #asLastResult()}.
+   */
+  public T lastResult()
+  {
+    return asLastResult();
   }
 
 
@@ -143,7 +170,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
-  public QueryResult<T, DataSourceType> executeWithResult(Task<T> task)
+  public QueryResult<T, DataSourceType> executeWithResult(Task<? super T> task)
   {
     return getQuery().addTask(task);
   }
@@ -154,7 +181,7 @@ public class QueryResult<T, DataSourceType> extends
    * 
    * @param task the not null task to be executed.
    */
-  public void execute(Task<T> task)
+  public void execute(Task<? super T> task)
   {
     getQuery().addTaskAndExecute(task);
   }
@@ -219,7 +246,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
-  public QueryResult<T, DataSourceType> and(WhereCondition<T> condition)
+  public QueryResult<T, DataSourceType> and(WhereCondition<? super T> condition)
   {
     return getQuery().addAndWhereCondition(condition);
   }
@@ -232,7 +259,7 @@ public class QueryResult<T, DataSourceType> extends
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
-  public QueryResult<T, DataSourceType> or(WhereCondition<T> condition)
+  public QueryResult<T, DataSourceType> or(WhereCondition<? super T> condition)
   {
     return getQuery().addOrWhereCondition(condition);
   }
