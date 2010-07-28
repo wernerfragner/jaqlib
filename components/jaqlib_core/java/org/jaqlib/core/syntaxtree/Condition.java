@@ -13,10 +13,10 @@ import org.jaqlib.util.ReflectionUtil;
 public class Condition<T> implements SyntaxTreeNode<T>
 {
 
-  private final WhereCondition<T> condition;
+  private final WhereCondition<? super T> condition;
 
 
-  public Condition(WhereCondition<T> condition)
+  public Condition(WhereCondition<? super T> condition)
   {
     this.condition = Assert.notNull(condition);
   }

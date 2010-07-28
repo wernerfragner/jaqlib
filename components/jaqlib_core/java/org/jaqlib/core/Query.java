@@ -23,10 +23,11 @@ public interface Query<T, DataSourceType> extends
 
 
   QueryResult<T, DataSourceType> addAndWhereCondition(
-      WhereCondition<T> condition);
+      WhereCondition<? super T> condition);
 
 
-  QueryResult<T, DataSourceType> addOrWhereCondition(WhereCondition<T> condition);
+  QueryResult<T, DataSourceType> addOrWhereCondition(
+      WhereCondition<? super T> condition);
 
 
   <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveAndWhereCondition();
@@ -35,9 +36,9 @@ public interface Query<T, DataSourceType> extends
   <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveOrWhereCondition();
 
 
-  QueryResult<T, DataSourceType> addTask(Task<T> task);
+  QueryResult<T, DataSourceType> addTask(Task<? super T> task);
 
 
-  void addTaskAndExecute(Task<T> task);
+  void addTaskAndExecute(Task<? super T> task);
 
 }

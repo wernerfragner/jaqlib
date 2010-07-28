@@ -100,7 +100,8 @@ public class WhereClause<T, DataSourceType> extends
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
-  public QueryResult<T, DataSourceType> where(WhereCondition<T> condition)
+  public QueryResult<T, DataSourceType> where(
+      WhereCondition<? super T> condition)
   {
     return getQuery().addAndWhereCondition(condition);
   }

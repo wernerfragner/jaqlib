@@ -1,6 +1,13 @@
 package org.jaqlib;
 
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
 import org.jaqlib.core.AbstractQueryBuilder;
+import org.jaqlib.core.QueryResultException;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
@@ -17,7 +24,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
 /**
  * <h2>Overview</h2>
  * <p>
- * This class is the main entry point of JaQLib for XML query support. It
+ * This class is the main entry point of Jaqlib for XML query support. It
  * provides following methods for building queries:
  * <ul>
  * <li>{@link #select(Class)}</li>
@@ -70,6 +77,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *   }
  * }
  * </pre>
+ * 
  * 
  * <h2>Important issues</h2>
  * <ul>
@@ -125,6 +133,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * </p>
  * 
+ * 
  * <h2>Usage examples</h2> The examples below use following XML files:<br>
  * <i>Accounts_Attributes.xml:</i>
  * 
@@ -163,6 +172,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * </bank>
  * }
  * </pre>
+ * 
  * 
  * <h3>Selecting Java objects using XML attributes (default)</h3>
  * 
@@ -207,6 +217,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * List&lt;CreditRating&gt; ratings = Jaqlib.XML.select(CreditRating.class)
  *     .from(&quot;Accounts.xml&quot;).where(&quot;//@creditRating&quot;).asList();
  * </pre>
+ * 
  * 
  * <h3>Selecting complex Java objects</h3> Jaqlib also support nested bean
  * hierarchies. That means that one Bean has other beans as fields. In the
@@ -305,6 +316,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * specified multiple times on an element - so they cannot be used for mapping
  * primitive XML values to Java collection values.
  * 
+ * 
  * <h3>Constraining the result</h3> There are different ways how to constrain
  * the returned query result. Jaqlib provides an API for specifying WHERE
  * clauses. You can use WHERE clauses in three ways:
@@ -402,6 +414,142 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *     .isSmallerThan(criteria).asList();
  * </pre>
  * 
+ * 
+ * <h3>Using different result kinds</h3>
+ * <p>
+ * The result of a query can be returned in following ways:
+ * <ul>
+ * <li>as {@link List}
+ * <li>as {@link Vector}
+ * <li>as {@link Set}
+ * <li>as {@link Map}
+ * <li>as {@link Hashtable}
+ * <li>as unique result
+ * <li>as first occurrence
+ * <li>as last occurrence
+ * </ul>
+ * </p>
+ * <p>
+ * <b>Return result as a {@link Map} or {@link Hashtable}:</b><br>
+ * The key for the {@link Map} must be specified by using the method call record
+ * mechanism. Again a method call on a recorder object is recorded by Jaqlib.
+ * When returning the query result Jaqlib executes this recorded method on each
+ * selected element and uses the result as key of the map entry.
+ * </p>
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.XML.getRecorder(Account.class);
+ * Map&lt;Long, AccountImpl&gt; results = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;).asMap(recorder.getId());
+ * </pre>
+ * 
+ * <p>
+ * <b>Return result as {@link Set}:</b><br>
+ * 
+ * <pre>
+ * Set&lt;AccountImpl&gt; notNullAccounts = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;).andElement().isNotNull().asSet();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return result as {@link List} or {@link Vector}:</b><br>
+ * 
+ * <pre>
+ * List&lt;AccountImpl&gt; notNullAccounts = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;).andElement().isNotNull().asList();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return unique result:</b> <br>
+ * Only one result is allowed to be selected by the query. If more than one
+ * elements are selected then an {@link QueryResultException} is thrown. <br>
+ * Note that you can use <tt>uniqueResult()</tt> or <tt>asUniqueResult()</tt> -
+ * what you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.XML.getRecorder(Account.class);
+ * Account result = Jaqlib.XML.select(AccountImpl.class).from(&quot;Accounts.xml&quot;)
+ *     .where(&quot;//accounts&quot;).andCall(recorder.getId()).isEqual((long) 5)
+ *     .asUniqueResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return only the first result:</b> <br>
+ * Only the element is returned that matches the given WHERE conditions first. <br>
+ * Note that you can use <tt>firstResult()</tt> or <tt>asFirstResult()</tt> -
+ * what you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.XML.getRecorder(Account.class);
+ * Account result = Jaqlib.XML.select(AccountImpl.class).from(&quot;Accounts.xml&quot;)
+ *     .where(&quot;//accounts&quot;).andCall(recorder.getBalance()).isGreaterThan(500.0)
+ *     .asFirstResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return only the last result:</b> <br>
+ * Only the element is returned that matches the given WHERE conditions last. <br>
+ * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> - what
+ * you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.XML.getRecorder(Account.class);
+ * Account result = Jaqlib.XML.select(AccountImpl.class).from(&quot;Accounts.xml&quot;)
+ *     .where(&quot;//accounts&quot;).andCall(recorder.getBalance()).isGreaterThan(500.0)
+ *     .asLastResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * 
+ * <h3>Executing a task on each element</h3>
+ * 
+ * <pre>
+ * // create task that should be executed for each element
+ * Task&lt;Account&gt; task = new Task&lt;Account&gt;()
+ * {
+ * 
+ *   public void execute(Account account)
+ *   {
+ *     account.sendInfoEmail();
+ *   }
+ * 
+ * };
+ * Jaqlib.XML.select(AccountImpl.class).from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;)
+ *     .execute(task);
+ * </pre>
+ * 
+ * <pre>
+ * // create condition for negative balances
+ * WhereCondition&lt;Account&gt; deptCond = new WhereCondition&lt;Account&gt;()
+ * {
+ * 
+ *   public boolean evaluate(Account account)
+ *   {
+ *     return (account.getBalance() &lt; 0);
+ *   }
+ * 
+ * };
+ * 
+ * // execute task only on elements that match the given condition
+ * Jaqlib.XML.select(AccountImpl.class).from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;)
+ *     .and(deptCond).execute(task);
+ * 
+ * // or ...
+ * List&lt;AccountImpl&gt; result = Jaqlib.XML.select(AccountImpl.class)
+ *     .from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;).and(deptCond)
+ *     .executeWithResult(task).asList();
+ * </pre>
+ * 
+ * 
  * <h3>Multiple queries on same file</h3> When multiple queries are run against
  * one XML file the {@link XmlSelectDataSource} should be used. With this
  * datasource the XML file is read and parsed only once for multiple queries.
@@ -466,6 +614,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * Jaqlib.XML.DEFAULTS.setXPathEngine(new JaxenXPathEngine());
  * </pre>
  * 
+ * 
  * <h3>Define a custom bean mapping</h3> By default the XML element or attribute
  * names must exactly match the Jave bean field names. This mapping behavior can
  * be changed by using the {@link BeanMapping} class. It holds the information
@@ -485,6 +634,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * {@link BeanMappingStrategy} interface. It can be set into the
  * {@link BeanMapping} object or can be set application-wide by calling
  * {@link XmlDefaults#setBeanMappingStrategy(BeanMappingStrategy)}.
+ * 
  * 
  * <h3>Using a custom Java type handler</h3> In some cases the default mapping
  * logic cannot be applied for certain fields. In that case a custom
@@ -545,6 +695,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * }
  * </pre>
+ * 
  * 
  * <h3>Using XML namespaces</h3> If XML files use namespaces for the XML
  * elements or attributes you must register these namespaces with the XPath

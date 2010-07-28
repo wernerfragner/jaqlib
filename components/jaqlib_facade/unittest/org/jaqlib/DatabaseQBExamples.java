@@ -2,9 +2,11 @@ package org.jaqlib;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.AbstractJavaTypeHandler;
 import org.jaqlib.core.bean.BeanMapping;
@@ -95,19 +97,98 @@ public class DatabaseQBExamples
   {
     // Account implements the Comparable interface; the balance field is used
     // for comparing two accounts
-    AccountImpl spec = new AccountImpl();
-    spec.setBalance(5000.0);
+    AccountImpl criteria = new AccountImpl();
+    criteria.setBalance(5000.0);
 
     List<AccountImpl> result = Jaqlib.DB.select(AccountImpl.class)
-        .from(accounts).where().element().isSmallerThan(spec).asList();
+        .from(accounts).where().element().isSmallerThan(criteria).asList();
   }
 
 
-  public void asMap()
+  public void mapResult()
   {
-    Account account = Jaqlib.DB.getRecorder(Account.class);
+    Account recorder = Jaqlib.DB.getRecorder(Account.class);
     Map<Long, AccountImpl> results = Jaqlib.DB.select(AccountImpl.class)
-        .from(accounts).asMap(account.getId());
+        .from(accounts).asMap(recorder.getId());
+  }
+
+
+  public void setResult()
+  {
+    Set<AccountImpl> notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
+        .from(accounts).whereElement().isNotNull().asSet();
+  }
+
+
+  public void listResult()
+  {
+    List<AccountImpl> notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
+        .from(accounts).whereElement().isNotNull().asList();
+  }
+
+
+  public void uniqueResult()
+  {
+    Account recorder = Jaqlib.DB.getRecorder(Account.class);
+    Account result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+        .whereCall(recorder.getId()).isEqual((long) 5).asUniqueResult();
+  }
+
+
+  public void firstResult()
+  {
+    Account recorder = Jaqlib.DB.getRecorder(Account.class);
+    Account result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+        .whereCall(recorder.getBalance()).isGreaterThan(500.0).asFirstResult();
+  }
+
+
+  public void lastResult()
+  {
+    Account recorder = Jaqlib.DB.getRecorder(Account.class);
+    Account result = Jaqlib.DB.select(AccountImpl.class).from(accounts)
+        .whereCall(recorder.getBalance()).isGreaterThan(500.0).asLastResult();
+  }
+
+
+  public void executeTask()
+  {
+    // create task that should be executed for each element
+    Task<Account> task = new Task<Account>()
+    {
+
+      public void execute(Account account)
+      {
+        account.sendInfoEmail();
+      }
+
+    };
+    Jaqlib.DB.select(AccountImpl.class).from(accounts).execute(task);
+  }
+
+
+  public void executeTaskWithResult()
+  {
+    Task<Account> task = null;
+
+    // create condition for negative balances
+    WhereCondition<Account> deptCond = new WhereCondition<Account>()
+    {
+
+      public boolean evaluate(Account account)
+      {
+        return (account.getBalance() < 0);
+      }
+
+    };
+
+    // execute task only on elements that match the given condition
+    Jaqlib.DB.select(AccountImpl.class).from(accounts).where(deptCond)
+        .execute(task);
+
+    // or ...
+    List<AccountImpl> result = Jaqlib.DB.select(AccountImpl.class)
+        .from(accounts).where(deptCond).executeWithResult(task).asList();
   }
 
 

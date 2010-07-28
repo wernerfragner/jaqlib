@@ -15,100 +15,233 @@
  */
 package org.jaqlib;
 
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Vector;
+
 import org.jaqlib.core.AbstractQueryBuilder;
+import org.jaqlib.core.QueryResultException;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.iterable.FromClause;
 import org.jaqlib.iterable.IterableQuery;
 
 /**
+ * <h2>Overview</h2>
  * <p>
- * The main entry point of JaQLib for {@link Iterable} support. It provides
- * {@link #select()} and {@link #selectFrom(Iterable)} for building queries.
+ * This class is the main entry point of Jaqlib for {@link Iterable} query
+ * support. It provides following methods for building queries:
+ * <ul>
+ * <li>{@link #select()}</li>
+ * <li>{@link #selectFrom(Iterable)}</li>
+ * </ul>
  * </p>
- * <p>
- * The Method {@link #getRecorder(Class)} can be used to define a WHERE
- * condition using a method call recording mechanism (see also the first example
- * below). First the programmer must call the desired method on the returned
- * proxy object. This method call is recorded by JaQLib. When JaqLib evaluates
- * the WHERE condition this method call is replayed on every selected element.
- * The result of this method call is then evaluated against the specified
- * condition.
- * </p>
- * This class is thread-safe.
- * <p>
- * <b>Usage examples:</b><br>
+ * 
+ * 
+ * <h2>Important issues</h2>
+ * <ul>
+ * <li>Various default values for querying XML files can be set application-wide
+ * by using the {@link #DEFAULTS} object.</li>
+ * <li>
+ * This class is thread-safe.</li>
+ * </ul>
+ * 
+ * 
+ * <h2>Usage examples</h2>
  * <p>
  * The following examples use Jaqlib.List for accessing the
  * IterableQueryBuilder. Alternatively the class IterableQB can be used, too.
  * </p>
- * <i>Method call recording mechanism:</i>
+ * 
+ * 
+ * <h3>Constraining the result</h3> There are different ways how to constrain
+ * the returned query result. Jaqlib provides an API for specifying WHERE
+ * clauses. You can use WHERE clauses in three ways:
+ * <ul>
+ * <li>Method call recording mechanism</li>
+ * <li>Custom where condition code</li>
+ * <li>Simple comparison methods</li>
+ * </ul>
+ * 
+ * <p>
+ * <b>Method call recording mechanism</b><br>
+ * By using the Method {@link #getRecorder(Class)} a recorder object is created
+ * (= a JDK dynamic proxy). First the programmer must call the desired method on
+ * the returned recorder object. This method call is recorded by JaQLib. When
+ * JaqLib evaluates the WHERE condition this method call is replayed on every
+ * selected element. The result of this method call is then evaluated against
+ * the condition that is specified after the WHERE clause.
+ * </p>
  * 
  * <pre>
  * // get accounts that should be queried
  * List&lt;Account&gt; accounts = getAccounts();
  * 
- * // create a 'dummy' object for recording a method call for the WHERE clause
+ * // get recorder object
  * Account account = Jaqlib.List.getRecorder(Account.class);
  * 
- * // select all accounts with a balance greater than 5000
+ * // select all accounts with a balance greater than 500.0
  * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts)
- *     .whereCall(account.getBalance()).isGreaterThan(5000).asList();
+ *     .whereCall(account.getBalance()).isGreaterThan(500.0).asList();
  * </pre>
  * 
- * <i>Custom WHERE conditions:</i>
+ * <p>
+ * <b>Custom where condition code</b><br>
+ * By implementing the interface {@link WhereCondition} you can define your own
+ * condition code. This alternative gives you most flexibility but is somewhat
+ * cumbersome to implement (see example below).
+ * </p>
  * 
  * <pre>
  * // create condition for negative balances
- * WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;() {
+ * WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;()
+ * {
  * 
- *   public boolean evaluate(Account account) {
+ *   public boolean evaluate(Account account)
+ *   {
  *     return (account.getBalance() &lt; 0);
  *   }
  * 
  * };
  * 
  * // create condition for accounts with poor credit rating
- * WhereCondition&lt;Account&gt; ratingCondition = new WhereCondition&lt;Account&gt;() {
+ * WhereCondition&lt;Account&gt; ratingCondition = new WhereCondition&lt;Account&gt;()
+ * {
  * 
- *   public boolean evaluate(Account account) {
+ *   public boolean evaluate(Account account)
+ *   {
  *     return (account.getCreditRating() == CreditRating.POOR);
  *   }
- * }
+ * };
  * 
- * // execute query with these conditions 
+ * // execute query with these conditions
  * List&lt;Account&gt; highRiskAccounts = Jaqlib.List.selectFrom(accounts)
  *     .where(deptCondition).and(ratingCondition).asList();
  * </pre>
  * 
- * <i>Filtering null elements:</i>
+ * <p>
+ * <b>Simple comparison methods</b><br>
+ * There are some comparison methods that can be used for criteria matching (see
+ * <a href=
+ * "http://java.sun.com/blueprints/corej2eepatterns/Patterns/DataAccessObject.html"
+ * >DataAccessObject<a>) or for matching primitive types.
+ * </p>
+ * 
+ * You could use this mechanism to filter <tt>null</tt> elements:
  * 
  * <pre>
  * List&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).where()
  *     .element().isNotNull().asList();
  * </pre>
  * 
- * <i>Filtering {@link Comparable} elements:</i>
+ * Or your could use it for filtering {@link Comparable} elements:</i>
  * 
  * <pre>
- * // Account implements the Comparable interface; the balance field is used for
- * // comparing two accounts
- * AccountImpl spec = new AccountImpl();
- * account.setBalance(5000);
+ * // Account implements the Comparable interface; the balance field is used
+ * // for comparing two accounts
+ * AccountImpl criteria = new AccountImpl();
+ * criteria.setBalance(5000.0);
  * 
  * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts).where().element()
- *     .isSmallerThan(spec).asList();
+ *     .isSmallerThan(criteria).asList();
  * </pre>
  * 
- * <i>Map as result:</i>
+ * 
+ * <h3>Using different result kinds</h3>
+ * <p>
+ * The result of a query can be returned in following ways:
+ * <ul>
+ * <li>as {@link List}
+ * <li>as {@link Vector}
+ * <li>as {@link Set}
+ * <li>as {@link Map}
+ * <li>as {@link Hashtable}
+ * <li>as unique result
+ * <li>as first occurrence
+ * <li>as last occurrence
+ * </ul>
+ * </p>
+ * <p>
+ * <b>Return result as a {@link Map} or {@link Hashtable}:</b><br>
+ * The key for the {@link Map} must be specified by using the method call record
+ * mechanism. Again a method call on a recorder object is recorded by Jaqlib.
+ * When returning the query result Jaqlib executes this recorded method on each
+ * selected element and uses the result as key of the map entry.
+ * </p>
  * 
  * <pre>
- * Account account = Jaqlib.List.getRecorder(Account.class);
+ * Account recorder = Jaqlib.List.getRecorder(Account.class);
  * Map&lt;Long, Account&gt; results = Jaqlib.List.selectFrom(accounts).asMap(
- *     account.getId());
+ *     recorder.getId());
  * </pre>
  * 
- * <i>Executing a task on each element:</i>
+ * <p>
+ * <b>Return result as {@link Set}:</b><br>
+ * 
+ * <pre>
+ * Set&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).whereElement()
+ *     .isNotNull().asSet();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return result as {@link List} or {@link Vector}:</b><br>
+ * 
+ * <pre>
+ * List&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).whereElement()
+ *     .isNotNull().asList();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return unique result:</b> <br>
+ * Only one result is allowed to be selected by the query. If more than one
+ * elements are selected then an {@link QueryResultException} is thrown. <br>
+ * Note that you can use <tt>uniqueResult()</tt> or <tt>asUniqueResult()</tt> -
+ * what you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.List.getRecorder(Account.class);
+ * Account result = Jaqlib.List.selectFrom(accounts).whereCall(recorder.getId())
+ *     .isEqual((long) 5).asUniqueResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return only the first result:</b> <br>
+ * Only the element is returned that matches the given WHERE conditions first. <br>
+ * Note that you can use <tt>firstResult()</tt> or <tt>asFirstResult()</tt> -
+ * what you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.List.getRecorder(Account.class);
+ * Account result = Jaqlib.List.selectFrom(accounts)
+ *     .whereCall(recorder.getBalance()).isGreaterThan(500.0).asFirstResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * <p>
+ * <b>Return only the last result:</b> <br>
+ * Only the element is returned that matches the given WHERE conditions last. <br>
+ * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> - what
+ * you prefer better.
+ * 
+ * <pre>
+ * Account recorder = Jaqlib.List.getRecorder(Account.class);
+ * Account result = Jaqlib.List.selectFrom(accounts)
+ *     .whereCall(recorder.getBalance()).isGreaterThan(500.0).asLastResult();
+ * </pre>
+ * 
+ * </p>
+ * 
+ * 
+ * <h3>Executing a task on each element</h3>
  * 
  * <pre>
  * // create task that should be executed for each element
@@ -126,7 +259,7 @@ import org.jaqlib.iterable.IterableQuery;
  * 
  * <pre>
  * // create condition for negative balances
- * WhereCondition&lt;Account&gt; deptCondition = new WhereCondition&lt;Account&gt;()
+ * WhereCondition&lt;Account&gt; deptCond = new WhereCondition&lt;Account&gt;()
  * {
  * 
  *   public boolean evaluate(Account account)
@@ -143,8 +276,6 @@ import org.jaqlib.iterable.IterableQuery;
  * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts).where(deptCond)
  *     .executeWithResult(task).asList();
  * </pre>
- * 
- * </p>
  * 
  * @see IterableDefaults
  * @see IterableQB

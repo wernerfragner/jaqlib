@@ -1,7 +1,10 @@
 package org.jaqlib;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.util.ClassPathResource;
@@ -237,6 +240,100 @@ public class XmlQBExamples
     // execute query
     List<CreditRating> ratings = Jaqlib.XML.select(CreditRating.class)
         .from("Accounts.xml").where("//@creditRating").asList();
+  }
+
+
+  public void mapResult()
+  {
+    Account recorder = Jaqlib.XML.getRecorder(Account.class);
+    Map<Long, AccountImpl> results = Jaqlib.XML.select(AccountImpl.class)
+        .from("Accounts.xml").where("//accounts").asMap(recorder.getId());
+  }
+
+
+  public void setResult()
+  {
+    Set<AccountImpl> notNullAccounts = Jaqlib.XML.select(AccountImpl.class)
+        .from("Accounts.xml").where("//accounts").andElement().isNotNull()
+        .asSet();
+  }
+
+
+  public void listResult()
+  {
+    List<AccountImpl> notNullAccounts = Jaqlib.XML.select(AccountImpl.class)
+        .from("Accounts.xml").where("//accounts").andElement().isNotNull()
+        .asList();
+  }
+
+
+  public void uniqueResult()
+  {
+    Account recorder = Jaqlib.XML.getRecorder(Account.class);
+    Account result = Jaqlib.XML.select(AccountImpl.class).from("Accounts.xml")
+        .where("//accounts").andCall(recorder.getId()).isEqual((long) 5)
+        .asUniqueResult();
+  }
+
+
+  public void firstResult()
+  {
+    Account recorder = Jaqlib.XML.getRecorder(Account.class);
+    Account result = Jaqlib.XML.select(AccountImpl.class).from("Accounts.xml")
+        .where("//accounts").andCall(recorder.getBalance())
+        .isGreaterThan(500.0).asFirstResult();
+  }
+
+
+  public void lastResult()
+  {
+    Account recorder = Jaqlib.XML.getRecorder(Account.class);
+    Account result = Jaqlib.XML.select(AccountImpl.class).from("Accounts.xml")
+        .where("//accounts").andCall(recorder.getBalance())
+        .isGreaterThan(500.0).asLastResult();
+  }
+
+
+  public void executeTask()
+  {
+    // create task that should be executed for each element
+    Task<Account> task = new Task<Account>()
+    {
+
+      public void execute(Account account)
+      {
+        account.sendInfoEmail();
+      }
+
+    };
+    Jaqlib.XML.select(AccountImpl.class).from("Accounts.xml")
+        .where("//accounts").execute(task);
+  }
+
+
+  public void executeTaskWithResult()
+  {
+    Task<Account> task = null;
+
+    // create condition for negative balances
+    WhereCondition<Account> deptCond = new WhereCondition<Account>()
+    {
+
+      public boolean evaluate(Account account)
+      {
+        return (account.getBalance() < 0);
+      }
+
+    };
+
+    // execute task only on elements that match the given condition
+    Jaqlib.XML.select(AccountImpl.class).from("Accounts.xml")
+        .where("//accounts").and(deptCond).execute(task);
+
+    // or ...
+    List<AccountImpl> result = Jaqlib.XML.select(AccountImpl.class)
+        .from("Accounts.xml").where("//accounts").and(deptCond)
+        .executeWithResult(task).asList();
   }
 
 }
