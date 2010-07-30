@@ -1,4 +1,4 @@
-package org.jaqlib.xml.xpath;
+package org.jaqlib.xml;
 
 import java.util.ArrayList;
 import java.util.Iterator;

@@ -1,4 +1,4 @@
-package org.jaqlib.xml.xpath;
+package org.jaqlib.xml;
 
 import javax.xml.XMLConstants;
 

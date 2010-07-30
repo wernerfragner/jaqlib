@@ -5,6 +5,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.xpath.XPathAPI;
 import org.jaqlib.util.ExceptionUtil;
+import org.jaqlib.xml.XmlNamespace;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

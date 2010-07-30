@@ -3,6 +3,7 @@ package org.jaqlib.xml.xpath;
 import java.io.IOException;
 
 import org.jaqlib.util.Resource;
+import org.jaqlib.xml.XmlNamespaces;
 import org.w3c.dom.NodeList;
 
 /**

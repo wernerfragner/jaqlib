@@ -5,6 +5,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.jaqlib.util.ExceptionUtil;
+import org.jaqlib.xml.XmlNamespace;
 import org.jaxen.JaxenException;
 import org.jaxen.XPath;
 import org.w3c.dom.Node;

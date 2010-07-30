@@ -2,10 +2,10 @@ package org.jaqlib;
 
 import org.jaqlib.core.DefaultsDelegate;
 import org.jaqlib.util.Assert;
+import org.jaqlib.xml.XmlNamespace;
+import org.jaqlib.xml.XmlNamespaces;
 import org.jaqlib.xml.xpath.JdkXPathEngine;
 import org.jaqlib.xml.xpath.XPathEngine;
-import org.jaqlib.xml.xpath.XmlNamespace;
-import org.jaqlib.xml.xpath.XmlNamespaces;
 
 /**
  * Static helper class that holds default infrastructure component instances and

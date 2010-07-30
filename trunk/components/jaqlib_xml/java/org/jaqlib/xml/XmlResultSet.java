@@ -16,8 +16,6 @@ import org.jaqlib.core.bean.FieldMapping;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.util.LogUtil;
 import org.jaqlib.util.lang.StringConversion;
-import org.jaqlib.xml.xpath.XmlNamespace;
-import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
