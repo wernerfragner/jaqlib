@@ -364,6 +364,9 @@
     <copy toDir="${dist.dir}/${version.fullString}/reports/javadoc" >
       <fileset dir="${build.temp}/javadoc/jaqlib" />
     </copy>
+    <copy toDir="${dist.dir}/${version.fullString}/dist" >
+      <fileset file="../doc/release_notes.txt" />
+    </copy>
 		
 		<delete dir="./dbunittest" failonerror="false" />
 		<delete file="./derby.log" failonerror="false" />
