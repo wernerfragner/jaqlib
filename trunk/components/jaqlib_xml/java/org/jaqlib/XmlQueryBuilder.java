@@ -263,7 +263,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * can select this account by using following code:
  * 
  * <pre>
- * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(Account.class)
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
  *     .from(&quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
@@ -271,7 +271,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * own collection mapping logic:
  * 
  * <pre>
- * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(Account.class);
+ * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(AccountImpl.class);
  * 
  * // set a custom source name for the transaction collection
  * mapping.getCollectionField(&quot;transactions&quot;).setSourceName(&quot;accTransactions&quot;);
@@ -281,7 +281,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *     &quot;accTransaction&quot;);
  * 
  * // execute query
- * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(Account.class)
+ * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(AccountImpl.class)
  *     .from(&quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
@@ -419,7 +419,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * AccountImpl criteria = new AccountImpl();
  * criteria.setBalance(5000.0);
  * 
- * List&lt;AccountImpl&gt; result = Jaqlib.XML.select(AccountImpl.class)
+ * List&lt;? extends AccountImpl&gt; result = Jaqlib.XML.select(AccountImpl.class)
  *     .from(&quot;Accounts.xml&quot;).where(&quot;/bank/accounts/*&quot;).andElement()
  *     .isSmallerThan(criteria).asList();
  * </pre>
@@ -632,11 +632,11 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * <pre>
  * // rename field 'lastName' and remove field 'department'
- * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(Account.class);
+ * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(AccountImpl.class);
  * mapping.getField(&quot;lastName&quot;).setSourceName(&quot;last_name&quot;);
  * mapping.removeField(&quot;department&quot;);
  * 
- * List&lt;? extends Account&gt; accounts = Jaqlib.XML.select(mapping)
+ * List&lt;Account&gt; accounts = Jaqlib.XML.select(mapping)
  *     .from(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
@@ -656,13 +656,13 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * <pre>
  * // set a custom type handler for the 'creditRating' field
- * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(Account.class);
+ * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(AccountImpl.class);
  * mapping.getField(&quot;creditRating&quot;).setTypeHandler(
  *     new CreditRatingStringTypeHandler());
  * 
  * // execute query
- * List&lt;? extends Account&gt; accounts = XmlQB.select(mapping)
- *     .from(&quot;Accounts_Attributes.xml&quot;).where(&quot;/bank/accounts/*&quot;).asList();
+ * List&lt;Account&gt; accounts = XmlQB.select(mapping).from(&quot;Accounts_Attributes.xml&quot;)
+ *     .where(&quot;/bank/accounts/*&quot;).asList();
  * </pre>
  * 
  * Alternatively the type handler can be set application-wide:
