@@ -318,7 +318,7 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
    * Contains the application wide default values for the Iterable query
    * builder.
    */
-  public static final IterableDefaults DEFAULTS = IterableDefaults.INSTANCE;
+  public final IterableDefaults DEFAULTS = IterableDefaults.INSTANCE;
 
 
   /**

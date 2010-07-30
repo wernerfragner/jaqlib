@@ -176,6 +176,11 @@ public class AccountImpl implements Account
   }
 
 
+  public void setEMailComponent(EMailComponent comp)
+  {
+  }
+
+
   public void addTransaction(String id, double amount)
   {
     TransactionImpl trans = new TransactionImpl();

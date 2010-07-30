@@ -12,6 +12,7 @@ provides following methods for building queries:
 </ul>
 </p>
 
+
 <h2>Important issues</h2>
 <ul>
 <li>
@@ -36,12 +37,8 @@ s after performing the query then
 called. Alternatively the auto close functionality can be deactivated by
 calling ''DbSelectDataSource#setAutoClosePreparedStatement(boolean)''.</li>
 <li>
-This method call record mechanism uses [http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html JDK dynamic proxies] 
-for proxying interfaces and [http://cglib.sourceforge.net/ CGLIB] for proxying classes. 
-So if you want to record method calls on classes you have to 
-[https://sourceforge.net/project/showfiles.php?group_id=56933 download] CGLIB and 
-put it on the classpath of your application.
-</li>
+The method call record mechanism uses [http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html JDK dynamic proxies] for proxying interfaces and [http://cglib.sourceforge.net/ CGLIB] for proxying classes. So if
+you want to record method calls on classes you have to [https://sourceforge.net/project/showfiles.php?group_id=56933 download] CGLIB and put it on the classpath of your application.</li>
 <li>
 Various default values for accessing a database can be set application-wide
 by using the ''Jaqlib.DB.DEFAULTS'' object.</li>
@@ -513,6 +510,64 @@ public class CreditRatingTypeHandler extends AbstractJavaTypeHandler
 }
 </pre>
 
+
+<h3>Using a custom bean factory</h3>
+<p>
+If you want to have control how JaQLib instantiates the beans you can use a
+custom ''BeanFactory}. JaQLib uses the ''DefaultBeanFactory'' class
+to instantiate Java Beans. This class requires that the beans have a
+parameterless default constructor. If this is not the case or if you want to
+do some initialization/configuration immediately after bean instantiation
+then you should implement your own ''BeanFactory''.<br>
+You can register your custom bean factory at the ''BeanMapping'' class or
+application-wide by calling ''Jaqlib.DB.DEFAULTS.setBeanFactory()''.
+</p>
+
+<pre>
+// set bean factory application-wide
+CustomBeanFactory beanFactory = new CustomBeanFactory(new EMailComponent());
+Jaqlib.DB.DEFAULTS.setBeanFactory(beanFactory);
+
+// set bean factory just for one specific mapping
+BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(AccountImpl.class);
+mapping.setFactory(beanFactory);
+
+// perform select
+</pre>
+
+<pre>
+public class CustomBeanFactory extends DefaultBeanFactory
+{
+
+  private final EMailComponent emailComponent;
+
+
+  public CustomBeanFactory(EMailComponent emailComponent)
+  {
+    this.emailComponent = emailComponent;
+  }
+
+
+  &#064;Override
+  public &lt;T&gt; T newInstance(Class&lt;T&gt; beanClass)
+  {
+    T instance = super.newInstance(beanClass);
+    configureInstance(instance);
+    return instance;
+  }
+
+
+  private void configureInstance(Object instance)
+  {
+    if (instance instanceof AccountImpl)
+    {
+      AccountImpl account = (AccountImpl) instance;
+      account.setEMailComponent(emailComponent);
+    }
+  }
+
+}
+</pre>
 
 <h2>Usage examples for INSERT, UPDATE, DELETE</h2>
 

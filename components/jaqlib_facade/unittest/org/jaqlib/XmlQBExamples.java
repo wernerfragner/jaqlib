@@ -336,4 +336,18 @@ public class XmlQBExamples
         .executeWithResult(task).asList();
   }
 
+
+  public void customBeanFactory()
+  {
+    // set bean factory application-wide
+    CustomBeanFactory beanFactory = new CustomBeanFactory(new EMailComponent());
+    Jaqlib.XML.DEFAULTS.setBeanFactory(beanFactory);
+
+    // set bean factory just for one specific mapping
+    BeanMapping<Account> mapping = new BeanMapping<Account>(AccountImpl.class);
+    mapping.setFactory(beanFactory);
+
+    // perform select
+  }
+
 }
