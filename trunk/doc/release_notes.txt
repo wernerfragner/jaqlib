@@ -1,6 +1,6 @@
-Java Query Library (JaqLib)
+Java Query Library (JaQLib)
 ---------------------------
-Copyright 2009 Werner Fragner
+Copyright 2010 Werner Fragner
 
 
 Dependencies:
@@ -9,8 +9,40 @@ Dependencies:
 JaQLib optionally requires CgLib to proxy classes for the method call recording mechanism. 
 JaQLib was tested with CgLib 2.1_3 (http://downloads.sourceforge.net/cglib/cglib-nodep-2.1_3.jar).
 
-For executing the JaQLib unittests EasyMock (http://www.easymock.org) and 
-Apache Derby (http://db.apache.org/derby/) must be on the unittest classpath.
+For executing all JaQLib unittests following frameworks must be on the unittest classpath:
+- ALL: EasyMock (http://www.easymock.org)
+- DB: Apache Derby (http://db.apache.org/derby/)
+- XML: Jaxen (http://jaxen.codehaus.org)
+- XML: Saxon (http://saxon.sourceforge.net)
+- XML: Xalan (http://xalan.apache.org/)
+
+
+jaqlib-2.0
+----------
+NOTE: this release is no drop-in replacement for jaqlib-1.0. There have been some changes
+      in the BeanMapping API. So if you just use the basic functionality of JaQLib a drop-in
+      replacement could possibly work - but there is no garantuee.
+
+Single entry point with fluent API:
+- JaQLib has one single entry point named 'org.jaqlib.Jaqlib'. 
+  Starting from this class all functionality of JaQLib can be reached conveniently.
+
+XML query support:
+- Selecting single XML values (attribute values, element values)
+- Selecting XML nodes (elements and attributes) into Java beans
+- Customizable mapping strategies for mapping XML nodes to Java beans (BeanMapping)
+- Customizable creation of Java bean instances (BeanFactory)
+- Support for XML namespaces
+- Support for custom Java type handlers: converting XML strings into to Java types
+- Defining application defaults for JaQLib using org.jaqlib.Jaqlib.XML.DEFAULTS
+
+Database query support:
+- Some changes in the BeanMapping API
+- Selecting sinlge database table columns without the need for a ColumnMapping
+- Defining application defaults for JaQLib using org.jaqlib.Jaqlib.DB.DEFAULTS
+
+Iterable query support:
+- Defining application defaults for JaQLib using org.jaqlib.Jaqlib.List.DEFAULTS
 
 
 jaqlib-1.0
@@ -23,12 +55,11 @@ Database query support:
 - Support for custom Java type handlers: converting database data types to Java types
 - Support for custom SQL type handlers: customize the extraction of database data via JDBC ResultSet
 - Defining application defaults for JaQLib using org.jaqlib.db.Defaults
-- [0000008] Automatic save data type conversion (e.g., database Integer value to Java bean Long value)
-- [0000001] Support for simple INSERT, UPDATE and DELETE statements
+- Support for INSERT, UPDATE, DELETE
+- Apply save Java type conversions automatically 
 
 Iterable query support:
 - Conditions on single elements
 - Conditions on comparable elements
 - Conditions with method call recording mechanism
 - Custom conditions
-
