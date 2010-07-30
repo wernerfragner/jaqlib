@@ -61,6 +61,7 @@ For example, you can select only the last names (= Strings) of all accounts
 instead of the full Java Bean 'Account'.
 </p>
 
+
 <h2>Important issues</h2>
 <ul>
 <li>
@@ -92,12 +93,9 @@ reflect this hierarchy, of course, in order that Jaqlib can do the right
 mapping and bean instantiation.<br>
 One-to-one or one-to-many relations are supported.</li>
 <li>
-This method call record mechanism uses [http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html JDK dynamic proxies] 
-for proxying interfaces and [http://cglib.sourceforge.net/ CGLIB] for proxying classes. 
-So if you want to record method calls on classes you have to 
-[https://sourceforge.net/project/showfiles.php?group_id=56933 download] CGLIB and 
-put it on the classpath of your application.
-</li>
+The method call record mechanisms uses [http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html JDK dynamic proxies] 
+for proxying interfaces and [http://cglib.sourceforge.net/ CGLIB] for proxying classes. So if
+you want to record method calls on classes you have to [https://sourceforge.net/project/showfiles.php?group_id=56933 download] CGLIB and put it on the classpath of your application.</li>
 <li>
 Various default values for querying XML files can be set application-wide by
 using the ''Jaqlib.XML.DEFAULTS'' object.</li>
@@ -555,6 +553,65 @@ Jaqlib.XML.select(AccountImpl.class).from(&quot;Accounts.xml&quot;).where(&quot;
 List&lt;AccountImpl&gt; result = Jaqlib.XML.select(AccountImpl.class)
     .from(&quot;Accounts.xml&quot;).where(&quot;//accounts&quot;).and(deptCond)
     .executeWithResult(task).asList();
+</pre>
+
+
+<h3>Using a custom bean factory</h3>
+<p>
+If you want to have control how JaQLib instantiates the beans you can use a
+custom ''BeanFactory}. JaQLib uses the ''DefaultBeanFactory'' class
+to instantiate Java Beans. This class requires that the beans have a
+parameterless default constructor. If this is not the case or if you want to
+do some initialization/configuration immediately after bean instantiation
+then you should implement your own ''BeanFactory''.<br>
+You can register your custom bean factory at the ''BeanMapping'' class or
+application-wide by calling ''Jaqlib.XML.DEFAULTS.setBeanFactory()''.
+</p>
+
+<pre>
+// set bean factory application-wide
+CustomBeanFactory beanFactory = new CustomBeanFactory(new EMailComponent());
+Jaqlib.XML.DEFAULTS.setBeanFactory(beanFactory);
+
+// set bean factory just for one specific mapping
+BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(AccountImpl.class);
+mapping.setFactory(beanFactory);
+
+// perform select
+</pre>
+
+<pre>
+public class CustomBeanFactory extends DefaultBeanFactory
+{
+
+  private final EMailComponent emailComponent;
+
+
+  public CustomBeanFactory(EMailComponent emailComponent)
+  {
+    this.emailComponent = emailComponent;
+  }
+
+
+  &#064;Override
+  public &lt;T&gt; T newInstance(Class&lt;T&gt; beanClass)
+  {
+    T instance = super.newInstance(beanClass);
+    configureInstance(instance);
+    return instance;
+  }
+
+
+  private void configureInstance(Object instance)
+  {
+    if (instance instanceof AccountImpl)
+    {
+      AccountImpl account = (AccountImpl) instance;
+      account.setEMailComponent(emailComponent);
+    }
+  }
+
+}
 </pre>
 
 

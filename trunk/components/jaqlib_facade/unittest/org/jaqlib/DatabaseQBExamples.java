@@ -258,6 +258,20 @@ public class DatabaseQBExamples
   }
 
 
+  public void customBeanFactory()
+  {
+    // set bean factory application-wide
+    CustomBeanFactory beanFactory = new CustomBeanFactory(new EMailComponent());
+    Jaqlib.DB.DEFAULTS.setBeanFactory(beanFactory);
+
+    // set bean factory just for one specific mapping
+    BeanMapping<Account> mapping = new BeanMapping<Account>(AccountImpl.class);
+    mapping.setFactory(beanFactory);
+
+    // perform select
+  }
+
+
   public void insertDefaultMapping()
   {
     AccountImpl account = new AccountImpl();

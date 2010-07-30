@@ -31,6 +31,7 @@ import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.AbstractMapping;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.core.bean.DefaultBeanFactory;
 import org.jaqlib.core.bean.JavaTypeHandler;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbDefaults;
@@ -563,6 +564,65 @@ import org.jaqlib.db.Using;
  * </pre>
  * 
  * 
+ * <h3>Using a custom bean factory</h3>
+ * <p>
+ * If you want to have control how JaQLib instantiates the beans you can use a
+ * custom {@link BeanFactory}. JaQLib uses the {@link DefaultBeanFactory} class
+ * to instantiate Java Beans. This class requires that the beans have a
+ * parameterless default constructor. If this is not the case or if you want to
+ * do some initialization/configuration immediately after bean instantiation
+ * then you should implement your own {@link BeanFactory}.<br>
+ * You can register your custom bean factory at the {@link BeanMapping} class or
+ * application-wide by calling <i>Jaqlib.DB.DEFAULTS.setBeanFactory()</i>.
+ * </p>
+ * 
+ * <pre>
+ * // set bean factory application-wide
+ * CustomBeanFactory beanFactory = new CustomBeanFactory(new EMailComponent());
+ * Jaqlib.DB.DEFAULTS.setBeanFactory(beanFactory);
+ * 
+ * // set bean factory just for one specific mapping
+ * BeanMapping&lt;Account&gt; mapping = new BeanMapping&lt;Account&gt;(AccountImpl.class);
+ * mapping.setFactory(beanFactory);
+ * 
+ * // perform select
+ * </pre>
+ * 
+ * <pre>
+ * public class CustomBeanFactory extends DefaultBeanFactory
+ * {
+ * 
+ *   private final EMailComponent emailComponent;
+ * 
+ * 
+ *   public CustomBeanFactory(EMailComponent emailComponent)
+ *   {
+ *     this.emailComponent = emailComponent;
+ *   }
+ * 
+ * 
+ *   &#064;Override
+ *   public &lt;T&gt; T newInstance(Class&lt;T&gt; beanClass)
+ *   {
+ *     T instance = super.newInstance(beanClass);
+ *     configureInstance(instance);
+ *     return instance;
+ *   }
+ * 
+ * 
+ *   private void configureInstance(Object instance)
+ *   {
+ *     if (instance instanceof AccountImpl)
+ *     {
+ *       AccountImpl account = (AccountImpl) instance;
+ *       account.setEMailComponent(emailComponent);
+ *     }
+ *   }
+ * 
+ * }
+ * </pre>
+ * 
+ * 
  * <h2>Usage examples for INSERT, UPDATE, DELETE</h2>
  * 
  * <h3>Inserting a Java bean into a database table</h3>
@@ -678,7 +738,7 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * Contains the application wide default values for the database query
    * builder.
    */
-  public static final DbDefaults DEFAULTS = DbDefaults.INSTANCE;
+  public final DbDefaults DEFAULTS = DbDefaults.INSTANCE;
 
 
   /**
