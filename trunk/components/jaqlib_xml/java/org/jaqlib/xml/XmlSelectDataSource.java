@@ -10,7 +10,6 @@ import org.jaqlib.util.FileResource;
 import org.jaqlib.util.Resource;
 import org.jaqlib.util.StringUtil;
 import org.jaqlib.xml.xpath.XPathEngine;
-import org.jaqlib.xml.xpath.XmlNamespaces;
 import org.w3c.dom.NodeList;
 
 /**
@@ -37,8 +36,6 @@ public class XmlSelectDataSource extends XmlDataSource implements
   private XPathEngine xPathEngine = XmlDefaults.INSTANCE.getXPathEngine();
   private String xPathExpression;
   private boolean useAttributes;
-  private boolean autoClose = true;
-  private final XmlNamespaces namespaces = XmlDefaults.INSTANCE.getNamespaces();
 
 
   /**
@@ -101,55 +98,6 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
 
   /**
-   * <p>
-   * Returns true if this data source closes itself after executing the XML
-   * query.
-   * </p>
-   * By default auto close is set to true.
-   * 
-   * @return see description.
-   */
-  public boolean isAutoClose()
-  {
-    return autoClose;
-  }
-
-
-  /**
-   * <p>
-   * If set to true this data source closes itself after executing the XML
-   * query. If set to false the Jaqlib user must close this data source by
-   * calling {@link #close()}. Otherwise used resources for reading and parsing
-   * the XML file are <b>NOT</b> freed!
-   * </p>
-   * By default auto close is set to true.
-   * 
-   * @param autoClose see description
-   */
-  public void setAutoClose(boolean autoClose)
-  {
-    this.autoClose = autoClose;
-  }
-
-
-  /**
-   * Adds a new XML namespace to this data source. This namespace is used to
-   * lookup XML attribute or element values.
-   * 
-   * @see XmlDefaults#addNamespace(String, String)
-   * @param prefix the prefix of the namespace. E.g. jaqlib in the definition
-   *          'xmlns:jaqlib=http://org.jaqlib/example'.
-   * @param uri the URI of the namespace (can or cannot really exist). E.g.
-   *          'http://org.jaqlib/example' in the definition
-   *          'xmlns:jaqlib=http://org.jaqlib/example'.
-   */
-  public void addNamespace(String prefix, String uri)
-  {
-    namespaces.add(prefix, uri);
-  }
-
-
-  /**
    * Sets a custom XPath engine. If none is set then the default JDK XPath
    * engine is used.
    * 
@@ -202,7 +150,10 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
   private void closeAfterQuery()
   {
-    close();
+    if (isAutoClose())
+    {
+      close();
+    }
   }
 
 
@@ -239,10 +190,10 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
     try
     {
-      xPathEngine.open(getXmlPath(), namespaces);
+      xPathEngine.open(getXmlPath(), getNamespaces());
 
       NodeList nodes = xPathEngine.getResults(xPathExpression);
-      return new XmlResultSet(nodes, useAttributes, namespaces);
+      return new XmlResultSet(nodes, useAttributes, getNamespaces());
     }
     catch (IOException e)
     {

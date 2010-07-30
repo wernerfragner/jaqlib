@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import org.jaqlib.core.AbstractQueryBuilder;
 import org.jaqlib.core.QueryResultException;
+import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.iterable.FromClause;
@@ -42,8 +43,16 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * 
  * <h2>Important issues</h2>
  * <ul>
- * <li>Various default values for querying XML files can be set application-wide
- * by using the {@link #DEFAULTS} object.</li>
+ * <li>
+ * The method call record mechanis uses <a
+ * href="http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html">JDK
+ * dynamic proxies</a> for proxying interfaces and <a
+ * href="http://cglib.sourceforge.net/">CGLIB</a> for proxying classes. So if
+ * you want to record method calls on classes you have to <a
+ * href="https://sourceforge.net/project/showfiles.php?group_id=56933">
+ * download</a> CGLIB and put it on the classpath of your application.</li>
+ * <li>Various default values for querying {@link Iterable}s can be set
+ * application-wide by using the <i>Jaqlib.List.DEFAULTS</i> object.</li>
  * <li>
  * This class is thread-safe.</li>
  * </ul>
@@ -51,14 +60,18 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * 
  * <h2>Usage examples</h2>
  * <p>
- * The following examples use Jaqlib.List for accessing the
- * IterableQueryBuilder. Alternatively the class IterableQB can be used, too.
+ * The following examples use <i>Jaqlib.List</i> for accessing the
+ * <i>IterableQueryBuilder</i>. Alternatively the class <i>IterableQB</i> can be
+ * used, too.
  * </p>
  * 
  * 
- * <h3>Constraining the result</h3> There are different ways how to constrain
- * the returned query result. Jaqlib provides an API for specifying WHERE
- * clauses. You can use WHERE clauses in three ways:
+ * <h3>Constraining the result</h3>
+ * <p>
+ * There are different ways how to constrain the returned query result. Jaqlib
+ * provides an API for specifying WHERE clauses. You can use WHERE clauses in
+ * three ways:
+ * </p>
  * <ul>
  * <li>Method call recording mechanism</li>
  * <li>Custom where condition code</li>
@@ -86,6 +99,14 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * List&lt;Account&gt; result = Jaqlib.List.selectFrom(accounts)
  *     .whereCall(account.getBalance()).isGreaterThan(500.0).asList();
  * </pre>
+ * 
+ * <p>
+ * In the example above the method call <tt>account.getBalance()</tt> is
+ * recorded by Jaqlib. When Jaqlib executes the query this method is called on
+ * every selected object. Each result of this method call is then evaluated
+ * according to the given condition <tt>isGreaterThan(500.0)</tt>. Only the
+ * selected elements that match this condition are returned.
+ * </p>
  * 
  * <p>
  * <b>Custom where condition code</b><br>
@@ -129,14 +150,7 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * >DataAccessObject<a>) or for matching primitive types.
  * </p>
  * 
- * You could use this mechanism to filter <tt>null</tt> elements:
- * 
- * <pre>
- * List&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).where()
- *     .element().isNotNull().asList();
- * </pre>
- * 
- * Or your could use it for filtering {@link Comparable} elements:</i>
+ * You could use it for filtering {@link Comparable} elements:</i>
  * 
  * <pre>
  * // Account implements the Comparable interface; the balance field is used
@@ -148,6 +162,12 @@ import org.jaqlib.iterable.IterableQueryFactory;
  *     .isSmallerThan(criteria).asList();
  * </pre>
  * 
+ * Or you could use this mechanism to filter <tt>null</tt> elements:
+ * 
+ * <pre>
+ * List&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).where()
+ *     .element().isNotNull().asList();
+ * </pre>
  * 
  * <h3>Using different result kinds</h3>
  * <p>
@@ -164,21 +184,22 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * </ul>
  * </p>
  * <p>
- * <b>Return result as a {@link Map} or {@link Hashtable}:</b><br>
- * The key for the {@link Map} must be specified by using the method call record
- * mechanism. Again a method call on a recorder object is recorded by Jaqlib.
- * When returning the query result Jaqlib executes this recorded method on each
- * selected element and uses the result as key of the map entry.
+ * <b>Return result as a Map or Hashtable:</b><br>
+ * The key for the {@link Map} must be specified by using the method call
+ * recording mechanism. Again a method call on a recorder object is recorded by
+ * Jaqlib. When returning the query result Jaqlib executes this recorded method
+ * on each selected element and uses the result as key of the map entry.
  * </p>
  * 
  * <pre>
+ * // use the ID field of Account as key for the map
  * Account recorder = Jaqlib.List.getRecorder(Account.class);
  * Map&lt;Long, Account&gt; results = Jaqlib.List.selectFrom(accounts).asMap(
  *     recorder.getId());
  * </pre>
  * 
  * <p>
- * <b>Return result as {@link Set}:</b><br>
+ * <b>Return result as Set:</b><br>
  * 
  * <pre>
  * Set&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).whereElement()
@@ -188,7 +209,7 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * </p>
  * 
  * <p>
- * <b>Return result as {@link List} or {@link Vector}:</b><br>
+ * <b>Return result as List or Vector:</b><br>
  * 
  * <pre>
  * List&lt;Account&gt; notNullAccounts = Jaqlib.List.selectFrom(accounts).whereElement()
@@ -202,7 +223,7 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * Only one result is allowed to be selected by the query. If more than one
  * elements are selected then an {@link QueryResultException} is thrown. <br>
  * Note that you can use <tt>uniqueResult()</tt> or <tt>asUniqueResult()</tt> -
- * what you prefer better.
+ * whatever you prefer better.
  * 
  * <pre>
  * Account recorder = Jaqlib.List.getRecorder(Account.class);
@@ -216,7 +237,7 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * <b>Return only the first result:</b> <br>
  * Only the element is returned that matches the given WHERE conditions first. <br>
  * Note that you can use <tt>firstResult()</tt> or <tt>asFirstResult()</tt> -
- * what you prefer better.
+ * whatever you prefer better.
  * 
  * <pre>
  * Account recorder = Jaqlib.List.getRecorder(Account.class);
@@ -229,8 +250,8 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * <p>
  * <b>Return only the last result:</b> <br>
  * Only the element is returned that matches the given WHERE conditions last. <br>
- * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> - what
- * you prefer better.
+ * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> -
+ * whatever you prefer better.
  * 
  * <pre>
  * Account recorder = Jaqlib.List.getRecorder(Account.class);
@@ -242,6 +263,9 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * 
  * 
  * <h3>Executing a task on each element</h3>
+ * <p>
+ * You can also execute custom code (= {@link Task}) on each returned element.
+ * </p>
  * 
  * <pre>
  * // create task that should be executed for each element
@@ -256,6 +280,11 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * };
  * Jaqlib.List.selectFrom(accounts).execute(task);
  * </pre>
+ * 
+ * <p>
+ * You can also combine the task execution with all other previous examples. Two
+ * examples are given below:
+ * </p>
  * 
  * <pre>
  * // create condition for negative balances

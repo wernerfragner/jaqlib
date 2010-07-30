@@ -30,7 +30,7 @@ public class CreditRatingStringTypeHandler extends AbstractJavaTypeHandler
       }
 
       // return value;
-      throw handleIllegalInputValue(value, CreditRating.class);
+      throw super.handleIllegalInputValue(value, CreditRating.class);
     }
 
     return value;

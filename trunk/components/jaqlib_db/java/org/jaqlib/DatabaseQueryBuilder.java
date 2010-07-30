@@ -23,10 +23,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.sql.DataSource;
-
 import org.jaqlib.core.AbstractQueryBuilder;
 import org.jaqlib.core.QueryResultException;
+import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereClause;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.AbstractMapping;
@@ -58,6 +57,7 @@ import org.jaqlib.db.Using;
  * </ul>
  * </p>
  * 
+ * 
  * <h2>Important issues</h2>
  * <ul>
  * <li>
@@ -69,34 +69,46 @@ import org.jaqlib.db.Using;
  * using a {@link BeanMapping} object. See example 'Define a custom bean
  * mapping' for further details.</li>
  * <li>Jaqlib does <b>NOT</b> close database connection automatically. It just
- * obtains the {@link Connection} object from the {@link DataSource} and uses it
- * without closing it. If Jaqlib should close the {@link Connection} after
- * performing the query then {@link DbDefaults#setAutoCloseConnection(boolean)}
- * must be called. Alternatively the auto close functionality can be activated
- * by calling {@link DbSelectDataSource#setAutoCloseConnection(boolean)}.</li>
- * <li>Jaqlib does close {@link PreparedStatement} automatically after executing
- * the query. If Jaqlib should not close the {@link PreparedStatement} after
+ * obtains the {@link Connection} object from the <i>DataSource</i> and uses it
+ * without closing it. If Jaqlib should close the <i>Connection</i> after
  * performing the query then
- * {@link DbDefaults#setAutoClosePreparedStatement(boolean)} must be called.
- * Alternatively the auto close functionality can be deactivated by calling
- * {@link DbSelectDataSource#setAutoClosePreparedStatement(boolean)}.</li>
+ * <i>Jaqlib.DB.DEFAULTS.setAutoCloseConnection(boolean)</i> must be called.
+ * Alternatively the auto close functionality can be activated by calling
+ * {@link DbSelectDataSource#setAutoCloseConnection(boolean)}.</li>
+ * <li>Jaqlib does close {@link PreparedStatement}s automatically after
+ * executing the query. If Jaqlib should not close the {@link PreparedStatement}
+ * s after performing the query then
+ * <i>Jaqlib.DB.DEFAULTS.setAutoClosePreparedStatement(boolean)</i> must be
+ * called. Alternatively the auto close functionality can be deactivated by
+ * calling {@link DbSelectDataSource#setAutoClosePreparedStatement(boolean)}.</li>
+ * <li>
+ * The method call record mechanism uses <a
+ * href="http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html">JDK
+ * dynamic proxies</a> for proxying interfaces and <a
+ * href="http://cglib.sourceforge.net/">CGLIB</a> for proxying classes. So if
+ * you want to record method calls on classes you have to <a
+ * href="https://sourceforge.net/project/showfiles.php?group_id=56933">
+ * download</a> CGLIB and put it on the classpath of your application.</li>
  * <li>
  * Various default values for accessing a database can be set application-wide
- * by using the {@link #DEFAULTS} object.</li>
+ * by using the <i>Jaqlib.DB.DEFAULTS</i> object.</li>
  * <li>This class is thread-safe.</li>
  * </ul>
  * 
  * 
- * <h2>Usage examples</h2> All examples use following statements to define the
- * database connection and the SQL statement that should act as data source for
- * some bank accounts.<br>
+ * <h2>Usage examples for SELECT</h2>
+ * <p>
+ * All examples use following statements to define the database connection and
+ * the SQL statement that should act as data source for some bank accounts.
+ * </p>
  * 
  * <pre>
  * String sql = &quot;SELECT lname AS lastname, fname AS firstname, creditrating, balance FROM APP.ACCOUNT&quot;;
  * DbSelectDataSource accounts = new DbSelectDataSource(getJdbcDataSource(), sql);
  * </pre>
  * 
- * alternatively following API can be used, as well:
+ * alternatively following code directly at the SELECT-FROM-WHERE API can be
+ * used, as well:
  * 
  * <pre>
  * DataSource ds = getJdbcDataSource();
@@ -106,8 +118,11 @@ import org.jaqlib.db.Using;
  * </pre>
  * 
  * 
- * <h3>Selecting primitive values</h3> If you just want to select one or a list
- * of primitive values you can use following code:
+ * <h3>Selecting primitive values</h3>
+ * <p>
+ * If you just want to select one or a list of primitive values you can use
+ * following code:
+ * </p>
  * 
  * <pre>
  * String sql = &quot;select count(*) from accounts&quot;;
@@ -120,17 +135,17 @@ import org.jaqlib.db.Using;
  * <p>
  * Jaqlib supports mapping database columns to Java bean fields. It provides a
  * mechanism to automatically do this mapping. But for more sophisticated use
- * cases you can also define your own mapping (see example 'Define a custom bean
- * mapping').
+ * cases you can also define your own mappings (see example 'Define a custom
+ * bean mapping').
  * </p>
  * <p>
  * Assume that you have following database table:
- * <table border="1" cellpadding="5" cellspacing="5">
+ * <table border="1" cellpadding="3" cellspacing="5">
  * <tr>
- * <td>id</td>
- * <td>lastName</td>
- * <td>firstName</td>
- * <td>balance</td>
+ * <th>id</th>
+ * <th>lastName</th>
+ * <th>firstName</th>
+ * <th>balance</th>
  * </tr>
  * <tr>
  * <td>1</td>
@@ -219,9 +234,12 @@ import org.jaqlib.db.Using;
  * </pre>
  * 
  * 
- * <h3>Constraining the result</h3> There are different ways how to constrain
- * the returned query result. Jaqlib provides an API for specifying WHERE
- * clauses. You can use WHERE clauses in three ways:
+ * <h3>Constraining the result</h3>
+ * <p>
+ * There are different ways how to constrain the returned query result. Jaqlib
+ * provides an API for specifying WHERE clauses. You can use WHERE clauses in
+ * three ways:
+ * </p>
  * <ul>
  * <li>Method call recording mechanism</li>
  * <li>Custom where condition code</li>
@@ -290,9 +308,8 @@ import org.jaqlib.db.Using;
  * </p>
  * 
  * <pre>
- * long accountId = 15;
  * AccountImpl criteria = new AccountImpl();
- * criteria.setId(accountId);
+ * criteria.setId((long) 15);
  * 
  * Account account15 = Jaqlib.DB.select(AccountImpl.class).from(accounts)
  *     .whereElement().isEqual(criteria).uniqueResult();
@@ -333,11 +350,11 @@ import org.jaqlib.db.Using;
  * </ul>
  * </p>
  * <p>
- * <b>Return result as a {@link Map} or {@link Hashtable}:</b><br>
- * The key for the {@link Map} must be specified by using the method call record
- * mechanism. Again a method call on a recorder object is recorded by Jaqlib.
- * When returning the query result Jaqlib executes this recorded method on each
- * selected element and uses the result as key of the map entry.
+ * <b>Return result as a Map or Hashtable:</b><br>
+ * The key for the {@link Map} must be specified by using the method call
+ * recording mechanism. Again a method call on a recorder object is recorded by
+ * Jaqlib. When returning the query result Jaqlib executes this recorded method
+ * on each selected element and uses the result as key of the map entry.
  * </p>
  * 
  * <pre>
@@ -347,7 +364,7 @@ import org.jaqlib.db.Using;
  * </pre>
  * 
  * <p>
- * <b>Return result as {@link Set}:</b><br>
+ * <b>Return result as Set:</b><br>
  * 
  * <pre>
  * Set&lt;AccountImpl&gt; notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
@@ -357,7 +374,7 @@ import org.jaqlib.db.Using;
  * </p>
  * 
  * <p>
- * <b>Return result as {@link List} or {@link Vector}:</b><br>
+ * <b>Return result as List or Vector:</b><br>
  * 
  * <pre>
  * List&lt;AccountImpl&gt; notNullAccounts = Jaqlib.DB.select(AccountImpl.class)
@@ -371,7 +388,7 @@ import org.jaqlib.db.Using;
  * Only one result is allowed to be selected by the query. If more than one
  * elements are selected then an {@link QueryResultException} is thrown. <br>
  * Note that you can use <tt>uniqueResult()</tt> or <tt>asUniqueResult()</tt> -
- * what you prefer better.
+ * whatever you prefer better.
  * 
  * <pre>
  * Account recorder = Jaqlib.DB.getRecorder(Account.class);
@@ -385,7 +402,7 @@ import org.jaqlib.db.Using;
  * <b>Return only the first result:</b> <br>
  * Only the element is returned that matches the given WHERE conditions first. <br>
  * Note that you can use <tt>firstResult()</tt> or <tt>asFirstResult()</tt> -
- * what you prefer better.
+ * whatever you prefer better.
  * 
  * <pre>
  * Account recorder = Jaqlib.DB.getRecorder(Account.class);
@@ -398,8 +415,8 @@ import org.jaqlib.db.Using;
  * <p>
  * <b>Return only the last result:</b> <br>
  * Only the element is returned that matches the given WHERE conditions last. <br>
- * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> - what
- * you prefer better.
+ * Note that you can use <tt>lastResult()</tt> or <tt>asLastResult()</tt> -
+ * whatever you prefer better.
  * 
  * <pre>
  * Account recorder = Jaqlib.DB.getRecorder(Account.class);
@@ -411,6 +428,9 @@ import org.jaqlib.db.Using;
  * 
  * 
  * <h3>Executing a task on each element</h3>
+ * <p>
+ * You can also execute custom code (= {@link Task}) on each returned element.
+ * </p>
  * 
  * <pre>
  * // create task that should be executed for each element
@@ -425,6 +445,11 @@ import org.jaqlib.db.Using;
  * };
  * Jaqlib.DB.select(AccountImpl.class).from(accounts).execute(task);
  * </pre>
+ * 
+ * <p>
+ * You can also combine the task execution with all other previous examples. Two
+ * examples are given below:
+ * </p>
  * 
  * <pre>
  * // create condition for negative balances
@@ -451,13 +476,13 @@ import org.jaqlib.db.Using;
  * <h3>Executing prepared statements</h3>
  * <p>
  * If the same {@link PreparedStatement} should be used for multiple queries
- * then a PreparedStatement pool (like http://commons.apache.org/dbcp/) must be
+ * then a PreparedStatement pool (like http://commons.apache.org/dbcp/) can be
  * used. Alternatively following code example can be used. It's important to set
  * the property <tt>AutoClosePreparedStatement</tt> to false and to close the
  * {@link DbSelectDataSource} after having issued the queries. By default the
  * <tt>AutoClosePreparedStatement</tt> is set to true. The property
  * <tt>AutoClosePreparedStatement</tt> can also be set application-wide by using
- * the {@link #DEFAULTS} objects.
+ * the <i>Jaqlib.DB.DEFAULTS</i> objects.
  * </p>
  * 
  * <pre>
@@ -484,17 +509,19 @@ import org.jaqlib.db.Using;
  * </pre>
  * 
  * 
- * <h3>Custom Java type handler</h3> Database column data types can be converted
- * to custom Java types with so-called {@link JavaTypeHandler}s. These handlers
- * can be registered using
- * {@link BeanMapping#registerJavaTypeHandler(JavaTypeHandler)} or
- * {@link DbDefaults#registerJavaTypeHandler(JavaTypeHandler)}.</p>
+ * <h3>Using a custom Java type handler</h3>
  * <p>
- * The <tt>AccountImpl</tt> class has a <tt>creditRating</tt> field with the
- * custom enumeration type <tt>CreditRating</tt>. At database this field is
- * stored as an Integer value. By using a {@link JavaTypeHandler} this Integer
- * value can be converted into the according <tt>CreditRating</tt> enumeration
- * value.
+ * Database column data types can be converted to custom Java types with
+ * so-called {@link JavaTypeHandler}s. These handlers can be registered using
+ * {@link BeanMapping#registerJavaTypeHandler(JavaTypeHandler)} or
+ * <i>Jaqlib.DB.DEFAULTS.registerJavaTypeHandler(JavaTypeHandler)</i>.
+ * </p>
+ * <p>
+ * <i>Example:</i> The <tt>AccountImpl</tt> class has a <tt>creditRating</tt>
+ * field with the custom enumeration type <tt>CreditRating</tt>. At database
+ * this field is stored as an Integer value. By using a {@link JavaTypeHandler}
+ * this Integer value can be converted into the according <tt>CreditRating</tt>
+ * enumeration value.
  * </p>
  * 
  * <pre>
@@ -523,7 +550,7 @@ import org.jaqlib.db.Using;
  *     if (value instanceof Integer)
  *       return CreditRating.rating((Integer) value);
  *     else
- *       throw handleIllegalInputValue(value, CreditRating.class);
+ *       throw super.handleIllegalInputValue(value, CreditRating.class);
  *   }
  * 
  * 
@@ -536,9 +563,11 @@ import org.jaqlib.db.Using;
  * </pre>
  * 
  * 
+ * <h2>Usage examples for INSERT, UPDATE, DELETE</h2>
+ * 
  * <h3>Inserting a Java bean into a database table</h3>
  * <p>
- * <b>Using default bean mapping (bean property convention):</b>
+ * <b>Using default bean mapping (Java Bean property convention):</b>
  * </p>
  * 
  * <pre>
@@ -557,12 +586,11 @@ import org.jaqlib.db.Using;
  * </p>
  * 
  * <pre>
- * AccountImpl account = new AccountImpl();
+ * Account account = new AccountImpl();
  * // fill account with values ...
  * 
  * // create custom bean mapping
- * BeanMapping&lt;AccountImpl&gt; beanMapping = Jaqlib.DB
- *     .getDefaultBeanMapping(AccountImpl.class);
+ * BeanMapping&lt;Account&gt; beanMapping = new BeanMapping(AccountImpl.class);
  * beanMapping.removeField(&quot;id&quot;);
  * beanMapping.getField(&quot;lastName&quot;).setSourceName(&quot;lName&quot;);
  * 
@@ -575,12 +603,12 @@ import org.jaqlib.db.Using;
  * 
  * <h3>Updating a Java bean in a database table</h3>
  * <p>
- * <b>Using default bean mapping (bean property convention):</b>
+ * <b>Using default bean mapping (Java Bean property convention):</b>
  * </p>
  * 
  * <pre>
  * // get account that already exists at database
- * AccountImpl account = getAccount();
+ * Account account = getAccount();
  * 
  * String whereClause = &quot;id = &quot; + account.getId();
  * String tableName = &quot;ACCOUNT&quot;;
@@ -617,7 +645,7 @@ import org.jaqlib.db.Using;
  * 
  * <pre>
  * // get account that already exists at database
- * AccountImpl account = getAccount();
+ * Account account = getAccount();
  * 
  * // delete account at database
  * String whereClause = &quot;id = &quot; + account.getId();

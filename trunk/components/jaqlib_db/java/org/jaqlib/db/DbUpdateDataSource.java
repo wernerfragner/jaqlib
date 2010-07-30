@@ -14,6 +14,12 @@ public class DbUpdateDataSource extends AbstractDbDmlDataSource
   private String whereClause;
 
 
+  public DbUpdateDataSource(DataSource dataSource, String tableName)
+  {
+    super(dataSource, tableName);
+  }
+
+
   public DbUpdateDataSource(DataSource dataSource, String tableName,
       String whereClause)
   {
