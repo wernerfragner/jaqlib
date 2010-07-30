@@ -159,12 +159,12 @@ public class XmlQBExamples
   private static void selectUsingCustomBeanMapping()
   {
     // rename field 'lastName' and remove field 'department'
-    BeanMapping<Account> mapping = new BeanMapping<Account>(Account.class);
+    BeanMapping<Account> mapping = new BeanMapping<Account>(AccountImpl.class);
     mapping.getField("lastName").setSourceName("last_name");
     mapping.removeField("department");
 
-    List<? extends Account> accounts = Jaqlib.XML.select(mapping)
-        .from("Accounts.xml").where("/bank/accounts/*").asList();
+    List<Account> accounts = Jaqlib.XML.select(mapping).from("Accounts.xml")
+        .where("/bank/accounts/*").asList();
   }
 
 
@@ -175,13 +175,13 @@ public class XmlQBExamples
         .registerJavaTypeHandler(new CreditRatingStringTypeHandler());
 
     // set a custom type handler for the 'creditRating' field
-    BeanMapping<Account> mapping = new BeanMapping<Account>(Account.class);
+    BeanMapping<Account> mapping = new BeanMapping<Account>(AccountImpl.class);
     mapping.getField("creditRating").setTypeHandler(
         new CreditRatingStringTypeHandler());
 
     // execute query
-    List<? extends Account> accounts = XmlQB.select(mapping)
-        .from("Accounts.xml").where("/bank/accounts/*").asList();
+    List<Account> accounts = XmlQB.select(mapping).from("Accounts.xml")
+        .where("/bank/accounts/*").asList();
   }
 
 
@@ -201,7 +201,7 @@ public class XmlQBExamples
 
   private static void selectComplexBean()
   {
-    List<? extends Account> accounts = Jaqlib.XML.select(Account.class)
+    List<? extends Account> accounts = Jaqlib.XML.select(AccountImpl.class)
         .from("Accounts.xml").where("/bank/accounts/*").asList();
   }
 
@@ -218,7 +218,7 @@ public class XmlQBExamples
         "accTransaction");
 
     // execute query
-    List<? extends Account> accounts = Jaqlib.XML.select(Account.class)
+    List<? extends Account> accounts = Jaqlib.XML.select(AccountImpl.class)
         .from("Accounts.xml").where("/bank/accounts/*").asList();
   }
 
