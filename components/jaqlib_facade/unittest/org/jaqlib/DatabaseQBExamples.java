@@ -10,7 +10,10 @@ import org.jaqlib.core.Task;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.AbstractJavaTypeHandler;
 import org.jaqlib.core.bean.BeanMapping;
+import org.jaqlib.db.DbDeleteDataSource;
+import org.jaqlib.db.DbInsertDataSource;
 import org.jaqlib.db.DbSelectDataSource;
+import org.jaqlib.db.DbUpdateDataSource;
 
 public class DatabaseQBExamples
 {
@@ -84,9 +87,8 @@ public class DatabaseQBExamples
 
   public void simpleComparisonMethod()
   {
-    long accountId = 15;
     AccountImpl criteria = new AccountImpl();
-    criteria.setId(accountId);
+    criteria.setId((long) 15);
 
     Account account15 = Jaqlib.DB.select(AccountImpl.class).from(accounts)
         .whereElement().isEqual(criteria).uniqueResult();
@@ -244,7 +246,7 @@ public class DatabaseQBExamples
       if (value instanceof Integer)
         return CreditRating.rating((Integer) value);
       else
-        throw handleIllegalInputValue(value, CreditRating.class);
+        throw super.handleIllegalInputValue(value, CreditRating.class);
     }
 
 
@@ -253,6 +255,50 @@ public class DatabaseQBExamples
     {
       types.add(CreditRating.class);
     }
+  }
+
+
+  public void insertDefaultMapping()
+  {
+    AccountImpl account = new AccountImpl();
+    // fill account with values ...
+
+    String tableName = "ACCOUNT";
+    DbInsertDataSource dataSource = new DbInsertDataSource(getJdbcDataSource(),
+        tableName);
+    int updateCount = Jaqlib.DB.insert(account).into(dataSource)
+        .usingDefaultMapping();
+  }
+
+
+  public void insertCustomMapping()
+  {
+    Account account = new AccountImpl();
+    // fill account with values ...
+
+    // create custom bean mapping
+    BeanMapping<Account> beanMapping = new BeanMapping(AccountImpl.class);
+    beanMapping.removeField("id");
+    beanMapping.getField("lastName").setSourceName("lName");
+
+    // insert account using the custom bean mapping and the simplified API
+    String tableName = "ACCOUNT";
+    int updateCount = Jaqlib.DB.insert(account)
+        .into(getJdbcDataSource(), tableName).using(beanMapping);
+  }
+
+
+  public void updateDefaultMapping()
+  {
+    // get account that already exists at database
+    Account account = getAccount();
+
+    String whereClause = "id = " + account.getId();
+    String tableName = "ACCOUNT";
+    DataSource ds = getJdbcDataSource();
+    DbUpdateDataSource dataSource = new DbUpdateDataSource(ds, tableName);
+    int updateCount = Jaqlib.DB.update(account).in(dataSource)
+        .where(whereClause).usingDefaultMapping();
   }
 
 
@@ -271,6 +317,29 @@ public class DatabaseQBExamples
     int updateCount = Jaqlib.DB.update(account)
         .in(getJdbcDataSource(), tableName).where(whereClause)
         .using(beanMapping);
+  }
+
+
+  public void deleteSpecific()
+  {
+    // get account that already exists at database
+    Account account = getAccount();
+
+    // delete account at database
+    String whereClause = "id = " + account.getId();
+    String tableName = "ACCOUNT";
+    DataSource ds = getJdbcDataSource();
+    DbDeleteDataSource dataSource = new DbDeleteDataSource(ds, tableName,
+        whereClause);
+    int updateCount = Jaqlib.DB.delete().from(dataSource);
+  }
+
+
+  public void deleteAll()
+  {
+    // delete all records from the ACCOUNT table
+    String tableName = "ACCOUNT";
+    int updateCount = Jaqlib.DB.delete().from(getJdbcDataSource(), tableName);
   }
 
 

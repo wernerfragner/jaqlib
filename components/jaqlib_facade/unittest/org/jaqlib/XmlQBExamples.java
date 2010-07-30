@@ -20,16 +20,16 @@ public class XmlQBExamples
   private static void selectUsingResourcePattern()
   {
     ClassPathResource cpResource = new ClassPathResource(
-        "./files/Accounts_Attributes.xml");
-    FileResource fResource = new FileResource(
-        "./JaqlibExample.jar!/files/Accounts_Attributes.xml");
+        "files/Accounts_Attributes.xml");
+    FileResource fResource = new FileResource("files/Accounts_Attributes.xml");
 
-    // cpResource and fResoure point to the same XML file
-    // queries access the same XML file
+    // cpResource and fResoure do not point to the same XML file
+    // - cpResource points to a XML file within the application classpath
+    // - fResource points to a XML file in the application working directory
 
-    List<? extends Account> cpAccounts = Jaqlib.XML.select(AccountImpl.class)
+    List<AccountImpl> cpAccounts = Jaqlib.XML.select(AccountImpl.class)
         .fromAttributes(cpResource).where("/bank/accounts/*").asList();
-    List<? extends Account> fAccounts = Jaqlib.XML.select(AccountImpl.class)
+    List<AccountImpl> fAccounts = Jaqlib.XML.select(AccountImpl.class)
         .fromAttributes(fResource).where("/bank/accounts/*").asList();
   }
 
@@ -90,9 +90,8 @@ public class XmlQBExamples
 
   private static void selectWithSimpleComparison()
   {
-    long accountId = 15;
     AccountImpl criteria = new AccountImpl();
-    criteria.setId(accountId);
+    criteria.setId((long) 15);
 
     Account account15 = Jaqlib.XML.select(AccountImpl.class)
         .from("Accounts_Elements.xml").where("/bank/accounts/*").andElement()
@@ -211,11 +210,12 @@ public class XmlQBExamples
     BeanMapping<Account> mapping = new BeanMapping<Account>(Account.class);
 
     // set a custom source name for the transaction collection
-    mapping.getCollectionField("transactions").setSourceName("accTransactions");
+    mapping.getCollectionField("transactions").setSourceName(
+        "differentTransactions");
 
     // set a custom source name for the elements of the transaction collection
     mapping.getCollectionField("transactions").setElementSourceName(
-        "accTransaction");
+        "differentTransaction");
 
     // execute query
     List<? extends Account> accounts = Jaqlib.XML.select(AccountImpl.class)

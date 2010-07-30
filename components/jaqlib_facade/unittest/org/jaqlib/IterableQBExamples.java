@@ -78,6 +78,7 @@ public class IterableQBExamples
 
   public void mapResult()
   {
+    // use the ID field of Account as key for the map
     Account recorder = Jaqlib.List.getRecorder(Account.class);
     Map<Long, Account> results = Jaqlib.List.selectFrom(accounts).asMap(
         recorder.getId());

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -28,7 +29,15 @@ public class FileResource implements Resource
    */
   public FileResource(String path)
   {
-    this.file = new File(path);
+    if (path.startsWith("file:/"))
+    {
+      URI uri = URI.create(path);
+      this.file = new File(uri);
+    }
+    else
+    {
+      this.file = new File(path);
+    }
   }
 
 
