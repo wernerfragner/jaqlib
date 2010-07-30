@@ -158,11 +158,9 @@ public class XmlSelectDataSource extends XmlDataSource implements
 
 
   /**
-   * Closes this data source. This method releases used resources for reading
-   * and parsing the XML file. This method only needs to be called by the Jaqlib
-   * user when the property <tt>autoClose</tt> is set to false. Otherwise this
-   * data source is automatically closed after executing the XML query.
+   * {@inheritDoc}
    */
+  @Override
   public void close()
   {
     try
