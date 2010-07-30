@@ -2,7 +2,6 @@ package org.jaqlib.xml;
 
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.util.Resource;
-import org.jaqlib.xml.xpath.XmlNamespaces;
 
 /**
  * Abstract base class for XML data sources.
