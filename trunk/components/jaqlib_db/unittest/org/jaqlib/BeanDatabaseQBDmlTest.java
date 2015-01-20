@@ -9,7 +9,6 @@ import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbUpdateDataSource;
 import org.jaqlib.db.ManualMappingStrategy;
 
-
 public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 {
 
@@ -17,7 +16,6 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
   private static final String EXACT_TABLE = DatabaseSetup.EXACT_ACCOUNT_TABLE;
   private static final String SELECT = DatabaseSetup.ACCOUNT_SELECT;
   private static final String EXACT_SELECT = DatabaseSetup.EXACT_ACCOUNT_SELECT;
-
 
   private AccountImpl account;
   private BeanMapping<AccountImpl> mapping;
@@ -53,7 +51,7 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   private void registerManualMappingStrategy()
   {
-    BeanMapping mapping2 = new BeanMapping(AccountImpl.class);
+    BeanMapping<Account> mapping2 = new BeanMapping<Account>(AccountImpl.class);
     mapping2.removeField("transactions");
 
     ManualMappingStrategy strategy = new ManualMappingStrategy();

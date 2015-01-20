@@ -416,8 +416,7 @@ import org.jaqlib.xml.xpath.XPathEngine;
  *   &#064;Override
  *   public boolean evaluate(AccountImpl element)
  *   {
- *     if (element == null)
- *       return false;
+ *     if (element == null) return false;
  *     return element.getBalance() &gt; 500;
  *   }
  * };
@@ -861,7 +860,6 @@ import org.jaqlib.xml.xpath.XPathEngine;
  * 
  * @see XmlDefaults
  * @see XmlQB
- * @see org.jaqlib.Jaqlib.XML
  * @author Werner Fragner
  */
 public class XmlQueryBuilder extends AbstractQueryBuilder
@@ -892,8 +890,10 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result bean type.
-   * @param beanClass the desired result bean. This bean must provide a default
+   * @param <T>
+   *          the result bean type.
+   * @param beanClass
+   *          the desired result bean. This bean must provide a default
    *          constructor. If the bean does not provide one a custom
    *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
    *          A {@link BeanMapping} can be simply instantiated with the
@@ -915,9 +915,11 @@ public class XmlQueryBuilder extends AbstractQueryBuilder
    * can defined with a {@link BeanMapping} instance. A {@link BeanMapping} can
    * be simply instantiated with the <tt>new</tt> operator.
    * 
-   * @param <T> the result bean type.
-   * @param beanMapping a bean definition that holds information how to map the
-   *          result of the query to a Java bean.
+   * @param <T>
+   *          the result bean type.
+   * @param beanMapping
+   *          a bean definition that holds information how to map the result of
+   *          the query to a Java bean.
    * @return the FROM clause to specify the input XML file for the query.
    */
   public <T> XmlFromClause<T> select(BeanMapping<T> beanMapping)

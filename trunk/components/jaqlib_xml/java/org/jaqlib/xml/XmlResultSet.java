@@ -41,10 +41,12 @@ public class XmlResultSet implements DsResultSet
   /**
    * Default constructor.
    * 
-   * @param nodes the 'raw' XML data. Can be null.
-   * @param useAttributes if true, XML attributes are used to map data to Java
-   *          bean fields.
-   * @param namespaces the XML namespaces to use to extract the XML data.
+   * @param nodes
+   *          the 'raw' XML data. Can be null.
+   * @param useAttributes
+   *          if true, XML attributes are used to map data to Java bean fields.
+   * @param namespaces
+   *          the XML namespaces to use to extract the XML data.
    */
   public XmlResultSet(NodeList nodes, boolean useAttributes,
       XmlNamespaces namespaces)
@@ -72,6 +74,7 @@ public class XmlResultSet implements DsResultSet
   /**
    * {@inheritDoc}
    */
+  @Override
   public Object getAnynomousObject(FieldMapping<?> mapping)
   {
     String original = mapping.getSourceName();
@@ -391,6 +394,5 @@ public class XmlResultSet implements DsResultSet
     curNodeIndex++;
     return curNodeIndex < nodes.getLength();
   }
-
 
 }

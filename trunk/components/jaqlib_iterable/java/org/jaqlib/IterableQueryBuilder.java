@@ -308,7 +308,6 @@ import org.jaqlib.iterable.IterableQueryFactory;
  * 
  * @see IterableDefaults
  * @see IterableQB
- * @see org.jaqlib.Jaqlib.List
  * @author Werner Fragner
  */
 public class IterableQueryBuilder extends AbstractQueryBuilder
@@ -343,7 +342,8 @@ public class IterableQueryBuilder extends AbstractQueryBuilder
   /**
    * Shortcut method for <tt>select().from()</tt>.
    * 
-   * @param iterable a not null Iterable for the query.
+   * @param iterable
+   *          a not null Iterable for the query.
    * @return a where clause for defining the query conditions.
    */
   public <T> WhereClause<T, Iterable<T>> selectFrom(Iterable<T> iterable)

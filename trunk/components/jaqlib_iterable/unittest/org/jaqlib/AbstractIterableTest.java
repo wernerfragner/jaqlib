@@ -586,7 +586,7 @@ public abstract class AbstractIterableTest<AccountType extends Account> extends
 
   public void testCountDistinct()
   {
-    List<Double> elements = new ArrayList<>();
+    List<Double> elements = new ArrayList<Double>();
     elements.add(100.0);
     elements.add(100.0);
     elements.add(100.0);

@@ -71,10 +71,10 @@ public class DatabaseQBExamples
     WhereCondition<AccountImpl> myCondition = new WhereCondition<AccountImpl>()
     {
 
+      @Override
       public boolean evaluate(AccountImpl element)
       {
-        if (element == null)
-          return false;
+        if (element == null) return false;
         return element.getBalance() > 500;
       }
     };
@@ -159,6 +159,7 @@ public class DatabaseQBExamples
     Task<Account> task = new Task<Account>()
     {
 
+      @Override
       public void execute(Account account)
       {
         account.sendInfoEmail();
@@ -177,6 +178,7 @@ public class DatabaseQBExamples
     WhereCondition<Account> deptCond = new WhereCondition<Account>()
     {
 
+      @Override
       public boolean evaluate(Account account)
       {
         return (account.getBalance() < 0);
@@ -243,8 +245,7 @@ public class DatabaseQBExamples
     @Override
     public Object convert(Object value)
     {
-      if (value instanceof Integer)
-        return CreditRating.rating((Integer) value);
+      if (value instanceof Integer) return CreditRating.rating((Integer) value);
       else
         throw super.handleIllegalInputValue(value, CreditRating.class);
     }
@@ -291,7 +292,8 @@ public class DatabaseQBExamples
     // fill account with values ...
 
     // create custom bean mapping
-    BeanMapping<Account> beanMapping = new BeanMapping(AccountImpl.class);
+    BeanMapping<Account> beanMapping = new BeanMapping<Account>(
+        AccountImpl.class);
     beanMapping.removeField("id");
     beanMapping.getField("lastName").setSourceName("lName");
 
