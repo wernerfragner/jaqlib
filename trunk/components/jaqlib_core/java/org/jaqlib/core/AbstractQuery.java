@@ -61,6 +61,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public QueryResult<T, DataSourceType> createQueryResult()
   {
     return new QueryResult<T, DataSourceType>(this);
@@ -73,6 +74,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public <R> SingleElementWhereCondition<T, DataSourceType, R> addElementAndWhereCondition()
   {
     SimpleWhereCondition<T, DataSourceType, R> condition = createSimpleWhereCondition();
@@ -81,6 +83,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public <R> SingleElementWhereCondition<T, DataSourceType, R> addElementOrWhereCondition()
   {
     SimpleWhereCondition<T, DataSourceType, R> condition = createSimpleWhereCondition();
@@ -89,6 +92,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public QueryResult<T, DataSourceType> addAndWhereCondition(
       WhereCondition<? super T> condition)
   {
@@ -97,6 +101,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public QueryResult<T, DataSourceType> addOrWhereCondition(
       WhereCondition<? super T> condition)
   {
@@ -105,6 +110,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveAndWhereCondition()
   {
     ReflectiveWhereCondition<T, DataSourceType, R> condition = new ReflectiveWhereCondition<T, DataSourceType, R>(
@@ -114,6 +120,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public <R> ReflectiveWhereCondition<T, DataSourceType, R> addReflectiveOrWhereCondition()
   {
     ReflectiveWhereCondition<T, DataSourceType, R> condition = new ReflectiveWhereCondition<T, DataSourceType, R>(
@@ -123,6 +130,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public QueryResult<T, DataSourceType> addTask(Task<? super T> task)
   {
     TaskWhereCondition<T> condition = new TaskWhereCondition<T>(task);
@@ -131,6 +139,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public void addTaskAndExecute(Task<? super T> task)
   {
     addTask(task);
@@ -146,6 +155,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public T getUniqueResult()
   {
     logQuery("UniqueResult");
@@ -168,6 +178,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public T getFirstResult()
   {
     logQuery("FirstResult");
@@ -185,6 +196,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public T getLastResult()
   {
     logQuery("LastResult");
@@ -201,6 +213,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public List<T> getListResult()
   {
     logQuery("List");
@@ -211,6 +224,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public Set<T> getSetResult()
   {
     logQuery("Set");
@@ -221,6 +235,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public Vector<T> getVectorResult()
   {
     logQuery("Vector");
@@ -231,6 +246,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public <KeyType> Map<KeyType, T> getMapResult(KeyType key)
   {
     logQuery("Map");
@@ -241,6 +257,7 @@ public abstract class AbstractQuery<T, DataSourceType> implements
   }
 
 
+  @Override
   public <KeyType> Hashtable<KeyType, T> getHashtableResult(KeyType key)
   {
     logQuery("Hashtable");
@@ -248,6 +265,20 @@ public abstract class AbstractQuery<T, DataSourceType> implements
     Hashtable<KeyType, T> result = new Hashtable<KeyType, T>();
     addResults(result);
     return result;
+  }
+
+
+  @Override
+  public int count()
+  {
+    return getListResult().size();
+  }
+
+
+  @Override
+  public int countDistinct()
+  {
+    return getSetResult().size();
   }
 
 

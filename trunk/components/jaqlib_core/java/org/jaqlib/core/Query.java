@@ -1,13 +1,14 @@
 package org.jaqlib.core;
 
-
 /**
  * Common interface for all sorts of queries (DB, XML, Iterable, ...).
  * 
  * @author Werner Fragner
  * 
- * @param <T> the element type.
- * @param <DataSourceType> the data source type (e.g. Iterable, database, ...).
+ * @param <T>
+ *          the element type.
+ * @param <DataSourceType>
+ *          the data source type (e.g. Iterable, database, ...).
  */
 public interface Query<T, DataSourceType> extends
     ResultProvider<T, DataSourceType>
@@ -40,5 +41,11 @@ public interface Query<T, DataSourceType> extends
 
 
   void addTaskAndExecute(Task<? super T> task);
+
+
+  int count();
+
+
+  int countDistinct();
 
 }

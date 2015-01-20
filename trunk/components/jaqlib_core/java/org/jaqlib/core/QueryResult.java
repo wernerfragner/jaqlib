@@ -74,8 +74,9 @@ public class QueryResult<T, DataSourceType> extends
    * 
    * </p>
    * 
-   * @param key the result of the recorded method call. This result is only
-   *          needed for type safety. The object itself is not used.
+   * @param key
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return a map containing all matching elements. If no matches have been
    *         found then an empty map is returned.
    */
@@ -103,7 +104,8 @@ public class QueryResult<T, DataSourceType> extends
    *         the query then an {@link QueryResultException} is thrown. Returns
    *         null if no match has been found.
    * 
-   * @throws QueryResultException if the query matches more than one element.
+   * @throws QueryResultException
+   *           if the query matches more than one element.
    */
   public T asUniqueResult()
   {
@@ -166,7 +168,8 @@ public class QueryResult<T, DataSourceType> extends
    * then {@link #execute(Task)} should be used.</b>
    * </p>
    * 
-   * @param task the not null task to be executed.
+   * @param task
+   *          the not null task to be executed.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
@@ -179,7 +182,8 @@ public class QueryResult<T, DataSourceType> extends
   /**
    * Executes the given task for each element in the data source immediately.
    * 
-   * @param task the not null task to be executed.
+   * @param task
+   *          the not null task to be executed.
    */
   public void execute(Task<? super T> task)
   {
@@ -191,7 +195,8 @@ public class QueryResult<T, DataSourceType> extends
    * Simple condition that can be used to test all elements for a specific
    * condition. This condition is appended using an AND connector.
    * 
-   * @param <ResultType> the result element type.
+   * @param <ResultType>
+   *          the result element type.
    * @return an object that represents a WHERE condition on a single element of
    *         the data source.
    */
@@ -204,7 +209,8 @@ public class QueryResult<T, DataSourceType> extends
   /**
    * Shortcut method for <tt>and().element()</tt>.
    * 
-   * @param <ResultType> the result element type.
+   * @param <ResultType>
+   *          the result element type.
    * @return an object to specify the condition on an element.
    */
   public <ResultType> ComparableWhereCondition<T, DataSourceType, ResultType> andElement()
@@ -217,7 +223,8 @@ public class QueryResult<T, DataSourceType> extends
    * Simple condition that can be used to test all elements for a specific
    * condition. This condition is appended using an OR connector.
    * 
-   * @param <R> the result element type.
+   * @param <R>
+   *          the result element type.
    * @return an object that represents a WHERE condition on a single element of
    *         the data source.
    */
@@ -230,7 +237,8 @@ public class QueryResult<T, DataSourceType> extends
   /**
    * Shortcut method for <tt>or().element()</tt>.
    * 
-   * @param <ResultType> the result element type.
+   * @param <ResultType>
+   *          the result element type.
    * @return an object to specify the condition on an element.
    */
   public <ResultType> ComparableWhereCondition<T, DataSourceType, ResultType> orElement()
@@ -242,7 +250,8 @@ public class QueryResult<T, DataSourceType> extends
   /**
    * Adds the given {@link WhereCondition} to the query using a AND connector.
    * 
-   * @param condition a custom WHERE condition.
+   * @param condition
+   *          a custom WHERE condition.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
@@ -255,7 +264,8 @@ public class QueryResult<T, DataSourceType> extends
   /**
    * Adds the given {@link WhereCondition} to the query using a OR connector.
    * 
-   * @param condition a custom WHERE condition.
+   * @param condition
+   *          a custom WHERE condition.
    * @return an object to retrieve the result of the query or to add more WHERE
    *         conditions to the query.
    */
@@ -271,8 +281,9 @@ public class QueryResult<T, DataSourceType> extends
    * {@link ComparableWhereCondition}. The condition is added to the query by
    * using a AND connector.
    * 
-   * @param evalResult the result of the recorded method call. This result is
-   *          only needed for type safety. The object itself is not used.
+   * @param evalResult
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return an object to specify the condition.
    */
   public <R> ComparableWhereCondition<T, DataSourceType, R> andCall(R evalResult)
@@ -287,8 +298,9 @@ public class QueryResult<T, DataSourceType> extends
    * {@link ComparableWhereCondition}. The condition is added to the query by
    * using a OR connector.
    * 
-   * @param evalResult the result of the recorded method call. This result is
-   *          only needed for type safety. The object itself is not used.
+   * @param evalResult
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return an object to specify the condition.
    */
   public <R> ComparableWhereCondition<T, DataSourceType, R> orCall(R evalResult)
@@ -302,8 +314,9 @@ public class QueryResult<T, DataSourceType> extends
    * The condition must return true in order to add the element to the result
    * set.
    * 
-   * @param evalResult the result of the recorded method call. This result is
-   *          only needed for type safety. The object itself is not used.
+   * @param evalResult
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
@@ -318,8 +331,9 @@ public class QueryResult<T, DataSourceType> extends
    * The condition must return false in order to add the element to the result
    * set.
    * 
-   * @param evalResult the result of the recorded method call. This result is
-   *          only needed for type safety. The object itself is not used.
+   * @param evalResult
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
@@ -334,8 +348,9 @@ public class QueryResult<T, DataSourceType> extends
    * The condition must return true in order to add the element to the result
    * set.
    * 
-   * @param evalResult the result of the recorded method call. This result is
-   *          only needed for type safety. The object itself is not used.
+   * @param evalResult
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
@@ -350,8 +365,9 @@ public class QueryResult<T, DataSourceType> extends
    * The condition must return false in order to add the element to the result
    * set.
    * 
-   * @param evalResult the result of the recorded method call. This result is
-   *          only needed for type safety. The object itself is not used.
+   * @param evalResult
+   *          the result of the recorded method call. This result is only needed
+   *          for type safety. The object itself is not used.
    * @return the result of the query (including methods to add other WHERE
    *         conditions).
    */
@@ -360,5 +376,25 @@ public class QueryResult<T, DataSourceType> extends
     return getQuery().addReflectiveAndWhereCondition().isEqual(false);
   }
 
+
+  /**
+   * @return the number of elements in the result set. Null elements in the
+   *         result set are also counted.
+   */
+  public int count()
+  {
+    return getQuery().count();
+  }
+
+
+  /**
+   * @return the number of distinct elements in the result set. The equals
+   *         method of the elements are used to determine the distinct elements.
+   *         A possible null element in the result set is also counted.
+   */
+  public int countDistinct()
+  {
+    return getQuery().countDistinct();
+  }
 
 }
