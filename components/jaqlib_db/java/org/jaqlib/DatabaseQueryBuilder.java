@@ -289,8 +289,7 @@ import org.jaqlib.db.Using;
  * 
  *   public boolean evaluate(AccountImpl element)
  *   {
- *     if (element == null)
- *       return false;
+ *     if (element == null) return false;
  *     return element.getBalance() &gt; 500;
  *   }
  * };
@@ -548,8 +547,7 @@ import org.jaqlib.db.Using;
  *   &#064;Override
  *   public Object convert(Object value)
  *   {
- *     if (value instanceof Integer)
- *       return CreditRating.rating((Integer) value);
+ *     if (value instanceof Integer) return CreditRating.rating((Integer) value);
  *     else
  *       throw super.handleIllegalInputValue(value, CreditRating.class);
  *   }
@@ -728,7 +726,6 @@ import org.jaqlib.db.Using;
  * 
  * @see DbDefaults
  * @see DatabaseQB
- * @see org.jaqlib.Jaqlib.DB
  * @author Werner Fragner
  */
 public class DatabaseQueryBuilder extends AbstractQueryBuilder
@@ -758,8 +755,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result column type.
-   * @param columnMapping an object defining the desired column.
+   * @param <T>
+   *          the result column type.
+   * @param columnMapping
+   *          an object defining the desired column.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
@@ -786,8 +785,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * constraining it with the WHERE functionality of JaqLib!</b>.
    * </p>
    * 
-   * @param <T> the result bean type.
-   * @param beanClass the desired result bean. This bean must provide a default
+   * @param <T>
+   *          the result bean type.
+   * @param beanClass
+   *          the desired result bean. This bean must provide a default
    *          constructor. If the bean does not provide one a custom
    *          {@link BeanFactory} must be registered at the {@link BeanMapping}.
    *          This {@link BeanMapping} can be obtained from {@link DatabaseQB}
@@ -809,9 +810,11 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * mapping can defined with a {@link BeanMapping} instance. For building these
    * instances see {@link DatabaseQB}.
    * 
-   * @param <T> the result bean type.
-   * @param beanMapping a bean definition that holds information how to map the
-   *          result of the SELECT statement to a Java bean.
+   * @param <T>
+   *          the result bean type.
+   * @param beanMapping
+   *          a bean definition that holds information how to map the result of
+   *          the SELECT statement to a Java bean.
    * @return the FROM clause to specify the database SELECT statement for the
    *         query.
    */
@@ -828,8 +831,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * {@link Using} object that is returned by
    * {@link IntoClause#into(org.jaqlib.db.DbInsertDataSource)}.
    * 
-   * @param <T> the type of the bean.
-   * @param bean a not null bean to insert.
+   * @param <T>
+   *          the type of the bean.
+   * @param bean
+   *          a not null bean to insert.
    * @return the INTO clause to specify the table where to insert the bean.
    */
   public <T> IntoClause<T> insert(T bean)
@@ -844,8 +849,10 @@ public class DatabaseQueryBuilder extends AbstractQueryBuilder
    * according table columns must be specified in the {@link Using} object that
    * is returned by {@link InClause#in(org.jaqlib.db.DbUpdateDataSource)}.
    * 
-   * @param <T> the type of the bean.
-   * @param bean a not null bean to update.
+   * @param <T>
+   *          the type of the bean.
+   * @param bean
+   *          a not null bean to update.
    * @return the IN clause to specify the table where to update the bean.
    */
   public <T> InClause<T> update(T bean)

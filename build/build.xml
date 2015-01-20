@@ -14,7 +14,8 @@
 	
 	<property name="dist.dir" value="d:/play/Projekte/JaQLib/release" />
 	<property name="build.temp" value="d:/play/Projekte/JaQLib/temp" />
-	
+	<property name="cobertura.dir" value="D:/programme/Softwareentwicklung/cobertura-2.0.3/" />	
+	<!-- javadoc.exe must available in the path-variable --> 
 	
 	<!-- ========================================= -->
 	<!-- Properties for source paths -->
@@ -23,8 +24,7 @@
 	<property name="build.base" value="${ant.file.JaqLib}/../.." />
 	<property name="build.source" value="${build.base}/components" />
 	<property name="build.temp.javadoc" value="${build.temp}/javadoc" />
-	
-	<property name="cobertura.dir" value="D:/programme/Softwareentwicklung/cobertura-2.0.3" />
+
 	<property name="instrumented.dir" value="${build.temp}/bin_instrumented" />
 	<property name="vendor.base" value="${build.base}/vendor" />
 	
@@ -75,10 +75,10 @@
 	</path>	
 
 	<path id="cobertura.classpath">
-	  <fileset dir="${cobertura.dir}">
-	    <include name="cobertura.jar" />
-	    <include name="lib/**/*.jar" />
-	  </fileset>
+		<fileset dir="${cobertura.dir}">
+			<include name="cobertura*.jar" />
+			<include name="lib/**/*.jar" />
+		</fileset>
 	</path>
 
 	<taskdef classpathref="cobertura.classpath" resource="tasks.properties"/>
@@ -134,7 +134,7 @@
 		<!-- Compile component -->
 		<property name="compile.target.dir" value="${build.temp}/bin/${component.name}" />
 		<mkdir dir="${compile.target.dir}" />
-		<javac destdir="${compile.target.dir}" srcDir="${build.source}/${component.name}/java" source="1.5" target="1.5" debug="true" failonerror="true" optimize="true" >
+		<javac destdir="${compile.target.dir}" srcDir="${build.source}/${component.name}/java" source="1.5" target="1.5" debug="true" failonerror="true" optimize="true" includeantruntime="false">
 			<classpath refid="jaqlib.libs" />
 			<classpath refid="jaqlib.components" />
 			<classpath refid="cobertura.classpath" />
@@ -149,7 +149,7 @@
 		<!-- Compile component -->
 		<property name="compile.unittest.target.dir" value="${build.temp}/bin_unittest/${component.name}" />
 		<mkdir dir="${compile.unittest.target.dir}" />
-		<javac destdir="${compile.unittest.target.dir}" srcDir="${build.source}/${component.name}/unittest" source="1.5" target="1.5" debug="true" failonerror="true" optimize="true" >
+		<javac destdir="${compile.unittest.target.dir}" srcDir="${build.source}/${component.name}/unittest" source="1.7" target="1.7" debug="true" failonerror="true" optimize="true" includeantruntime="false">
 			<classpath refid="jaqlib.libs" />
       <classpath refid="jaqlib.components" />
 			<classpath refid="jaqlib.unittest.libs" />
