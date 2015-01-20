@@ -12,8 +12,8 @@
 	<!-- User defined paths -->
 	<!-- ========================================= -->
 	
-	<property name="dist.dir" value="d:/Projekte/JaQLib/release" />
-	<property name="build.temp" value="d:/Projekte/JaQLib/temp" />
+	<property name="dist.dir" value="d:/play/Projekte/JaQLib/release" />
+	<property name="build.temp" value="d:/play/Projekte/JaQLib/temp" />
 	
 	
 	<!-- ========================================= -->
@@ -24,7 +24,7 @@
 	<property name="build.source" value="${build.base}/components" />
 	<property name="build.temp.javadoc" value="${build.temp}/javadoc" />
 	
-	<property name="cobertura.dir" value="d:/programme/cobertura-1.9.4.1/" />
+	<property name="cobertura.dir" value="D:/programme/Softwareentwicklung/cobertura-2.0.3" />
 	<property name="instrumented.dir" value="${build.temp}/bin_instrumented" />
 	<property name="vendor.base" value="${build.base}/vendor" />
 	
@@ -229,6 +229,18 @@
 		
 	<target name="unittest" depends="compile_unittest">
 		<mkdir dir="${build.temp}/unittest_results/jaqlib" />
+		
+		<!-- Iterable tests with CGLib on classpath -->
+		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
+			<classpath location="${instrumented.dir}" />
+			<classpath refid="cobertura.classpath" />
+			<classpath refid="jaqlib.components" />
+			<classpath refid="jaqlib.unittest.components" />
+			<classpath refid="jaqlib.libs" />
+			<classpath refid="jaqlib.unittest.libs" />
+			<test name="org.jaqlib.JaqlibCoreTests" toDir="${build.temp}/unittest_results/jaqlib" />
+			<formatter type="xml"/>
+		</junit>		
 		
 		<!-- Iterable tests with CGLib on classpath -->
 		<junit haltonfailure="false" failureproperty="junit.failure" fork="true">
