@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
@@ -50,6 +52,7 @@ public class SingleConnectionDataSource implements DataSource
   }
 
 
+  @Override
   public Connection getConnection() throws SQLException
   {
     if (simpleConnection == null)
@@ -60,6 +63,7 @@ public class SingleConnectionDataSource implements DataSource
   }
 
 
+  @Override
   public Connection getConnection(String username, String password)
       throws SQLException
   {
@@ -72,36 +76,42 @@ public class SingleConnectionDataSource implements DataSource
   }
 
 
+  @Override
   public PrintWriter getLogWriter() throws SQLException
   {
     return target.getLogWriter();
   }
 
 
+  @Override
   public int getLoginTimeout() throws SQLException
   {
     return target.getLoginTimeout();
   }
 
 
+  @Override
   public void setLogWriter(PrintWriter out) throws SQLException
   {
     target.setLogWriter(out);
   }
 
 
+  @Override
   public void setLoginTimeout(int seconds) throws SQLException
   {
     target.setLoginTimeout(seconds);
   }
 
 
+  @Override
   public boolean isWrapperFor(Class<?> iface) throws SQLException
   {
     return target.isWrapperFor(iface);
   }
 
 
+  @Override
   public <T> T unwrap(Class<T> iface) throws SQLException
   {
     return target.unwrap(iface);
@@ -121,7 +131,6 @@ public class SingleConnectionDataSource implements DataSource
     return Thread.currentThread().getContextClassLoader();
   }
 
-
   private static class ConnectionInvocationHandler implements InvocationHandler
   {
 
@@ -135,6 +144,7 @@ public class SingleConnectionDataSource implements DataSource
     }
 
 
+    @Override
     public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable
     {
@@ -176,5 +186,11 @@ public class SingleConnectionDataSource implements DataSource
 
   }
 
+
+  @Override
+  public Logger getParentLogger() throws SQLFeatureNotSupportedException
+  {
+    return target.getParentLogger();
+  }
 
 }
