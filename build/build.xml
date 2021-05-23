@@ -337,7 +337,7 @@
 		
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}.jar" >
 			<zipgroupfileset dir="${build.temp}/zip" />
-			<fileset file="${build.base}/doc/apache_license-2.0.txt" />
+			<fileset file="${build.base}/docs/apache_license-2.0.txt" />
 		</jar>
 		<jar destfile="${build.temp}/jar/jaqlib-${version.fullString}-src.zip" >
 			<fileset dir="${jaqlib_util.source}" />
@@ -377,7 +377,7 @@
       <fileset dir="${build.temp}/javadoc/jaqlib" />
     </copy>
     <copy toDir="${dist.dir}/${version.fullString}/dist" >
-      <fileset file="../doc/release_notes.txt" />
+      <fileset file="../docs/release_notes.txt" />
     </copy>
 		
 		<delete dir="./dbunittest" failonerror="false" />

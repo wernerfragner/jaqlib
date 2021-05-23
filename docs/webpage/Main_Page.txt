@@ -1,0 +1,57 @@
+==Introduction==
+<p>
+JaQLib (Java Query Library) is a compact Java library that supports programmers in querying all sorts of collections, databases and XML files in a compact and intuitive manner. It heavily makes use of Java Generics and follows the idea of [http://www.martinfowler.com/bliki/FluentInterface.html fluent interfaces]. JaQLib has one single entry point named <i>org.jaqlib.Jaqlib</i>. Starting from this class all functionality of JaQLib can be reached conveniently.
+</p>
+
+<p>
+JaqLib only uses standard Java features like [http://java.sun.com/developer/technicalArticles/J2SE/generics/ generics] or [http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html dynamic proxies]. It does ''not'' need any pre or post compile steps.
+</p>
+
+<p>
+WHERE conditions can be specified by custom implementations of the <tt>WhereCondition</tt> interface, by using the <tt>where().element()</tt> expression and by using a <b>method call recording mechanism</b>:<br>
+First a recorder object must be created (= a JDK dynamic proxy). Then the programmer must call the desired method on the returned recorder object. This method call is recorded by JaQLib. When JaqLib evaluates the WHERE condition this method call is replayed on every selected element. The result of this method call is then evaluated against the condition that is specified after the WHERE clause.<br>
+This method call record mechanism uses [http://java.sun.com/j2se/1.4.2/docs/guide/reflection/proxy.html JDK dynamic proxies] for proxying interfaces and [http://cglib.sourceforge.net/ CGLIB] for proxying classes. So if you want to record method calls on classes you have to [https://sourceforge.net/project/showfiles.php?group_id=56933 download] CGLIB and put it on the classpath of your application.
+</p>
+
+<p>
+JaQLib uses the standard [http://java.sun.com/j2se/1.4.2/docs/guide/util/logging/overview.html JDK Logging mechanism]. Logging to the console can be activated by calling <i>Jaqlib.enableConsoleLogging()</i>. Custom log handlers can be registered by calling <i>Jaqlib.DEFAULTS.registerLogHandler()</i> These log messages also include descriptive string representations of all executed queries.
+</p>
+
+<p>
+But examples are always better than some abstract descriptions. So lets continue with some basic examples:
+</p> 
+
+* [[Iterable Queries]]
+* [[Database Queries]]
+* [[XML Queries]]
+
+
+==Usage Scenarios==
+* Selecting arbitrary elements from collections, maps, ... in everyday programming tasks.
+* Using the database query support for unit testing. E.g., when you want to read back previously inserted/updated/deleted data from database in order to check if the unittest worked correctly.
+* Using the database query support for simple applications that need a quick and easy way to select data from database (without the coding overhead of JDBC or OR-Mappers like [http://www.hibernate.org Hibernate], [http://www.eclipse.org/eclipselink/ EclipseLink], [http://ibatis.apache.org iBatis], [http://www.mybatis.org/ MyBatis] ...).
+* Using the database OR Mapping support for simple applications or prototypes.
+* Using the XML query support for mapping data of Webservices to Java objects.
+* Using the XML query support for performing code generation. Meta data can be specified in XML files and can be easily read into a Java object model. Using this object model code or other artefacts can be generated.
+
+
+==Roadmap==
+* Manipulating XML files
+* Define custom Bean mappings using [http://download-llnw.oracle.com/javase/1.5.0/docs/guide/language/annotations.html Java Annotations]
+* Integration of DataBinding frameworks like [https://jaxb.dev.java.net/guide/ JAXB], [http://www.castor.org/ Castor], [http://xmlbeans.apache.org/ XMLBeans], [http://jibx.sourceforge.net/ JiBX].
+* Whishes from the users ...
+
+
+==References==
+* [http://download.famouswhy.com/jaqlib/ download.famouswhy]
+* [http://mac.softpedia.com/get/Development/Libraries/JaqLib.shtml MAC Softpedia]
+
+
+==Links==
+* [https://sourceforge.net/projects/jaqlib/ JaQLib at SourceForge]
+* [https://sourceforge.net/news/?group_id=219830 JaQLib News]
+* [https://sourceforge.net/forum/?group_id=219830 JaQLib Forums]
+* [https://sourceforge.net/project/showfiles.php?group_id=219830 JaQLib Downloads]
+* [http://apps.sourceforge.net/mantisbt/jaqlib/main_page.php JaQLib BugTracker]
+* [https://sourceforge.net/apps/limesurvey/jaqlib/ JaQLib Surveys]
+* [http://jaqlib.sourceforge.net/javadoc/ JaQLib Javadoc]
