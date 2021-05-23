@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="src" path="java"/>
-	<classpathentry kind="src" path="unittest"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/jaqlib_vendor/cglib/cglib-nodep-2.1_3.jar" sourcepath="/jaqlib_vendor/cglib/cglib-src-2.1_3.jar"/>
-	<classpathentry kind="lib" path="/jaqlib_vendor/junit/junit.jar"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
