@@ -1,0 +1,7 @@
+dependencies {
+    compile project(':jaqlib-util')
+    compile project(':jaqlib-core')
+    compile project(':jaqlib-db')
+    compile project(':jaqlib-iterable')
+    compile project(':jaqlib-xml')
+}
