@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':jaqlib-util')
+    compile project(':jaqlib-core')
+
+    testImplementation(testFixtures(project(":jaqlib-util")))
+    testImplementation(testFixtures(project(":jaqlib-core")))
+
+    testImplementation group: 'org.apache.derby', name: 'derby', version: '10.15.2.0'
+}

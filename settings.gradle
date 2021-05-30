@@ -1,0 +1,5 @@
+include 'jaqlib-util'
+include 'jaqlib-core'
+include 'jaqlib-iterable'
+include 'jaqlib-db'
+include 'jaqlib-tools'

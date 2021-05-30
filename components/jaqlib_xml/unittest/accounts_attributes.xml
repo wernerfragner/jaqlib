@@ -1,8 +1,0 @@
-<bank>
-	<accounts>
-	
-		<account lastName="huber" firstName="sepp" balance="5000" creditRating="GOOD" department="linz" />
-		<account lastName="maier" firstName="franz" balance="2000" creditRating="POOR" department="wien" />
-    
-	</accounts>
-</bank>

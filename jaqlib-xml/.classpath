@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="java"/>
+	<classpathentry kind="src" path="unittest"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="src" path="/jaqlib_util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jaqlib_core"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/serializer.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xalan.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xercesImpl.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xml-apis.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/xalan/xsltc.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/jaxen/jaxen-1.1.2.jar"/>
+	<classpathentry kind="lib" path="/jaqlib_vendor/saxon/saxon9he.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

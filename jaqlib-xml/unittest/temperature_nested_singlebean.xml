@@ -1,0 +1,26 @@
+<house>
+	<sensors>
+	
+		<temperature location="kitchen" >
+		  <history>25</history>
+		  <history>26</history>
+		  <history>23</history>
+		  <sensor name="TempSens 1.04" uniqueId="1234" >
+        <type id="1">
+          <name>temp</name>
+        </type>
+		  </sensor>
+		</temperature>
+		
+		<temperature location="cellar" >
+      <history>19</history>
+      <history>18</history>
+      <sensor name="TempSens 1.01" uniqueId="1235" >
+        <type id="1">
+          <name>temp</name>
+        </type>
+      </sensor>
+    </temperature>
+    
+	</sensors>
+</house>
