@@ -1,17 +1,14 @@
 package org.jaqlib.core;
 
-import java.lang.reflect.Method;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.easymock.EasyMock;
-import org.jaqlib.Account;
 import org.jaqlib.AccountImpl;
 import org.jaqlib.core.bean.BeanFactory;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.core.reflect.MethodInvocation;
 import org.jaqlib.util.CollectionUtil;
-import org.junit.jupiter.api.BeforeEach;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class AbstractFetchStrategyTest
 {
