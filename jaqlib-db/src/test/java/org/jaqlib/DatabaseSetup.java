@@ -51,7 +51,6 @@ public class DatabaseSetup
   private SingleConnectionDataSource createDataSource()
   {
     DriverManagerDataSource ds = new DriverManagerDataSource();
-    ds.setDriverClassName("org.apache.derby.jdbc.EmbeddedDriver");
     ds.setUrl("jdbc:derby:dbunittest;create=true");
     return new SingleConnectionDataSource(ds);
   }
@@ -63,7 +62,7 @@ public class DatabaseSetup
   }
 
 
-  public void dropTestTables() throws SQLException
+  public void dropTestTables()
   {
     try
     {
@@ -72,6 +71,7 @@ public class DatabaseSetup
     }
     catch (SQLException sqle)
     {
+      // not relevant
     }
   }
 
@@ -97,7 +97,7 @@ public class DatabaseSetup
   }
 
 
-  public void insertTestRecords() throws SQLException
+  public void insertTestRecords()
   {
     DbInsertDataSource ds = createAccountInsertDataSource(ACCOUNT_TABLE);
     BeanMapping<AccountImpl> mapping = createAccountMapping();
@@ -123,8 +123,7 @@ public class DatabaseSetup
     strategy.addColumnMapping("balance");
     strategy.addColumnMapping("creditRating");
 
-    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
-        AccountImpl.class);
+    BeanMapping<AccountImpl> mapping = new BeanMapping<>(AccountImpl.class);
     mapping.setMappingStrategy(strategy);
     mapping.registerJavaTypeHandler(new CreditRatingTypeHandler());
     return mapping;
@@ -177,31 +176,32 @@ public class DatabaseSetup
 
     ResultSet rs = EasyMock.createNiceMock(ResultSet.class);
     ResultSetMetaData metaData = EasyMock
-        .createNiceMock(ResultSetMetaData.class);
+            .createNiceMock(ResultSetMetaData.class);
     EasyMock.expect(rs.getMetaData()).andReturn(metaData).anyTimes();
     EasyMock.expect(metaData.getColumnCount()).andReturn(2);
     EasyMock.expect(metaData.getColumnLabel(1)).andReturn("id");
     EasyMock.expect(metaData.getColumnLabel(2)).andReturn("lastname");
 
     EasyMock.expect(rs.next()).andReturn(true);
-    EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(1));
+    EasyMock.expect(rs.getObject("id")).andReturn(1L);
     EasyMock.expect(rs.getObject("lastName")).andReturn(
-        AccountSetup.HUBER_ACCOUNT.getLastName());
-    EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(1));
+            AccountSetup.HUBER_ACCOUNT.getLastName());
+    EasyMock.expect(rs.getObject(1)).andReturn(1L);
     EasyMock.expect(rs.getObject(2)).andReturn(
-        AccountSetup.HUBER_ACCOUNT.getLastName());
+            AccountSetup.HUBER_ACCOUNT.getLastName());
 
     EasyMock.expect(rs.next()).andReturn(true);
-    EasyMock.expect(rs.getObject("id")).andReturn(Long.valueOf(2));
+    EasyMock.expect(rs.getObject("id")).andReturn(2L);
     EasyMock.expect(rs.getObject("lastName")).andReturn(
-        AccountSetup.MAIER_ACCOUNT.getLastName());
-    EasyMock.expect(rs.getObject(1)).andReturn(Long.valueOf(2));
+            AccountSetup.MAIER_ACCOUNT.getLastName());
+    EasyMock.expect(rs.getObject(1)).andReturn(2L);
     EasyMock.expect(rs.getObject(2)).andReturn(
-        AccountSetup.MAIER_ACCOUNT.getLastName());
+            AccountSetup.MAIER_ACCOUNT.getLastName());
 
     EasyMock.expect(rs.next()).andReturn(false);
 
-    EasyMock.replay(rs, metaData);
+    EasyMock.replay(rs);
+    EasyMock.replay(metaData);
 
     return rs;
   }
@@ -227,7 +227,9 @@ public class DatabaseSetup
     EasyMock.expect(conn.createStatement()).andReturn(stmt).once();
     EasyMock.expect(stmt.executeQuery(sql)).andReturn(resultSet).once();
 
-    EasyMock.replay(ds, conn, stmt);
+    EasyMock.replay(ds);
+    EasyMock.replay(conn);
+    EasyMock.replay(stmt);
     return ds;
   }
 
@@ -245,18 +247,14 @@ public class DatabaseSetup
     EasyMock.expect(conn.createStatement()).andReturn(stmt);
     EasyMock.expect(conn.prepareStatement(SELECT_SQL)).andReturn(prepStmt);
     EasyMock.expect(stmt.executeQuery(SELECT_SQL)).andReturn(resultSet)
-        .anyTimes();
+            .anyTimes();
     EasyMock.expect(prepStmt.executeQuery()).andReturn(resultSet).anyTimes();
 
-    EasyMock.replay(ds, conn, stmt, prepStmt);
+    EasyMock.replay(ds);
+    EasyMock.replay(conn);
+    EasyMock.replay(stmt);
+    EasyMock.replay(prepStmt);
     return ds;
   }
-
-
-  public static DbSelectDataSource getDbSelectDataSource() throws SQLException
-  {
-    return new DbSelectDataSource(getNiceMockDataSource(), SELECT_SQL);
-  }
-
 
 }

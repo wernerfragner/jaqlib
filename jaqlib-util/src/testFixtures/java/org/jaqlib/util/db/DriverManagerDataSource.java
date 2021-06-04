@@ -28,6 +28,11 @@ public class DriverManagerDataSource extends DataSourceAdapter
 
   private void registerDriver()
   {
+    if (driverClassName == null)
+    {
+      return;
+    }
+
     try
     {
       Class.forName(driverClassName);

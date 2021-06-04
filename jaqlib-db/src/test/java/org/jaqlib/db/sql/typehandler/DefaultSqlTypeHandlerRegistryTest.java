@@ -1,21 +1,23 @@
 package org.jaqlib.db.sql.typehandler;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.Types;
 
-public class DefaultSqlTypeHandlerRegistryTest extends TestCase
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.fail;
+
+public class DefaultSqlTypeHandlerRegistryTest
 {
 
   private DefaultSqlTypeHandlerRegistry registry;
 
 
-  @Override
-  protected void setUp() throws Exception
+  @BeforeEach
+  public void setUp()
   {
-    super.setUp();
-
     registry = new DefaultSqlTypeHandlerRegistry();
   }
 
@@ -24,13 +26,14 @@ public class DefaultSqlTypeHandlerRegistryTest extends TestCase
    * No type handler for given data type available. An ObjectTypeHandler must be
    * returned.
    */
+  @Test
   public void testGetTypeHandler_NoneAvailable()
   {
     assertSame(SqlTypeHandlerRegistry.OBJECT_TYPEHANDLER, registry
         .getTypeHandler(Integer.MAX_VALUE));
   }
 
-
+  @Test
   public void testRegisterTypeHandler_Null()
   {
     try
@@ -40,10 +43,11 @@ public class DefaultSqlTypeHandlerRegistryTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testRegisterTypeHandler()
   {
     int sqlDataType = Integer.MAX_VALUE;

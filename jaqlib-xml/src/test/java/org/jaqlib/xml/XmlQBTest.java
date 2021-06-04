@@ -1,19 +1,22 @@
 package org.jaqlib.xml;
 
-import junit.framework.TestCase;
 import org.jaqlib.*;
 import org.jaqlib.core.DataSourceQueryException;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.util.ClassPathResource;
 import org.jaqlib.util.FileResource;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
 
 import static org.jaqlib.AccountAssert.*;
 import static org.jaqlib.TemperatureAssert.assertKitchenTemperature;
+import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class XmlQBTest extends TestCase
+public abstract class XmlQBTest
 {
 
   private static final String XPATH_ACCOUNTS = "/bank/accounts/*";
@@ -22,12 +25,13 @@ public abstract class XmlQBTest extends TestCase
 
   private static final Temperature KITCHEN = TemperatureSetup.KITCHEN;
   private static final Temperature CELLAR = TemperatureSetup.CELLAR;
+  private static final String TESTFILESDIR = "src/test/resources/";
 
 
   private List<AccountImpl> accounts;
 
 
-  @Override
+  @BeforeEach
   public void setUp()
   {
     XmlDefaults.INSTANCE.getJavaTypeHandlerRegistry().registerTypeHandler(
@@ -35,13 +39,14 @@ public abstract class XmlQBTest extends TestCase
   }
 
 
-  @Override
+  @AfterEach
   public void tearDown()
   {
     XmlDefaults.INSTANCE.reset();
   }
 
 
+  @Test
   public void testSelectAccount_Default_String()
   {
     // select huber account
@@ -55,7 +60,7 @@ public abstract class XmlQBTest extends TestCase
     assertMaierAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Attributes_String()
   {
     // select huber account
@@ -69,7 +74,7 @@ public abstract class XmlQBTest extends TestCase
     assertMaierAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Elements_String()
   {
     // select huber account
@@ -83,11 +88,11 @@ public abstract class XmlQBTest extends TestCase
     assertMaierAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Default_ClassPathResource()
   {
     ClassPathResource resource = new ClassPathResource(
-        "accounts_attributes.xml");
+            "accounts_attributes.xml");
     Account recorder = XmlQB.getRecorder(Account.class);
     accounts = XmlQB.select(AccountImpl.class).from(resource)
         .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
@@ -96,11 +101,11 @@ public abstract class XmlQBTest extends TestCase
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Attributes_ClassPathResource()
   {
     ClassPathResource resource = new ClassPathResource(
-        "accounts_attributes.xml");
+            "accounts_attributes.xml");
     Account recorder = XmlQB.getRecorder(Account.class);
     accounts = XmlQB.select(AccountImpl.class).fromAttributes(resource)
         .where(XPATH_ACCOUNTS).andCall(recorder.getLastName()).isEqual("huber")
@@ -109,7 +114,7 @@ public abstract class XmlQBTest extends TestCase
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Elements_ClassPathResource()
   {
     ClassPathResource resource = new ClassPathResource("accounts_elements.xml");
@@ -121,10 +126,10 @@ public abstract class XmlQBTest extends TestCase
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Default_XmlSelectDataSource()
   {
-    FileResource r = new FileResource("unittest/accounts_attributes.xml");
+    FileResource r = new FileResource(TESTFILESDIR + "accounts_attributes.xml");
     XmlSelectDataSource ds = new XmlSelectDataSource(r, true);
 
     Account recorder = XmlQB.getRecorder(Account.class);
@@ -134,10 +139,10 @@ public abstract class XmlQBTest extends TestCase
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Attributes_XmlSelectDataSource()
   {
-    FileResource r = new FileResource("unittest/accounts_attributes.xml");
+    FileResource r = new FileResource(TESTFILESDIR + "accounts_attributes.xml");
     XmlSelectDataSource ds = new XmlSelectDataSource(r, true);
 
     Account recorder = XmlQB.getRecorder(Account.class);
@@ -148,10 +153,10 @@ public abstract class XmlQBTest extends TestCase
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_Elements_XmlSelectDataSource()
   {
-    FileResource r = new FileResource("unittest/accounts_elements.xml");
+    FileResource r = new FileResource(TESTFILESDIR + "accounts_elements.xml");
     XmlSelectDataSource ds = new XmlSelectDataSource(r, false);
 
     Account recorder = XmlQB.getRecorder(Account.class);
@@ -162,7 +167,7 @@ public abstract class XmlQBTest extends TestCase
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectAccount_NonExistingFileResource()
   {
     FileResource resource = new FileResource("nonexisting.xml");
@@ -181,7 +186,7 @@ public abstract class XmlQBTest extends TestCase
     }
   }
 
-
+  @Test
   public void testSelectAccount_NonExistingClassPathResource()
   {
     ClassPathResource resource = new ClassPathResource("nonexisting.xml");
@@ -200,11 +205,11 @@ public abstract class XmlQBTest extends TestCase
     }
   }
 
-
+  @Test
   public void testSelectAccount_DataSourceReuse_Default()
   {
     XmlSelectDataSource ds = new XmlSelectDataSource(
-        "unittest/accounts_nestedbeans.xml");
+            TESTFILESDIR + "accounts_nestedbeans.xml");
     ds.setAutoClose(false);
 
     try
@@ -230,7 +235,7 @@ public abstract class XmlQBTest extends TestCase
     }
   }
 
-
+  @Test
   public void testSelectAccount_Attribute_Namespace()
   {
     addAttributeNamespace("test1", "http://werner.fragner.org/jaqlib/test1");
@@ -238,69 +243,70 @@ public abstract class XmlQBTest extends TestCase
 
     // select huber account
 
-    accounts = selectDefault("unittest/accounts_namespaces.xml",
-        XPATH_ACCOUNTS_NS, "huber");
+    accounts = selectDefault(TESTFILESDIR + "accounts_namespaces.xml",
+            XPATH_ACCOUNTS_NS, "huber");
     assertHuberAccount(accounts);
 
     // select maier account
 
-    accounts = selectDefault("unittest/accounts_namespaces.xml",
-        XPATH_ACCOUNTS_NS, "maier");
+    accounts = selectDefault(TESTFILESDIR + "accounts_namespaces.xml",
+            XPATH_ACCOUNTS_NS, "maier");
     assertMaierAccount(accounts);
   }
 
-
+  @Test
   public void testSelectUsingCustomTypeHandler()
   {
     XmlDefaults.INSTANCE.reset();
 
-    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
-        AccountImpl.class);
+    BeanMapping<AccountImpl> mapping = new BeanMapping<>(
+            AccountImpl.class);
     mapping.getField("creditRating").setTypeHandler(
-        new CreditRatingStringTypeHandler());
+            new CreditRatingStringTypeHandler());
 
     Account recorder = XmlQB.getRecorder(Account.class);
-    String fileName = "unittest/accounts_attributes.xml";
+    String fileName = TESTFILESDIR + "accounts_attributes.xml";
     accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
-        .andCall(recorder.getLastName()).isEqual("huber").asList();
+            .andCall(recorder.getLastName()).isEqual("huber").asList();
 
     assertHuberAccount(accounts);
   }
 
-
+  @Test
   public void testSelectNestedBeans()
   {
-    BeanMapping<AccountImpl> mapping = new BeanMapping<AccountImpl>(
-        AccountImpl.class);
+    BeanMapping<AccountImpl> mapping = new BeanMapping<>(
+            AccountImpl.class);
     Account recorder = XmlQB.getRecorder(Account.class);
-    String fileName = "unittest/accounts_nestedbeans.xml";
+    String fileName = TESTFILESDIR + "accounts_nestedbeans.xml";
 
     accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
-        .andCall(recorder.getLastName()).isEqual("huber").asList();
+            .andCall(recorder.getLastName()).isEqual("huber").asList();
     assertHuberAccountWithTransactions(accounts);
 
     accounts = XmlQB.select(mapping).from(fileName).where(XPATH_ACCOUNTS)
-        .andCall(recorder.getLastName()).isEqual("maier").asList();
+            .andCall(recorder.getLastName()).isEqual("maier").asList();
     assertMaierAccountWithTransactions(accounts);
   }
 
-
+  @Test
   public void testSelect_StrictFieldCheck_Enabled()
   {
     XmlDefaults.INSTANCE.setStrictFieldCheck(true);
 
-    BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
-        Temperature.class);
-    String fileName = "unittest/temperature_nested_primitives.xml";
+    BeanMapping<Temperature> mapping = new BeanMapping<>(
+            Temperature.class);
+    String fileName = TESTFILESDIR + "temperature_nested_primitives.xml";
 
     try
     {
       XmlQB.select(mapping).from(fileName).where("/house/sensors/temperature")
-          .asList();
+              .asList();
       fail("Did not throw DataSourceQueryException");
     }
     catch (DataSourceQueryException e)
     {
+      // expected
     }
     finally
     {
@@ -308,25 +314,25 @@ public abstract class XmlQBTest extends TestCase
     }
   }
 
-
+  @Test
   public void testSelectNestedPrimitives()
   {
-    BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
-        Temperature.class);
+    BeanMapping<Temperature> mapping = new BeanMapping<>(
+            Temperature.class);
     Temperature recorder = XmlQB.getRecorder(Temperature.class);
-    String fileName = "unittest/temperature_nested_primitives.xml";
+    String fileName = TESTFILESDIR + "temperature_nested_primitives.xml";
 
     Temperature temp = XmlQB.select(mapping).from(fileName)
-        .where("/house/sensors/temperature").andCall(recorder.getLocation())
-        .isEqual(KITCHEN.getLocation()).uniqueResult();
+            .where("/house/sensors/temperature").andCall(recorder.getLocation())
+            .isEqual(KITCHEN.getLocation()).uniqueResult();
 
     assertKitchenTemperature(temp);
   }
 
-
+  @Test
   public void testSelectPrimitives()
   {
-    String fileName = "unittest/temperature_nested_primitives.xml";
+    String fileName = TESTFILESDIR + "temperature_nested_primitives.xml";
 
     List<String> locations = XmlQB.select(String.class).from(fileName)
         .where("//@location").asList();
@@ -337,30 +343,30 @@ public abstract class XmlQBTest extends TestCase
     assertTrue(locations.contains(CELLAR.getLocation()));
   }
 
-
+  @Test
   public void testSelect_NestedSingleBean()
   {
-    BeanMapping<Temperature> mapping = new BeanMapping<Temperature>(
-        Temperature.class);
+    BeanMapping<Temperature> mapping = new BeanMapping<>(
+            Temperature.class);
     Temperature recorder = XmlQB.getRecorder(Temperature.class);
-    String fileName = "unittest/temperature_nested_singlebean.xml";
+    String fileName = TESTFILESDIR + "temperature_nested_singlebean.xml";
 
     Temperature temp = XmlQB.select(mapping).from(fileName)
-        .where("/house/sensors/temperature").andCall(recorder.getLocation())
-        .isEqual(KITCHEN.getLocation()).uniqueResult();
+            .where("/house/sensors/temperature").andCall(recorder.getLocation())
+            .isEqual(KITCHEN.getLocation()).uniqueResult();
 
     assertNotNull(temp);
     TemperatureAssert.assertKitchenSensor(temp.getSensor());
   }
 
-
+  @Test
   public void testSelectPrimitives_TypeHandler()
   {
     XmlDefaults.INSTANCE
         .registerJavaTypeHandler(new CreditRatingStringTypeHandler());
 
     List<CreditRating> ratings = XmlQB.select(CreditRating.class)
-        .from("unittest/accounts_attributes.xml").where("//@creditRating")
+            .from(TESTFILESDIR + "accounts_attributes.xml").where("//@creditRating")
         .asList();
     assertEquals(2, ratings.size());
     assertTrue(ratings.contains(CreditRating.POOR));
@@ -370,7 +376,7 @@ public abstract class XmlQBTest extends TestCase
 
   private List<AccountImpl> selectDefault(String xpathAccounts, String string)
   {
-    String fileName = "unittest/accounts_attributes.xml";
+    String fileName = TESTFILESDIR + "accounts_attributes.xml";
     return selectDefault(fileName, xpathAccounts, string);
   }
 
@@ -386,7 +392,7 @@ public abstract class XmlQBTest extends TestCase
 
   private List<AccountImpl> selectAttributes(String xPath, String lastName)
   {
-    String fileName = "unittest/accounts_attributes.xml";
+    String fileName = TESTFILESDIR + "accounts_attributes.xml";
     Account recorder = XmlQB.getRecorder(Account.class);
     return XmlQB.select(AccountImpl.class).fromAttributes(fileName)
         .where(xPath).andCall(recorder.getLastName()).isEqual(lastName)
@@ -396,7 +402,7 @@ public abstract class XmlQBTest extends TestCase
 
   private List<AccountImpl> selectElements(String xPath, String lastName)
   {
-    String fileName = "unittest/accounts_elements.xml";
+    String fileName = TESTFILESDIR + "accounts_elements.xml";
     Account recorder = XmlQB.getRecorder(Account.class);
     return XmlQB.select(AccountImpl.class).fromElements(fileName).where(xPath)
         .andCall(recorder.getLastName()).isEqual(lastName).asList();

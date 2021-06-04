@@ -4,11 +4,13 @@ import org.jaqlib.core.WhereCondition;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbWhereClause;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.jaqlib.AccountAssert.assertHuberAccount;
-import static org.jaqlib.AccountAssert.assertMaierAccount;
+import static org.jaqlib.AccountAssert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 {
@@ -19,7 +21,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   private DbWhereClause<Account> where;
 
 
-  @Override
+  @BeforeEach
   public void setUp() throws Exception
   {
     super.setUp();
@@ -54,10 +56,8 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 
   private void assertMapResult(Map<String, Account> accounts)
   {
-    org.jaqlib.AccountAssert.assertEquals(AccountSetup.MAIER_ACCOUNT, accounts
-        .get(MAIER));
-    org.jaqlib.AccountAssert.assertEquals(AccountSetup.HUBER_ACCOUNT, accounts
-        .get(HUBER));
+    assertEqualAccount(AccountSetup.MAIER_ACCOUNT, accounts.get(MAIER));
+    assertEqualAccount(AccountSetup.HUBER_ACCOUNT, accounts.get(HUBER));
   }
 
 
@@ -65,7 +65,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   {
     Set<Account> accounts = where.asSet();
     assertEquals(2, accounts.size());
-    List<Account> accountList = new ArrayList<Account>(accounts);
+    List<Account> accountList = new ArrayList<>(accounts);
     assertListResult(accountList);
   }
 
@@ -106,18 +106,11 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
 
   private WhereCondition<Account> createWhereCondition(final double balance)
   {
-    return new WhereCondition<Account>()
-    {
-
-      public boolean evaluate(Account element)
-      {
-        return element.getBalance() > balance;
-      }
-
-    };
+    return element -> element.getBalance() > balance;
   }
 
 
+  @Test
   public void testSelect_NoCondition()
   {
     assertListResult(where);
@@ -127,7 +120,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     assertHashtableResult(where);
   }
 
-
+  @Test
   public void testSelect_CustomCondition_OneMatch()
   {
     WhereCondition<Account> condition = createWhereCondition(3500.0);
@@ -136,7 +129,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     assertHuberAccount(account);
   }
 
-
+  @Test
   public void testSelect_CustomCondition_NoMatch()
   {
     WhereCondition<Account> condition = createWhereCondition(100000.0);
@@ -144,7 +137,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     assertNull(account);
   }
 
-
+  @Test
   public void testSelect_MethodCallCondition_OneMatch()
   {
     Account dummy = DatabaseQB.getRecorder(Account.class);
@@ -154,7 +147,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     assertHuberAccount(account);
   }
 
-
+  @Test
   public void testSelect_MethodCallCondition_NoMatch()
   {
     Account dummy = DatabaseQB.getRecorder(Account.class);
@@ -163,7 +156,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     assertNull(account);
   }
 
-
+  @Test
   public void testSelect_MixedConditions()
   {
     Account dummy = DatabaseQB.getRecorder(Account.class);
@@ -175,7 +168,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
     assertHuberAccount(account);
   }
 
-
+  @Test
   public void testSelect_PreparedStatement()
   {
     String sql = "SELECT id, lname AS lastname, fname AS firstname, creditrating AS creditrating, balance FROM APP.ACCOUNT WHERE lname = ?";
@@ -200,6 +193,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   /**
    * Given WHERE clause produces one match.
    */
+  @Test
   public void testSelect_CustomSqlCondition_OneMatch()
   {
     Account account = where.where(DatabaseSetup.SELECT_SQL_WHERE)
@@ -212,6 +206,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   /**
    * Given WHERE clause produces no match.
    */
+  @Test
   public void testSelect_CustomSqlCondition_NoMatch()
   {
     Account account = where.where("lname = 'invalid'").uniqueResult();
@@ -222,6 +217,7 @@ public class BeanDatabaseQBSelectTest extends AbstractDatabaseQBTest
   /**
    * No SQL WHERE condition is specified, but a custom where condition class.
    */
+  @Test
   public void testSelect_CustomSqlCondition_Null()
   {
     WhereCondition<Account> condition = createWhereCondition(3500.0);

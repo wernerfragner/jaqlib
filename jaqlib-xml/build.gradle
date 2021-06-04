@@ -1,9 +1,14 @@
+plugins {
+    id "java-test-fixtures"
+}
+
 dependencies {
     compile project(':jaqlib-util')
     compile project(':jaqlib-core')
 
     testImplementation(testFixtures(project(":jaqlib-util")))
     testImplementation(testFixtures(project(":jaqlib-core")))
+    testFixturesImplementation(testFixtures(project(":jaqlib-core")))
 
     implementation group: 'xalan', name: 'xalan', version: '2.7.2'
     implementation group: 'jaxen', name: 'jaxen', version: '1.2.0'

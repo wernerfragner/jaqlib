@@ -3,6 +3,8 @@ package org.jaqlib;
 import org.jaqlib.core.bean.BeanMapping;
 import org.jaqlib.db.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 {
 
@@ -33,11 +35,11 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
     mapping.removeField("firstName");
     mapping.removeField("transactions");
 
-    ColumnMapping<?> lname = new ColumnMapping<Object>("lastName");
+    ColumnMapping<?> lname = new ColumnMapping<>("lastName");
     lname.setColumnName("lname");
     mapping.addField(lname);
 
-    ColumnMapping<?> fname = new ColumnMapping<Object>("firstName");
+    ColumnMapping<?> fname = new ColumnMapping<>("firstName");
     fname.setColumnName("fname");
     mapping.addField(fname);
   }
@@ -45,7 +47,7 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   private void registerManualMappingStrategy()
   {
-    BeanMapping<Account> mapping2 = new BeanMapping<Account>(AccountImpl.class);
+    BeanMapping<Account> mapping2 = new BeanMapping<>(AccountImpl.class);
     mapping2.removeField("transactions");
 
     ManualMappingStrategy strategy = new ManualMappingStrategy();
@@ -97,9 +99,7 @@ public class BeanDatabaseQBDmlTest extends AbstractDatabaseQBTest
 
   private DbSelectDataSource getSelectDataSource(String select)
   {
-    DbSelectDataSource dbSelectDataSource = Database.getSelectDataSource(
-        getDataSource(), select);
-    return dbSelectDataSource;
+    return Database.getSelectDataSource(getDataSource(), select);
   }
 
 

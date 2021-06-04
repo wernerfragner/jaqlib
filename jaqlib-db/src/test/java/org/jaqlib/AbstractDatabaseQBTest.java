@@ -1,31 +1,28 @@
 package org.jaqlib;
 
-import junit.framework.TestCase;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 import javax.sql.DataSource;
 
-public class AbstractDatabaseQBTest extends TestCase
+public abstract class AbstractDatabaseQBTest
 {
 
   protected DatabaseSetup dbSetup;
 
 
-  @Override
+  @BeforeEach
   public void setUp() throws Exception
   {
-    super.setUp();
-
     dbSetup = new DatabaseSetup();
     dbSetup.createTestTables();
     dbSetup.insertTestRecords();
   }
 
 
-  @Override
+  @AfterEach
   public void tearDown() throws Exception
   {
-    super.tearDown();
-
     dbSetup.clear();
   }
 

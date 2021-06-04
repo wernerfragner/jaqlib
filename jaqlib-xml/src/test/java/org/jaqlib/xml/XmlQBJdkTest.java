@@ -2,11 +2,12 @@ package org.jaqlib.xml;
 
 import org.jaqlib.XmlDefaults;
 import org.jaqlib.xml.xpath.JdkXPathEngine;
+import org.junit.jupiter.api.BeforeEach;
 
 public class XmlQBJdkTest extends XmlQBTest
 {
 
-  @Override
+  @BeforeEach
   public void setUp()
   {
     super.setUp();

@@ -4,4 +4,8 @@ dependencies {
     compile project(':jaqlib-db')
     compile project(':jaqlib-iterable')
     compile project(':jaqlib-xml')
+
+    testImplementation(testFixtures(project(":jaqlib-util")))
+    testImplementation(testFixtures(project(":jaqlib-core")))
+    testImplementation(testFixtures(project(":jaqlib-xml")))
 }

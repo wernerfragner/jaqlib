@@ -1,17 +1,20 @@
 package org.jaqlib.db;
 
-import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.jaqlib.AccountSetup;
 import org.jaqlib.DatabaseSetup;
 import org.jaqlib.db.sql.typehandler.DefaultSqlTypeHandlerRegistry;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DbResultSetTest extends TestCase
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DbResultSetTest
 {
 
   private ResultSet rs;
@@ -20,29 +23,28 @@ public class DbResultSetTest extends TestCase
   private DbResultSet resultSet;
 
 
-  @Override
-  protected void setUp() throws Exception
+  @BeforeEach
+  public void setUp() throws Exception
   {
-    super.setUp();
-
     rs = DatabaseSetup.getMockResultSet();
     sqlTypeHandlerRegistry = new DefaultSqlTypeHandlerRegistry();
     resultSet = new DbResultSet(rs, sqlTypeHandlerRegistry, DbDefaults.INSTANCE
-        .getStrictFieldCheck());
+            .getStrictFieldCheck());
   }
 
-
+  @Test
   public void testDbResultSet_Null() throws SQLException
   {
-    invalidConstructurArgs(null, DbDefaults.INSTANCE
-        .getSqlTypeHandlerRegistry(), false);
-    invalidConstructurArgs(rs, null, false);
+    invalidConstructorArgs(null, DbDefaults.INSTANCE
+            .getSqlTypeHandlerRegistry(), false);
+    invalidConstructorArgs(rs, null, false);
   }
 
 
-  private void invalidConstructurArgs(ResultSet rs,
-      SqlTypeHandlerRegistry registry, boolean strictColumnCheck)
-      throws SQLException
+  private void invalidConstructorArgs(ResultSet rs,
+                                      SqlTypeHandlerRegistry registry,
+                                      boolean strictColumnCheck)
+          throws SQLException
   {
     try
     {
@@ -51,10 +53,11 @@ public class DbResultSetTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testHasColumn() throws SQLException
   {
     assertTrue(resultSet.hasColumn("lastname"));
@@ -64,10 +67,10 @@ public class DbResultSetTest extends TestCase
     assertFalse(resultSet.hasColumn("nonExisting"));
   }
 
-
+  @Test
   public void testClose() throws SQLException
   {
-    EasyMock.resetToNice(rs);
+    EasyMock.reset(rs);
     rs.close();
     EasyMock.replay(rs);
 
@@ -76,10 +79,10 @@ public class DbResultSetTest extends TestCase
     EasyMock.verify(rs);
   }
 
-
+  @Test
   public void testNext() throws SQLException
   {
-    EasyMock.resetToNice(rs);
+    EasyMock.reset(rs);
     EasyMock.expect(rs.next()).andReturn(Boolean.FALSE);
     EasyMock.replay(rs);
 
@@ -88,23 +91,23 @@ public class DbResultSetTest extends TestCase
     EasyMock.verify(rs);
   }
 
-
-  public void testGetObject_ColumnName() throws SQLException
+  @Test
+  public void testGetObject_ColumnName()
   {
-    ColumnMapping<?> mapping = new ColumnMapping<Object>("lastName");
+    ColumnMapping<?> mapping = new ColumnMapping<>("lastName");
     Object value = resultSet.getObject(mapping);
     assertEquals(AccountSetup.HUBER_ACCOUNT.getLastName(), value);
   }
 
-
-  public void testGetObject_ColumnIndex() throws SQLException
+  @Test
+  public void testGetObject_ColumnIndex()
   {
-    ColumnMapping<?> mapping = new ColumnMapping<Object>(1);
+    ColumnMapping<?> mapping = new ColumnMapping<>(1);
     Object value = resultSet.getObject(mapping);
     assertEquals(AccountSetup.HUBER_ACCOUNT.getId(), value);
   }
 
-
+  @Test
   public void testGetObject_SqlTypeHandler() throws SQLException
   {
     // getObject() must be called on custom type handler
@@ -120,7 +123,7 @@ public class DbResultSetTest extends TestCase
 
     // get object from result set
 
-    ColumnMapping<?> mapping = new ColumnMapping<Object>(1);
+    ColumnMapping<?> mapping = new ColumnMapping<>(1);
     mapping.setColumnDataType(sqlDataType);
     resultSet.getObject(mapping);
 

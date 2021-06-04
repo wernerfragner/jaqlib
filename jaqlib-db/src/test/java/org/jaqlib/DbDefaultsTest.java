@@ -1,26 +1,29 @@
 package org.jaqlib;
 
-import junit.framework.TestCase;
 import org.jaqlib.db.DbDefaults;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandler;
 import org.jaqlib.db.sql.typehandler.SqlTypeHandlerRegistry;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-public class DbDefaultsTest extends TestCase
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DbDefaultsTest
 {
 
-  @Override
+  @AfterEach
   public void tearDown()
   {
     DbDefaults.INSTANCE.reset();
   }
 
-
+  @Test
   public void testGetSqlTypeHandlerRegistry()
   {
     assertNotNull(DbDefaults.INSTANCE.getSqlTypeHandlerRegistry());
   }
 
-
+  @Test
   public void testSetSqlTypeHandlerRegistry_Null()
   {
     try
@@ -30,10 +33,11 @@ public class DbDefaultsTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testSetSqlTypeHandlerRegistry()
   {
     SqlTypeHandlerRegistry registry = new SqlTypeHandlerRegistry()

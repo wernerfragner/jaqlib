@@ -1,29 +1,31 @@
 package org.jaqlib.db;
 
-import junit.framework.TestCase;
 import org.jaqlib.DatabaseSetup;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DbResultSetMetaDataTest extends TestCase
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DbResultSetMetaDataTest
 {
 
   private ResultSet rs;
   private DbResultSetMetaData metaData;
 
 
-  @Override
+  @BeforeEach
   protected void setUp() throws Exception
   {
-    super.setUp();
-
     rs = DatabaseSetup.getMockResultSet();
 
     metaData = new DbResultSetMetaData(rs.getMetaData());
   }
 
 
+  @Test
   public void testDbResultSetMetaData()
   {
     try
@@ -33,10 +35,11 @@ public class DbResultSetMetaDataTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testHasColumn() throws SQLException
   {
     assertTrue(metaData.hasColumn("id"));

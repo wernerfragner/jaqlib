@@ -1,13 +1,16 @@
 package org.jaqlib.db;
 
-import junit.framework.TestCase;
 import org.jaqlib.DatabaseSetup;
 import org.jaqlib.util.ExceptionUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
 
-public class DbSelectDataSourceTest extends TestCase
+import static org.junit.jupiter.api.Assertions.*;
+
+public class DbSelectDataSourceTest
 {
 
   private static final String SQL = DatabaseSetup.SELECT_SQL;
@@ -16,11 +19,9 @@ public class DbSelectDataSourceTest extends TestCase
   private DbSelectDataSource dataSource;
 
 
-  @Override
-  protected void setUp() throws Exception
+  @BeforeEach
+  protected void setUp()
   {
-    super.setUp();
-
     dataSource = new DbSelectDataSource(getDataSource(), SQL);
   }
 
@@ -37,7 +38,7 @@ public class DbSelectDataSourceTest extends TestCase
     }
   }
 
-
+  @Test
   public void testDbSelectDataSource_Null()
   {
     try
@@ -47,6 +48,7 @@ public class DbSelectDataSourceTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
     try
     {
@@ -55,10 +57,11 @@ public class DbSelectDataSourceTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testRegisterSqlTypeHandler_Null()
   {
     try
@@ -68,10 +71,11 @@ public class DbSelectDataSourceTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testSetSqlTypeHandlerRegistry_Null()
   {
     try
@@ -81,32 +85,33 @@ public class DbSelectDataSourceTest extends TestCase
     }
     catch (IllegalArgumentException e)
     {
+      // expected
     }
   }
 
-
+  @Test
   public void testGetSql()
   {
     assertEquals(SQL, dataSource.getSql());
   }
 
-
+  @Test
   public void testGetSql_WithWhereCondition()
   {
     dataSource.setSqlWhereCondition(SELECT_SQL_WHERE);
     assertEquals(SQL + " WHERE " + SELECT_SQL_WHERE, dataSource.getSql());
   }
 
-
-  public void testExecute_NormalStatement() throws SQLException
+  @Test
+  public void testExecute_NormalStatement()
   {
     DbResultSet rs = dataSource.execute();
     assertNotNull(rs);
     assertNotSame(rs, dataSource.execute());
   }
 
-
-  public void testExecute_PreparedStatement() throws SQLException
+  @Test
+  public void testExecute_PreparedStatement()
   {
     dataSource.addPreparedStatementParameter(5000);
     DbResultSet rs = dataSource.execute();
@@ -114,14 +119,14 @@ public class DbSelectDataSourceTest extends TestCase
     assertNotSame(rs, dataSource.execute());
   }
 
-
+  @Test
   public void testClose_NoExecutePerformed()
   {
     dataSource.closeAfterQuery();
   }
 
-
-  public void testClose_ExecutePerformed() throws SQLException
+  @Test
+  public void testClose_ExecutePerformed()
   {
     dataSource.execute();
     dataSource.closeAfterQuery();

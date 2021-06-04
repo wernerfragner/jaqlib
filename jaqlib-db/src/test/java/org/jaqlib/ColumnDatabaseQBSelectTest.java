@@ -1,10 +1,12 @@
 package org.jaqlib;
 
-import junit.framework.TestCase;
 import org.jaqlib.core.WhereCondition;
 import org.jaqlib.db.ColumnMapping;
 import org.jaqlib.db.DbSelectDataSource;
 import org.jaqlib.db.DbWhereClause;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -15,9 +17,10 @@ import java.util.Vector;
 
 import static org.jaqlib.AccountSetup.HUBER_ACCOUNT;
 import static org.jaqlib.AccountSetup.MAIER_ACCOUNT;
+import static org.junit.jupiter.api.Assertions.*;
 
 
-public class ColumnDatabaseQBSelectTest extends TestCase
+public class ColumnDatabaseQBSelectTest
 {
 
   private DatabaseSetup dbSetup;
@@ -25,11 +28,9 @@ public class ColumnDatabaseQBSelectTest extends TestCase
   private DbWhereClause<String> where;
 
 
-  @Override
+  @BeforeEach
   public void setUp() throws Exception
   {
-    super.setUp();
-
     dbSetup = new DatabaseSetup();
     dbSetup.createTestTables();
     dbSetup.insertTestRecords();
@@ -42,6 +43,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
   }
 
 
+  @Test
   public void testSimpleSelect()
   {
     final String sql = "SELECT lname AS lastname FROM APP.ACCOUNT";
@@ -53,11 +55,9 @@ public class ColumnDatabaseQBSelectTest extends TestCase
   }
 
 
-  @Override
+  @AfterEach
   public void tearDown() throws Exception
   {
-    super.tearDown();
-
     dbSetup.clear();
   }
 
@@ -111,17 +111,10 @@ public class ColumnDatabaseQBSelectTest extends TestCase
 
   private WhereCondition<String> createWhereCondition(final String pattern)
   {
-    return new WhereCondition<String>()
-    {
-
-      public boolean evaluate(String element)
-      {
-        return element.matches(pattern);
-      }
-    };
+    return element -> element.matches(pattern);
   }
 
-
+  @Test
   public void testSelect()
   {
     assertListResult(where);
@@ -131,7 +124,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
     assertLastResult(where);
   }
 
-
+  @Test
   public void testSelect_SimpleCondition() throws Exception
   {
     String huber = HUBER_ACCOUNT.getLastName();
@@ -149,7 +142,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
     assertFalse(getDataSource().getConnection().isClosed());
   }
 
-
+  @Test
   public void testSelect_MultipleSimpleConditions()
   {
     String maier = MAIER_ACCOUNT.getLastName();
@@ -166,7 +159,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
     assertAllLastNames(result);
   }
 
-
+  @Test
   public void testSelect_CustomCondition()
   {
     String huber = HUBER_ACCOUNT.getLastName();
@@ -175,7 +168,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
     assertEquals(huber, where.where(condition).uniqueResult());
   }
 
-
+  @Test
   public void testSelect_MultipleCustomConditions()
   {
     WhereCondition<String> condition1 = createWhereCondition("h.*");
@@ -190,6 +183,7 @@ public class ColumnDatabaseQBSelectTest extends TestCase
    * SELECT statement must only be executed once when using the WhereClause for
    * different conditions with different results.
    */
+  @Test
   public void testSelect_CacheResultSet() throws SQLException
   {
     final String sql = "SELECT lname AS lastname FROM APP.ACCOUNT";
