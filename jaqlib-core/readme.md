@@ -1,0 +1,1 @@
+This module contains the common core logic for all other JaQLib modules.

@@ -1,0 +1,1 @@
+This module contains JaQLib logic for accessing XML files.
