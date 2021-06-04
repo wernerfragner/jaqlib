@@ -51,7 +51,7 @@ public class DatabaseSetup
   private SingleConnectionDataSource createDataSource()
   {
     DriverManagerDataSource ds = new DriverManagerDataSource();
-    ds.setUrl("jdbc:derby:dbunittest;create=true");
+    ds.setUrl("jdbc:derby:memory:dbunittest;create=true");
     return new SingleConnectionDataSource(ds);
   }
 
